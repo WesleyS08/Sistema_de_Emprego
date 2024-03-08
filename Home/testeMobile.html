@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        
+/* ------------------------- Header -------------------------*/
+
+:root{
+    --laranja: #EC6809;
+    --laranjaClaro: #ee8840;
+    --laranjaEscuro: #a04809;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body{
+    font-family: Arial, sans-serif;
+}
+
+nav{
+    background-color: var(--laranja);
+    height: 64px;
+}
+
+nav #logo{
+    color: white;
+    font-size: 22pt;
+    line-height: 64px;
+}
+
+nav ul{
+    float: right;
+    margin-right: 30px;
+}
+
+nav ul li{
+    display: inline-block;
+    line-height: 64px;
+}
+
+nav ul li a{
+    color: white;
+    font-size: 10pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 20px;
+}
+
+nav ul li a:hover{
+    background: var(--laranjaClaro);
+    transition: 0.2s;
+}
+
+.menuBtn{
+    float: right;
+    line-height: 64px;
+    cursor: pointer;
+}
+
+#check, .menuBtn{
+    display: none;
+}
+
+@media(min-width:700px){
+    nav #logo{
+        padding-left: 50px;
+    }
+}
+
+@media (max-width: 700px){
+    nav #logo{
+        padding-left: 24px;
+    }
+    .menuBtn{
+        padding-right: 24px;
+        display: block;
+    }
+
+    .menuBtn:focus{
+        padding-right: 24px;
+        display: block;
+    }
+    ul{
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: var(--laranjaEscuro);
+        left: -100%;
+        text-align: center;
+        transition: all .5s;
+    }
+    nav ul li{
+        display: block;
+        margin: 10px 0;
+    }
+    nav ul li a{
+        font-size: 12pt;
+    }
+    nav ul li a:hover{
+        color: var(--laranjaClaro);
+        background-color: var(--laranjaEscuro);
+        transition: 0.2s;
+    }
+    #check:checked ~ ul{
+        left: 0;
+    }
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="menuBtn">
+            <svg width="30px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 6H20M4 12H20M4 18H20" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+        </label>
+        <label id="logo">SIAS</label>
+        <ul>
+            <li><a href="#">Início</a></li>
+            <li><a href="#">Pesquisa</a></li>
+            <li><a href="#">Vagas</a></li>
+            <li><a href="#">Cursos</a></li>
+            <li><a href="#">Perfil</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,105 @@
+
+/* ------------------------- Header -------------------------*/
+
+:root{
+    --laranja: #EC6809;
+    --laranjaClaro: #ee8840;
+    --laranjaEscuro: #a04809;
+    -webkit-tap-highlight-color: transparent;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+}
+
+nav{
+    background-color: var(--laranja);
+    height: 64px;
+}
+
+nav #logo{
+    color: white;
+    font-size: 22pt;
+    line-height: 64px;
+}
+
+nav ul{
+    float: right;
+    margin-right: 30px;
+}
+
+nav ul li{
+    display: inline-block;
+    line-height: 64px;
+}
+
+nav ul li a{
+    color: white;
+    font-size: 10pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 20px;
+}
+
+nav ul li a:hover{
+    background: var(--laranjaClaro);
+    transition: 0.2s;
+}
+
+.menuBtn{
+    float: right;
+    line-height: 64px;
+    cursor: pointer;
+}
+
+#check, .menuBtn{
+    display: none;
+}
+
+@media(min-width:700px){
+    nav #logo{
+        padding-left: 50px;
+    }
+}
+
+@media (max-width: 700px){
+    nav #logo{
+        padding-left: 24px;
+    }
+    .menuBtn{
+        padding-right: 24px;
+        display: block;
+    }
+    ul{
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: var(--laranjaEscuro);
+        left: -100%;
+        text-align: center;
+        transition: all .5s;
+    }
+    nav ul li{
+        display: block;
+        margin: 10px 0;
+    }
+    nav ul li a{
+        font-size: 12pt;
+    }
+    nav ul li a:hover{
+        color: var(--laranjaClaro);
+        background-color: var(--laranjaEscuro);
+        transition: 0.2s;
+    }
+    #check:checked ~ ul{
+        left: 0;
+    }
+}
