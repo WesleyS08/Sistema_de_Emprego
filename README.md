@@ -31,6 +31,10 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
  Estrutura de Pastas:
 
  ```
+| -- docs/
+|   | -- word/
+|   | -- excel/
+|   | -- Modelos do banco de dados/
  |-- public/
 |   |-- index.html
 |   |-- manifest.json
