@@ -14,10 +14,12 @@
     text-decoration: none;
     list-style: none;
     box-sizing: border-box;
+    scroll-behavior: smooth !important;
 }
 
 body{
     font-family: Arial, sans-serif;
+    background-color: whitesmoke;
 }
 
 nav{
@@ -28,7 +30,7 @@ nav{
 }
 
 nav #logo{
-    color: white;
+    color: whitesmoke;
     font-size: 22pt;
     line-height: 64px;
 }
@@ -44,7 +46,7 @@ nav ul li{
 }
 
 nav ul li a{
-    color: white;
+    color: whitesmoke;
     font-size: 10pt;
     font-weight: bold;
     text-transform: uppercase;
@@ -112,7 +114,7 @@ nav ul li a:hover{
     background-color: var(--laranja);
     padding: 30px;
     text-align: center;
-    color: white;
+    color: whitesmoke;
 }
 
 .title h1{
@@ -125,27 +127,28 @@ nav ul li a:hover{
 
 .title input[type=button]{
     margin-top: 20px;
-    color: white;
+    color: whitesmoke;
     background-color: black;
     padding: 10px 20px;
     border: 1px solid black;
     font-size: 12pt;
     border-radius: 8px;
     cursor: pointer;
+    transition: 0.5s ease;
 }
 
 .title input[type=button]:hover{
     color: black;
-    background-color: white;
-    border: 1px solid white;
+    background-color: whitesmoke;
+    border: 1px solid whitesmoke;
     transition: 0.2s;
 }
 
 .title i{
-    margin-left: 4px;
+    margin-left: 6px;
     width: 6px;
     height: 60px;
-    background-color: white;
+    background-color: whitesmoke;
     -webkit-animation: blinking 2s infinite;
     animation: blinking 1s infinite;
 }
@@ -158,51 +161,192 @@ nav ul li a:hover{
         background-color: transparent
     }
     50% {
-        background-color: white;
+        background-color: whitesmoke;
     }
   }
+
+  /* ------------------------- Carrosel -------------------------*/
+
+.carouselBox{
+    display: flex;
+    align-items: center;
+    height: 200px;
+    width: auto;
+    overflow: hidden;
+}
+
+.btnLeftSlider, .btnRightSlider{
+    color: silver;
+    border: solid 1px silver;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 20pt;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 70px;
+}
+
+.btnLeftSlider:hover, .btnRightSlider:hover{
+    transition: 0.2s;
+    color: #1C1C1C;
+    border: solid 1px #1C1C1C;
+}
+
+.btnLeftSlider{
+    float: left;
+}
+
+.btnRightSlider{
+    float: right;
+}
 
   /* ------------------------- Anúncios -------------------------*/
 
 .anuncios{
     padding: 10px;
+    margin: 20px 0px 30px 0px;
 }
 
 .anuncios h2{
     font-size: 24pt;
-    margin-top:  10px;
-    margin-bottom:  30px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
-.anuncios a{
+.postLink{
     margin: 0 10px;
     cursor: pointer;
+    transition: 0.5s ease;
 }
 
-.anuncios a:hover{
+.postLink:hover{
     transform: scale(1.04);
     transition: 0.2s;
 }
 
+  
 /* ------------------------- Post -------------------------*/
 
 .post{
     border: 1px solid silver;
     border-radius: 10px;
+    width: 250px;
+    height: 160px;
+    box-shadow: 4px 4px 4px silver;
     padding: 8px;
-    max-width: 250px;
-}
-
-.post header{
-     font-size: 14pt;
-}
-
-.post header label{
-    margin-left: 4px;
-    color: blue;
+    position: relative;
 }
 
 .post section{
-    padding: 10px 0;
+    margin-top: 20px;
+}
+
+.tipoVaga{
+    font-size: 14pt;
+    margin-left: 4px;
+}
+
+.empresaVaga{
+    margin-top: 4px;
+}
+
+.statusVaga, .dataVaga{
+    padding: 8px;
+}
+
+.statusVaga{
+    position: absolute;
+    bottom: 0;
+    font-weight: bold;
+    left: 0;
+}
+
+.dataVaga{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+/* ------------------------- Testes -------------------------*/
+
+.testes{
+    padding: 40px;
+    margin-bottom: 30px;
+}
+
+.testes h2{
+    font-size: 24pt;
+    margin-bottom: 6px;
+}
+
+.testes input[type=button]{
+    color: whitesmoke;
+    background-color: black;
+    padding: 10px 30px;
+    border: 1px solid black;
+    font-size: 12pt;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+.testes input[type=button]:hover{
+    color: black;
+    background-color: whitesmoke;
+    border: 1px solid black;
+    transition: 0.2s;
+}
+
+.gridTestes{
+    margin: 20px 0;
+    display: grid;
+    grid-template-columns: 550px 550px;
+}
+
+.testeLink{
+    cursor: pointer;
+    transition: 0.5s ease;
+    margin: 20px 0px;
+}
+
+.testeLink:hover{
+    transform: scale(1.04);
+    transition: 0.2s;
+}
+
+/* ------------------------- post do Teste -------------------------*/
+
+.teste{
+    position: relative;
+    border: 1px solid silver;
+    padding: 6px;
+    display: flex;
+    width: 500px;
+    box-shadow: 4px 4px 4px silver;
+}
+
+.nomeTeste{
+    font-weight: bold;
+}
+
+.autorTeste{
+    color: gray;
+}
+
+.divAcessos{
+    padding: 4px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+}
+
+.qntdAcessos{
+    margin: 4px;
 }
