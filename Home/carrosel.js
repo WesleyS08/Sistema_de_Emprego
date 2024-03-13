@@ -1,4 +1,4 @@
-const sliders = document.querySelector(".carouselBox");
+const sliders = document.querySelector(".carrosselBox");
 let scrollPerClick = 800;
 let scrollAmount = 0;
 

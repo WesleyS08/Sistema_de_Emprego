@@ -1,4 +1,3 @@
-
 /* ------------------------- Header -------------------------*/
 
 :root{
@@ -108,24 +107,24 @@ nav ul li a:hover{
     }
 }
 
-/* ------------------------- Title -------------------------*/
+/* ------------------------- Article do Título -------------------------*/
 
-.title{
+.articleTitle{
     background-color: var(--laranja);
     padding: 30px;
     text-align: center;
     color: whitesmoke;
 }
 
-.title h1{
+.articleTitle h1{
     font-size: 44pt;
 }
 
-.title p{
+.articleTitle p{
     margin-top: 10px;
 }
 
-.title input[type=button]{
+.articleTitle input[type=button]{
     margin-top: 20px;
     color: whitesmoke;
     background-color: black;
@@ -137,14 +136,14 @@ nav ul li a:hover{
     transition: 0.5s ease;
 }
 
-.title input[type=button]:hover{
+.articleTitle input[type=button]:hover{
     color: black;
     background-color: whitesmoke;
     border: 1px solid whitesmoke;
     transition: 0.2s;
 }
 
-.title i{
+.articleTitle i{
     margin-left: 6px;
     width: 6px;
     height: 60px;
@@ -165,9 +164,23 @@ nav ul li a:hover{
     }
   }
 
-  /* ------------------------- Carrosel -------------------------*/
+  
+  /* ------------------------- Article dos Anúncios -------------------------*/
 
-.carouselBox{
+.articleAnuncios{
+    padding: 10px;
+    margin: 20px 0;
+}
+
+.articleAnuncios h2{
+    font-size: 24pt;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* ------------------------- Carrosel dos Anúncios -------------------------*/
+
+.carrosselBox{
     display: flex;
     align-items: center;
     height: 200px;
@@ -205,18 +218,8 @@ nav ul li a:hover{
     float: right;
 }
 
-  /* ------------------------- Anúncios -------------------------*/
-
-.anuncios{
-    padding: 10px;
-    margin: 20px 0px 30px 0px;
-}
-
-.anuncios h2{
-    font-size: 24pt;
-    margin-bottom: 10px;
-    text-align: center;
-}
+  
+/* ------------------------- Post -------------------------*/
 
 .postLink{
     margin: 0 10px;
@@ -228,9 +231,6 @@ nav ul li a:hover{
     transform: scale(1.04);
     transition: 0.2s;
 }
-
-  
-/* ------------------------- Post -------------------------*/
 
 .post{
     border: 1px solid silver;
@@ -272,19 +272,19 @@ nav ul li a:hover{
     right: 0;
 }
 
-/* ------------------------- Testes -------------------------*/
+/* ------------------------- Article Comum -------------------------*/
 
-.testes{
+.commonArticle{
     padding: 40px;
-    margin-bottom: 30px;
+    margin: 20px 0;
 }
 
-.testes h2{
+.commonArticle h2{
     font-size: 24pt;
     margin-bottom: 6px;
 }
 
-.testes input[type=button]{
+.commonArticle input[type=button]{
     color: whitesmoke;
     background-color: black;
     padding: 10px 30px;
@@ -295,12 +295,14 @@ nav ul li a:hover{
     transition: 0.5s ease;
 }
 
-.testes input[type=button]:hover{
+.commonArticle input[type=button]:hover{
     color: black;
     background-color: whitesmoke;
     border: 1px solid black;
     transition: 0.2s;
 }
+
+/* ------------------------- Grid de testes -------------------------*/
 
 .gridTestes{
     margin: 20px 0;
@@ -308,10 +310,13 @@ nav ul li a:hover{
     grid-template-columns: 550px 550px;
 }
 
+/* ------------------------- post do Teste -------------------------*/
+
 .testeLink{
     cursor: pointer;
     transition: 0.5s ease;
     margin: 20px 0px;
+    width: 500px;
 }
 
 .testeLink:hover{
@@ -319,14 +324,11 @@ nav ul li a:hover{
     transition: 0.2s;
 }
 
-/* ------------------------- post do Teste -------------------------*/
-
 .teste{
     position: relative;
     border: 1px solid silver;
     padding: 6px;
     display: flex;
-    width: 500px;
     box-shadow: 4px 4px 4px silver;
 }
 
@@ -349,4 +351,73 @@ nav ul li a:hover{
 
 .qntdAcessos{
     margin: 4px;
+}
+
+/* ------------------------- Div Comentários -------------------------*/
+
+.divComentarios{
+    display: flex;
+    align-items: center;
+    margin: 30px 0;
+}
+
+/* ------------------------- Comentários -------------------------*/
+
+.comentarioLink{
+    transition: 0.5s ease;
+    width: 230px;
+    height: 230px;
+    margin-right: 30px;
+}
+
+.comentarioLink:hover{
+    transform: scale(1.04);
+    transition: 0.2s;
+}
+
+.comentario{
+    width: 230px;
+    height: 230px;
+    padding: 6px;
+    border: 1px solid silver;
+    box-shadow: 4px 4px 4px silver;
+    border-radius: 10px;
+    position: relative;
+}
+
+.divImg{
+    background-image: url("/imagens/pessoa.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-width: 30px;
+    min-height: 30px;
+    margin-right: 6px;
+    border-radius: 50px;
+}
+
+.comentario section{
+    margin: 14px 0px;
+}
+
+.estrela{
+    margin-right: 2px;
+}
+
+.comentario .dataEnvio{
+    margin-left: 8px;
+    color: gray;
+}
+
+.likes{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+}
+
+.qntdLikes{
+    margin-left: 4px;
 }
