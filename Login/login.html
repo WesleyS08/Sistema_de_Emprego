@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="login.css">
+</head>
+<body>
+    <article>
+        <section class="sectionLogin">
+            <h1>Login</h1>
+            <button class="btnGoogle"><img src="../imagens/google.svg"></button>
+            <form>
+                <div class="containerInput">
+                    <div class="contentInput">
+                        <input class="inputAnimado" id="email" type="text" required>
+                        <div class="labelLine">Email</div>
+                    </div><br>
+                    <small name="aviso"></small>
+                </div>
+                <div class="containerInput">
+                    <div class="contentInput">
+                        <input class="inputAnimado" id="senha" type="password" required>
+                        <div class="labelLine">Senha</div>
+                    </div><br>
+                    <small name="aviso"></small>
+                </div>
+                <input type="button" value="Login" class="btnLogin">
+            </form>
+            <a>Não tem conta? Registre-se!</a>
+        </section>
+        <section class="sectionArt">
+            <div>
+                <img src="../imagens/garotoFlutuando.jpeg" class="imagemflutuando"><br>
+                <img src="../imagens/sombraDoGaroto.jpeg" class="sombra">
+            </div>
+        </section>
+    </article>
+    <script src="avisos.js"></script>
+</body>
+</html>
