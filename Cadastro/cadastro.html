@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" type="text/css" href="cadastro.css">
+</head>
+<body>
+    <article>
+        <div class="carrosselVertical">
+            <div class="rollingImg"><img src="../imagens/icones.jpeg"></div>
+            <div class="rollingImg"><img src="../imagens/icones.jpeg"></div>
+            <div class="rollingImg"><img src="../imagens/icones.jpeg"></div>
+            <div class="rollingImg"><img src="../imagens/icones.jpeg"></div>
+        </div>
+        <div class="divCentraliza">
+            <section class="sectionCadastro">
+                <h1>Cadastro</h1>
+                <button class="btnGoogle"><img src="../imagens/google.svg"></button>
+                <div class="divBotoesTrocaForms">
+                    <button id="btnEsquerda">Candidato</button>
+                    <button id="btnDireita">Recrutador</button>
+                </div>
+                <form id="formCandidato">
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="nome" type="text" required>
+                            <div class="labelLine">Nome</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="email" type="text" required>
+                            <div class="labelLine">Email</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="cpf" type="text" required>
+                            <div class="labelLine">CPF</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="senha" type="text" required>
+                            <div class="labelLine">Senha</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="confirmaSenha" type="text" required>
+                            <div class="labelLine">Confirmar senha</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <input type="button" value="Cadastrar" class="btnCadastro"><br><small>Ao se cadastrar, você concorda com os <br><a>Termos de Serviço</a></small><br><br>
+                    <a>Já é cadastrado? Faça o login!</a> 
+                </form>
+                <form id="formRecrutador">
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="nome" type="text" required>
+                            <div class="labelLine">Nome</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="email" type="text" required>
+                            <div class="labelLine">Email</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="cnpj" type="text" required>
+                            <div class="labelLine">CNPJ</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="senha" type="text" required>
+                            <div class="labelLine">Senha</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInput">
+                            <input class="inputAnimado" id="confirmaSenha" type="text" required>
+                            <div class="labelLine">Confirmar senha</div>
+                        </div><br>
+                        <small name="aviso"></small>
+                    </div>
+                    <input type="button" value="Cadastrar" class="btnCadastro"><br>
+                    <small>Ao se cadastrar, você concorda com os <br><a>Termos de Serviço</a></small><br><br>
+                    <a>Já é cadastrado? Faça o login!</a>                
+                </form>      
+            </section> 
+        </div>            
+    </article>
+<script src="trocaDeForms.js"></script>
+<script src="avisos.js"></script>
+</body>
+</html>

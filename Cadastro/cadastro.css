@@ -1,0 +1,234 @@
+:root{
+    --laranjaBranco: #f0a976;
+    --laranja: #EC6809;
+    --laranjaClaro: #ee8840;
+    --laranjaEscuro: #a04809;
+    -webkit-tap-highlight-color: transparent;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;    
+    overflow:hidden;
+}
+
+article{
+    display: flex;
+}
+
+/* ------------------------- Imagem Animada -------------------------*/
+
+.carrosselVertical{ 
+    display: grid;
+}
+
+.rollingImg img{
+    width: 620px;
+    height: 550px;
+    animation: scroll 9000ms linear infinite;
+}
+
+@keyframes scroll{
+    0%{
+        transform: translate(0);
+    }
+    100%{
+        transform: translateY(-100%);
+    }
+}
+
+/* ------------------------- Formulário de Cadastro -------------------------*/
+
+.divCentraliza{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.sectionCadastro{
+    margin-top: 24px;
+    text-align: center;
+    position: relative;
+    width: 660px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sectionCadastro::before,
+.sectionCadastro::after{
+    background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+    content: '';
+    height: 100%;
+    position: absolute;
+    width: 20%;
+    z-index: 2;
+}
+
+.sectionCadastro::before{
+    left: 0;
+    top: 0;
+}
+
+.sectionCadastro::after{
+    right: 0;
+    top: 0;
+    transform: rotateZ(180deg);
+}
+
+.sectionCadastro h1{
+    font-size: 32pt;
+}
+
+.btnGoogle{
+    background: none;
+    border: none;
+    border-radius: 14px;
+    padding: 6px 30px 2px 30px;
+    margin: 6px 0px 18px 0px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.btnGoogle:hover{
+    box-shadow: 0px 0px 8px silver;
+    transform: scale(1.06);
+}
+
+/* ------------------------- TROCA DE FORMULÁRIOS -------------------------*/
+
+.divBotoesTrocaForms{
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.divBotoesTrocaForms button{
+    cursor: pointer;
+    padding: 4px 8px;
+    background-color: var(--laranjaBranco);
+    color: white;
+    font-size: 12pt;
+    border: none;
+    transition: 0.5s;
+    outline: 0;
+}
+
+
+#btnEsquerda{
+    border-radius: 20px 0px 0px 20px;
+    border-right: 0px;
+}
+
+#btnDireita{
+    border-radius: 0px 20px 20px 0px;
+    border-left: 0px;
+}
+
+/* ------------------------- FORMULÁRIO ANIMADO -------------------------*/
+
+form{
+    position: absolute;
+    transition: 0.5s;   
+    width: 100%;
+    padding: 0px 170px;
+}
+
+#formRecrutador{
+    left: 600px;
+}
+
+/* ------------------------- INPUTS ANIMADOS -------------------------*/
+
+.containerInput{
+    margin-bottom: 30px;
+}
+
+.contentInput{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.inputAnimado{
+    width: 320px;
+    position: absolute;
+    border: 1px solid silver;
+    padding: 6px 10px;
+    border-radius: 20px;
+    outline: none;
+    font-size: 11pt;
+    transition: 0.2s ease;
+    background: transparent;    
+    z-index: 1111;
+}
+
+.labelLine{
+    position: absolute;
+    transition: 0.2s ease;
+    margin: 0px 11px;
+    color: silver;
+    background-color: white;
+    font-size: 11pt;
+}
+
+.inputAnimado:focus,
+.inputAnimado:valid{
+    border: 1px solid var(--laranja);
+}
+
+.inputAnimado:focus +.labelLine,
+.inputAnimado:valid +.labelLine{
+    transform: translate(10px,-16px) scale(0.84);
+    padding: 0 6px;
+    color: var(--laranja);
+    z-index: 1111;
+}
+
+.containerInput small{
+    display: flex;
+    margin-left: 11px;
+    color: red;
+}
+
+/* ------------------------- Botão de cadastro -------------------------*/
+
+.btnCadastro{
+    width: 320px;
+    background: var(--laranja);
+    color: white;
+    font-size: 14pt;
+    font-weight: bold;
+    border: 1px solid var(--laranja);
+    border-radius: 20px;
+    padding: 6px 0px;
+    box-shadow: 0px 0px 8px silver;
+    margin-bottom: 4px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.btnCadastro:hover{
+    border: 1px solid var(--laranja);
+    background: none;
+    transition: 0.2s;
+    color:var(--laranja);
+}
+
+/* ------------------------- Rodapé -------------------------*/
+
+.sectionCadastro a{
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.sectionCadastro a:hover{
+    color: var(--laranja);
+    transition: 0.2s;
+}
