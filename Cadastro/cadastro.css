@@ -30,7 +30,7 @@ article{
 .rollingImg img{
     width: 620px;
     height: 550px;
-    animation: scroll 9000ms linear infinite;
+    animation: scroll 12s linear infinite;
 }
 
 @keyframes scroll{
