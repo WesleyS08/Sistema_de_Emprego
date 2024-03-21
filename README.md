@@ -45,6 +45,8 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 |   |   |-- styles/
 |   |-- components/
 |   |-- services/
+|   |   |-- auth/
+|   |   |   |-- login.php
 |   |   |-- api.js
 |   |-- views/
 |   |-- App.js
