@@ -1,91 +1,113 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="login.css" />
-  </head>
-  <body>
-    <php include '../src/services/google_credentials.php'; ?>
-    <article>
-      <section class="sectionLogin">
+</head>
+<body>
+<?php include '../src/services/google_credentials.php'; ?>
+<article>
+    <section class="sectionLogin">
         <h1>Login</h1>
-        <div id="buttonDiv"></div>
-
-        <form action="../src/services/auth/processar_login.php" method="POST">
-          <div class="containerInput">
-              <div class="contentInput">
-                  <input class="inputAnimado" id="email" name="email" type="text" required />
-                  <div class="labelLine">Email</div>
-              </div>
-              <small name="aviso"></small>
-          </div>
-          <div class="containerInput">
-              <div class="contentInput">
-                  <input class="inputAnimado" id="senha" name="senha" type="password" required />
-                  <div class="labelLine">Senha</div>
-              </div>
-              <small name="aviso"></small>
-          </div>
-          <input type="submit" value="Login" class="btnLogin" />
-      </form>
+        <form id="googleLoginForm" method="post" action="../src/services/auth/processar_login.php">
+            <div id="buttonDiv"></div>
+            <input type="hidden" id="google_token" name="google_token" />
+        </form>
       
+        <form id="login" method="post" action="../src/services/auth/processar_login.php">
+            <div class="containerInput">
+                <div class="contentInput">
+                    <input class="inputAnimado" id="email" name="email" type="text" required />
+                    <div class="labelLine">Email</div>
+                </div>
+                <small name="aviso"></small>
+            </div>
+            <div class="containerInput">
+                <div class="contentInput">
+                    <input class="inputAnimado" id="senha" name="senha" type="password" required />
+                    <div class="labelLine">Senha</div>
+                </div>
+                <small name="aviso"></small>
+            </div>
+            <input type="submit" value="Login" class="btnLogin" />
+        </form>
+
         <a href="../Cadastro/cadastro.html">Não tem conta? Registre-se!</a>
-      </section>
-      <section class="sectionArt">
+    </section>
+    <section class="sectionArt">
         <div>
-          <img
-            src="../imagens/garotoFlutuando.jpeg"
-            class="imagemflutuando"
-          /><br />
-          <img src="../imagens/sombraDoGaroto.jpeg" class="sombra" />
+            <img
+                    src="../imagens/garotoFlutuando.jpeg"
+                    class="imagemflutuando"
+            /><br />
+            <img src="../imagens/sombraDoGaroto.jpeg" class="sombra" />
         </div>
-      </section>
-    </article>
-    <script src="avisos.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async></script>
-    <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
-    <script>
-      // Função para lidar com a resposta de credenciais do Google
-      function handleCredentialResponse(response) {
-        // Decodifica o token JWT usando a biblioteca jwt-decode
-        const data = jwt_decode(response.credential);
-
-        // Atualiza elementos HTML com os dados do usuário
-        fullName.textContent = data.name;
-        sub.textContent = data.sub;
-        given_name.textContent = data.given_name;
-        family_name.textContent = data.family_name;
-        email.textContent = data.email;
-        verifiedEmail.textContent = data.verifiedEmail;
-        picture.setAttribute("src", data.picture);
+    </section>
+</article>
+<script src="avisos.js"></script>
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
+<script>
+  // Função para enviar o token do Google e enviar o formulário
+  function submitWithGoogleToken() {
+      const token = document.getElementById("google_token").value;
+      if (token) {
+          // Se o token do Google estiver presente, atualize o campo e envie o formulário
+          document.getElementById("google_token").value = token;
+          document.getElementById("googleLoginForm").submit();
+      } else {
+          // Se o token do Google não estiver presente, faça o login normalmente
+          document.getElementById("login").submit();
       }
+  }
 
-      // Manipulador de eventos para quando a janela estiver totalmente carregada
-      window.onload = function () {
-        // Inicializa o Google Sign-In com o ID do cliente obtido do arquivo PHP
-        google.accounts.id.initialize({
-          client_id: "<?php echo obter_credenciais_google()['client_id']; ?>",
+  // Função para lidar com a resposta de credenciais do Google
+  function handleCredentialResponse(response) {
+      // Decodifica o token JWT usando a biblioteca jwt-decode
+      const data = jwt_decode(response.credential);
+
+      // Atualiza elementos HTML com os dados do usuário
+      fullName.textContent = data.name;
+      sub.textContent = data.sub;
+      given_name.textContent = data.given_name;
+      family_name.textContent = data.family_name;
+      email.textContent = data.email;
+      verifiedEmail.textContent = data.verifiedEmail;
+      picture.setAttribute("src", data.picture);
+
+      // Atualiza o valor do campo oculto com o token do Google
+      document.getElementById("google_token").value = response.credential;
+
+      // Envie o formulário com o token do Google
+      submitWithGoogleToken();
+  }
+
+  // Manipulador de eventos para quando a janela estiver totalmente carregada
+  window.onload = function () {
+      // Inicializa o Google Sign-In com o ID do cliente obtido do arquivo PHP
+      google.accounts.id.initialize({
+          client_id: "367331740507-ti4ugnjnjjn862k4v361000vfa3frcr3.apps.googleusercontent.com",
           callback: handleCredentialResponse,
-        });
+      });
 
-        // Renderiza o botão de login do Google
-        google.accounts.id.renderButton(
+      // Renderiza o botão de login do Google
+      google.accounts.id.renderButton(
           document.getElementById("buttonDiv"),
           {
-            type: "standard",
-            shape: "rectangular",
-            theme: "filled_blue",
-            text: "signin_with",
-            size: "large",
-            logo_alignment: "left",
+              type: "standard",
+              shape: "rectangular",
+              theme: "filled_blue",
+              text: "signin_with",
+              size: "large",
+              logo_alignment: "left",
           } // atributos de personalização
-        );
+      );
 
-        // Exibe o diálogo "One Tap"
-        google.accounts.id.prompt();
-      };
-    </script>
-  </body>
+      // Exibe o diálogo "One Tap"
+      google.accounts.id.prompt();
+  };
+</script>
+</body>
 </html>
