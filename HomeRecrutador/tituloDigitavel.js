@@ -16,7 +16,7 @@ function DeterminaHorario(){
 }
 
 
-let text1 = `${DeterminaHorario()} ${nomeUsuario}!`;
+let text1 = `${DeterminaHorario()}, ${nomeUsuario}!`;
 
 function showText(titulo, text1, interval){
     let char = text1.split("").reverse();

@@ -46,17 +46,18 @@ article{
 
 .divCentraliza{
     width: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .sectionCadastro{
-    margin-top: 24px;
     text-align: center;
     position: relative;
     width: 660px;
-    height: 100%;
     overflow: hidden;
+    min-height: 600px;
 }
 
 .sectionCadastro::before,
@@ -145,7 +146,7 @@ form{
 /* ------------------------- INPUTS ANIMADOS -------------------------*/
 
 .containerInput{
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .contentInput{
@@ -156,7 +157,6 @@ form{
 
 .inputAnimado{
     width: 320px;
-    position: absolute;
     border: 1px solid silver;
     padding: 6px 10px;
     border-radius: 20px;
@@ -207,7 +207,7 @@ form{
     border-radius: 20px;
     padding: 6px 0px;
     box-shadow: 0px 0px 8px silver;
-    margin-bottom: 4px;
+    margin: 4px 0px;
     transition: 0.5s;
     cursor: pointer;
 }

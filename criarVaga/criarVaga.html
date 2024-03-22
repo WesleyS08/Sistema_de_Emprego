@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anunciar</title>
+    <link rel="stylesheet" type="text/css" href="criaVaga.css">
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="menuBtn">
+            <img src="../imagens/menu.svg">
+        </label>
+        <label id="logo">SIAS</label>        
+        <button class="btnModo"><img src="../imagens/moon.svg"></button>   
+        <ul>        
+            <li><a href="#">Anunciar</a></li>
+            <li><a href="#">Minhas vagas</a></li>
+            <li><a href="#">Meus testes</a></li>
+            <li><a href="#">Perfil</a></li>
+        </ul>
+    </nav>
+    <article>
+        <h2>Criação de Vaga</h2>
+        <form>
+            <div class="divFlexBox">
+                <div class="divEsquerda">
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="titulo" type="text" required>
+                                <div class="labelLine">Título</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="area" type="text" list="areaList" required>
+                                <div class="labelLine">Área</div>
+                                <datalist id="areaList">
+                                    <option>TI</option>
+                                </datalist>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="estado" type="text" required>
+                                <div class="labelLine">Estado</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="cidade" type="text" required>
+                                <div class="labelLine">Cidade</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="endereco" type="text" placeholder="Rua Fulano de Tal, 123" required>
+                                <div class="labelLine">Endereço</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="horario" type="text" placeholder="De segunda a sexta, das 9:00 às 16:00" required>
+                                <div class="labelLine">Carga horária</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInputTextArea">
+                            <textarea class="textAreaAnimada" id="descricao" type="text" required></textarea>
+                            <div class="textArealabelLine">Descrição da Vaga</div>
+                        </div>
+                        <small name="aviso"></small>
+                    </div>
+                </div>
+                
+                <div class="divDireita">
+                    <div class="containerInput">
+                        <div class="contentInputTextArea">
+                            <textarea class="textAreaAnimada" id="requisitos" type="text" required></textarea>
+                            <div class="textArealabelLine">Requisitos</div>
+                        </div>
+                        <small name="aviso"></small>
+                    </div>
+                    <div class="containerInput">
+                        <div class="contentInputTextArea">
+                            <textarea class="textAreaAnimada" id="beneficios" type="text" required></textarea>
+                            <div class="textArealabelLine">Benefícios</div>
+                        </div>
+                        <small name="aviso"></small>
+                    </div>
+                </div>   
+            </div>
+            <div class="divRadios">
+                <div class="divRadiosContent">                    
+                    <h3>Jornada:</h3>
+                    <input type="radio" name="jornada" id="meioPeriodo" required>
+                    <input type="radio" name="jornada" id="integral" required>
+                    <label for="meioPeriodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>                
+                    <label for="integral" class="btnRadio" id="btnIntegral">Integral</label>
+                </div>
+                <div class="divRadiosContent">                    
+                    <h3>Modalidade:</h3>
+                    <input type="radio" name="modalidade" id="remoto" required>
+                    <input type="radio" name="modalidade" id="presencial" required>
+                    <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>                
+                    <label for="presencial" class="btnRadio" id="btnPresencial">Presencial</label>
+                </div>
+                <div class="divRadiosContent">                    
+                    <h3>Tipo de profissional:</h3>
+                    <input type="radio" name="tipo" id="jovemAprendiz" required>
+                    <input type="radio" name="tipo" id="estagio" required>
+                    <input type="radio" name="tipo" id="clt" required>
+                    <input type="radio" name="tipo" id="pj" required>
+                    <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem Aprendiz</label>                
+                    <label for="estagio" class="btnRadio" id="btnEstagio">Estágio</label>
+                    <label for="clt" class="btnRadio" id="btnClt">CLT</label>
+                    <label for="pj" class="btnRadio" id="btnPj">PJ</label>
+                </div>
+                <div class="divRadiosContent">                    
+                    <h3>Nível:</h3>
+                    <input type="radio" name="nivel" id="medio" required>
+                    <input type="radio" name="nivel" id="tecnico" required>
+                    <input type="radio" name="nivel" id="superior" required>
+                    <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>                
+                    <label for="tecnico" class="btnRadio" id="btnTecnico">Técnico</label>
+                    <label for="superior" class="btnRadio" id="btnSuperior">Superior</label>
+                </div>
+            </div>
+            <div class="divSalvar">                
+                <input type="button" value="Salvar" class="btnSalvar">
+            </div>            
+        </form>       
+    </article>
+<script src="modoNoturno.js"></script>
+<script src="radioButtons.js"></script>
+</body>
+</html>
