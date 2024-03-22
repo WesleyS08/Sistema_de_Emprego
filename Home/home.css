@@ -178,6 +178,10 @@ button:hover{
     text-align: center;
 }
 
+.divTitulo{
+    display: flex; justify-content: center; align-items: center;
+}
+
 /* ------------------------- Carrosel dos Anúncios -------------------------*/
 
 .carrosselBox{
@@ -241,6 +245,11 @@ button:hover{
     box-shadow: 4px 4px 4px silver;
     padding: 8px;
     position: relative;
+}
+
+.post header{
+    display: flex;
+    align-items: center;
 }
 
 .post section{
@@ -319,6 +328,16 @@ button:hover{
     box-shadow: 4px 4px 4px silver;
 }
 
+.divDetalhesTeste{
+    padding: 8px;
+}
+
+.divCompetencias{
+    display: flex;
+    align-items: baseline;
+    margin-top: 6px;
+}
+
 .nomeTeste{
     font-weight: bold;
 }
@@ -394,8 +413,18 @@ button:hover{
     border-radius: 50px;
 }
 
+.comentario header{
+    display: flex;
+    align-items: center;
+}
+
 .comentario section{
     margin: 14px 0px;
+}
+
+.sectionEstrelas{
+    display: flex;
+    align-items: center;
 }
 
 .estrela{

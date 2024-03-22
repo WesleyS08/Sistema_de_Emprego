@@ -11,7 +11,7 @@
     <article>
       <section class="sectionLogin">
         <h1>Login</h1>
-        <div id="buttonDiv" style="margin-top: 20px; margin-bottom: 45px;"></div>
+        <div id="buttonDiv"></div>
 
         <form action="../src/services/auth/processar_login.php" method="POST">
           <div class="containerInput">
@@ -19,7 +19,6 @@
                   <input class="inputAnimado" id="email" name="email" type="text" required />
                   <div class="labelLine">Email</div>
               </div>
-              <br />
               <small name="aviso"></small>
           </div>
           <div class="containerInput">
@@ -27,7 +26,6 @@
                   <input class="inputAnimado" id="senha" name="senha" type="password" required />
                   <div class="labelLine">Senha</div>
               </div>
-              <br />
               <small name="aviso"></small>
           </div>
           <input type="submit" value="Login" class="btnLogin" />

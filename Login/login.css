@@ -34,25 +34,14 @@ article{
     font-size: 40pt;
 }
 
-.btnGoogle{
-    background: none;
-    border: none;
-    border-radius: 14px;
-    padding: 6px 30px 2px 30px;
-    margin: 16px 0px 44px 0px;
-    transition: 0.5s;
-    cursor: pointer;
-}
-
-.btnGoogle:hover{
-    box-shadow: 0px 0px 8px silver;
-    transform: scale(1.06);
+#buttonDiv{
+    margin: 20px 0px 36px 0px;
 }
 
 /* ------------------------- INPUTS ANIMADOS -------------------------*/
 
 .containerInput{
-    margin-bottom: 44px;
+    margin-bottom: 24px;
 }
 
 .contentInput{
@@ -62,7 +51,6 @@ article{
 }
 
 .inputAnimado{
-    position: absolute;
     border: 1px solid silver;
     padding: 6px 10px;
     border-radius: 20px;
@@ -115,7 +103,7 @@ small{
     padding: 6px 0px;
     width: 320px;
     box-shadow: 0px 0px 8px silver;
-    margin-bottom: 40px;
+    margin: 10px 0px 40px 0px;
     transition: 0.5s;
     cursor: pointer;
 }
