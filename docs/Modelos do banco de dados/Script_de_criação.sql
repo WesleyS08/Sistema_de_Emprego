@@ -21,7 +21,7 @@ USE `SIAS` ;
 -- Table `SIAS`.`Tb_Pessoas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Pessoas` (
-  `Id_Pessoas` INT NOT NULL,
+  `Id_Pessoas` INT NOT NULL AUTO_INCREMENT, -- Adicionado AUTO_INCREMENT
   `Email` VARCHAR(45) NULL,
   `Senha` VARCHAR(255) NULL,
   `Nome` VARCHAR(45) NULL,
@@ -29,16 +29,16 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Pessoas` (
   `Token` VARCHAR(21) NULL,
   `Img(Perfil)` VARCHAR(45) NULL,
   `Verificado` BLOB NULL,
-  PRIMARY KEY (`Id_Pessoas`))
+  PRIMARY KEY (`Id_Pessoas`)
+)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Candidato`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Candidato` (
   `CPF` VARCHAR(12) NOT NULL,
-  `Tb_Pessoas_Id` INT NOT NULL,
+  `Tb_Pessoas_Id` INT NOT NULL AUTO_INCREMENT, -- Adicionado AUTO_INCREMENT
   `Area_de_Interesse` VARCHAR(50) NULL,
   `Tipo_de_Contratacao` VARCHAR(45) NULL,
   `Experiencia` VARCHAR(200) NULL,
@@ -52,14 +52,14 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Candidato` (
   `Numero` VARCHAR(12) NULL,
   `Cursos` VARCHAR(45) NULL,
   PRIMARY KEY (`CPF`),
-  INDEX `fk_Tb_Candidato_Tb_Pessoas_idx` (`Tb_Pessoas_Id` ASC) ,
+  INDEX `fk_Tb_Candidato_Tb_Pessoas_idx` (`Tb_Pessoas_Id` ASC),
   CONSTRAINT `fk_Tb_Candidato_Tb_Pessoas`
     FOREIGN KEY (`Tb_Pessoas_Id`)
     REFERENCES `SIAS`.`Tb_Pessoas` (`Id_Pessoas`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Empresa`
