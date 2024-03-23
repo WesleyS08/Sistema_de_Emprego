@@ -22,7 +22,7 @@
                     <button id="btnEsquerda">Candidato</button>
                     <button id="btnDireita">Recrutador</button>
                 </div>
-                <form id="formCandidato" method="post" action="../src/services/auth/cadastro.php">
+                <form id="formCandidato" method="post" action="../src/services/cadastros/cadastro.php">
                     <div class="containerInput">
                         <div class="contentInput">
                             <input class="inputAnimado" name="nome" type="text" required>
@@ -61,38 +61,38 @@
                     <input type="submit" value="Cadastrar" class="btnCadastro"><br><small>Ao se cadastrar, você concorda com os <br><a>Termos de Serviço</a></small><br><br>
                     <a href="../Login/login.html">Já é cadastrado? Faça o login!</a> 
                 </form>
-                <form id="formRecrutador" method="POST">
+                <form id="formRecrutador" method="post" action="../src/services/cadastros/cadastroRecrutador.php">
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" id="nome" type="text" required>
+                            <input class="inputAnimado" name="nome" type="text" required>
                             <div class="labelLine">Nome</div>
                         </div>
                         <small name="aviso"></small>
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" id="email" type="text" required>
+                            <input class="inputAnimado" name="email" type="text" required>
                             <div class="labelLine">Email</div>
                         </div>
                         <small name="aviso"></small>
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" id="cnpj" type="text" required>
+                            <input class="inputAnimado" name="cnpj" type="text" required>
                             <div class="labelLine">CNPJ</div>
                         </div>
                         <small name="aviso"></small>
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" id="senha" type="text" required>
+                            <input class="inputAnimado" name="senha" type="text" required>
                             <div class="labelLine">Senha</div>
                         </div>
                         <small name="aviso"></small>
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" id="confirmaSenha" type="text" required>
+                            <input class="inputAnimado" name="confirmaSenha" type="text" required>
                             <div class="labelLine">Confirmar senha</div>
                         </div>
                         <small name="aviso"></small>
