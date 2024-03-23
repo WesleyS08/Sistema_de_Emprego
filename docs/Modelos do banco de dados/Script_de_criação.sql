@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Pessoas` (
   `Senha` VARCHAR(255) NULL,
   `Nome` VARCHAR(45) NULL,
   `Sobrenome` VARCHAR(45) NULL,
-  `Token` VARCHAR(21) NULL,
+  `Token` TEXT NULL,
   `Img(Perfil)` VARCHAR(45) NULL,
   `Verificado` BLOB NULL,
   PRIMARY KEY (`Id_Pessoas`)

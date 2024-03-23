@@ -2,7 +2,7 @@ let email = document.querySelector("#email");
 let senha = document.querySelector("#senha");
 let mensagemEmail = "O email deve ser inserido!";
 let mensagemSenha = "A senha deve ser inserida!";
-let mensagemErro = "Usuário não encontrado ou senha incorreta.";
+
 
 function ExibirAviso(){
     if(email.value==""){

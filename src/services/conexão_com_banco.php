@@ -14,5 +14,5 @@ if (!$_con) {
     die("Falha na conexão: " . mysqli_connect_error());
 }
 
-echo "Conexão estabelecida com sucesso.";
+//echo "Conexão estabelecida com sucesso.";
 ?>

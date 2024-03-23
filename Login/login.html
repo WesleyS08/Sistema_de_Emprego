@@ -11,12 +11,12 @@
 <article>
     <section class="sectionLogin">
         <h1>Login</h1>
-        <form id="googleLoginForm" method="post" action="../src/services/auth/processar_login.php">
+        <form id="googleLoginForm" method="post" action="../src/services/auth/processar_login_google.php">
             <div id="buttonDiv"></div>
-            <input type="hidden" id="google_token" name="google_token" />
+            <input type="hidden" id="google_token" name="token" />
+            <input type="hidden" id="email_google" name="email_google" />
         </form>
-      
-        <form id="login" method="post" action="../src/services/auth/processar_login.php">
+        <form id="loginForm" method="post" action="../src/services/auth/processar_login.php">
             <div class="containerInput">
                 <div class="contentInput">
                     <input class="inputAnimado" id="email" name="email" type="text" required />
@@ -35,6 +35,11 @@
         </form>
 
         <a href="../Cadastro/cadastro.html">Não tem conta? Registre-se!</a>
+
+        <!-- Avisos de errro por falta de cadastro no banco-->
+        <div id="aviso" style="color: red;width: 300px;margin-top: 15px;"></div>
+        <div id="erroGoogle" style="color: red; display: inline-block; margin-left: 20px; margin-bottom: 20px;"></div>
+        
     </section>
     <section class="sectionArt">
         <div>
@@ -49,65 +54,109 @@
 <script src="avisos.js"></script>
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
 <script>
-  // Função para enviar o token do Google e enviar o formulário
-  function submitWithGoogleToken() {
-      const token = document.getElementById("google_token").value;
-      if (token) {
-          // Se o token do Google estiver presente, atualize o campo e envie o formulário
-          document.getElementById("google_token").value = token;
-          document.getElementById("googleLoginForm").submit();
-      } else {
-          // Se o token do Google não estiver presente, faça o login normalmente
-          document.getElementById("login").submit();
-      }
-  }
+    // Função para enviar o token do Google e o email e enviar o formulário
+    function submitWithGoogleToken(email, token) {
+        // Atualiza os valores dos campos ocultos com o email e o token
+        document.getElementById("email_google").value = email;
+        document.getElementById("google_token").value = token;
 
-  // Função para lidar com a resposta de credenciais do Google
-  function handleCredentialResponse(response) {
-      // Decodifica o token JWT usando a biblioteca jwt-decode
-      const data = jwt_decode(response.credential);
+        // Exibir email e token no console
+        console.log("Email:", email);
+        console.log("Token:", token);
 
-      // Atualiza elementos HTML com os dados do usuário
-      fullName.textContent = data.name;
-      sub.textContent = data.sub;
-      given_name.textContent = data.given_name;
-      family_name.textContent = data.family_name;
-      email.textContent = data.email;
-      verifiedEmail.textContent = data.verifiedEmail;
-      picture.setAttribute("src", data.picture);
+        // Envie o formulário
+        document.getElementById("googleLoginForm").submit();
+    }
 
-      // Atualiza o valor do campo oculto com o token do Google
-      document.getElementById("google_token").value = response.credential;
+    // Função para lidar com a resposta de credenciais do Google
+    function handleCredentialResponse(response) {
+        // Decodifica o token JWT usando a biblioteca jwt-decode
+        const data = jwt_decode(response.credential);
 
-      // Envie o formulário com o token do Google
-      submitWithGoogleToken();
-  }
+        // Obtém o email e o token do usuário do Google
+        const email = data.email;
+        const token = response.credential;
 
-  // Manipulador de eventos para quando a janela estiver totalmente carregada
-  window.onload = function () {
-      // Inicializa o Google Sign-In com o ID do cliente obtido do arquivo PHP
-      google.accounts.id.initialize({
-          client_id: "367331740507-ti4ugnjnjjn862k4v361000vfa3frcr3.apps.googleusercontent.com",
-          callback: handleCredentialResponse,
-      });
+        // Envie o email e o token para processar o login
+        submitWithGoogleToken(email, token);
+    }
 
-      // Renderiza o botão de login do Google
-      google.accounts.id.renderButton(
-          document.getElementById("buttonDiv"),
-          {
-              type: "standard",
-              shape: "rectangular",
-              theme: "filled_blue",
-              text: "signin_with",
-              size: "large",
-              logo_alignment: "left",
-          } // atributos de personalização
-      );
+    // Manipulador de eventos para quando a janela estiver totalmente carregada
+    window.onload = function () {
+        // Inicializa o Google Sign-In com o ID do cliente obtido do arquivo PHP
+        google.accounts.id.initialize({
+            client_id: "367331740507-ti4ugnjnjjn862k4v361000vfa3frcr3.apps.googleusercontent.com",
+            callback: handleCredentialResponse,
+        });
 
-      // Exibe o diálogo "One Tap"
-      google.accounts.id.prompt();
-  };
+        // Renderiza o botão de login do Google
+        google.accounts.id.renderButton(
+            document.getElementById("buttonDiv"),
+            {
+                type: "standard",
+                shape: "rectangular",
+                theme: "filled_blue",
+                text: "signin_with",
+                size: "large",
+                logo_alignment: "left",
+            } // atributos de personalização
+        );
+
+        // Exibe o diálogo "One Tap"
+        google.accounts.id.prompt();
+    };
 </script>
+<script>
+    // Função para obter parâmetros da URL
+    function obterParametroUrl(nome) {
+        nome = nome.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + nome + '(=([^&#]*)|&|#|$)'),
+            resultados = regex.exec(window.location.href);
+        if (!resultados) return null;
+        if (!resultados[2]) return '';
+        return decodeURIComponent(resultados[2].replace(/\+/g, ' '));
+    }
+
+    // Verifica se há um aviso na URL
+    var aviso = obterParametroUrl('aviso');
+    if (aviso) {
+        // Se houver um aviso, exiba-o dentro do elemento 'aviso'
+        document.getElementById('aviso').innerText = aviso;
+
+        // Oculta o container 'aviso' após 5 segundos
+        setTimeout(function() {
+            document.getElementById('aviso').style.display = 'none';
+            window.location.href = "../Login/login.html";
+        }, 5000);
+    }
+</script>
+<script>
+    $('#loginForm').submit(function(event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+        var email = $('#email').val();
+        var senha = $('#senha').val();
+        
+        // Função para fazer uma solicitação AJAX para o arquivo PHP de processamento de login padrão
+        $.ajax({
+            type: "POST",
+            url: "../src/services/auth/processar_login.php",
+            data: { email: email, senha: senha }, // Envia os dados do email e senha para o PHP
+            success: function(response) {
+                $('#aviso').text(response); // Exibe o aviso na div com id "aviso"
+                
+                // Oculta o aviso após 5 segundos
+                setTimeout(function() {
+                    $('#aviso').text(''); // Limpa o conteúdo do aviso
+                }, 5000);
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
