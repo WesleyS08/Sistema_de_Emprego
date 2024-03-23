@@ -90,7 +90,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Questionarios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionarios` (
-  `Id_Questionario` INT NOT NULL,
+  `Id_Questionario` INT NOT NULL AUTO_INCREMENT,
   `Area` VARCHAR(255) NULL,
   `Nivel_de_Dificuldade` VARCHAR(55) NULL,
   `Questoes` VARCHAR(255) NULL,
@@ -102,7 +102,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Resultados`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Resultados` (
-  `Tb_Questionarios_ID` INT NOT NULL,
+  `Tb_Questionarios_ID` INT NOT NULL AUTO_INCREMENT,
   `Tb_Candidato_CPF` VARCHAR(12) NOT NULL,
   `Nota` INT NULL,
   `Quantidade_de_Acertos` INT NULL,
@@ -128,7 +128,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Anuncios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Anuncios` (
-  `Id_Anuncios` INT NOT NULL,
+  `Id_Anuncios` INT NOT NULL AUTO_INCREMENT,
   `Categoria` VARCHAR(45) NULL,
   `Titulo` VARCHAR(45) NULL,
   `Descricao` VARCHAR(45) NULL,
@@ -149,7 +149,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Vagas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Vagas` (
-  `Tb_Anuncios_Id` INT NOT NULL,
+  `Tb_Anuncios_Id` INT NOT NULL AUTO_INCREMENT,
   `Tb_Empresa_CNPJ` VARCHAR(14) NOT NULL,
   `Estados` VARCHAR(45) NULL,
   `Data_de_Termino` DATETIME NULL,
@@ -173,7 +173,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Inscricoes`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Inscricoes` (
-  `Tb_Vagas_Tb_Anuncios_Id` INT NOT NULL,
+  `Tb_Vagas_Tb_Anuncios_Id` INT NOT NULL AUTO_INCREMENT,
   `Tb_Vagas_Tb_Empresa_CNPJ` VARCHAR(14) NOT NULL,
   `Tb_Candidato_CPF` VARCHAR(12) NOT NULL,
   `Data_de _Inscricao` DATETIME NULL,
@@ -197,7 +197,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Cursos`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Cursos` (
-  `Id_Cursos` INT NOT NULL,
+  `Id_Cursos` INT NOT NULL AUTO_INCREMENT,
   `Tema` VARCHAR(45) NULL,
   `Duracao` VARCHAR(45) NULL,
   `Certificado` VARCHAR(45) NULL,
@@ -214,7 +214,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Recomendacoes` (
   `Tb_Candidato_CPF` VARCHAR(12) NOT NULL,
-  `Tb_Cursos_Id` INT NOT NULL,
+  `Tb_Cursos_Id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`Tb_Candidato_CPF`, `Tb_Cursos_Id`),
   INDEX `fk_Tb_Candidato_has_Tb_Cursos_Tb_Cursos1_idx` (`Tb_Cursos_Id` ASC) ,
   INDEX `fk_Tb_Candidato_has_Tb_Cursos_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC) ,
@@ -235,7 +235,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Respostas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Respostas` (
-  `idtb_Respostas` INT NOT NULL,
+  `idtb_Respostas` INT NOT NULL AUTO_INCREMENT,
   `Errada` VARCHAR(255) NULL,
   `Errada2` VARCHAR(255) NULL,
   `Errada3` VARCHAR(255) NULL,
