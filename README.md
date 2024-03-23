@@ -44,10 +44,19 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 |   |   |-- images/
 |   |   |-- styles/
 |   |-- components/
+|   |   |-- PHPMailer-master
 |   |-- services/
 |   |   |-- auth/
 |   |   |   |-- processar_login.php
+|   |   |   |-- verificarRecrutador.php
+|   |   |   |-- verificarUsuario.php
+|   |   |-- cadastros/
+|   |   |   |-- cadastro.php
+|   |   |   |-- cadastroRecrutador.php
 |   |   |-- api.js
+|   |   |-- conexão_com_banco.php
+|   |   |-- criar_banco.php
+|   |   |-- google_credentials.php
 |   |-- views/
 |   |-- App.js
 |   |-- index.js
