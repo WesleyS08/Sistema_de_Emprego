@@ -132,31 +132,5 @@
         }, 5000);
     }
 </script>
-<script>
-    $('#loginForm').submit(function(event) {
-        event.preventDefault(); // Impede o envio padrão do formulário
-        var email = $('#email').val();
-        var senha = $('#senha').val();
-        
-        // Função para fazer uma solicitação AJAX para o arquivo PHP de processamento de login padrão
-        $.ajax({
-            type: "POST",
-            url: "../src/services/auth/processar_login.php",
-            data: { email: email, senha: senha }, // Envia os dados do email e senha para o PHP
-            success: function(response) {
-                $('#aviso').text(response); // Exibe o aviso na div com id "aviso"
-                
-                // Oculta o aviso após 5 segundos
-                setTimeout(function() {
-                    $('#aviso').text(''); // Limpa o conteúdo do aviso
-                }, 5000);
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-            }
-        });
-    });
-</script>
-
 </body>
 </html>

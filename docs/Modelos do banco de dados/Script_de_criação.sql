@@ -21,7 +21,7 @@ USE `SIAS` ;
 -- Table `SIAS`.`Tb_Pessoas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Pessoas` (
-  `Id_Pessoas` INT NOT NULL AUTO_INCREMENT, -- Adicionado AUTO_INCREMENT
+  `Id_Pessoas` INT NOT NULL AUTO_INCREMENT,
   `Email` VARCHAR(45) NULL,
   `Senha` VARCHAR(255) NULL,
   `Nome` VARCHAR(45) NULL,
@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Pessoas` (
   PRIMARY KEY (`Id_Pessoas`)
 )
 ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Candidato`
@@ -129,19 +130,22 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Anuncios` (
   `Id_Anuncios` INT NOT NULL AUTO_INCREMENT,
-  `Categoria` VARCHAR(45) NULL,
-  `Titulo` VARCHAR(45) NULL,
-  `Descricao` VARCHAR(45) NULL,
-  `Area` VARCHAR(45) NULL,
-  `Cidade` VARCHAR(45) NULL,
-  `Nivel_Operacional` VARCHAR(45) NULL,
-  `Img` VARCHAR(45) NULL,
-  `Data_de_Criacao` DATETIME NULL,
-  `Modalidade` VARCHAR(45) NULL,
-  `Responsabilidade` VARCHAR(45) NULL,
-  `Beneficicios` VARCHAR(45) NULL,
-  `Requisitos` VARCHAR(45) NULL,
-  PRIMARY KEY (`Id_Anuncios`))
+  `Categoria` varchar(45) DEFAULT NULL,
+  `Titulo` varchar(45) DEFAULT NULL,
+  `Descricao` varchar(45) DEFAULT NULL,
+  `Area` varchar(45) DEFAULT NULL,
+  `Cidade` varchar(45) DEFAULT NULL,
+  `Nivel_Operacional` varchar(45) DEFAULT NULL,
+  `Img` varchar(45) DEFAULT NULL,
+  `Data_de_Criacao` datetime DEFAULT NULL,
+  `Modalidade` varchar(45) DEFAULT NULL,
+  `Responsabilidade` varchar(45) DEFAULT NULL,
+  `Beneficicios` varchar(45) DEFAULT NULL,
+  `Requisitos` varchar(45) DEFAULT NULL,
+  `Horario` varchar(45) NOT NULL,
+  `Estado` varchar(45) NOT NULL,
+  `Jornada` varchar(45) NOT NULL,
+  PRIMARY KEY (`Id_Anuncios`));
 ENGINE = InnoDB;
 
 

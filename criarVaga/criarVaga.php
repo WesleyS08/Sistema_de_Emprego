@@ -1,20 +1,42 @@
+<?php
+session_start();
+include "../src/services/conexão_com_banco.php";
+if (
+    (
+        !isset ($_SESSION['email_session']) ||
+        !isset ($_SESSION['senha_session']) ||
+        $_SESSION['tipo_usuario'] !== 'empresa'
+    ) &&
+    (
+        !isset ($_SESSION['google_session']) ||
+        !isset ($_SESSION['token_session']) ||
+        $_SESSION['google_usuario'] !== 'empresa'
+    )
+) {
+    header("Location: ../Login/login.html");
+    exit;
+}
+$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anunciar</title>
     <link rel="stylesheet" type="text/css" href="criaVaga.css">
 </head>
+
 <body>
     <nav>
         <input type="checkbox" id="check">
         <label for="check" class="menuBtn">
             <img src="../imagens/menu.svg">
         </label>
-        <label id="logo">SIAS</label>        
-        <button class="btnModo"><img src="../imagens/moon.svg"></button>   
-        <ul>        
+        <label id="logo">SIAS</label>
+        <button class="btnModo"><img src="../imagens/moon.svg"></button>
+        <ul>
             <li><a href="#">Anunciar</a></li>
             <li><a href="#">Minhas vagas</a></li>
             <li><a href="#">Meus testes</a></li>
@@ -23,20 +45,20 @@
     </nav>
     <article>
         <h2>Criação de Vaga</h2>
-        <form id="formvaga" method="post" action="../src/services/cadastros/vaga.php">
+        <form id="formvaga" method="POST" action="../src/services/cadastros/vaga.php">
             <div class="divFlexBox">
                 <div class="divEsquerda">
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="titulo" type="text" required>
+                                <input class="inputAnimado" id="titulo" name="titulo" type="text" required>
                                 <div class="labelLine">Título</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="area" type="text" list="areaList" required>
+                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required>
                                 <div class="labelLine">Área</div>
                                 <datalist id="areaList">
                                     <option>TI</option>
@@ -48,14 +70,14 @@
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="estado" type="text" required>
+                                <input class="inputAnimado" name="estado" id="estado" type="text" required>
                                 <div class="labelLine">Estado</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="cidade" type="text" required>
+                                <input class="inputAnimado" id="cidade" name="cidade" type="text" required>
                                 <div class="labelLine">Cidade</div>
                             </div>
                             <small name="aviso"></small>
@@ -64,14 +86,16 @@
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="endereco" type="text" placeholder="Rua Fulano de Tal, 123" required>
+                                <input class="inputAnimado" name="endereco" id="endereco" type="text"
+                                    placeholder="Rua Fulano de Tal, 123" required>
                                 <div class="labelLine">Endereço</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="horario" type="text" placeholder="De segunda a sexta, das 9:00 às 16:00" required>
+                                <input class="inputAnimado" name="horario" id="horario" type="text"
+                                    placeholder="De segunda a sexta, das 9:00 às 16:00" required>
                                 <div class="labelLine">Carga horária</div>
                             </div>
                             <small name="aviso"></small>
@@ -79,72 +103,79 @@
                     </div>
                     <div class="containerInput">
                         <div class="contentInputTextArea">
-                            <textarea class="textAreaAnimada" id="descricao" type="text" required></textarea>
+                            <textarea class="textAreaAnimada" name="descricao" id="descricao" type="text"
+                                required></textarea>
                             <div class="textArealabelLine">Descrição da Vaga</div>
                         </div>
                         <small name="aviso"></small>
                     </div>
                 </div>
-                
                 <div class="divDireita">
                     <div class="containerInput">
                         <div class="contentInputTextArea">
-                            <textarea class="textAreaAnimada" id="requisitos" type="text" required></textarea>
+                            <textarea class="textAreaAnimada" name="requisitos" id="requisitos" type="text"
+                                required></textarea>
                             <div class="textArealabelLine">Requisitos</div>
                         </div>
                         <small name="aviso"></small>
                     </div>
                     <div class="containerInput">
                         <div class="contentInputTextArea">
-                            <textarea class="textAreaAnimada" id="beneficios" type="text" required></textarea>
+                            <textarea class="textAreaAnimada" name="beneficios" id="beneficios" type="text"
+                                required></textarea>
                             <div class="textArealabelLine">Benefícios</div>
                         </div>
                         <small name="aviso"></small>
                     </div>
-                </div>   
+                </div>
             </div>
             <div class="divRadios">
-                <div class="divRadiosContent">                    
+                <div class="divRadiosContent">
                     <h3>Jornada:</h3>
-                    <input type="radio" name="jornada" id="meioPeriodo" required>
-                    <input type="radio" name="jornada" id="integral" required>
-                    <label for="meioPeriodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>                
+                    <input type="radio" name="jornada" id="meioPeriodo" value="Meio período" required>
+                    <input type="radio" name="jornada" id="integral" value="Integral" required>
+                    <label for="meioPeriodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>
                     <label for="integral" class="btnRadio" id="btnIntegral">Integral</label>
                 </div>
-                <div class="divRadiosContent">                    
+                <div class="divRadiosContent">
                     <h3>Modalidade:</h3>
-                    <input type="radio" name="modalidade" id="remoto" required>
-                    <input type="radio" name="modalidade" id="presencial" required>
-                    <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>                
+                    <input type="radio" name="modalidade" id="remoto" value="Remoto" required>
+                    <input type="radio" name="modalidade" id="presencial" value="Presencial" required>
+                    <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>
                     <label for="presencial" class="btnRadio" id="btnPresencial">Presencial</label>
                 </div>
-                <div class="divRadiosContent">                    
+                <div class="divRadiosContent">
                     <h3>Tipo de profissional:</h3>
-                    <input type="radio" name="tipo" id="jovemAprendiz" required>
-                    <input type="radio" name="tipo" id="estagio" required>
-                    <input type="radio" name="tipo" id="clt" required>
-                    <input type="radio" name="tipo" id="pj" required>
-                    <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem Aprendiz</label>                
+                    <input type="radio" name="tipo" id="jovemAprendiz" value="Jovem Aprendiz" required>
+                    <input type="radio" name="tipo" id="estagio" value="Estágio" required>
+                    <input type="radio" name="tipo" id="clt" value="CLT" required>
+                    <input type="radio" name="tipo" id="pj" value="PJ" required>
+                    <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem Aprendiz</label>
                     <label for="estagio" class="btnRadio" id="btnEstagio">Estágio</label>
                     <label for="clt" class="btnRadio" id="btnClt">CLT</label>
                     <label for="pj" class="btnRadio" id="btnPj">PJ</label>
                 </div>
-                <div class="divRadiosContent">                    
+                <div class="divRadiosContent">
                     <h3>Nível:</h3>
-                    <input type="radio" name="nivel" id="medio" required>
-                    <input type="radio" name="nivel" id="tecnico" required>
-                    <input type="radio" name="nivel" id="superior" required>
-                    <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>                
+                    <input type="radio" name="nivel" id="medio" value="Ensino Médio" required>
+                    <input type="radio" name="nivel" id="tecnico" value="Técnico" required>
+                    <input type="radio" name="nivel" id="superior" value="Superior" required>
+                    <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
                     <label for="tecnico" class="btnRadio" id="btnTecnico">Técnico</label>
                     <label for="superior" class="btnRadio" id="btnSuperior">Superior</label>
                 </div>
             </div>
-            <div class="divSalvar">                
+            <input type="hidden" name="email_session"
+                value="<?php echo isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : ''; ?>">
+            <input type="hidden" name="token_session"
+                value="<?php echo isset ($_SESSION['token_session']) ? $_SESSION['token_session'] : ''; ?>">
+            <div class="divSalvar">
                 <input type="submit" value="Salvar" class="btnSalvar">
-            </div>            
-        </form>       
+            </div>
+        </form>
     </article>
-<script src="modoNoturno.js"></script>
-<script src="radioButtons.js"></script>
+    <script src="modoNoturno.js"></script>
+    <script src="radioButtons.js"></script>
 </body>
+
 </html>
