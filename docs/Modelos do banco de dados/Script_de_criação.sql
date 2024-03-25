@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Anuncios` (
   `Horario` varchar(45) NOT NULL,
   `Estado` varchar(45) NOT NULL,
   `Jornada` varchar(45) NOT NULL,
-  PRIMARY KEY (`Id_Anuncios`));
+  PRIMARY KEY (`Id_Anuncios`))
 ENGINE = InnoDB;
 
 
