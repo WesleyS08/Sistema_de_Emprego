@@ -1,23 +1,35 @@
 <?php
 session_start();
 include "../src/services/conexão_com_banco.php";
+
+// Verifica se o usuário está autenticado como empresa
 if (
     (
-        !isset ($_SESSION['email_session']) ||
-        !isset ($_SESSION['senha_session']) ||
+        !isset($_SESSION['email_session']) ||
+        !isset($_SESSION['senha_session']) ||
         $_SESSION['tipo_usuario'] !== 'empresa'
-    ) &&
-    (
-        !isset ($_SESSION['google_session']) ||
-        !isset ($_SESSION['token_session']) ||
+    ) XOR (
+        !isset($_SESSION['google_session']) ||
+        !isset($_SESSION['token_session']) ||
         $_SESSION['google_usuario'] !== 'empresa'
     )
 ) {
     header("Location: ../Login/login.html");
     exit;
 }
-$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+
+// Atribuindo os valores das variáveis de sessão
+$emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
+$tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
+
+// Definindo a variável $emailUsuario
+$emailUsuario = $emailSession;
+
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -164,13 +176,15 @@ $nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '
                     <label for="tecnico" class="btnRadio" id="btnTecnico">Técnico</label>
                     <label for="superior" class="btnRadio" id="btnSuperior">Superior</label>
                 </div>
-            </div>
-            <input type="hidden" name="email_session"
-                value="<?php echo isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : ''; ?>">
-            <input type="hidden" name="token_session"
-                value="<?php echo isset ($_SESSION['token_session']) ? $_SESSION['token_session'] : ''; ?>">
+                </div>
+                <input type="hidden" name="email_session" value="<?php echo $emailSession; ?>">
+            <input type="hidden" name="token_session" value="<?php echo $tokenSession; ?>">
+            <input type="hidden" name="email_session" value="<?php echo $emailSession; ?>">
+            <input type="hidden" name="nome_usuario" value="<?php echo $nomeUsuario; ?>">
+            <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
+
             <div class="divSalvar">
-                <input type="submit" value="Salvar" class="btnSalvar">
+            <input type="submit" value="Salvar" class="btnSalvar">
             </div>
         </form>
     </article>
