@@ -1,5 +1,3 @@
-/* ------------------------- Header -------------------------*/
-
 :root{
     --laranja: #EC6809;
     --laranjaClaro: #ee8840;
@@ -20,6 +18,56 @@ body{
     font-family: Arial, sans-serif;
     background-color: whitesmoke;
 }
+
+/* ------------------------- Article Comum -------------------------*/
+
+.commonArticle{
+    padding: 40px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.commonArticle h2{
+    margin-bottom: 6px;
+}
+
+.commonArticle button:hover{
+    border: 1px solid black;
+}
+
+.divCommonContent{
+    width: 1150px;
+}
+
+h2{
+    font-size: 24pt;
+}
+
+button{
+    color: whitesmoke;
+    background-color: black;
+    width: 130px;
+    padding: 10px 0;
+    border: 1px solid black;
+    font-size: 12pt;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+button:hover{
+    color: black;
+    background-color: whitesmoke;
+    border: 1px solid whitesmoke;
+    transition: 0.2s;
+}
+
+.divTitulo{
+    margin-bottom: 24px;
+}
+
+/* ------------------------- Header -------------------------*/
 
 nav{
     background-color: var(--laranja);
@@ -117,31 +165,13 @@ nav ul li a:hover{
     color: whitesmoke;
 }
 
+.divTituloDigitavel{
+    display: flex;
+    justify-content: center;
+}
+
 .articleTitle h1{
     font-size: 44pt;
-}
-
-.articleTitle p{
-    margin: 10px 0px 20px 0px;
-}
-
-button{
-    color: whitesmoke;
-    background-color: black;
-    width: 130px;
-    padding: 10px 0;
-    border: 1px solid black;
-    font-size: 12pt;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.5s ease;
-}
-
-button:hover{
-    color: black;
-    background-color: whitesmoke;
-    border: 1px solid whitesmoke;
-    transition: 0.2s;
 }
 
 .articleTitle i{
@@ -165,30 +195,32 @@ button:hover{
     }
   }
 
+  .articleTitle p{
+    margin: 10px 0px 20px 0px;
+  }
   
   /* ------------------------- Article dos Anúncios -------------------------*/
 
 .articleAnuncios{
-    padding: 10px;
-    margin: 10px 0px 30px 0px
+    margin: 20px 0px 30px 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.divContentAnuncios{
+    width: 1270px;
 }
 
 .articleAnuncios h2{
-    font-size: 24pt;
     text-align: center;
-}
-
-.divTitulo{
-    display: flex; justify-content: center; align-items: center;
 }
 
 /* ------------------------- Carrosel dos Anúncios -------------------------*/
 
 .carrosselBox{
-    margin-top: 10px;
     display: flex;
     align-items: center;
-    height: 200px;
+    height: 190px;
     width: auto;
     overflow: hidden;
 }
@@ -207,6 +239,7 @@ button:hover{
     font-weight: bold;
     cursor: pointer;
     margin-top: 70px;
+    transition: 0.5s ease;
 }
 
 .btnLeftSlider:hover, .btnRightSlider:hover{
@@ -222,7 +255,6 @@ button:hover{
 .btnRightSlider{
     float: right;
 }
-
   
 /* ------------------------- Post -------------------------*/
 
@@ -282,28 +314,15 @@ button:hover{
     right: 0;
 }
 
-/* ------------------------- Article Comum -------------------------*/
+/* ------------------------- Div de testes -------------------------*/
 
-.commonArticle{
-    padding: 40px;
-    margin: 20px 0;
+.flexTestes{
+    display: flex;
 }
-
-.commonArticle h2{
-    font-size: 24pt;
-    margin-bottom: 6px;
-}
-
-.commonArticle button:hover{
-    border: 1px solid black;
-}
-
-/* ------------------------- Grid de testes -------------------------*/
 
 .gridTestes{
     display: grid;
-    grid-template-columns: 600px 600px;
-    margin: 16px 0px 4px 0px;
+    width: 100%;
 }
 
 /* ------------------------- post do Teste -------------------------*/
@@ -311,8 +330,8 @@ button:hover{
 .testeLink{
     cursor: pointer;
     transition: 0.5s ease;
-    margin: 20px 0px;
-    width: 550px;
+    width: 100%;    
+    margin-bottom: 20px;
 }
 
 .testeLink:hover{
@@ -363,14 +382,13 @@ button:hover{
 
 .divComentarios{
     display: flex;
+    justify-content: center;
     align-items: center;
-    margin-top: 30px;
 }
 
 .divComentarios button{
     padding: 8px;
     height: 130px;
-    margin-left: 20px;
 }
 
 .divComentarios button img{
@@ -383,7 +401,7 @@ button:hover{
     transition: 0.5s ease;
     width: 230px;
     height: 230px;
-    margin-right: 30px;
+    margin-right: 24px;
 }
 
 .comentarioLink:hover{
@@ -449,24 +467,11 @@ button:hover{
     margin-left: 4px;
 }
 
-/* ------------------------- Article Carrosel Infinito -------------------------*/
-
-.articleCarroselInfinito{
-    margin: 60px 0px 90px 0px;
-}
-
-.articleCarroselInfinito h2{
-    font-size: 24pt;
-    margin-left: 40px;
-}
-
 /* ------------------------- Carrosel Infinito -------------------------*/
 
 .carrosselInfinito{
-    margin-top: 30px;    
-    position: relative;   
-    display: grid;
-    place-items: center; 
+    margin-bottom: 40px;   
+    position: relative; 
     overflow: hidden;
 }
 
@@ -519,7 +524,7 @@ button:hover{
 }
 
 .slide img{
-    transition: 0.5s;
+    transition: 0.5s ease;
 }
 
 .slide img:hover{
@@ -542,9 +547,8 @@ footer{
 footer a{
     cursor: pointer;
     color: whitesmoke;
-    text-decoration:underline;
+    text-decoration: underline;
     font-weight: bold;
-    transition: 0.5s;
     margin-right: 30px;
 }
 
