@@ -35,15 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ../../../../../HomeRecrutador/homeRecrutador.php");
                 exit;
             } else {
-                $aviso = "Usuário não encontrado ou senha incorreta. Por favor, tente novamente.";
+                header("Location: ../../../../../Login/login.html?aviso=" . urlencode("Usuário não encontrado ou senha incorreta. Por favor, tente novamente.."));
+                exit;
             }
         }
     } else {
-        $aviso = "Por favor, preencha todos os campos.";
+        header("Location: ../../../../../Login/login.html?aviso=" . urlencode("Algo deu errado. Tente novamente."));
+        exit;
     }
 }
-
-if (!empty($aviso)) {
-    echo $aviso;
-}
-?>

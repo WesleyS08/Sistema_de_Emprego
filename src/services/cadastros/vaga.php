@@ -20,13 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modalidadeVaga = mysqli_real_escape_string($_con, $_POST['modalidade']);
     $categoriaVaga = mysqli_real_escape_string($_con, $_POST['tipo']);
     $nivelVaga = mysqli_real_escape_string($_con, $_POST['nivel']);
-    $emailSession = mysqli_real_escape_string($_con, $_POST['email_session']);
-    $tokenSession = mysqli_real_escape_string($_con, $_POST['token_session']);
+    $emailUsuario = mysqli_real_escape_string($_con, $_POST['emailSession']); // Corrigido aqui
 
     date_default_timezone_set('America/Sao_Paulo'); // Define o fuso horário para São Paulo
     $dataEhoraDeHoje = date("Y-m-d H:i:s"); // Obtém a data e hora atual
 
-    $estado = "aberto";
+    $estado = "Aberta";
 
     // Inserir os dados da vaga na tabela Tb_anuncios para salvar no banco.
     $sql_inserir_vaga = "INSERT INTO Tb_Anuncios (Categoria, Titulo, Descricao, Area, Cidade, Nivel_Operacional, Data_de_Criacao, Modalidade, Beneficicios, Requisitos, Horario, Estado, Jornada) 
@@ -43,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Consultar o CNPJ da empresa associada ao e-mail da sessão
         $sql_consulta_cnpj = "SELECT CNPJ FROM Tb_Empresa 
                                 JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas 
-                                WHERE Tb_Pessoas.Email = '$emailSession'";
+                                WHERE Tb_Pessoas.Email = '$emailUsuario'";
         
         $result_consulta_cnpj = mysqli_query($_con, $sql_consulta_cnpj);
 

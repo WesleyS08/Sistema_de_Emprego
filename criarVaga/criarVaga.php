@@ -2,33 +2,30 @@
 session_start();
 include "../src/services/conexão_com_banco.php";
 
-// Verifica se o usuário está autenticado como empresa
-if (
-    (
-        !isset($_SESSION['email_session']) ||
-        !isset($_SESSION['senha_session']) ||
-        $_SESSION['tipo_usuario'] !== 'empresa'
-    ) XOR (
-        !isset($_SESSION['google_session']) ||
-        !isset($_SESSION['token_session']) ||
-        $_SESSION['google_usuario'] !== 'empresa'
-    )
-) {
+// Verificar se o usuário está autenticado como empresa
+$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$emailUsuario = '';
+
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset ($_SESSION['email_session']) && isset ($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
+    // Se estiver autenticado com e-mail/senha e for do tipo empresa
+    $emailUsuario = $_SESSION['email_session'];
+    
+} elseif (isset ($_SESSION['google_session']) && isset ($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
+    // Se estiver autenticado com o Google e for do tipo empresa
+    $emailUsuario = $_SESSION['google_session'];
+} else {
+    // Se não estiver autenticado como empresa, redirecione para a página de login
     header("Location: ../Login/login.html");
     exit;
 }
-
-$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 
 // Atribuindo os valores das variáveis de sessão
-$emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
-$tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
-
-// Definindo a variável $emailUsuario
-$emailUsuario = $emailSession;
+$emailSession = isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
+$tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -176,13 +173,9 @@ $emailUsuario = $emailSession;
                     <label for="tecnico" class="btnRadio" id="btnTecnico">Técnico</label>
                     <label for="superior" class="btnRadio" id="btnSuperior">Superior</label>
                 </div>
-                </div>
-                <input type="hidden" name="email_session" value="<?php echo $emailSession; ?>">
-            <input type="hidden" name="token_session" value="<?php echo $tokenSession; ?>">
-            <input type="hidden" name="email_session" value="<?php echo $emailSession; ?>">
-            <input type="hidden" name="nome_usuario" value="<?php echo $nomeUsuario; ?>">
-            <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
-
+            </div>
+            <input type="hidden" name="emailSession" value="<?php echo $emailUsuario; ?>">
+            
             <div class="divSalvar">
             <input type="submit" value="Salvar" class="btnSalvar">
             </div>

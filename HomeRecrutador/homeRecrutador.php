@@ -1,26 +1,24 @@
 <?php
-session_start();
 include "../src/services/conexão_com_banco.php";
+session_start();
+// Obtendo o nome do usuário da sessão PHP
+$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$emailUsuario = '';
 
-// Verificar se o usuário está logado como empresa
-if (
-    (
-        !isset($_SESSION['email_session']) ||
-        !isset($_SESSION['senha_session']) ||
-        $_SESSION['tipo_usuario'] !== 'empresa'
-    ) XOR
-    (
-        !isset($_SESSION['google_session']) ||
-        !isset($_SESSION['token_session']) ||
-        $_SESSION['google_usuario'] !== 'empresa'
-    )
-) {
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset ($_SESSION['email_session']) && isset ($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
+    // Se estiver autenticado com e-mail/senha e for do tipo empresa
+    $emailUsuario = $_SESSION['email_session'];
+
+} elseif (isset ($_SESSION['google_session']) && isset ($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
+    // Se estiver autenticado com o Google e for do tipo empresa
+    $emailUsuario = $_SESSION['google_session'];
+} else {
+    // Se não estiver autenticado como empresa, redirecione para a página de login
     header("Location: ../Login/login.html");
     exit;
 }
-// Obtendo o nome do usuário da sessão PHP
-$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-$emailUsuario = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
+
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
 JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
 JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
@@ -38,7 +36,15 @@ if ($result === false) {
     echo "Erro na consulta: " . $_con->error;
     exit;
 }
+$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+
+// Atribuindo os valores das variáveis de sessão
+$emailSession = isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
+$tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -72,12 +78,12 @@ if ($result === false) {
         </div>
         <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique agora
             mesmo!</p>
-        <button onclick="redirectToCriarVaga()">Anunciar</button>
+        <button onclick="window.location.href='../criarVaga/criarVaga.php'">Anunciar</button>
     </article>
     <article class="articleCarrossel">
         <div class="divTitulo">
             <h2>Meus anúncios</h2>
-            <button onclick="redirectToCriarVaga()" class="adicionar">+</button>
+            <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="adicionar">+</button>
         </div>
         <div class="divCarrosel">
             <a class="btnLeftSlider" id="leftAnuncios">
@@ -99,7 +105,7 @@ if ($result === false) {
                                         echo '<img src="../imagens/estagio.svg">';
 
                                         // Verifique se a chave "Categoria" existe antes de tentar acessá-la
-                                        if (isset($row["Categoria"])) {
+                                        if (isset ($row["Categoria"])) {
                                             echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
                                         } else {
                                             // Se "Categoria" não estiver definida, imprima uma mensagem alternativa ou deixe em branco
@@ -111,14 +117,14 @@ if ($result === false) {
 
                                         // Faça o mesmo para outras chaves, como "Titulo", "Descricao", "Data_de_Criacao", etc.
                                         // Certifique-se de verificar isset() para cada chave
-
-                                        echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                                        echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
+                                    
+                                        echo '<h3 class="nomeVaga">' . (isset ($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
+                                        echo '<p class="empresaVaga">' . (isset ($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
                                         echo '</section>';
                                         echo '<p class="statusVaga" style="color: green;">Aberta</p>';
 
                                         // Mostrar apenas a data sem a hora
-                                        $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
+                                        $dataCriacao = isset ($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                                         echo '<p class="dataVaga">' . $dataCriacao . '</p>';
 
                                         echo '</article>';
@@ -383,17 +389,6 @@ if ($result === false) {
             console.log("Nome do usuário está vazio!");
         }
     </script>
-    <script>
-    function redirectToCriarVaga() {
-        // Obtendo o nome do usuário da sessão PHP
-        var nomeUsuario = "<?php echo $nomeUsuario; ?>";
-        var emailUsuario = "<?php echo $emailUsuario; ?>"; // Adicionando o email do usuário
-
-        // Redirecionando para a página criarVaga.php com parâmetros
-        window.location.href = '../criarVaga/criarVaga.php?nome=' + encodeURIComponent(nomeUsuario) + '&email=' + encodeURIComponent(emailUsuario);
-    }
-</script>
-
 
 </body>
 
