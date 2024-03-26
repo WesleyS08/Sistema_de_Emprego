@@ -1,7 +1,10 @@
 <?php
 include "../src/services/conexão_com_banco.php";
+
 session_start();
-// Obtendo o nome do usuário da sessão PHP
+
+
+// Verificar se o usuário está autenticado como empresa
 $nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 $emailUsuario = '';
 
@@ -9,7 +12,7 @@ $emailUsuario = '';
 if (isset ($_SESSION['email_session']) && isset ($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
     // Se estiver autenticado com e-mail/senha e for do tipo empresa
     $emailUsuario = $_SESSION['email_session'];
-
+    
 } elseif (isset ($_SESSION['google_session']) && isset ($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
     // Se estiver autenticado com o Google e for do tipo empresa
     $emailUsuario = $_SESSION['google_session'];
@@ -18,6 +21,9 @@ if (isset ($_SESSION['email_session']) && isset ($_SESSION['tipo_usuario']) && $
     header("Location: ../Login/login.html");
     exit;
 }
+$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+
+
 
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
 JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
@@ -36,7 +42,6 @@ if ($result === false) {
     echo "Erro na consulta: " . $_con->error;
     exit;
 }
-$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 
 // Atribuindo os valores das variáveis de sessão
 $emailSession = isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : '';

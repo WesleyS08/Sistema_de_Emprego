@@ -10,37 +10,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($email) && !empty($senha)) {
         $senha_sha1 = sha1($senha);
 
-        $sql_candidato = "SELECT * FROM Tb_Pessoas JOIN Tb_Candidato ON Tb_Pessoas.Id_Pessoas = Tb_Candidato.Tb_Pessoas_Id WHERE Email = '$email' AND Senha = '$senha_sha1'";
-        $result_candidato = mysqli_query($_con, $sql_candidato);
+        $sql_pessoa = "SELECT * FROM Tb_Pessoas WHERE Email = '$email' AND Senha = '$senha_sha1'";
+        $result_pessoa = mysqli_query($_con, $sql_pessoa);
 
-        $sql_empresa = "SELECT * FROM Tb_Pessoas JOIN Tb_Empresa ON Tb_Pessoas.Id_Pessoas = Tb_Empresa.Tb_Pessoas_Id WHERE Email = '$email' AND Senha = '$senha_sha1'";
-        $result_empresa = mysqli_query($_con, $sql_empresa);
-
-        if ($result_candidato === false || $result_empresa === false) {
+        if ($result_pessoa === false) {
             // Tratar erros de consulta SQL
             $aviso = "Erro ao executar consulta SQL: " . mysqli_error($_con);
         } else {
-            if (mysqli_num_rows($result_candidato) > 0) {
-                $_SESSION['tipo_usuario'] = 'candidato';
-                // Consulta para obter o nome do usuário
-                $row = mysqli_fetch_assoc($result_candidato);
-                $_SESSION['nome_usuario'] = $row['Nome']; // Supondo que o nome do usuário está na coluna 'Nome'
-                header("Location: pagina_do_candidato.php");
-                exit;
-            } elseif (mysqli_num_rows($result_empresa) > 0) {
-                $_SESSION['tipo_usuario'] = 'empresa';
-                // Consulta para obter o nome do usuário
-                $row = mysqli_fetch_assoc($result_empresa);
-                $_SESSION['nome_usuario'] = $row['Nome']; // Supondo que o nome do usuário está na coluna 'Nome'
-                header("Location: ../../../../../HomeRecrutador/homeRecrutador.php");
-                exit;
+            if (mysqli_num_rows($result_pessoa) > 0) {
+                $row = mysqli_fetch_assoc($result_pessoa);
+                $_SESSION['nome_usuario'] = $row['Nome'];
+                // Verificar se é empresa ou candidato
+                $sql_empresa = "SELECT * FROM Tb_Empresa WHERE Tb_Pessoas_Id = '" . $row['Id_Pessoas'] . "'";
+                $result_empresa = mysqli_query($_con, $sql_empresa);
+
+                $sql_candidato = "SELECT * FROM Tb_Candidato WHERE Tb_Pessoas_Id = '" . $row['Id_Pessoas'] . "'";
+                $result_candidato = mysqli_query($_con, $sql_candidato);
+
+                if (mysqli_num_rows($result_empresa) > 0) {
+                    $_SESSION['tipo_usuario'] = 'empresa';
+                    $_SESSION['email_session'] = $email;
+                    header("Location: ../../../HomeRecrutador/homeRecrutador.php");
+                    exit;
+                } elseif (mysqli_num_rows($result_candidato) > 0) {
+                    $_SESSION['tipo_usuario'] = 'candidato';
+                    $_SESSION['email_session'] = $email;
+                    header("Location: pagina_do_candidato.php");
+                    exit;
+                } else {
+                    // Se o tipo de usuário não puder ser determinado, redirecione para a página de login com um aviso
+                    header("Location: ../../../Login/login.html?aviso=" . urlencode("Tipo de usuário desconhecido."));
+                    exit;
+                }
             } else {
-                header("Location: ../../../../../Login/login.html?aviso=" . urlencode("Usuário não encontrado ou senha incorreta. Por favor, tente novamente.."));
+                header("Location: ../../../Login/login.html?aviso=" . urlencode("Usuário não encontrado ou senha incorreta. Por favor, tente novamente.."));
                 exit;
             }
         }
     } else {
-        header("Location: ../../../../../Login/login.html?aviso=" . urlencode("Algo deu errado. Tente novamente."));
+        header("Location: ../../../Login/login.html?aviso=" . urlencode("Algo deu errado. Tente novamente."));
         exit;
     }
 }
+?>

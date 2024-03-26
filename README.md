@@ -35,7 +35,7 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 |   | -- word/
 |   | -- excel/
 |   | -- Modelos do banco de dados/
- |-- public/
+|-- public/
 |   |-- index.html
 |   |-- manifest.json
 |   |-- sw.js
