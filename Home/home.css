@@ -19,74 +19,8 @@ body{
     background-color: whitesmoke;
 }
 
-/* ------------------------- Articles -------------------------*/
-
-h2{
-    font-size: 24pt;
-}
-
-button{
-    color: whitesmoke;
-    background-color: black;
-    width: 130px;
-    padding: 10px 0;
-    border: 1px solid black;
-    font-size: 12pt;
-    border-radius: 8px;
+a{
     cursor: pointer;
-    transition: 0.5s ease;
-}
-
-button:hover{
-    color: black;
-    background-color: whitesmoke;
-    border: 1px solid whitesmoke;
-    transition: 0.2s;
-}
-
-.divTitulo{
-    margin-bottom: 24px;
-    width: 1150px;
-}
-
-/* ------------------------- Article Comum -------------------------*/
-
-.commonArticle{
-    display: grid;  
-    place-items: center;
-    margin: 70px 0px;
-}
-
-.commonArticle .container{
-    width: 1150px;
-}
-
-.commonArticle p{
-    margin-top: 6px;
-}
-
-.commonArticle button:hover{
-    border: 1px solid black;
-}
-
-.commonArticle .divTitulo{
-    margin-bottom: 36px;
-}
-
-/* ------------------------- Article Carrossel -------------------------*/
-
-.articleCarrossel{
-    display: grid;
-    place-items: center;
-    margin: 70px 0px;
-}
-
-.articleCarrossel .container{
-    width: 1270px;
-}
-
-.articleCarrossel h2{
-    text-align: center;
 }
 
 /* ------------------------- Header -------------------------*/
@@ -205,7 +139,7 @@ nav ul li a:hover{
     animation: blinking 1s infinite;
 }
   
-  @keyframes blinking {
+@keyframes blinking {
     0% {
         background-color: transparent;
     }
@@ -215,13 +149,83 @@ nav ul li a:hover{
     50% {
         background-color: whitesmoke;
     }
-  }
+}
 
-  .articleTitle p{
+.articleTitle p{
     margin: 10px 0px 20px 0px;
-  }
+}
 
-/* ------------------------- Carrosel dos Anúncios -------------------------*/
+/* ------------------------- Articles -------------------------*/
+
+h2{
+    font-size: 24pt;
+}
+
+button{
+    color: whitesmoke;
+    background-color: black;
+    width: 130px;
+    padding: 10px 0;
+    border: 1px solid black;
+    font-size: 12pt;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+button:hover{
+    color: black;
+    background-color: whitesmoke;
+    border: 1px solid whitesmoke;
+    transition: 0.2s;
+}
+
+.divTitulo{
+    margin-bottom: 24px;
+    width: 1150px;
+}
+
+/* ------------------------- Article Comum -------------------------*/
+
+.commonArticle{
+    display: grid;  
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.commonArticle .container{
+    width: 1150px;
+}
+
+.commonArticle p{
+    margin-top: 6px;
+}
+
+.commonArticle button:hover{
+    border: 1px solid black;
+}
+
+.commonArticle .divTitulo{
+    margin-bottom: 36px;
+}
+
+/* ------------------------- Article do Carrossel -------------------------*/
+
+.articleCarrossel{
+    display: grid;
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.articleCarrossel .container{
+    width: 1270px;
+}
+
+.articleCarrossel h2{
+    text-align: center;
+}
+
+/* ------------------------- Carrossel -------------------------*/
 
 .carrosselBox{
     display: flex;
@@ -262,7 +266,7 @@ nav ul li a:hover{
     float: right;
 }
   
-/* ------------------------- Post -------------------------*/
+/* ------------------------- Anuncio -------------------------*/
 
 .postLink{
     margin: 0 10px;
@@ -331,7 +335,7 @@ nav ul li a:hover{
     width: 100%;
 }
 
-/* ------------------------- post do Teste -------------------------*/
+/* ------------------------- Teste -------------------------*/
 
 .testeLink{
     cursor: pointer;
@@ -354,13 +358,9 @@ nav ul li a:hover{
 }
 
 .divDetalhesTeste{
-    margin: 8px;
-}
-
-.divCompetencias{
     display: flex;
-    align-items: baseline;
-    margin-top: 6px;
+    align-items: center;
+    padding-left: 4px;
 }
 
 .nomeTeste{
@@ -384,7 +384,7 @@ nav ul li a:hover{
     margin: 4px;
 }
 
-/* ------------------------- Div Comentários -------------------------*/
+/* ------------------------- Div de Comentários -------------------------*/
 
 .divComentarios{
     display: flex;
@@ -401,7 +401,7 @@ nav ul li a:hover{
     margin-top: 10px;
 }
 
-/* ------------------------- Comentários -------------------------*/
+/* ------------------------- Comentário -------------------------*/
 
 .comentarioLink{
     transition: 0.5s ease;
@@ -551,7 +551,6 @@ footer{
 }
 
 footer a{
-    cursor: pointer;
     color: whitesmoke;
     text-decoration: underline;
     font-weight: bold;

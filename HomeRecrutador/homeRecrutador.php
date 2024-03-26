@@ -67,7 +67,7 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
         <label for="check" class="menuBtn">
             <img src="../imagens/menu.svg">
         </label>
-        <label id="logo">SIAS</label>
+        <a id="logo" href="homeRecrutador.php">SIAS</a>   
         <button class="btnModo"><img src="../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Anunciar</a></li>
@@ -77,7 +77,7 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
         </ul>
     </nav>
     <article class="articleTitle">
-        <div class="divTitle">
+        <div class="divTituloDigitavel">
             <h1 id="tituloAutomatico">B</h1>
             <i></i>
         </div>
@@ -90,56 +90,55 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
             <h2>Meus anúncios</h2>
             <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="adicionar">+</button>
         </div>
-        <div class="divCarrosel">
-            <a class="btnLeftSlider" id="leftAnuncios">
-                <</a>
-                    <a class="btnRightSlider" id="rightAnuncios">></a>
-                    <div class="carrosselBox" id="carrosselAnuncios">
-                        <a class="postLink">
-                            <article class="post">
-                                <div class="cardsAnuncios">
-                                    <?php
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo '<div class="post-container">';
-                                        echo '<article class="post">';
-                                        echo '<div class="divAcessos">';
-                                        echo '<img src="../imagens/people.svg"></img>';
-                                        echo '<small class="qntdAcessos">28</small>';
-                                        echo '</div>';
-                                        echo '<header>';
-                                        echo '<img src="../imagens/estagio.svg">';
+        <div class="container">
+            <a class="btnLeftSlider" id="leftAnuncios"><</a>
+            <a class="btnRightSlider" id="rightAnuncios">></a>
+            <div class="carrosselBox" id="carrosselAnuncios">
+                <a class="postLink">
+                    <article class="post">
+                        <div class="cardsAnuncios">
+                            <?php
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<div class="post-container">';
+                                echo '<article class="post">';
+                                echo '<div class="divAcessos">';
+                                echo '<img src="../imagens/people.svg"></img>';
+                                echo '<small class="qntdAcessos">28</small>';
+                                echo '</div>';
+                                echo '<header>';
+                                echo '<img src="../imagens/estagio.svg">';
 
-                                        // Verifique se a chave "Categoria" existe antes de tentar acessá-la
-                                        if (isset ($row["Categoria"])) {
-                                            echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
-                                        } else {
-                                            // Se "Categoria" não estiver definida, imprima uma mensagem alternativa ou deixe em branco
-                                            echo '<label class="tipoVaga" style="color:#191970">Categoria não definida</label>';
-                                        }
+                                // Verifique se a chave "Categoria" existe antes de tentar acessá-la
+                                if (isset ($row["Categoria"])) {
+                                    echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
+                                } else {
+                                    // Se "Categoria" não estiver definida, imprima uma mensagem alternativa ou deixe em branco
+                                    echo '<label class="tipoVaga" style="color:#191970">Categoria não definida</label>';
+                                }
 
-                                        echo '</header>';
-                                        echo '<section>';
+                                echo '</header>';
+                                echo '<section>';
 
-                                        // Faça o mesmo para outras chaves, como "Titulo", "Descricao", "Data_de_Criacao", etc.
-                                        // Certifique-se de verificar isset() para cada chave
-                                    
-                                        echo '<h3 class="nomeVaga">' . (isset ($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                                        echo '<p class="empresaVaga">' . (isset ($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
-                                        echo '</section>';
-                                        echo '<p class="statusVaga" style="color: green;">Aberta</p>';
+                                // Faça o mesmo para outras chaves, como "Titulo", "Descricao", "Data_de_Criacao", etc.
+                                // Certifique-se de verificar isset() para cada chave
+                            
+                                echo '<h3 class="nomeVaga">' . (isset ($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
+                                echo '<p class="empresaVaga">' . (isset ($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
+                                echo '</section>';
+                                echo '<p class="statusVaga" style="color: green;">Aberta</p>';
 
-                                        // Mostrar apenas a data sem a hora
-                                        $dataCriacao = isset ($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                                        echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                                // Mostrar apenas a data sem a hora
+                                $dataCriacao = isset ($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
+                                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
 
-                                        echo '</article>';
-                                        echo '</div>'; // fechando a div do contêiner
-                                    }
-                                    ?>
-                                </div>
-                            </article>
-                        </a>
-                    </div>
+                                echo '</article>';
+                                echo '</div>'; // fechando a div do contêiner
+                            }
+                            ?>
+                        </div>
+                    </article>
+                </a>
+            </div>
         </div>
     </article>
     <article class="articleCarrossel">
@@ -147,196 +146,206 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
             <h2>Minhas avaliações</h2>
             <button class="adicionar">+</button>
         </div>
-        <div class="divCarrosel">
-            <a class="btnLeftSlider" id="leftTestes">
-                <</a>
-                    <a class="btnRightSlider" id="rightTestes">></a>
-                    <div class="carrosselBox" id="carrosselTestes">
-                        <a class="testeLink">
-                            <article class="teste">
-                                <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../imagens/excel.svg"></img>
-                                <div class="testeDetalhes">
-                                    <p class="nomeTeste">Excel Básico</p>
-                                    <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeLink">
-                            <article class="teste">
-                                <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../imagens/figma.svg"></img>
-                                <div class="testeDetalhes">
-                                    <p class="nomeTeste">Figma Intermediário</p>
-                                    <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeLink">
-                            <article class="teste">
-                                <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../imagens/word.svg"></img>
-                                <div class="testeDetalhes">
-                                    <p class="nomeTeste">Word Avançado</p>
-                                    <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeLink">
-                            <article class="teste">
-                                <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../imagens/python.svg"></img>
-                                <div class="testeDetalhes">
-                                    <p class="nomeTeste">Python Básico</p>
-                                    <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                </div>
-                            </article>
-                        </a>
-                    </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftTestes"><</a>
+            <a class="btnRightSlider" id="rightTestes">></a>
+            <div class="carrosselBox" id="carrosselTestes">
+                <a class="testeLink">
+                    <article class="teste">
+                        <div class="divAcessos">
+                            <img src="../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../imagens/excel.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Excel Básico</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeLink">
+                    <article class="teste">
+                        <div class="divAcessos">
+                            <img src="../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../imagens/figma.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Figma Intermediário</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>                                        
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeLink">
+                    <article class="teste">
+                        <div class="divAcessos">
+                            <img src="../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../imagens/word.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Word Avançado</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeLink">
+                    <article class="teste">
+                        <div class="divAcessos">
+                            <img src="../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../imagens/python.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>                                        
+                                <p class="nomeTeste">Python Básico</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            <div>
+                        </div>
+                    </article>
+                </a>
+            </div>
         </div>
     </article>
     <article class="articleCarrossel">
         <div class="divTitulo">
             <h2>Perfis de usuários</h2>
         </div>
-        <div class="divCarroselTeste">
-            <a class="btnLeftSlider" id="leftPerfis">
-                <</a>
-                    <a class="btnRightSlider" id="rightPerfis">></a>
-                    <div class="carrosselBox" id="carrosselPerfis">
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                    </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftPerfis"><</a>
+            <a class="btnRightSlider" id="rightPerfis">></a>
+            <div class="carrosselBox" id="carrosselPerfis">
+                <a class="perfilLink">
+                    <article class="perfil">
+                        <div class="divImg"></div>
+                        <section>
+                            <p class="nomePessoa">Clarice Josefina</p>
+                        </section>
+                        <section>
+                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                | Azure</small>
+                        </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                        <div class="divImg"></div>
+                        <section>
+                            <p class="nomePessoa">Clarice Josefina</p>
+                        </section>
+                        <section>
+                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                | Azure</small>
+                        </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                        <div class="divImg"></div>
+                        <section>
+                            <p class="nomePessoa">Clarice Josefina</p>
+                        </section>
+                        <section>
+                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                | Azure</small>
+                        </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                        <div class="divImg"></div>
+                        <section>
+                            <p class="nomePessoa">Clarice Josefina</p>
+                        </section>
+                        <section>
+                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                | Azure</small>
+                        </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                        <div class="divImg"></div>
+                        <section>
+                            <p class="nomePessoa">Clarice Josefina</p>
+                        </section>
+                        <section>
+                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                | Azure</small>
+                        </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                        <div class="divImg"></div>
+                        <section>
+                            <p class="nomePessoa">Clarice Josefina</p>
+                        </section>
+                        <section>
+                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                | Azure</small>
+                        </section>
+                    </article>
+                </a>
+            </div>
         </div>
     </article>
-    <article class="articleCarroselInfinito">
-        <h2>Nossos Parceiros</h2>
-        <div class="carrosselInfinito">
-            <div class="trilhaCarrossel">
-                <div class="slide">
-                    <img src="../imagens/mysql.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/php.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/firebase.svg">
-                </div>
-                <div class="slide">
-                    <img class="logoFatec" src="../imagens/fatec.png">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/javascript.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/html.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/css.svg">
-                </div>
+    <article class="commonArticle">
+        <div class="divTitulo">
+            <h2>Nossos Parceiros</h2>
+        </div>
+        <div class="container">
+            <div class="carrosselInfinito">
+                <div class="trilhaCarrossel">
+                    <div class="slide">
+                        <img src="../imagens/mysql.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/php.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/firebase.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="logoFatec" src="../imagens/fatec.png">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/javascript.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/html.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/css.svg">
+                    </div>
 
-                <div class="slide">
-                    <img src="../imagens/mysql.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/php.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/firebase.svg">
-                </div>
-                <div class="slide">
-                    <img class="logoFatec" src="../imagens/fatec.png">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/javascript.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/html.svg">
-                </div>
-                <div class="slide">
-                    <img src="../imagens/css.svg">
+                    <div class="slide">
+                        <img src="../imagens/mysql.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/php.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/firebase.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="logoFatec" src="../imagens/fatec.png">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/javascript.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/html.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../imagens/css.svg">
+                    </div>
                 </div>
             </div>
         </div>
@@ -394,7 +403,5 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
             console.log("Nome do usuário está vazio!");
         }
     </script>
-
 </body>
-
 </html>

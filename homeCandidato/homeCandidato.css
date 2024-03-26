@@ -23,73 +23,6 @@ a{
     cursor: pointer;
 }
 
-/* ------------------------- Articles -------------------------*/
-
-h2{
-    font-size: 24pt;
-}
-
-button{
-    color: whitesmoke;
-    background-color: black;
-    width: 130px;
-    padding: 10px 0;
-    border: 1px solid black;
-    font-size: 12pt;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.5s ease;
-}
-
-button:hover{
-    color: black;
-    background-color: whitesmoke;
-    border: 1px solid whitesmoke;
-    transition: 0.2s;
-}
-
-.divTitulo{
-    margin-bottom: 24px;
-    width: 1150px;
-}
-
-/* ------------------------- Article Comum -------------------------*/
-
-.commonArticle{
-    display: grid;
-    place-items: center;
-    margin: 70px 0px;
-}
-
-.commonArticle .container{
-    width: 1150px;
-}
-
-.commonArticle button:hover{
-    border: 1px solid black;
-}
-
-.commonArticle .divTitulo{
-    margin-bottom: 36px;
-}
-
-/* ------------------------- Article Carrossel -------------------------*/
-
-
-.articleCarrossel{
-    display: grid;
-    place-items: center;
-    margin: 70px 0px;
-}
-
-.articleCarrossel p{
-    margin-top: 6px;
-}
-
-.articleCarrossel .container{
-    width: 1270px;
-}
-
 /* ------------------------- Header -------------------------*/
 
 nav{
@@ -107,7 +40,7 @@ nav #logo{
 
 nav ul{
     float: right;
-    margin-right: 30px;
+    margin-right: 10px;
 }
 
 nav ul li{
@@ -129,8 +62,28 @@ nav ul li a:hover{
     transition: 0.2s;
 }
 
-.menuBtn{
+.btnModo{
+    line-height: 64px;
     float: right;
+    background: transparent;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px 18px 0px 0px;
+    border-radius: 20px;
+    border: none;
+}
+
+.btnModo:hover{
+    border: none;
+    background: transparent;
+    box-shadow: 0px 0px 8px var(--laranjaEscuro);
+}
+
+.menuBtn{
+    float: left;
     line-height: 64px;
     cursor: pointer;
 }
@@ -191,6 +144,7 @@ nav ul li a:hover{
 .divTituloDigitavel{
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .articleTitle h1{
@@ -206,7 +160,7 @@ nav ul li a:hover{
     animation: blinking 1s infinite;
 }
   
-  @keyframes blinking {
+@keyframes blinking {
     0% {
         background-color: transparent;
     }
@@ -216,24 +170,90 @@ nav ul li a:hover{
     50% {
         background-color: whitesmoke;
     }
-  }
+}
 
-  .articleTitle p{
-    margin: 10px 0px 20px 0px;
-  }
+.articleTitle p{
+margin: 10px 0px 20px 0px;
+}
 
-  .articleTitle button{
-    width: 200px;
-  }
+.articleTitle button{
+width: 200px;
+}
 
-  .articleTitle button:hover{
+.articleTitle button:hover{
+color: black;
+background-color: whitesmoke;
+border: 1px solid whitesmoke;
+transition: 0.2s;
+}
+
+/* ------------------------- Articles -------------------------*/
+
+h2{
+    font-size: 24pt;
+}
+
+button{
+    color: whitesmoke;
+    background-color: black;
+    width: 130px;
+    padding: 10px 0;
+    border: 1px solid black;
+    font-size: 12pt;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+button:hover{
     color: black;
     background-color: whitesmoke;
     border: 1px solid whitesmoke;
     transition: 0.2s;
 }
 
-/* ------------------------- Carrosel dos Anúncios -------------------------*/
+.divTitulo{
+    margin-bottom: 24px;
+    width: 1150px;
+}
+
+/* ------------------------- Article Comum -------------------------*/
+
+.commonArticle{
+    display: grid;
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.commonArticle .container{
+    width: 1150px;
+}
+
+.commonArticle button:hover{
+    border: 1px solid black;
+}
+
+.commonArticle .divTitulo{
+    margin-bottom: 36px;
+}
+
+/* ------------------------- Article Carrossel -------------------------*/
+
+.articleCarrossel{
+    display: grid;
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.articleCarrossel .container{
+    width: 1270px;
+}
+
+.articleCarrossel p{
+    margin-top: 6px;
+}
+
+/* ------------------------- Carrossel -------------------------*/
 
 .carrosselBox{
     display: flex;
@@ -273,7 +293,18 @@ nav ul li a:hover{
     float: right;
 }
   
-/* ------------------------- Post -------------------------*/
+/* ------------------------- Carrossel dos Testes -------------------------*/
+
+#testes{
+    height: 120px;
+    margin: 0px 10px;
+}
+
+#leftTestes, #rightTestes{
+    margin-top: 38px;
+}
+
+/* ------------------------- Anuncio -------------------------*/
 
 .postLink{
     margin: 0 10px;
@@ -330,18 +361,7 @@ nav ul li a:hover{
     right: 0;
 }
 
-/* ------------------------- Carrossel do Teste -------------------------*/
-
-#testes{
-    height: 120px;
-    margin: 0px 10px;
-}
-
-#leftTestes, #rightTestes{
-    margin-top: 50px;
-}
-
-/* ------------------------- post do Teste -------------------------*/
+/* ------------------------- Teste -------------------------*/
 
 .testeLink{
     margin: 0px 10px;
@@ -363,7 +383,9 @@ nav ul li a:hover{
 }
 
 .divDetalhesTeste{
-    margin: 8px;
+    display: flex;
+    align-items: center;
+    padding-left: 4px;
 }
 
 .nomeTeste{
@@ -387,9 +409,9 @@ nav ul li a:hover{
     margin: 4px;
 }
 
-/* ------------------------- Carrossel Infinito -------------------------*/
+/* ------------------------- Carrosel Infinito -------------------------*/
 
-.carrosselInfinito{ 
+.carrosselInfinito{  
     position: relative; 
     overflow: hidden;
     margin-bottom: 40px;
