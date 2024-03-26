@@ -19,26 +19,7 @@ body{
     background-color: whitesmoke;
 }
 
-/* ------------------------- Article Comum -------------------------*/
-
-.commonArticle{
-    padding: 40px;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.commonArticle h2{
-    margin-bottom: 6px;
-}
-
-.commonArticle button:hover{
-    border: 1px solid black;
-}
-
-.divCommonContent{
-    width: 1150px;
-}
+/* ------------------------- Articles -------------------------*/
 
 h2{
     font-size: 24pt;
@@ -65,6 +46,47 @@ button:hover{
 
 .divTitulo{
     margin-bottom: 24px;
+    width: 1150px;
+}
+
+/* ------------------------- Article Comum -------------------------*/
+
+.commonArticle{
+    display: grid;  
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.commonArticle .container{
+    width: 1150px;
+}
+
+.commonArticle p{
+    margin-top: 6px;
+}
+
+.commonArticle button:hover{
+    border: 1px solid black;
+}
+
+.commonArticle .divTitulo{
+    margin-bottom: 36px;
+}
+
+/* ------------------------- Article Carrossel -------------------------*/
+
+.articleCarrossel{
+    display: grid;
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.articleCarrossel .container{
+    width: 1270px;
+}
+
+.articleCarrossel h2{
+    text-align: center;
 }
 
 /* ------------------------- Header -------------------------*/
@@ -198,29 +220,13 @@ nav ul li a:hover{
   .articleTitle p{
     margin: 10px 0px 20px 0px;
   }
-  
-  /* ------------------------- Article dos Anúncios -------------------------*/
-
-.articleAnuncios{
-    margin: 20px 0px 30px 0px;
-    display: flex;
-    justify-content: center;
-}
-
-.divContentAnuncios{
-    width: 1270px;
-}
-
-.articleAnuncios h2{
-    text-align: center;
-}
 
 /* ------------------------- Carrosel dos Anúncios -------------------------*/
 
 .carrosselBox{
     display: flex;
     align-items: center;
-    height: 190px;
+    height: 180px;
     width: auto;
     overflow: hidden;
 }
@@ -348,7 +354,7 @@ nav ul li a:hover{
 }
 
 .divDetalhesTeste{
-    padding: 8px;
+    margin: 8px;
 }
 
 .divCompetencias{
@@ -469,10 +475,10 @@ nav ul li a:hover{
 
 /* ------------------------- Carrosel Infinito -------------------------*/
 
-.carrosselInfinito{
-    margin-bottom: 40px;   
+.carrosselInfinito{  
     position: relative; 
     overflow: hidden;
+    margin-bottom: 40px;
 }
 
 .carrosselInfinito::before,

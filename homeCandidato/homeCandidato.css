@@ -1,5 +1,3 @@
-/* ------------------------- Header -------------------------*/
-
 :root{
     --laranja: #EC6809;
     --laranjaClaro: #ee8840;
@@ -19,8 +17,80 @@
 body{
     font-family: Arial, sans-serif;
     background-color: whitesmoke;
-    transition: 0.5s;
 }
+
+a{
+    cursor: pointer;
+}
+
+/* ------------------------- Articles -------------------------*/
+
+h2{
+    font-size: 24pt;
+}
+
+button{
+    color: whitesmoke;
+    background-color: black;
+    width: 130px;
+    padding: 10px 0;
+    border: 1px solid black;
+    font-size: 12pt;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+
+button:hover{
+    color: black;
+    background-color: whitesmoke;
+    border: 1px solid whitesmoke;
+    transition: 0.2s;
+}
+
+.divTitulo{
+    margin-bottom: 24px;
+    width: 1150px;
+}
+
+/* ------------------------- Article Comum -------------------------*/
+
+.commonArticle{
+    display: grid;
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.commonArticle .container{
+    width: 1150px;
+}
+
+.commonArticle button:hover{
+    border: 1px solid black;
+}
+
+.commonArticle .divTitulo{
+    margin-bottom: 36px;
+}
+
+/* ------------------------- Article Carrossel -------------------------*/
+
+
+.articleCarrossel{
+    display: grid;
+    place-items: center;
+    margin: 70px 0px;
+}
+
+.articleCarrossel p{
+    margin-top: 6px;
+}
+
+.articleCarrossel .container{
+    width: 1270px;
+}
+
+/* ------------------------- Header -------------------------*/
 
 nav{
     background-color: var(--laranja);
@@ -37,7 +107,7 @@ nav #logo{
 
 nav ul{
     float: right;
-    margin-right: 10px;
+    margin-right: 30px;
 }
 
 nav ul li{
@@ -57,26 +127,6 @@ nav ul li a{
 nav ul li a:hover{
     background: var(--laranjaClaro);
     transition: 0.2s;
-}
-
-.btnModo{
-    line-height: 64px;
-    float: right;
-    background: transparent;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 12px 12px 0px 0px;
-    border-radius: 20px;
-    border: none;
-}
-
-.btnModo:hover{
-    border: none;
-    background: transparent;
-    box-shadow: 0px 0px 8px var(--laranjaEscuro);
 }
 
 .menuBtn{
@@ -138,37 +188,13 @@ nav ul li a:hover{
     color: whitesmoke;
 }
 
-.divTitle{
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
+.divTituloDigitavel{
+    display: flex;
+    justify-content: center;
 }
 
 .articleTitle h1{
     font-size: 44pt;
-}
-
-.articleTitle p{
-    margin: 10px 0px 20px 0px;
-}
-
-button{
-    color: whitesmoke;
-    background-color: black;
-    width: 130px;
-    padding: 10px 0;
-    border: 1px solid black;
-    font-size: 12pt;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.5s ease;
-}
-
-button:hover{
-    color: black;
-    background-color: whitesmoke;
-    border: 1px solid whitesmoke;
-    transition: 0.2s;
 }
 
 .articleTitle i{
@@ -192,49 +218,27 @@ button:hover{
     }
   }
 
-  
-  /* ------------------------- Article dos Anúncios -------------------------*/
+  .articleTitle p{
+    margin: 10px 0px 20px 0px;
+  }
 
-.articleCarrossel{
-    padding: 10px;
-    margin: 30px 0px
+  .articleTitle button{
+    width: 200px;
+  }
+
+  .articleTitle button:hover{
+    color: black;
+    background-color: whitesmoke;
+    border: 1px solid whitesmoke;
+    transition: 0.2s;
 }
 
-.divTitulo{
-    display: flex;
-    align-items: center;
-}
-
-h2{
-    font-size: 24pt;
-}
-
-.articleCarrossel h2{
-    margin-left: 30px;
-}
-
-.adicionar{
-    width: 40px;
-    height: 40px;
-    margin-left: 14px;
-    border-radius: 20px;
-    font-size: 22pt;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.adicionar:hover{
-    border: 1px solid black;
-}
-
-/* ------------------------- Carrosel -------------------------*/
+/* ------------------------- Carrosel dos Anúncios -------------------------*/
 
 .carrosselBox{
-    margin-top: 10px;
     display: flex;
     align-items: center;
-    height: 200px;
+    height: 180px;
     width: auto;
     overflow: hidden;
 }
@@ -251,8 +255,8 @@ h2{
     padding: 10px;
     font-size: 20pt;
     font-weight: bold;
-    cursor: pointer;
     margin-top: 70px;
+    transition: 0.5s ease;
 }
 
 .btnLeftSlider:hover, .btnRightSlider:hover{
@@ -268,33 +272,11 @@ h2{
 .btnRightSlider{
     float: right;
 }
-
-
-/* ------------------------- Carrossel Testes -------------------------*/
-
-#carrosselTestes{
-    height: 140px;
-}
-
-#leftTestes, #rightTestes{
-    margin-top: 50px;
-}
-
-/* ------------------------- Carrossel Perfis -------------------------*/
-
-#carrosselPerfis{
-    height: 260px;
-}
-
-#leftPerfis, #rightPerfis{
-    margin-top: 100px;
-}
-
+  
 /* ------------------------- Post -------------------------*/
 
 .postLink{
     margin: 0 10px;
-    cursor: pointer;
     transition: 0.5s ease;
 }
 
@@ -314,7 +296,7 @@ h2{
 }
 
 .post header{
-    display: flex ; 
+    display: flex;
     align-items: center;
 }
 
@@ -348,12 +330,22 @@ h2{
     right: 0;
 }
 
+/* ------------------------- Carrossel do Teste -------------------------*/
+
+#testes{
+    height: 120px;
+    margin: 0px 10px;
+}
+
+#leftTestes, #rightTestes{
+    margin-top: 50px;
+}
+
 /* ------------------------- post do Teste -------------------------*/
 
 .testeLink{
-    cursor: pointer;
-    transition: 0.5s ease;
     margin: 0px 10px;
+    transition: 0.5s ease;
 }
 
 .testeLink:hover{
@@ -370,8 +362,8 @@ h2{
     box-shadow: 4px 4px 4px silver;
 }
 
-.testeDetalhes{
-    padding: 20px 8px;
+.divDetalhesTeste{
+    margin: 8px;
 }
 
 .nomeTeste{
@@ -395,79 +387,12 @@ h2{
     margin: 4px;
 }
 
-/* ------------------------- Article Comum -------------------------*/
+/* ------------------------- Carrossel Infinito -------------------------*/
 
-.commonArticle{
-    margin: 20px 0;
-}
-
-.commonArticle button:hover{
-    border: 1px solid black;
-}
-
-
-/* ------------------------- Perfis -------------------------*/
-
-.perfilLink{
-    cursor: pointer;
-    transition: 0.5s ease;
-    margin: 0px 20px;
-}
-
-.perfilLink:hover{
-    transform: scale(1.04);
-    transition: 0.2s;
-}
-
-.perfil{
-    text-align: center;
-    width: 170px;
-    height: 220px;
-    padding: 10px;
-    border: 1px solid silver;
-    box-shadow: 4px 4px 4px silver;
-    border-radius: 10px;
-    background-color: #eeeeee;
-}
-
-.divImg{
-    background-image: url("../imagens/pessoa.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    width: 90px;
-    height: 90px;
-    border-radius: 50px;
-    margin: 0 auto;
-}
-
-.perfil section{
-    margin: 8px 0px;
-}
-
-.nomePessoa{
-    font-weight: bold;
-}
-
-/* ------------------------- Article Carrosel Infinito -------------------------*/
-
-.articleCarroselInfinito{
-    margin: 60px 0px 90px 0px;
-}
-
-.articleCarroselInfinito h2{
-    font-size: 24pt;
-    margin-left: 40px;
-}
-
-/* ------------------------- Carrosel Infinito -------------------------*/
-
-.carrosselInfinito{
-    margin-top: 30px;    
-    position: relative;   
-    display: grid;
-    place-items: center; 
+.carrosselInfinito{ 
+    position: relative; 
     overflow: hidden;
+    margin-bottom: 40px;
 }
 
 .carrosselInfinito::before,
@@ -519,7 +444,7 @@ h2{
 }
 
 .slide img{
-    transition: 0.5s;
+    transition: 0.5s ease;
 }
 
 .slide img:hover{
@@ -540,11 +465,9 @@ footer{
 }
 
 footer a{
-    cursor: pointer;
     color: whitesmoke;
-    text-decoration:underline;
+    text-decoration: underline;
     font-weight: bold;
-    transition: 0.5s;
     margin-right: 30px;
 }
 
