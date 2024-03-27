@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 } elseif (mysqli_num_rows($result_candidato) > 0) {
                     $_SESSION['tipo_usuario'] = 'candidato';
                     $_SESSION['email_session'] = $email;
-                    header("Location: pagina_do_candidato.php");
+                    header("Location: ../../../HomeCandidato/homeCandidato.html");
                     exit;
                 } else {
                     // Se o tipo de usuário não puder ser determinado, redirecione para a página de login com um aviso

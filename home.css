@@ -427,7 +427,7 @@ button:hover{
 }
 
 .divImg{
-    background-image: url("../imagens/pessoa.png");
+    background-image: url("imagens/pessoa.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
