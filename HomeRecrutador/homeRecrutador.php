@@ -5,15 +5,15 @@ session_start();
 
 
 // Verificar se o usuário está autenticado como empresa
-$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 $emailUsuario = '';
 
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
-if (isset ($_SESSION['email_session']) && isset ($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
+if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
     // Se estiver autenticado com e-mail/senha e for do tipo empresa
     $emailUsuario = $_SESSION['email_session'];
-    
-} elseif (isset ($_SESSION['google_session']) && isset ($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
+
+} elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
     // Se estiver autenticado com o Google e for do tipo empresa
     $emailUsuario = $_SESSION['google_session'];
 } else {
@@ -21,7 +21,7 @@ if (isset ($_SESSION['email_session']) && isset ($_SESSION['tipo_usuario']) && $
     header("Location: ../Login/login.html");
     exit;
 }
-$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 
 
 
@@ -44,8 +44,8 @@ if ($result === false) {
 }
 
 // Atribuindo os valores das variáveis de sessão
-$emailSession = isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
-$tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
+$emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
+$tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
 
 ?>
 
@@ -67,7 +67,7 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
         <label for="check" class="menuBtn">
             <img src="../imagens/menu.svg">
         </label>
-        <a id="logo" href="homeRecrutador.php">SIAS</a>   
+        <a id="logo" href="homeRecrutador.php">SIAS</a>
         <button class="btnModo"><img src="../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Anunciar</a></li>
@@ -91,15 +91,15 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
             <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="adicionar">+</button>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftAnuncios"><</a>
-            <a class="btnRightSlider" id="rightAnuncios">></a>
-            <div class="carrosselBox" id="carrosselAnuncios">
-                <a class="postLink">
-                    <article class="post">
-                        <div class="cardsAnuncios">
-                            <?php
+            <a class="btnLeftSlider" id="leftAnuncios">
+                <</a>
+                    <a class="btnRightSlider" id="rightAnuncios">></a>
+                    <div class="carrosselBox" id="carrosselAnuncios">
+                        <?php
+                        // Verifique se há resultados antes de iniciar o loop
+                        if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo '<div class="post-container">';
+                                echo '<a class="postLink">';
                                 echo '<article class="post">';
                                 echo '<div class="divAcessos">';
                                 echo '<img src="../imagens/people.svg"></img>';
@@ -108,37 +108,29 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                                 echo '<header>';
                                 echo '<img src="../imagens/estagio.svg">';
 
-                                // Verifique se a chave "Categoria" existe antes de tentar acessá-la
-                                if (isset ($row["Categoria"])) {
+                                if (isset($row["Categoria"])) {
                                     echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
                                 } else {
-                                    // Se "Categoria" não estiver definida, imprima uma mensagem alternativa ou deixe em branco
                                     echo '<label class="tipoVaga" style="color:#191970">Categoria não definida</label>';
                                 }
 
                                 echo '</header>';
                                 echo '<section>';
-
-                                // Faça o mesmo para outras chaves, como "Titulo", "Descricao", "Data_de_Criacao", etc.
-                                // Certifique-se de verificar isset() para cada chave
-                            
-                                echo '<h3 class="nomeVaga">' . (isset ($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                                echo '<p class="empresaVaga">' . (isset ($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
+                                echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
+                                echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
                                 echo '</section>';
                                 echo '<p class="statusVaga" style="color: green;">Aberta</p>';
-
-                                // Mostrar apenas a data sem a hora
-                                $dataCriacao = isset ($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
+                                $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                                 echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-
                                 echo '</article>';
-                                echo '</div>'; // fechando a div do contêiner
+                                echo '</a>';
                             }
-                            ?>
-                        </div>
-                    </article>
-                </a>
-            </div>
+                        } else {
+                            // Se não houver resultados, exiba uma mensagem alternativa
+                            echo '<p>Nenhuma postagem encontrada</p>';
+                        }
+                        ?>
+                    </div>
         </div>
     </article>
     <article class="articleCarrossel">
@@ -147,70 +139,71 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
             <button class="adicionar">+</button>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftTestes"><</a>
-            <a class="btnRightSlider" id="rightTestes">></a>
-            <div class="carrosselBox" id="carrosselTestes">
-                <a class="testeLink">
-                    <article class="teste">
-                        <div class="divAcessos">
-                            <img src="../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../imagens/excel.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Excel Básico</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeLink">
-                    <article class="teste">
-                        <div class="divAcessos">
-                            <img src="../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../imagens/figma.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Figma Intermediário</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>                                        
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeLink">
-                    <article class="teste">
-                        <div class="divAcessos">
-                            <img src="../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../imagens/word.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Word Avançado</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeLink">
-                    <article class="teste">
-                        <div class="divAcessos">
-                            <img src="../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../imagens/python.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>                                        
-                                <p class="nomeTeste">Python Básico</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            <div>
-                        </div>
-                    </article>
-                </a>
-            </div>
+            <a class="btnLeftSlider" id="leftTestes">
+                <</a>
+                    <a class="btnRightSlider" id="rightTestes">></a>
+                    <div class="carrosselBox" id="carrosselTestes">
+                        <a class="testeLink">
+                            <article class="teste">
+                                <div class="divAcessos">
+                                    <img src="../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../imagens/excel.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>
+                                        <p class="nomeTeste">Excel Básico</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                        <a class="testeLink">
+                            <article class="teste">
+                                <div class="divAcessos">
+                                    <img src="../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../imagens/figma.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>
+                                        <p class="nomeTeste">Figma Intermediário</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                        <a class="testeLink">
+                            <article class="teste">
+                                <div class="divAcessos">
+                                    <img src="../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../imagens/word.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>
+                                        <p class="nomeTeste">Word Avançado</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                        <a class="testeLink">
+                            <article class="teste">
+                                <div class="divAcessos">
+                                    <img src="../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../imagens/python.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>
+                                        <p class="nomeTeste">Python Básico</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                        <div>
+                                        </div>
+                            </article>
+                        </a>
+                    </div>
         </div>
     </article>
     <article class="articleCarrossel">
@@ -218,82 +211,83 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
             <h2>Perfis de usuários</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftPerfis"><</a>
-            <a class="btnRightSlider" id="rightPerfis">></a>
-            <div class="carrosselBox" id="carrosselPerfis">
-                <a class="perfilLink">
-                    <article class="perfil">
-                        <div class="divImg"></div>
-                        <section>
-                            <p class="nomePessoa">Clarice Josefina</p>
-                        </section>
-                        <section>
-                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                | Azure</small>
-                        </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                        <div class="divImg"></div>
-                        <section>
-                            <p class="nomePessoa">Clarice Josefina</p>
-                        </section>
-                        <section>
-                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                | Azure</small>
-                        </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                        <div class="divImg"></div>
-                        <section>
-                            <p class="nomePessoa">Clarice Josefina</p>
-                        </section>
-                        <section>
-                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                | Azure</small>
-                        </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                        <div class="divImg"></div>
-                        <section>
-                            <p class="nomePessoa">Clarice Josefina</p>
-                        </section>
-                        <section>
-                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                | Azure</small>
-                        </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                        <div class="divImg"></div>
-                        <section>
-                            <p class="nomePessoa">Clarice Josefina</p>
-                        </section>
-                        <section>
-                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                | Azure</small>
-                        </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                        <div class="divImg"></div>
-                        <section>
-                            <p class="nomePessoa">Clarice Josefina</p>
-                        </section>
-                        <section>
-                            <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                | Azure</small>
-                        </section>
-                    </article>
-                </a>
-            </div>
+            <a class="btnLeftSlider" id="leftPerfis">
+                <</a>
+                    <a class="btnRightSlider" id="rightPerfis">></a>
+                    <div class="carrosselBox" id="carrosselPerfis">
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                    </div>
         </div>
     </article>
     <article class="commonArticle">
@@ -404,4 +398,5 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
         }
     </script>
 </body>
+
 </html>
