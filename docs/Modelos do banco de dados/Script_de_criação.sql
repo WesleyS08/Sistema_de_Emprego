@@ -38,7 +38,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Candidato`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Candidato` (
-  `CPF` VARCHAR(12) NOT NULL,
+  `CPF` VARCHAR(11) NOT NULL,
   `Tb_Pessoas_Id` INT NOT NULL AUTO_INCREMENT, -- Adicionado AUTO_INCREMENT
   `Area_de_Interesse` VARCHAR(50) NULL,
   `Tipo_de_Contratacao` VARCHAR(45) NULL,
@@ -136,11 +136,9 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Anuncios` (
   `Area` varchar(45) DEFAULT NULL,
   `Cidade` varchar(45) DEFAULT NULL,
   `Nivel_Operacional` varchar(45) DEFAULT NULL,
-  `Img` varchar(45) DEFAULT NULL,
   `Data_de_Criacao` datetime DEFAULT NULL,
   `Modalidade` varchar(45) DEFAULT NULL,
-  `Responsabilidade` varchar(45) DEFAULT NULL,
-  `Beneficicios` varchar(45) DEFAULT NULL,
+  `Beneficios` varchar(45) DEFAULT NULL,
   `Requisitos` varchar(45) DEFAULT NULL,
   `Horario` varchar(45) NOT NULL,
   `Estado` varchar(45) NOT NULL,
@@ -155,7 +153,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Vagas` (
   `Tb_Anuncios_Id` INT NOT NULL,
   `Tb_Empresa_CNPJ` VARCHAR(14) NOT NULL,
-  `Estados` VARCHAR(45) NULL,
+  `Status` VARCHAR(45) NULL,
   `Data_de_Termino` DATETIME NULL,
   PRIMARY KEY (`Tb_Anuncios_Id`, `Tb_Empresa_CNPJ`),
   INDEX `fk_Tb_Anuncios_has_Tb_Empresa_Tb_Empresa1_idx` (`Tb_Empresa_CNPJ` ASC) ,
@@ -179,7 +177,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Inscricoes` (
   `Tb_Vagas_Tb_Anuncios_Id` INT NOT NULL,
   `Tb_Vagas_Tb_Empresa_CNPJ` VARCHAR(14) NOT NULL,
-  `Tb_Candidato_CPF` VARCHAR(12) NOT NULL,
+  `Tb_Candidato_CPF` VARCHAR(11) NOT NULL,
   `Data_de _Inscricao` DATETIME NULL,
   PRIMARY KEY (`Tb_Vagas_Tb_Anuncios_Id`, `Tb_Vagas_Tb_Empresa_CNPJ`, `Tb_Candidato_CPF`),
   INDEX `fk_Tb_Vagas_has_Tb_Candidato_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC) ,
@@ -217,7 +215,7 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Recomendacoes`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Recomendacoes` (
-  `Tb_Candidato_CPF` VARCHAR(12) NOT NULL,
+  `Tb_Candidato_CPF` VARCHAR(11) NOT NULL,
   `Tb_Cursos_Id` INT NOT NULL,
   PRIMARY KEY (`Tb_Candidato_CPF`, `Tb_Cursos_Id`),
   INDEX `fk_Tb_Candidato_has_Tb_Cursos_Tb_Cursos1_idx` (`Tb_Cursos_Id` ASC) ,
@@ -239,14 +237,14 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Respostas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Respostas` (
-  `idtb_Respostas` INT NOT NULL AUTO_INCREMENT,
+  `Id_Respostas` INT NOT NULL AUTO_INCREMENT,
   `Errada` VARCHAR(255) NULL,
   `Errada2` VARCHAR(255) NULL,
   `Errada3` VARCHAR(255) NULL,
   `Errada4` VARCHAR(255) NULL,
   `Certa` VARCHAR(255) NULL,
   `Tb_Questionarios_Id_Questionario` INT NOT NULL,
-  PRIMARY KEY (`idtb_Respostas`, `Tb_Questionarios_Id_Questionario`),
+  PRIMARY KEY (`Id_Respostas`, `Tb_Questionarios_Id_Questionario`),
   INDEX `fk_Tb_Respostas_Tb_Questionarios1_idx` (`Tb_Questionarios_Id_Questionario` ASC) ,
   CONSTRAINT `fk_Tb_Respostas_Tb_Questionarios1`
     FOREIGN KEY (`Tb_Questionarios_Id_Questionario`)
