@@ -1,5 +1,5 @@
 <?php
-include "../src/services/conexão_com_banco.php";
+include "../../services/conexão_com_banco.php";
 
 session_start();
 
@@ -65,10 +65,10 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
     <nav>
         <input type="checkbox" id="check">
         <label for="check" class="menuBtn">
-            <img src="../imagens/menu.svg">
+            <img src="../../../imagens/menu.svg">
         </label>
         <a id="logo" href="homeRecrutador.php">SIAS</a>
-        <button class="btnModo"><img src="../imagens/moon.svg"></button>
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Anunciar</a></li>
             <li><a href="#">Minhas vagas</a></li>
@@ -102,11 +102,11 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 echo '<a class="postLink">';
                                 echo '<article class="post">';
                                 echo '<div class="divAcessos">';
-                                echo '<img src="../imagens/people.svg"></img>';
+                                echo '<img src="../../../imagens/people.svg"></img>';
                                 echo '<small class="qntdAcessos">28</small>';
                                 echo '</div>';
                                 echo '<header>';
-                                echo '<img src="../imagens/estagio.svg">';
+                                echo '<img src="../../../imagens/estagio.svg">';
 
                                 if (isset($row["Categoria"])) {
                                     echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
@@ -146,10 +146,10 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         <a class="testeLink">
                             <article class="teste">
                                 <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
+                                    <img src=".../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
                                 </div>
-                                <img src="../imagens/excel.svg"></img>
+                                <img src="../../../imagens/excel.svg"></img>
                                 <div class="divDetalhesTeste">
                                     <div>
                                         <p class="nomeTeste">Excel Básico</p>
@@ -161,10 +161,10 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         <a class="testeLink">
                             <article class="teste">
                                 <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
+                                    <img src="../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
                                 </div>
-                                <img src="../imagens/figma.svg"></img>
+                                <img src="../../../imagens/figma.svg"></img>
                                 <div class="divDetalhesTeste">
                                     <div>
                                         <p class="nomeTeste">Figma Intermediário</p>
@@ -176,10 +176,10 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         <a class="testeLink">
                             <article class="teste">
                                 <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
+                                    <img src="../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
                                 </div>
-                                <img src="../imagens/word.svg"></img>
+                                <img src="../../../imagens/word.svg"></img>
                                 <div class="divDetalhesTeste">
                                     <div>
                                         <p class="nomeTeste">Word Avançado</p>
@@ -191,10 +191,10 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         <a class="testeLink">
                             <article class="teste">
                                 <div class="divAcessos">
-                                    <img src="../imagens/people.svg"></img>
+                                    <img src="../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
                                 </div>
-                                <img src="../imagens/python.svg"></img>
+                                <img src="../../../imagens/python.svg"></img>
                                 <div class="divDetalhesTeste">
                                     <div>
                                         <p class="nomeTeste">Python Básico</p>
@@ -298,47 +298,47 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
             <div class="carrosselInfinito">
                 <div class="trilhaCarrossel">
                     <div class="slide">
-                        <img src="../imagens/mysql.svg">
+                        <img src="../../../imagens/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/php.svg">
+                        <img src="../../../imagens/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/firebase.svg">
+                        <img src="../../../imagens/firebase.svg">
                     </div>
                     <div class="slide">
-                        <img class="logoFatec" src="../imagens/fatec.png">
+                        <img class="logoFatec" src="../../../imagens/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/javascript.svg">
+                        <img src="../../../imagens/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/html.svg">
+                        <img src="../../../imagens/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/css.svg">
+                        <img src="../../../imagens/css.svg">
                     </div>
 
                     <div class="slide">
-                        <img src="../imagens/mysql.svg">
+                        <img src="../../../imagens/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/php.svg">
+                        <img src="../../../imagens/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/firebase.svg">
+                        <img src="../../../imagens/firebase.svg">
                     </div>
                     <div class="slide">
-                        <img class="logoFatec" src="../imagens/fatec.png">
+                        <img class="logoFatec" src="../../../imagens/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/javascript.svg">
+                        <img src="../../../imagens/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/html.svg">
+                        <img src="../../../imagens/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/css.svg">
+                        <img src="../../../imagens/css.svg">
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "../src/services/conexão_com_banco.php";
+include "../../../src/services/conexão_com_banco.php";
 
 // Verificar se o usuário está autenticado como empresa
 $nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
@@ -41,10 +41,10 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
     <nav>
         <input type="checkbox" id="check">
         <label for="check" class="menuBtn">
-            <img src="../imagens/menu.svg">
+            <img src="../../../imagens/menu.svg">
         </label>
         <label id="logo">SIAS</label>
-        <button class="btnModo"><img src="../imagens/moon.svg"></button>
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Anunciar</a></li>
             <li><a href="#">Minhas vagas</a></li>
@@ -54,7 +54,7 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
     </nav>
     <article>
         <h2>Criação de Vaga</h2>
-        <form id="formvaga" method="POST" action="../src/services/cadastros/vaga.php">
+        <form id="formvaga" method="POST" action="../../../src/services/cadastros/vaga.php">
             <div class="divFlexBox">
                 <div class="divEsquerda">
                     <div class="inputsLadoALado">
