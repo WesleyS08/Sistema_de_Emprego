@@ -1,5 +1,5 @@
 const sliderTeste = document.querySelector("#carrosselTestes");
-let scrollPerClickTeste = 800;
+let scrollPerClickTeste = 1040;
 let scrollAmountTeste = 0;
 
 function SliderScrollLeft(){
