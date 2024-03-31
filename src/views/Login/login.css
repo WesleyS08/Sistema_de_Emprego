@@ -34,8 +34,10 @@ article{
     font-size: 40pt;
 }
 
-#buttonDiv{
-    margin: 20px 0px 36px 0px;
+#googleLoginForm{
+    display: grid;
+    justify-content: center;
+    margin: 30px;
 }
 
 /* ------------------------- INPUTS ANIMADOS -------------------------*/

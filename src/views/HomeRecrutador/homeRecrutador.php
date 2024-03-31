@@ -76,7 +76,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
             <li><a href="#">Perfil</a></li>
         </ul>
     </nav>
-    <article class="articleTitle">
+    <div class="divTitle">
         <div class="divTituloDigitavel">
             <h1 id="tituloAutomatico">B</h1>
             <i></i>
@@ -84,8 +84,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique agora
             mesmo!</p>
         <button onclick="window.location.href='../criarVaga/criarVaga.php'">Anunciar</button>
-    </article>
-    <article class="articleCarrossel">
+    </div>
+    <div class="divCarrossel">
         <div class="divTitulo">
             <h2>Meus anúncios</h2>
             <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="adicionar">+</button>
@@ -132,8 +132,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         ?>
                     </div>
         </div>
-    </article>
-    <article class="articleCarrossel">
+    </div>
+    <div class="divCarrossel">
         <div class="divTitulo">
             <h2>Minhas avaliações</h2>
             <button class="adicionar">+</button>
@@ -205,8 +205,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         </a>
                     </div>
         </div>
-    </article>
-    <article class="articleCarrossel">
+    </div>
+    <div class="divCarrossel">
         <div class="divTitulo">
             <h2>Perfis de usuários</h2>
         </div>
@@ -289,8 +289,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         </a>
                     </div>
         </div>
-    </article>
-    <article class="commonArticle">
+    </div>
+    <div class="divCommon">
         <div class="divTitulo">
             <h2>Nossos Parceiros</h2>
         </div>
@@ -343,7 +343,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                 </div>
             </div>
         </div>
-    </article>
+    </div>
     <footer>
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
