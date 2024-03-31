@@ -1,5 +1,5 @@
 <?php
-include "../conexão_com_banco.php";
+include "../../services/conexão_com_banco.php";
 session_start();
 
 $aviso = ""; 
@@ -40,27 +40,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['google_session'] = $email_google;
                 $_SESSION['google_usuario'] = 'empresa';
                 $_SESSION['nome_usuario'] = $nome_usuario; 
-                header("Location: ../../../HomeRecrutador/homeRecrutador.php");
+                header("Location: ../../views/HomeRecrutador/homeRecrutador.php");
                 exit;
             } elseif (mysqli_num_rows($result_candidato) > 0) {
                 $_SESSION['google_session'] = $email_google;
                 $_SESSION['google_usuario'] = 'candidato';
                 $_SESSION['nome_usuario'] = $nome_usuario; 
-                header("Location: pagina_do_candidato.php");
+                header("Location: pagina_do_candidato.php"); // O que faz essa linha? lol
                 exit;
             } else {
                 // Se o tipo de usuário não puder ser determinado, redirecione para a página de login com um aviso
-                header("Location: ../../../Login/login.html?aviso=" . urlencode("Tipo de usuário desconhecido."));
+                header("Location: ../../views/Login/login.html?aviso=" . urlencode("Tipo de usuário desconhecido."));
                 exit;
             }
         } else {
             // Se o email não foi encontrado no sistema, redirecione para a página de login com o aviso
-            header("Location: ../../../Login/login.html?aviso=" . urlencode("Email não encontrado no sistema."));
+            header("Location: ../../views/Login/login.html?aviso=" . urlencode("Email não encontrado no sistema."));
             exit;
         }
     } else {
         // Se os campos estiverem vazios, redirecione para a página de login com o aviso
-        header("Location: ../../../Login/login.html?aviso=" . urlencode("Por favor, preencha todos os campos."));
+        header("Location: ../../views/Login/login.html?aviso=" . urlencode("Por favor, preencha todos os campos."));
         exit;
     }
 }

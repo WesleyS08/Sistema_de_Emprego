@@ -1,0 +1,179 @@
+:root{
+    --laranja: #EC6809;
+    --laranjaClaro: #ee8840;
+    --laranjaEscuro: #a04809;
+    -webkit-tap-highlight-color: transparent;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+}
+
+article{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ------------------------- Formulário -------------------------*/
+
+.sectionLogin{
+    margin-right: 90px;
+    text-align: center;
+    padding: 0px 70px 50px 0px;
+}
+
+.sectionLogin h1{
+    font-size: 40pt;
+}
+
+#buttonDiv{
+    margin: 20px 0px 36px 0px;
+}
+
+/* ------------------------- INPUTS ANIMADOS -------------------------*/
+
+.containerInput{
+    margin-bottom: 24px;
+}
+
+.contentInput{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.inputAnimado{
+    border: 1px solid silver;
+    padding: 6px 10px;
+    border-radius: 20px;
+    width: 320px;
+    outline: none;
+    font-size: 14pt;
+    transition: 0.2s ease;
+    background: transparent;    
+    z-index: 1111;
+}
+
+.labelLine{
+    position: absolute;
+    transition: 0.2s ease;
+    margin: 0px 11px;
+    color: silver;
+    background-color: white;
+    font-size: 14pt;
+}
+
+.inputAnimado:focus,
+.inputAnimado:valid{
+    border: 1px solid var(--laranja);
+}
+
+.inputAnimado:focus +.labelLine,
+.inputAnimado:valid +.labelLine{
+    transform: translate(10px,-18px) scale(0.86);
+    padding: 0 6px;
+    color: var(--laranja);
+    z-index: 1111;
+}
+
+small{
+    display: flex;
+    margin-left: 11px;
+    color: red;
+}
+
+/* --------------------------------------------------------------*/
+
+
+.btnLogin{
+    background: var(--laranja);
+    color: white;
+    font-size: 14pt;
+    font-weight: bold;
+    border: 1px solid var(--laranja);
+    border-radius: 20px;
+    padding: 6px 0px;
+    width: 320px;
+    box-shadow: 0px 0px 8px silver;
+    margin: 10px 0px 40px 0px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.btnLogin:hover{
+    border: 1px solid var(--laranja);
+    background: none;
+    transition: 0.2s;
+    color:var(--laranja);
+}
+
+.sectionLogin a{
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.sectionLogin a:hover{
+    color: var(--laranja);
+    transition: 0.2s;
+}
+
+/* ------------------------- Arte -------------------------*/
+
+
+.sectionArt div img{
+    width: 550px;
+}
+
+.imagemflutuando{
+    animation-name: infiniteUpDown;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+    transition: all .5s;
+}
+
+@keyframes infiniteUpDown{
+    0%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(-40px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+}
+
+.sombra{
+    animation-name: infiniteGrowDecrease;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+    transition: all .5s;
+}
+
+@keyframes infiniteGrowDecrease{
+    0%{
+        transform: scale(1.2);
+    }
+
+    50%{
+        transform: scale(1.0);
+    }
+
+    100%{
+        transform: scale(1.2);
+    }
+}

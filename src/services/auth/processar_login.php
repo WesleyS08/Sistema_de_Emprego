@@ -30,25 +30,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (mysqli_num_rows($result_empresa) > 0) {
                     $_SESSION['tipo_usuario'] = 'empresa';
                     $_SESSION['email_session'] = $email;
-                    header("Location: ../../../HomeRecrutador/homeRecrutador.php");
+                    header("Location: ../../views/HomeRecrutador/homeRecrutador.php");                    
                     exit;
                 } elseif (mysqli_num_rows($result_candidato) > 0) {
                     $_SESSION['tipo_usuario'] = 'candidato';
                     $_SESSION['email_session'] = $email;
-                    header("Location: pagina_do_candidato.php");
+                    header("Location: ../../views/HomeCandidato/homeCandidato.html");
                     exit;
                 } else {
                     // Se o tipo de usuário não puder ser determinado, redirecione para a página de login com um aviso
-                    header("Location: ../../../Login/login.html?aviso=" . urlencode("Tipo de usuário desconhecido."));
+                    header("Location: ../../views/Login/login.html?aviso=" . urlencode("Tipo de usuário desconhecido."));
                     exit;
                 }
             } else {
-                header("Location: ../../../Login/login.html?aviso=" . urlencode("Usuário não encontrado ou senha incorreta. Por favor, tente novamente.."));
+                header("Location: ../../views/Login/login.html?aviso=" . urlencode("Usuário não encontrado ou senha incorreta. Por favor, tente novamente.."));
                 exit;
             }
         }
     } else {
-        header("Location: ../../../Login/login.html?aviso=" . urlencode("Algo deu errado. Tente novamente."));
+        header("Location: ../../views/Login/login.html?aviso=" . urlencode("Algo deu errado. Tente novamente."));
         exit;
     }
 }

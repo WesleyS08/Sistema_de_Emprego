@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt1->affected_rows > 0 && $stmt2->affected_rows > 0) {
             // Confirmar a transação
             $_con->commit();
-            echo "Registro inserido com sucesso!";
+            echo "Registro inserido com sucesso!";            
         } else {
             // Desfazer a transação em caso de erro
             $_con->rollback();
@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->AltBody .= 'Link: ' . $link;
         
             if($mail->send()) {
-                // Redirecionar página
+                // Redirecionar para página de aviso de envio de email
                 echo 'Email enviado com sucesso';
             } else {
                 echo 'Email não enviado';

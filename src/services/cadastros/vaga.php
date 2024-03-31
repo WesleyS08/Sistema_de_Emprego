@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modalidadeVaga = mysqli_real_escape_string($_con, $_POST['modalidade']);
     $categoriaVaga = mysqli_real_escape_string($_con, $_POST['tipo']);
     $nivelVaga = mysqli_real_escape_string($_con, $_POST['nivel']);
-    $emailUsuario = mysqli_real_escape_string($_con, $_POST['emailSession']); // Corrigido aqui
+    $emailUsuario = mysqli_real_escape_string($_con, $_POST['emailSession']); 
 
     date_default_timezone_set('America/Sao_Paulo'); // Define o fuso horário para São Paulo
     $dataEhoraDeHoje = date("Y-m-d H:i:s"); // Obtém a data e hora atual
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $estado = "Aberta";
 
     // Inserir os dados da vaga na tabela Tb_anuncios para salvar no banco.
-    $sql_inserir_vaga = "INSERT INTO Tb_Anuncios (Categoria, Titulo, Descricao, Area, Cidade, Nivel_Operacional, Data_de_Criacao, Modalidade, Beneficicios, Requisitos, Horario, Estado, Jornada) 
+    $sql_inserir_vaga = "INSERT INTO Tb_Anuncios (Categoria, Titulo, Descricao, Area, Cidade, Nivel_Operacional, Data_de_Criacao, Modalidade, Beneficios, Requisitos, Horario, Estado, Jornada) 
                       VALUES ('$categoriaVaga', '$tituloVaga', '$descricaoVaga', '$areaVaga', '$cidadeVaga', '$nivelVaga', NOW(), '$modalidadeVaga', '$beneficiosVaga', '$requisitosVaga', '$horarioVaga', '$estadoVaga', '$jornadaVaga')";
 
 
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $cnpjEmpresa = $row['CNPJ']; // CNPJ da empresa logada
             
             // Preencher a tabela Tb_Vagas
-            $sql_preencher_tabela_vagas = "INSERT INTO Tb_Vagas (Tb_Anuncios_Id, Tb_Empresa_CNPJ, Estados, Data_de_Termino) 
+            $sql_preencher_tabela_vagas = "INSERT INTO Tb_Vagas (Tb_Anuncios_Id, Tb_Empresa_CNPJ, Status, Data_de_Termino) 
                                             VALUES ('$idVagaInserida', '$cnpjEmpresa', '$estado', NULL)";
 
             if (mysqli_query($_con, $sql_preencher_tabela_vagas)) {
