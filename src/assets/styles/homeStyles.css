@@ -512,7 +512,7 @@ nav ul li a:hover{
     background-color: #eeeeee;
 }
 
-.divImg{
+.comentario .divImg{
     background-image: url("../imagens/pessoa.png");
     background-repeat: no-repeat;
     background-size: cover;
@@ -532,12 +532,12 @@ nav ul li a:hover{
     margin: 14px 0px;
 }
 
-.sectionEstrelas{
+.comentario .sectionEstrelas{
     display: flex;
     align-items: center;
 }
 
-.estrela{
+.comentario .estrela{
     margin-right: 2px;
 }
 
@@ -546,7 +546,7 @@ nav ul li a:hover{
     color: gray;
 }
 
-.likes{
+.comentario .likes{
     position: absolute;
     left: 0;
     bottom: 0;
@@ -555,7 +555,7 @@ nav ul li a:hover{
     padding-left: 8px;
 }
 
-.qntdLikes{
+.comentario .qntdLikes{
     margin-left: 4px;
 }
 
@@ -583,7 +583,7 @@ nav ul li a:hover{
     background-color: #eeeeee;
 }
 
-.divImg{
+.perfil .divImg{
     background-image: url("../imagens/pessoa.png");
     background-repeat: no-repeat;
     background-size: cover;
@@ -598,7 +598,7 @@ nav ul li a:hover{
     margin: 8px 0px;
 }
 
-.nomePessoa{
+.perfil .nomePessoa{
     font-weight: bold;
 }
 
