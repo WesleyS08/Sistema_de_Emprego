@@ -42,14 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt1->bind_param("sss", $nomeUsuario, $emailUsuario, $senhaCriptografada);
         
         $stmt2 = $_con->prepare("INSERT INTO tb_candidato (CPF) VALUES (?)");
-        $stmt2->bind_param("s", $cpfUsuario);
+        $stmt2->bind_param("s", $cpfUsuario);        
 
         // Executar as instruções SQL dentro da transação
         $stmt1->execute();
 
         // Obtenção do Id do usuário inserido na última tabela (tb_pessoas)
         $userId = $_con->query("SELECT LAST_INSERT_ID()")->fetch_row()[0];
-
+        
         $stmt2->execute();
 
         //////////////////////

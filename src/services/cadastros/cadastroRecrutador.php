@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cpfExists = $checkCPF->get_result()->fetch_assoc()['total'];
 
     if ($cpfExists > 0) {
-        echo "Erro ao inserir registro: CPF já existe.";        
+        echo "Erro ao inserir registro: CNPJ já existe.";        
     } else {
         // Iniciar a transação
         $_con->begin_transaction();
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Prevenir SQL Injection usando prepared statements
         $stmt1 = $_con->prepare("INSERT INTO tb_pessoas (Nome, Email, Senha) VALUES (?, ?, ?)");
         $stmt1->bind_param("sss", $nomeRecrutador, $emailRecrutador, $senhaCriptografada);
-        
+
         $stmt2 = $_con->prepare("INSERT INTO tb_empresa (CNPJ) VALUES (?)");
         $stmt2->bind_param("s", $cnpjRecrutador);
 
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt1->execute();
 
         // Obtenção do Id do usuário inserido na última tabela (tb_pessoas)
-        $userId = $_con->query("SELECT LAST_INSERT_ID()")->fetch_row()[0];
+        $userId = $_con->query("SELECT LAST_INSERT_ID()")->fetch_row()[0];        
 
         $stmt2->execute();
 
