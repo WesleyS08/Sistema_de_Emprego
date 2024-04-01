@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['google_session'] = $email_google;
                 $_SESSION['google_usuario'] = 'candidato';
                 $_SESSION['nome_usuario'] = $nome_usuario; 
-                header("Location: pagina_do_candidato.php"); // O que faz essa linha? lol
+                header("Location: ../../views/homeCandidato/homeCandidato.html"); // O que faz essa linha? lol
                 exit;
             } else {
                 // Se o tipo de usuário não puder ser determinado, redirecione para a página de login com um aviso
