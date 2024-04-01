@@ -39,10 +39,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Prevenir SQL Injection usando prepared statements
         $stmt1 = $_con->prepare("INSERT INTO tb_pessoas (Nome, Email, Senha) VALUES (?, ?, ?)");
-        $stmt1->bind_param("sss", $nomeUsuario, $emailUsuario, $senhaCriptografada);
+        $stmt1->bind_param("sss", $nomeUsuario, $emailUsuario, $senhaCriptografada);        
         
-        $stmt2 = $_con->prepare("INSERT INTO tb_candidato (CPF) VALUES (?)");
-        $stmt2->bind_param("s", $cpfUsuario);        
+        $stmt2 = $_con->prepare("INSERT INTO tb_candidato (CPF, Tb_Pessoas_Id) VALUES (?, ?)");
+        $stmt2->bind_param("si", $cpfUsuario, $userId);        
 
         // Executar as instruções SQL dentro da transação
         $stmt1->execute();

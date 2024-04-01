@@ -41,8 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt1 = $_con->prepare("INSERT INTO tb_pessoas (Nome, Email, Senha) VALUES (?, ?, ?)");
         $stmt1->bind_param("sss", $nomeRecrutador, $emailRecrutador, $senhaCriptografada);
 
-        $stmt2 = $_con->prepare("INSERT INTO tb_empresa (CNPJ) VALUES (?)");
-        $stmt2->bind_param("s", $cnpjRecrutador);
+        $stmt2 = $_con->prepare("INSERT INTO tb_empresa (CNPJ, Tb_Pessoas_Id) VALUES (?, ?)");
+        $stmt2->bind_param("si", $cnpjRecrutador, $userId);
 
         // Executar as instruções SQL dentro da transação
         $stmt1->execute();

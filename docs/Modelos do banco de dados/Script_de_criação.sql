@@ -39,7 +39,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Candidato` (
   `CPF` VARCHAR(11) NOT NULL,
-  `Tb_Pessoas_Id` INT NOT NULL AUTO_INCREMENT, -- Adicionado AUTO_INCREMENT
+  `Tb_Pessoas_Id` INT NOT NULL, -- Adicionado AUTO_INCREMENT
   `Area_de_Interesse` VARCHAR(50) NULL,
   `Tipo_de_Contratacao` VARCHAR(45) NULL,
   `Experiencia` VARCHAR(200) NULL,
@@ -67,7 +67,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Empresa` (
   `CNPJ` VARCHAR(14) NOT NULL,
-  `Tb_Pessoas_Id` INT NOT NULL AUTO_INCREMENT,
+  `Tb_Pessoas_Id` INT NOT NULL,
   `Banner` VARCHAR(45) NULL,
   `Area_de_Atuacao` VARCHAR(45) NULL,
   `Facebook` VARCHAR(45) NULL,
