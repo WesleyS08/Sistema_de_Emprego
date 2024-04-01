@@ -41,7 +41,7 @@ function determinarImagemCategoria($categoria) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="src/assets/styles/homeStyles.css">
 </head>
 <body>
     <nav>
@@ -49,7 +49,7 @@ function determinarImagemCategoria($categoria) {
         <label for="check" class="menuBtn">
             <img src="imagens/menu.svg">
         </label>
-        <label id="logo">SIAS</label>
+        <a href="index.html"><img id="logo" src="src/assets/images/logos_empresa/logo_sias.png"></a>
         <ul>            
             <li><a href="#">Vagas</a></li>
             <li><a href="#">Pesquisar</a></li>
@@ -58,12 +58,16 @@ function determinarImagemCategoria($categoria) {
         </ul>
     </nav>
     <div class="divTitle">
-        <div class="divTituloDigitavel">
-            <h1 id="tituloAutomatico">S</h1>
-            <i></i>
+        <div class="divCentraliza">
+            <div>
+                <div class="divTituloDigitavel">
+                    <h1 id="tituloAutomatico">S</h1>
+                    <i></i>
+                </div>
+                <p>Construa sua carreira onde habilidades geram oportunidades.<br>Seu emprego dos sonhos está a um clique de distância!</p>
+                <button onclick="location.href='src/views/Cadastro/cadastro.html'">Inscreva-se</button>
+            </div>            
         </div>
-        <p>Construa sua carreira onde habilidades geram oportunidades.<br>Seu emprego dos sonhos está a um clique de distância!</p>
-        <button onclick="location.href='src/views/Cadastro/cadastro.html'">Inscreva-se</button>
     </div>
     <div class="divCarrossel">
         <div class="divTitulo">
