@@ -1,5 +1,5 @@
 const sliderPerfil = document.querySelector("#carrosselPerfis");
-let scrollPerClickPerfil = 800;
+let scrollPerClickPerfil = 1000;
 let scrollAmountPerfil = 0;
 
 function SliderScrollLeft(){

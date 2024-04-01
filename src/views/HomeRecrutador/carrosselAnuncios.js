@@ -1,5 +1,5 @@
 const sliderAnuncio = document.querySelector("#carrosselAnuncios");
-let scrollPerClickAnuncio = 800;
+let scrollPerClickAnuncio = 1040;
 let scrollAmountAnuncio = 0;
 
 function SliderScrollLeft(){

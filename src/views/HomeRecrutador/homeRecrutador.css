@@ -17,10 +17,38 @@
 body{
     font-family: Arial, sans-serif;
     background-color: whitesmoke;
+    transition: 0.5s ease;
 }
 
 a{
     cursor: pointer;
+}
+
+button{
+    color: whitesmoke;
+    background-color: black;
+    width: 130px;
+    padding: 10px 0;
+    border: 1px solid black;
+    font-size: 12pt;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover{
+    transform: scale(1.08);
+}
+
+h2{
+    font-size: 24pt;
+}
+
+.divTitulo{
+    margin-bottom: 24px;
+    width: 1150px;
+    display: flex;
+    align-items: center;
 }
 
 /* ------------------------- Header -------------------------*/                                                                                                                 
@@ -132,9 +160,9 @@ nav ul li a:hover{
     }
 }
 
-/* ------------------------- Article do Título -------------------------*/
+/* ------------------------- Div do Título -------------------------*/
 
-.articleTitle{
+.divTitle{
     background-color: var(--laranja);
     padding: 30px;
     text-align: center;
@@ -147,11 +175,11 @@ nav ul li a:hover{
     align-items: center;
 }
 
-.articleTitle h1{
+.divTitle h1{
     font-size: 44pt;
 }
 
-.articleTitle i{
+.divTitle i{
     margin-left: 6px;
     width: 6px;
     height: 60px;
@@ -172,86 +200,39 @@ nav ul li a:hover{
     }
 }
 
-.articleTitle p{
-margin: 10px 0px 20px 0px;
+.divTitle p{
+    margin: 10px 0px 20px 0px;
 }
 
-.articleTitle button{
-width: 200px;
-}
+/* ------------------------- Div Comum -------------------------*/
 
-.articleTitle button:hover{
-color: black;
-background-color: whitesmoke;
-border: 1px solid whitesmoke;
-transition: 0.2s;
-}
-
-/* ------------------------- Articles -------------------------*/
-
-h2{
-    font-size: 24pt;
-}
-
-button{
-    color: whitesmoke;
-    background-color: black;
-    width: 130px;
-    padding: 10px 0;
-    border: 1px solid black;
-    font-size: 12pt;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.5s ease;
-}
-
-button:hover{
-    color: black;
-    background-color: whitesmoke;
-    border: 1px solid whitesmoke;
-    transition: 0.2s;
-}
-
-.divTitulo{
-    margin-bottom: 24px;
-    width: 1150px;
-    display: flex;
-    align-items: center;
-}
-
-/* ------------------------- Article Comum -------------------------*/
-
-.commonArticle{
+.divCommon{
     display: grid;
     place-items: center;
     margin: 70px 0px;
 }
 
-.commonArticle .container{
+.divCommon .container{
     width: 1150px;
 }
 
-.commonArticle button:hover{
-    border: 1px solid black;
-}
-
-.commonArticle .divTitulo{
+.divCommon .divTitulo{
     margin-bottom: 36px;
 }
 
-/* ------------------------- Article Carrossel -------------------------*/
+/* ------------------------- Div Carrossel -------------------------*/
 
-.articleCarrossel{
+.divCarrossel{
     display: grid;
     place-items: center;
     margin: 70px 0px;
 }
 
-.articleCarrossel p{
+.divCarrossel p{
     margin-top: 6px;
 }
 
-.articleCarrossel .container{
+.divCarrossel .container{
     width: 1270px;
 } 
 
@@ -293,13 +274,11 @@ button:hover{
     font-size: 20pt;
     font-weight: bold;
     margin-top: 70px;
-    transition: 0.5s ease;
+    transition: 0.2s ease;
 }
 
 .btnLeftSlider:hover, .btnRightSlider:hover{
-    transition: 0.2s;
-    color: #1C1C1C;
-    border: solid 1px #1C1C1C;
+    transform: scale(1.08);
 }
 
 .btnLeftSlider{

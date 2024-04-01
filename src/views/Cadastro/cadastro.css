@@ -85,25 +85,10 @@ article{
     font-size: 32pt;
 }
 
-.btnGoogle{
-    background: none;
-    border: none;
-    border-radius: 14px;
-    padding: 6px 30px 2px 30px;
-    margin: 6px 0px 18px 0px;
-    transition: 0.5s;
-    cursor: pointer;
-}
-
-.btnGoogle:hover{
-    box-shadow: 0px 0px 8px silver;
-    transform: scale(1.06);
-}
-
 /* ------------------------- TROCA DE FORMULÁRIOS -------------------------*/
 
 .divBotoesTrocaForms{
-    margin-bottom: 40px;
+    margin: 14px 0px 32px 0px;
     display: flex;
     justify-content: center;
 }

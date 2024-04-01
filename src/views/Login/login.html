@@ -11,11 +11,12 @@
 <article>
     <section class="sectionLogin">
         <h1>Login</h1>
-        <form id="googleLoginForm" method="post" action="../../../src/services/auth/processar_login_google.php">
-            <div id="buttonDiv"></div>
-            <input type="hidden" id="google_token" name="token" />
-            <input type="hidden" id="email_google" name="email_google" />
-        </form>
+        <form id="googleLoginForm" method="post" action="../src/services/auth/processar_login_google.php">
+            <div id="buttonDiv">
+                <input type="hidden" id="google_token" name="token" />
+                <input type="hidden" id="email_google" name="email_google" />
+            </div>
+        </form>
         <form id="loginForm" method="post" action="../../../src/services/auth/processar_login.php">
             <div class="containerInput">
                 <div class="contentInput">
