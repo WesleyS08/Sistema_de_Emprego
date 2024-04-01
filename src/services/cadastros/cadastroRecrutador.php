@@ -97,8 +97,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->AltBody .= 'Link: ' . $link;
         
             if($mail->send()) {
-                // Redirecionar página
-                echo 'Email enviado com sucesso';
+                header("Location: ../../views/Login/login.html?cadastro=" . urlencode("sucesso"));
+
+                exit();
             } else {
                 echo 'Email não enviado';
             }

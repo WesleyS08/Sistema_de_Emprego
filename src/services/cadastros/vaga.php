@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modalidadeVaga = mysqli_real_escape_string($_con, $_POST['modalidade']);
     $categoriaVaga = mysqli_real_escape_string($_con, $_POST['tipo']);
     $nivelVaga = mysqli_real_escape_string($_con, $_POST['nivel']);
-    $emailUsuario = mysqli_real_escape_string($_con, $_POST['emailSession']); 
+    $emailUsuario = mysqli_real_escape_string($_con, $_POST['emailSession']);
 
     date_default_timezone_set('America/Sao_Paulo'); // Define o fuso horário para São Paulo
     $dataEhoraDeHoje = date("Y-m-d H:i:s"); // Obtém a data e hora atual
@@ -35,15 +35,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Executar a consulta para inserir a vaga
     if (mysqli_query($_con, $sql_inserir_vaga)) {
         echo "Vaga criada com sucesso!";
-        
+
         // Obtendo o ID da vaga recém-inserida
         $idVagaInserida = mysqli_insert_id($_con);
-        
+
         // Consultar o CNPJ da empresa associada ao e-mail da sessão
         $sql_consulta_cnpj = "SELECT CNPJ FROM Tb_Empresa 
                                 JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas 
                                 WHERE Tb_Pessoas.Email = '$emailUsuario'";
-        
+
         $result_consulta_cnpj = mysqli_query($_con, $sql_consulta_cnpj);
 
         // Verificar se a consulta foi bem-sucedida e se o CNPJ foi encontrado
@@ -51,13 +51,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Extrair o CNPJ da consulta
             $row = mysqli_fetch_assoc($result_consulta_cnpj);
             $cnpjEmpresa = $row['CNPJ']; // CNPJ da empresa logada
-            
+
             // Preencher a tabela Tb_Vagas
             $sql_preencher_tabela_vagas = "INSERT INTO Tb_Vagas (Tb_Anuncios_Id, Tb_Empresa_CNPJ, Status, Data_de_Termino) 
                                             VALUES ('$idVagaInserida', '$cnpjEmpresa', '$estado', NULL)";
 
             if (mysqli_query($_con, $sql_preencher_tabela_vagas)) {
-                echo "Tabela Tb_Vagas preenchida com sucesso!";
+                header("Location: ../../views/HomeRecrutador/homeRecrutador.php");
+                exit();
             } else {
                 echo "Erro ao preencher a tabela Tb_Vagas: " . mysqli_error($_con);
             }

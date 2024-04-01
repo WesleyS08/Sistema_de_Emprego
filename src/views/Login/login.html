@@ -9,7 +9,6 @@
 <body>
 <?php include '../src/services/google_credentials.php'; ?>
 <article>
-    <section class="sectionLogin">
         <h1>Login</h1>
         <form id="googleLoginForm" method="post" action="../src/services/auth/processar_login_google.php">
             <div id="buttonDiv">
@@ -109,29 +108,6 @@
         google.accounts.id.prompt();
     };
 </script>
-<script>
-    // Função para obter parâmetros da URL
-    function obterParametroUrl(nome) {
-        nome = nome.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + nome + '(=([^&#]*)|&|#|$)'),
-            resultados = regex.exec(window.location.href);
-        if (!resultados) return null;
-        if (!resultados[2]) return '';
-        return decodeURIComponent(resultados[2].replace(/\+/g, ' '));
-    }
 
-    // Verifica se há um aviso na URL
-    var aviso = obterParametroUrl('aviso');
-    if (aviso) {
-        // Se houver um aviso, exiba-o dentro do elemento 'aviso'
-        document.getElementById('aviso').innerText = aviso;
-
-        // Oculta o container 'aviso' após 5 segundos
-        setTimeout(function() {
-            document.getElementById('aviso').style.display = 'none';
-            window.location.href = "../Login/login.html";
-        }, 5000);
-    }
-</script>
 </body>
 </html>
