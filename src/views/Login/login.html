@@ -17,32 +17,32 @@
           </div>
         </div>
         <h1>Login</h1>
+        <form id="googleLoginForm" method="post" action="../../../src/services/auth/processar_login_google.php">
+        <div id="buttonDiv"></div>
+        <input type="hidden" id="google_token" name="token" />
+        <input type="hidden" id="email_google" name="email_google" />
+    </form>
         <form
-          id="googleLoginForm"
+          id="loginForm"
           method="post"
-          action="../../../src/services/auth/processar_login_google.php"
+          action="../../../src/services/auth/processar_login.php"
         >
-          <div id="buttonDiv"></div>
-          <input type="hidden" id="google_token" name="token" />
-          <input type="hidden" id="email_google" name="email_google" />
-        </form>
-        <form id="loginForm" method="post" action="../../../src/services/auth/processar_login.php">
-        <div class="containerInput">
+          <div class="containerInput">
             <div class="contentInput">
-            <input
+              <input
                 class="inputAnimado"
                 id="email"
                 name="email"
                 type="text"
                 required
-            />
-            <div class="labelLine">Email</div>
+              />
+              <div class="labelLine">Email</div>
             </div>
             <small name="aviso"></small>
-        </div>
-        <div class="containerInput">
+          </div>
+          <div class="containerInput">
             <div class="contentInput">
-            <input
+              <input
                 class="inputAnimado"
                 id="senha"
                 name="senha"
@@ -86,10 +86,10 @@
     <script src="avisos.js"></script>
     <script src="https://accounts.google.com/gsi/client" async></script>
     <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-      // Função para enviar o token do Google e o email e enviar o formulário
-      function submitWithGoogleToken(email, token) {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+<script>
+    // Função para enviar o token do Google e o email e enviar o formulário
+    function submitWithGoogleToken(email, token) {
         // Atualiza os valores dos campos ocultos com o email e o token
         document.getElementById("email_google").value = email;
         document.getElementById("google_token").value = token;
@@ -100,10 +100,10 @@
 
         // Envie o formulário
         document.getElementById("googleLoginForm").submit();
-      }
+    }
 
-      // Função para lidar com a resposta de credenciais do Google
-      function handleCredentialResponse(response) {
+    // Função para lidar com a resposta de credenciais do Google
+    function handleCredentialResponse(response) {
         // Decodifica o token JWT usando a biblioteca jwt-decode
         const data = jwt_decode(response.credential);
 
@@ -113,34 +113,33 @@
 
         // Envie o email e o token para processar o login
         submitWithGoogleToken(email, token);
-      }
+    }
 
-      // Manipulador de eventos para quando a janela estiver totalmente carregada
-      window.onload = function () {
+    // Manipulador de eventos para quando a janela estiver totalmente carregada
+    window.onload = function () {
         // Inicializa o Google Sign-In com o ID do cliente obtido do arquivo PHP
         google.accounts.id.initialize({
-          client_id:
-            "367331740507-ti4ugnjnjjn862k4v361000vfa3frcr3.apps.googleusercontent.com",
-          callback: handleCredentialResponse,
+            client_id: "367331740507-ti4ugnjnjjn862k4v361000vfa3frcr3.apps.googleusercontent.com",
+            callback: handleCredentialResponse,
         });
 
         // Renderiza o botão de login do Google
         google.accounts.id.renderButton(
-          document.getElementById("buttonDiv"),
-          {
-            type: "standard",
-            shape: "rectangular",
-            theme: "filled_blue",
-            text: "signin_with",
-            size: "large",
-            logo_alignment: "left",
-          } // atributos de personalização
+            document.getElementById("buttonDiv"),
+            {
+                type: "standard",
+                shape: "rectangular",
+                theme: "filled_blue",
+                text: "signin_with",
+                size: "large",
+                logo_alignment: "left",
+            } // atributos de personalização
         );
 
         // Exibe o diálogo "One Tap"
         google.accounts.id.prompt();
-      };
-    </script>
+    };
+</script>
     <script>
       // Função para obter parâmetros da URL
       function obterParametroUrl(nome) {
