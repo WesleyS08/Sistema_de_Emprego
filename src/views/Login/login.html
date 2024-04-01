@@ -1,63 +1,95 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="login.css" />
-</head>
-<body>
-<?php include '../src/services/google_credentials.php'; ?>
-<article>
+  </head>
+  <body>
+    <?php include '../src/services/google_credentials.php'; ?>
+    <article>
+      <section class="sectionLogin">
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <p>Cadastro realizado com sucesso!</p>
+            <button id="fecharModal" class="fecharModal">OK</button>
+          </div>
+        </div>
         <h1>Login</h1>
-        <form id="googleLoginForm" method="post" action="../src/services/auth/processar_login_google.php">
-            <div id="buttonDiv">
-                <input type="hidden" id="google_token" name="token" />
-                <input type="hidden" id="email_google" name="email_google" />
-            </div>
-        </form>
+        <form
+          id="googleLoginForm"
+          method="post"
+          action="../../../src/services/auth/processar_login_google.php"
+        >
+          <div id="buttonDiv"></div>
+          <input type="hidden" id="google_token" name="token" />
+          <input type="hidden" id="email_google" name="email_google" />
+        </form>
         <form id="loginForm" method="post" action="../../../src/services/auth/processar_login.php">
-            <div class="containerInput">
-                <div class="contentInput">
-                    <input class="inputAnimado" id="email" name="email" type="text" required />
-                    <div class="labelLine">Email</div>
-                </div>
-                <small name="aviso"></small>
+        <div class="containerInput">
+            <div class="contentInput">
+            <input
+                class="inputAnimado"
+                id="email"
+                name="email"
+                type="text"
+                required
+            />
+            <div class="labelLine">Email</div>
             </div>
-            <div class="containerInput">
-                <div class="contentInput">
-                    <input class="inputAnimado" id="senha" name="senha" type="password" required />
-                    <div class="labelLine">Senha</div>
-                </div>
-                <small name="aviso"></small>
+            <small name="aviso"></small>
+        </div>
+        <div class="containerInput">
+            <div class="contentInput">
+            <input
+                class="inputAnimado"
+                id="senha"
+                name="senha"
+                type="password"
+                required
+              />
+              <div class="labelLine">Senha</div>
             </div>
-            <input type="submit" value="Login" class="btnLogin" />
+            <small name="aviso"></small>
+          </div>
+          <input type="submit" value="Login" class="btnLogin" />
         </form>
 
         <a href="../Cadastro/cadastro.html">Não tem conta? Registre-se!</a>
 
         <!-- Avisos de errro por falta de cadastro no banco-->
-        <div id="aviso" style="color: red;width: 300px;margin-top: 15px;"></div>
-        <div id="erroGoogle" style="color: red; display: inline-block; margin-left: 20px; margin-bottom: 20px;"></div>
-        
-    </section>
-    <section class="sectionArt">
+        <div
+          id="aviso"
+          style="color: red; width: 300px; margin-top: 15px"
+        ></div>
+        <div
+          id="erroGoogle"
+          style="
+            color: red;
+            display: inline-block;
+            margin-left: 20px;
+            margin-bottom: 20px;
+          "
+        ></div>
+      </section>
+      <section class="sectionArt">
         <div>
-            <img
-                    src="../../../imagens/garotoFlutuando.jpeg"
-                    class="imagemflutuando"
-            /><br />
-            <img src="../../../imagens/sombraDoGaroto.jpeg" class="sombra" />
+          <img
+            src="../../../imagens/garotoFlutuando.jpeg"
+            class="imagemflutuando"
+          /><br />
+          <img src="../../../imagens/sombraDoGaroto.jpeg" class="sombra" />
         </div>
-    </section>
-</article>
-<script src="avisos.js"></script>
-<script src="https://accounts.google.com/gsi/client" async></script>
-<script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
-<script>
-    // Função para enviar o token do Google e o email e enviar o formulário
-    function submitWithGoogleToken(email, token) {
+      </section>
+    </article>
+    <script src="avisos.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      // Função para enviar o token do Google e o email e enviar o formulário
+      function submitWithGoogleToken(email, token) {
         // Atualiza os valores dos campos ocultos com o email e o token
         document.getElementById("email_google").value = email;
         document.getElementById("google_token").value = token;
@@ -68,10 +100,10 @@
 
         // Envie o formulário
         document.getElementById("googleLoginForm").submit();
-    }
+      }
 
-    // Função para lidar com a resposta de credenciais do Google
-    function handleCredentialResponse(response) {
+      // Função para lidar com a resposta de credenciais do Google
+      function handleCredentialResponse(response) {
         // Decodifica o token JWT usando a biblioteca jwt-decode
         const data = jwt_decode(response.credential);
 
@@ -81,33 +113,75 @@
 
         // Envie o email e o token para processar o login
         submitWithGoogleToken(email, token);
-    }
+      }
 
-    // Manipulador de eventos para quando a janela estiver totalmente carregada
-    window.onload = function () {
+      // Manipulador de eventos para quando a janela estiver totalmente carregada
+      window.onload = function () {
         // Inicializa o Google Sign-In com o ID do cliente obtido do arquivo PHP
         google.accounts.id.initialize({
-            client_id: "367331740507-ti4ugnjnjjn862k4v361000vfa3frcr3.apps.googleusercontent.com",
-            callback: handleCredentialResponse,
+          client_id:
+            "367331740507-ti4ugnjnjjn862k4v361000vfa3frcr3.apps.googleusercontent.com",
+          callback: handleCredentialResponse,
         });
 
         // Renderiza o botão de login do Google
         google.accounts.id.renderButton(
-            document.getElementById("buttonDiv"),
-            {
-                type: "standard",
-                shape: "rectangular",
-                theme: "filled_blue",
-                text: "signin_with",
-                size: "large",
-                logo_alignment: "left",
-            } // atributos de personalização
+          document.getElementById("buttonDiv"),
+          {
+            type: "standard",
+            shape: "rectangular",
+            theme: "filled_blue",
+            text: "signin_with",
+            size: "large",
+            logo_alignment: "left",
+          } // atributos de personalização
         );
 
         // Exibe o diálogo "One Tap"
         google.accounts.id.prompt();
-    };
-</script>
+      };
+    </script>
+    <script>
+      // Função para obter parâmetros da URL
+      function obterParametroUrl(nome) {
+        nome = nome.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + nome + "(=([^&#]*)|&|#|$)"),
+          resultados = regex.exec(window.location.href);
+        if (!resultados) return null;
+        if (!resultados[2]) return "";
+        return decodeURIComponent(resultados[2].replace(/\+/g, " "));
+      }
 
-</body>
+      // Verifica se há um aviso na URL
+      var aviso = obterParametroUrl("aviso");
+      if (aviso) {
+        // Se houver um aviso, exiba-o dentro do elemento 'aviso'
+        document.getElementById("aviso").innerText = aviso;
+
+        // Oculta o container 'aviso' após 5 segundos
+        setTimeout(function () {
+          document.getElementById("aviso").style.display = "none";
+          window.location.href = "../Login/login.html";
+        }, 5000);
+      }
+    </script>
+    <script>
+      // Função para fechar a janela modal
+      function fecharModal() {
+        document.getElementById("myModal").style.display = "none";
+      }
+
+      // Verifica se há um aviso na URL
+      var cadastroSucesso = obterParametroUrl("cadastro");
+      if (cadastroSucesso === "sucesso") {
+        // Se houver um aviso, exiba a mensagem de sucesso
+        document.getElementById("myModal").style.display = "block";
+
+        // Adiciona um evento de clique ao botão "OK" para fechar a janela modal
+        document
+          .getElementById("fecharModal")
+          .addEventListener("click", fecharModal);
+      }
+    </script>
+  </body>
 </html>
