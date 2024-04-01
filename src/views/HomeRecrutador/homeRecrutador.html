@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" type="text/css" href="homeRecrutador.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
 </head>
 <body>
     <nav>
@@ -12,7 +12,7 @@
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a id="logo" href="homeRecrutador.php">SIAS</a>     
+        <a href="homeRecrutador.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>   
         <ul>        
             <li><a href="#">Anunciar</a></li>
@@ -22,15 +22,20 @@
         </ul>
     </nav>
     <div class="divTitle">
-        <div class="divTituloDigitavel">
-            <h1 id="tituloAutomatico">B</h1>
-            <i></i>
+        <div class="divCentraliza">
+            <div>
+                <div class="divTituloDigitavel">
+                    <h1 id="tituloAutomatico">B</h1>
+                    <i></i>
+                </div>
+                <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique agora
+                    mesmo!</p>  
+                <button onclick="window.location.href='../criarVaga/criarVaga.php'">Anunciar</button>
+            </div>
         </div>
-        <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É simples e prático, clique já!</p>
-        <button onclick="location.href='../criarVaga/criarVaga.php'">Anunciar</button>
     </div>
     <div class="divCarrossel">
-        <div class="divTitulo">
+        <div class="divTituloComBtn">
             <h2>Meus anúncios</h2>
             <button class="btnAdicionar">+</button>
         </div>
@@ -60,7 +65,7 @@
         </div>
     </div>
     <div class="divCarrossel">
-        <div class="divTitulo">
+        <div class="divTituloComBtn">
             <h2>Minhas avaliações</h2>
             <button class="btnAdicionar">+</button>
         </div>
@@ -68,8 +73,8 @@
             <a class="btnLeftSlider" id="leftTestes"><</a>
             <a class="btnRightSlider" id="rightTestes">></a> 
             <div class="carrosselBox" id="carrosselTestes">
-                <a class="testeLink">
-                    <article class="teste">
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
                         <div class="divAcessos">
                             <img src="../../../imagens/people.svg"></img>
                             <small class="qntdAcessos">800</small>
@@ -82,8 +87,8 @@
                             </div>
                     </article>
                 </a>
-                <a class="testeLink">
-                    <article class="teste">
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
                         <div class="divAcessos">
                             <img src="../../../imagens/people.svg"></img>
                             <small class="qntdAcessos">800</small>
@@ -97,8 +102,8 @@
                         </div>
                     </article>
                 </a>
-                <a class="testeLink">
-                    <article class="teste">
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
                         <div class="divAcessos">
                             <img src="../../../imagens/people.svg"></img>
                             <small class="qntdAcessos">800</small>
@@ -112,8 +117,8 @@
                         </div>
                     </article>
                 </a>
-                <a class="testeLink">
-                    <article class="teste">
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
                         <div class="divAcessos">
                             <img src="../../../imagens/people.svg"></img>
                             <small class="qntdAcessos">800</small>

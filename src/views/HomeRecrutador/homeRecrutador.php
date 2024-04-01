@@ -67,7 +67,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a id="logo" href="homeRecrutador.php">SIAS</a>
+        <a href="homeRecrutador.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Anunciar</a></li>
@@ -77,18 +77,22 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         </ul>
     </nav>
     <div class="divTitle">
-        <div class="divTituloDigitavel">
-            <h1 id="tituloAutomatico">B</h1>
-            <i></i>
+        <div class="divCentraliza">
+            <div>
+                <div class="divTituloDigitavel">
+                    <h1 id="tituloAutomatico">B</h1>
+                    <i></i>
+                </div>
+                <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique agora
+                    mesmo!</p> 
+                <button onclick="window.location.href='../criarVaga/criarVaga.php'">Anunciar</button>
+            </div>
         </div>
-        <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique agora
-            mesmo!</p>
-        <button onclick="window.location.href='../criarVaga/criarVaga.php'">Anunciar</button>
     </div>
     <div class="divCarrossel">
         <div class="divTitulo">
             <h2>Meus anúncios</h2>
-            <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="adicionar">+</button>
+            <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="btnAdicionar">+</button>
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftAnuncios">
@@ -134,17 +138,17 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         </div>
     </div>
     <div class="divCarrossel">
-        <div class="divTitulo">
+        <div class="divTituloComBtn">
             <h2>Minhas avaliações</h2>
-            <button class="adicionar">+</button>
+            <button class="btnAdicionar">+</button>
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftTestes">
                 <</a>
                     <a class="btnRightSlider" id="rightTestes">></a>
                     <div class="carrosselBox" id="carrosselTestes">
-                        <a class="testeLink">
-                            <article class="teste">
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
                                 <div class="divAcessos">
                                     <img src=".../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
@@ -158,8 +162,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 </div>
                             </article>
                         </a>
-                        <a class="testeLink">
-                            <article class="teste">
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
                                 <div class="divAcessos">
                                     <img src="../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
@@ -173,8 +177,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 </div>
                             </article>
                         </a>
-                        <a class="testeLink">
-                            <article class="teste">
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
                                 <div class="divAcessos">
                                     <img src="../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
@@ -188,8 +192,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 </div>
                             </article>
                         </a>
-                        <a class="testeLink">
-                            <article class="teste">
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
                                 <div class="divAcessos">
                                     <img src="../../../imagens/people.svg"></img>
                                     <small class="qntdAcessos">800</small>
@@ -207,7 +211,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         </div>
     </div>
     <div class="divCarrossel">
-        <div class="divTitulo">
+        <div class="divTituloComBtn">
             <h2>Perfis de usuários</h2>
         </div>
         <div class="container">

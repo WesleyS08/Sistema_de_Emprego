@@ -49,7 +49,14 @@ h2{
     width: 1150px;
 }
 
-/* ------------------------- Header -------------------------*/
+.divTituloComBtn{
+    margin-bottom: 24px;
+    width: 1150px;
+    display: flex;
+    align-items: center;
+}
+
+/* ------------------------- Nav -------------------------*/
 
 nav{
     background-color: var(--laranja);
@@ -59,9 +66,8 @@ nav{
 }
 
 nav #logo{
-    color: whitesmoke;
-    font-size: 22pt;
-    line-height: 64px;
+    margin: 16px 0px;
+    width: 100px;
 }
 
 nav ul{
@@ -88,8 +94,29 @@ nav ul li a:hover{
     transition: 0.2s;
 }
 
-.menuBtn{
+.btnModo{
+    line-height: 64px;
     float: right;
+    background: transparent;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px 30px 0px 0px;
+    border-radius: 20px;
+    border: none;
+}
+
+.btnModo:hover{
+    border: none;
+    background: transparent;
+    box-shadow: 0px 0px 8px var(--laranjaEscuro);
+}
+
+.menuBtn{
+    margin-left: 20px;
+    float: left;
     line-height: 64px;
     cursor: pointer;
 }
@@ -100,14 +127,11 @@ nav ul li a:hover{
 
 @media(min-width:700px){
     nav #logo{
-        padding-left: 50px;
+        margin-left: 50px;
     }
 }
 
 @media (max-width: 700px){
-    nav #logo{
-        padding-left: 24px;
-    }
     .menuBtn{
         padding-right: 24px;
         display: block;
@@ -141,10 +165,18 @@ nav ul li a:hover{
 /* ------------------------- Div do Título -------------------------*/
 
 .divTitle{
+    height: 380px;
     background-color: var(--laranja);
-    padding: 30px;
-    text-align: center;
     color: whitesmoke;
+    text-align: center;
+}
+
+.divCentraliza{
+    width: 100%;  
+    height: 100%;  
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .divTituloDigitavel{
@@ -154,7 +186,7 @@ nav ul li a:hover{
 }
 
 .divTitle h1{
-    font-size: 44pt;
+    font-size: 50pt;
 }
 
 .divTitle i{
@@ -180,6 +212,13 @@ nav ul li a:hover{
 
 .divTitle p{
     margin: 10px 0px 20px 0px;
+    font-size: 16pt;
+}
+
+.divTitle button{
+    width: 200px;
+    font-size: 14pt;
+    margin-top: 20px;
 }
 
 /* ------------------------- Div Comum -------------------------*/
@@ -214,8 +253,51 @@ nav ul li a:hover{
     width: 1270px;
 }
 
-.divCarrossel h2{
-    text-align: center;
+.divCarrossel p{
+    margin-top: 6px;
+}
+
+.btnAdicionar{
+    width: 40px;
+    height: 40px;
+    margin-left: 14px;
+    border-radius: 20px;
+    font-size: 22pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnAdicionar:hover{
+    border: 1px solid black;
+}
+
+/* ------------------------- Div de testes -------------------------*/
+
+.flexTestes{
+    display: flex;
+}
+
+.gridTestes{
+    display: grid;
+    width: 100%;
+}
+
+/* ------------------------- Div de Comentários -------------------------*/
+
+.divComentarios{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divComentarios button{
+    padding: 8px;
+    height: 130px;
+}
+
+.divComentarios button img{
+    margin-top: 10px;
 }
 
 /* ------------------------- Carrossel -------------------------*/
@@ -256,12 +338,31 @@ nav ul li a:hover{
 .btnRightSlider{
     float: right;
 }
+
+/* ------------------------- Carrossel dos Testes -------------------------*/
+
+#carrosselTestes{
+    height: 120px;
+}
+
+#leftTestes, #rightTestes{
+    margin-top: 40px;
+}
+
+/* ------------------------- Carrossel dos Perfis -------------------------*/
+
+#carrosselPerfis{
+    height: 260px;
+}
+
+#leftPerfis, #rightPerfis{
+    margin-top: 110px;
+}
   
 /* ------------------------- Anuncio -------------------------*/
 
 .postLink{
     margin: 0 10px;
-    cursor: pointer;
     transition: 0.5s ease;
 }
 
@@ -315,17 +416,6 @@ nav ul li a:hover{
     right: 0;
 }
 
-/* ------------------------- Div de testes -------------------------*/
-
-.flexTestes{
-    display: flex;
-}
-
-.gridTestes{
-    display: grid;
-    width: 100%;
-}
-
 /* ------------------------- Teste -------------------------*/
 
 .testeLink{
@@ -375,26 +465,31 @@ nav ul li a:hover{
     margin: 4px;
 }
 
-/* ------------------------- Div de Comentários -------------------------*/
+/* ------------------------- Teste do Carrossel -------------------------*/
 
-.divComentarios{
+.testeCarrosselLink{
+    margin: 0px 10px;
+    transition: 0.5s ease;
+}
+
+.testeCarrosselLink:hover{
+    transform: scale(1.04);
+    transition: 0.2s;
+}
+
+.testeCarrossel{
+    width: 340px;
+    position: relative;
+    border: 1px solid silver;
+    padding: 6px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.divComentarios button{
-    padding: 8px;
-    height: 130px;
-}
-
-.divComentarios button img{
-    margin-top: 10px;
+    box-shadow: 4px 4px 4px silver;
 }
 
 /* ------------------------- Comentário -------------------------*/
 
 .comentarioLink{
+    cursor: default;
     transition: 0.5s ease;
     width: 230px;
     height: 230px;
@@ -464,7 +559,50 @@ nav ul li a:hover{
     margin-left: 4px;
 }
 
-/* ------------------------- Carrosel Infinito -------------------------*/
+/* ------------------------- Perfil -------------------------*/
+
+.perfilLink{
+    cursor: pointer;
+    transition: 0.5s ease;
+    margin: 0px 20px;
+}
+
+.perfilLink:hover{
+    transform: scale(1.04);
+    transition: 0.2s;
+}
+
+.perfil{
+    text-align: center;
+    width: 170px;
+    height: 220px;
+    padding: 10px;
+    border: 1px solid silver;
+    box-shadow: 4px 4px 4px silver;
+    border-radius: 10px;
+    background-color: #eeeeee;
+}
+
+.divImg{
+    background-image: url("../imagens/pessoa.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 50px;
+    margin: 0 auto;
+}
+
+.perfil section{
+    margin: 8px 0px;
+}
+
+.nomePessoa{
+    font-weight: bold;
+}
+
+/* ------------------------- Carrossel Infinito -------------------------*/
 
 .carrosselInfinito{  
     position: relative; 
