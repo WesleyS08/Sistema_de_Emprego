@@ -109,15 +109,31 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 echo '<img src="../../../imagens/people.svg"></img>';
                                 echo '<small class="qntdAcessos">28</small>';
                                 echo '</div>';
+                            
                                 echo '<header>';
-                                echo '<img src="../../../imagens/estagio.svg">';
-
-                                if (isset($row["Categoria"])) {
-                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                } else {
-                                    echo '<label class="tipoVaga">Categoria não definida</label>';
+                                switch ($row["Categoria"]) {
+                                    case "CLT":
+                                        echo '<img src="../../../imagens/clt.svg">';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                        break;
+                                    case "Estágio":
+                                        echo '<img src="../../../imagens/estagio.svg">';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                        break;
+                                    case "Jovem Aprendiz":
+                                        echo '<img src="../../../imagens/estagio.svg">';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                        break;
+                                    case "PJ":
+                                        echo '<img src="../../../imagens/pj.svg">';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                        break;
+                                    default:
+                                        echo '<label class="tipoVaga">Categoria não definida</label>';
+                                        break;
                                 }
-
+                            
+                                echo '</header>';
                                 echo '</header>';
                                 echo '<section>';
                                 echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';

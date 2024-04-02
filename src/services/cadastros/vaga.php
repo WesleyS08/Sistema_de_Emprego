@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 
@@ -21,15 +22,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $categoriaVaga = mysqli_real_escape_string($_con, $_POST['tipo']);
     $nivelVaga = mysqli_real_escape_string($_con, $_POST['nivel']);
     $emailUsuario = mysqli_real_escape_string($_con, $_POST['emailSession']);
-
+    $cep = mysqli_real_escape_string($_con, $_POST['cep']);
+    $numero = mysqli_real_escape_string($_con, $_POST['numero']);
     date_default_timezone_set('America/Sao_Paulo'); // Define o fuso horário para São Paulo
     $dataEhoraDeHoje = date("Y-m-d H:i:s"); // Obtém a data e hora atual
 
     $estado = "Aberta";
 
     // Inserir os dados da vaga na tabela Tb_anuncios para salvar no banco.
-    $sql_inserir_vaga = "INSERT INTO Tb_Anuncios (Categoria, Titulo, Descricao, Area, Cidade, Nivel_Operacional, Data_de_Criacao, Modalidade, Beneficios, Requisitos, Horario, Estado, Jornada) 
-                      VALUES ('$categoriaVaga', '$tituloVaga', '$descricaoVaga', '$areaVaga', '$cidadeVaga', '$nivelVaga', NOW(), '$modalidadeVaga', '$beneficiosVaga', '$requisitosVaga', '$horarioVaga', '$estadoVaga', '$jornadaVaga')";
+    $sql_inserir_vaga = "INSERT INTO Tb_Anuncios (Categoria, Titulo, Descricao, Area, Cidade, Nivel_Operacional, Data_de_Criacao, Modalidade, Beneficios, Requisitos, Horario, Estado, Jornada, CEP, Numero) 
+                      VALUES ('$categoriaVaga', '$tituloVaga', '$descricaoVaga', '$areaVaga', '$cidadeVaga', '$nivelVaga', NOW(), '$modalidadeVaga', '$beneficiosVaga', '$requisitosVaga', '$horarioVaga', '$estadoVaga', '$jornadaVaga','$cep', '$numero')";
 
 
     // Executar a consulta para inserir a vaga
