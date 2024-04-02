@@ -40,6 +40,10 @@ button:hover{
     transform: scale(1.08);
 }
 
+#btnRunningGuy{
+    padding: 12px;
+}
+
 h2{
     font-size: 24pt;
 }

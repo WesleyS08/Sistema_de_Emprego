@@ -88,7 +88,7 @@ function determinarImagemCategoria($categoria) {
                     echo '</div>';
                     echo '<header>';
                     echo '<img src="imagens/' . determinarImagemCategoria($row["Categoria"]) . '.svg">'; // Determina a imagem com base na categoria do trabalho
-                    echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
+                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                     echo '</header>';
                     echo '<section>';
                     echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
@@ -293,7 +293,14 @@ function determinarImagemCategoria($categoria) {
                         </section>
                     </article>
                 </a>
-                <button id="trocaImg" onclick="location.href='Login/login.html'">Faça parte!<br><img class="runningGuy" src="imagens/runningWhite.svg"></button>
+                <button id="btnRunningGuy" onclick="location.href='Login/login.html'">Faça parte!<br>
+                    <lord-icon
+                        src="https://cdn.lordicon.com/gwvmctbb.json"
+                        trigger="hover"
+                        colors="primary:#ffffff,secondary:#ffffff"
+                        style="width:90px;height:90px">
+                    </lord-icon>
+                </button>
             </div>
         </div>
     </div>
@@ -358,6 +365,8 @@ function determinarImagemCategoria($categoria) {
         <a>Avalie-nos</a>
         <p>SIAS 2024</p>
     </footer>
+
+<script src="https://cdn.lordicon.com/lordicon.js"></script>
 <script src="tituloDigitavel.js"></script>
 <script src="carrossel.js"></script>
 <script src="trocaImagem.js"></script>

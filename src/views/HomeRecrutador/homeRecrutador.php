@@ -113,9 +113,9 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 echo '<img src="../../../imagens/estagio.svg">';
 
                                 if (isset($row["Categoria"])) {
-                                    echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
+                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                 } else {
-                                    echo '<label class="tipoVaga" style="color:#191970">Categoria não definida</label>';
+                                    echo '<label class="tipoVaga">Categoria não definida</label>';
                                 }
 
                                 echo '</header>';
