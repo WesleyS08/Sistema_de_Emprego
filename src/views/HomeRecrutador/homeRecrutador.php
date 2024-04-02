@@ -114,22 +114,22 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 switch ($row["Categoria"]) {
                                     case "CLT":
                                         echo '<img src="../../../imagens/clt.svg">';
-                                        echo '<label class="tipoVaga" style="color:#008B8B">' . $row["Categoria"] . '</label>';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                         break;
                                     case "Estágio":
                                         echo '<img src="../../../imagens/estagio.svg">';
-                                        echo '<label class="tipoVaga" style="color:#191970">' . $row["Categoria"] . '</label>';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                         break;
                                     case "Jovem Aprendiz":
                                         echo '<img src="../../../imagens/estagio.svg">';
-                                        echo '<label class="tipoVaga" style="color:#EC6809">' . $row["Categoria"] . '</label>';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                         break;
                                     case "PJ":
                                         echo '<img src="../../../imagens/pj.svg">';
-                                        echo '<label class="tipoVaga" style="color:#800080">' . $row["Categoria"] . '</label>';
+                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                         break;
                                     default:
-                                        echo '<label class="tipoVaga" style="color:#191970">Categoria não definida</label>';
+                                        echo '<label class="tipoVaga">Categoria não definida</label>';
                                         break;
                                 }
                             
