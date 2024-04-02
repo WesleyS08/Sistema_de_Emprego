@@ -3,7 +3,7 @@ const text1 = "eu futuro começa aqui!";
 const interval = 150; // variável do tempo de digitação
 
 // método para fazer o título autodigitável
-function showText(titulo, text1, interval){
+function showText(titulo, text, interval){
     let char = text1.split("").reverse(); // esta variável está recebendo um array de todos caracteres do texto (ao inverso)
     
     // função responsável pela inserção de letras no título   
