@@ -27,7 +27,7 @@
         </div>
         <div class="container">
             <div class="divInformacoesIniciais">
-                <div class="IconeENome">
+                <div class="divIconeENome">
                     <lord-icon
                         src="https://cdn.lordicon.com/pbbsmkso.json"
                         trigger="loop"
@@ -37,7 +37,7 @@
                     </lord-icon>
                     <label id="nomeArea">Tecnologia da Informação</label>
                 </div>
-                <div class="IconeENome">
+                <div class="divIconeENome">
                     <lord-icon
                         src="https://cdn.lordicon.com/surcxhka.json"
                         trigger="loop"
@@ -50,7 +50,7 @@
                     <label>,&nbsp;</label>
                     <label id="cidade">São Paulo</label>
                 </div>
-                <div class="IconeENome">
+                <div class="divIconeENome">
                     <lord-icon
                         src="https://cdn.lordicon.com/qvyppzqz.json"
                         trigger="loop"
@@ -63,30 +63,64 @@
                 </div>
             </div>
             <div class="divInformacoesPrincipais">
-                <div class="divFlex">
-                    <div class="detalhesCurtos">
-                        <div class="IconeENome">
-                            <img src="../../assets/images/icones_regimes/estudanteSemFundo.svg" class="icone">
-                            <label id="tipoProfissional">Estágio</label>
+                <div class="divFlexWithButton">                    
+                    <div class="divFlex">
+                        <div class="divDetalhesCurtos">
+                            <div class="divIconeENome">
+                                <img id="imgTipoProfissional" src="" class="icone">
+                                <label id="tipoProfissional">Jovem Aprendiz</label>
+                            </div>
+                            <div class="divIconeENome">
+                                <img id="imgModalidade" src="../../assets/images/icones_vaga/iconePresencial.svg" class="icone">
+                                <label id="modalidade">Presencial</label>
+                            </div>
+                            <div class="divIconeENome">
+                                <img src="../../assets/images/icones_vaga/iconeTempoIntegral.svg" class="icone">
+                                <label id="cargaHoraria">Tempo Integral</label>
+                            </div>
+                            <div class="divIconeENome">
+                                <img src="../../assets/images/icones_vaga/iconeNivelTecnico.svg" class="icone">
+                                <label id="cargaHoraria">Nível Médio</label>
+                            </div>
                         </div>
-                        <div class="IconeENome">
-                            <img src="../../assets/images/icones_vaga/iconeADistancia.svg" class="icone">
-                            <label id="cargaHoraria">Presencial</label>
+                        <div class="divDescricao">
+                            <h3>Descrição da vaga</h3>
+                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus, officia, molestiae culpa provident accusantium accusamus aut eveniet nulla cum modi expedita omnis quo recusandae suscipit minus optio explicabo! Quasi, consequatur.</p>
+                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus, officia, molestiae culpa provident accusantium accusamus aut eveniet nulla cum modi expedita omnis quo recusandae suscipit minus optio explicabo! Quasi, consequatur.</p>
                         </div>
-                        <div class="IconeENome">
-                            <img src="../../assets/images/icones_regimes/estagio.svg" class="icone">
-                            <label id="cargaHoraria">Tempo Integral</label>
-                        </div>
-                        <div class="IconeENome">
-                            <img src="../../assets/images/icones_regimes/estagio.svg" class="icone">
-                            <label id="cargaHoraria">Nível Médio</label>
-                        </div>
+                    </div>   
+                    <div class="divSendButton">
+                        <button>
+                            <h4>Candidatar-se</h4>
+                            <lord-icon
+                                src="https://cdn.lordicon.com/smwmetfi.json"
+                                trigger="hover"
+                                colors="primary:#f5f5f5"
+                                style="width:80px;height:80px">
+                            </lord-icon>
+                        </button>
+                    </div>         
+                </div>
+                <div class="divFlex" id="divBoxes">
+                    <div class="divBox">
+                        <h3>Requisitos</h3>
+                        <p>- Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum</p>
                     </div>
-                    <div class="detalhesLongos"></div>
+                    <div class="divBox">
+                        <h3>Benefícios</h3>
+                        <p>- Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum</p>
+                    </div>
                 </div>
             </div>            
         </div>
     </div>
+    <footer>
+        <a>Política de Privacidade</a>
+        <a>Nosso contato</a>
+        <a>Avalie-nos</a>
+        <p>SIAS 2024</p>
+    </footer>
+    <script src="trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </body>
 </html>
