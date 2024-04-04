@@ -60,6 +60,21 @@ h2{
     align-items: center;
 }
 
+.btnVoltar{
+    background: none;
+    color: black;
+    padding: 0;
+    font-size: 28pt;
+    width: 30px;
+    border: none;
+    margin-right: 10px;
+}
+
+.btnVoltar:hover{
+    color: var(--laranja);
+    transform: scale(1.0);
+}
+
 /* ------------------------- Nav -------------------------*/
 
 nav{
@@ -542,14 +557,14 @@ nav ul li a:hover{
 }
 
 .comentario .divImg{
-    background-image: url("../imagens/pessoa.png");
+    background-image: url("../images/figuras/avatar.svg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     min-width: 30px;
     min-height: 30px;
     margin-right: 6px;
-    border-radius: 50px;
+    border-radius: 100%;
 }
 
 .comentario header{
@@ -613,13 +628,13 @@ nav ul li a:hover{
 }
 
 .perfil .divImg{
-    background-image: url("../imagens/pessoa.png");
+    background-image: url("../images/figuras/avatar.svg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     width: 90px;
     height: 90px;
-    border-radius: 50px;
+    border-radius: 100%;
     margin: 0 auto;
 }
 

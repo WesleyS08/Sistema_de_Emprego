@@ -58,7 +58,8 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
         </ul>
     </nav>
     <div class="divCommon">
-        <div class="divTitulo" id="divTituloCriacaoVaga">
+        <div class="divTituloComBtn" id="divTituloCriacaoVaga">
+            <button class="btnVoltar" onclick="window.location.href='../homeRecrutador/homeRecrutador.php'"><</button>
             <h2>Criação de Vaga</h2>
         </div>
         <form id="formvaga" method="POST" action="../../../src/services/cadastros/vaga.php">
@@ -136,20 +137,11 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                         </div>
                     </div>
                     <div class="containerInput">
-                            <div class="contentInput">
-                                <input class="inputAnimado" name="horario" id="horario" type="text" placeholder="De segunda a sexta, das 9:00 às 16:00" required>
-                                <div class="labelLine">Carga horária</div>
-                            </div>
-                            <small name="aviso"></small>
-                    </div>
-                    <div class="divTextArea">                        
-                        <div class="containerTextArea">
-                            <div class="contentInputTextArea">
-                                <textarea class="textAreaAnimada" name="descricao" id="descricao" type="text" required></textarea>
-                                <div class="textArealabelLine">Descrição da Vaga</div>
-                            </div>
-                            <small name="aviso"></small>
+                        <div class="contentInput">
+                            <input class="inputAnimado" name="horario" id="horario" type="text" placeholder="De segunda a sexta, das 9:00 às 16:00" required>
+                            <div class="labelLine">Carga horária</div>
                         </div>
+                        <small name="aviso"></small>
                     </div>
                 </div>
                 <div class="divDireita">
@@ -169,6 +161,15 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                     </div>
                 </div>
             </div>
+            <div class="divTextArea">                        
+                    <div class="containerTextArea">
+                        <div class="contentInputTextArea">
+                            <textarea class="textAreaAnimada" name="descricao" id="descricao" type="text" required></textarea>
+                            <div class="textArealabelLine">Descrição da Vaga</div>
+                        </div>
+                        <small name="aviso"></small>
+                    </div>
+                </div>
             <div class="divFlexRadios">
                 <div>
                     <div class="divRadioContent">

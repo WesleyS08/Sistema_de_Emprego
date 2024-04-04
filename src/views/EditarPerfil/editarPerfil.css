@@ -1,0 +1,137 @@
+.divEdicaoPerfil{
+    border-radius: 20px;
+    border: 1px solid silver;
+    width: 800px;
+    height: 1000px;
+}
+
+.divBackgroundImg{
+    background-image: url("../../assets/images/figuras/imgFundo.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 160px;
+    border-radius: 20px 20px 0px 0px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.divFotoDePerfil{
+    cursor: pointer;
+    background-image: url("../../assets/images/figuras/avatar.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 140px;
+    height: 140px;
+    border-radius: 50px;
+    top: 86px;
+    position: absolute;
+}
+
+.btnEditarFundo{
+    background-color: black;
+    border: 1px solid var(--laranjas);
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+/* ------------------------- INPUTS ANIMADOS -------------------------*/
+
+.divInputs{
+    margin-top: 100px;
+    display: grid;
+    justify-content: center;
+}
+
+.inputsLadoALado{
+    display: flex;
+    margin-bottom: 40px;
+}
+
+.containerInput{
+    margin: 0px 30px;
+}
+
+.contentInput{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.inputAnimado{
+    width: 270px;
+    border: none;
+    border-bottom: 1px solid grey;
+    padding: 6px 10px;
+    outline: none;
+    font-size: 12pt;
+    transition: 0.2s ease;
+    background: transparent;    
+    z-index: 1111;
+}
+
+
+.inputAnimado::placeholder{
+    opacity: 0;
+}
+
+.inputAnimado:focus::placeholder{
+    opacity: 1;
+}
+
+.labelLine{
+    position: absolute;
+    transition: 0.2s ease;
+    margin: 0px 11px;
+    color: grey;
+    background-color: whitesmoke;
+    font-size: 12pt;
+}
+
+.inputAnimado:focus,
+.inputAnimado:valid{
+    border-bottom: 1px solid var(--laranja);
+}
+
+.inputAnimado:focus +.labelLine,
+.inputAnimado:valid +.labelLine{
+    transform: translate(-4px,-20px) scale(0.84);
+    padding: 0 6px;
+    color: var(--laranja);
+    z-index: 1111;
+}
+
+input:hover{
+    cursor: text;
+}
+
+input[type=date]:required:invalid::-webkit-datetime-edit {
+    color: transparent;
+}
+
+input[type=date]:focus::-webkit-datetime-edit {
+    color: black !important;
+}
+
+input[type=date]:focus +.labelLine,
+input[type=date]:valid +.labelLine{
+    transform: translate(-12px,-20px) scale(0.84);
+}
+
+
+
+small{
+    display: flex;
+    margin-left: 11px;
+    color: red;
+}
