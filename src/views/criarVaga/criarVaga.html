@@ -1,36 +1,3 @@
-<?php
-session_start();
-
-// Inclua o arquivo de conexão com o banco de dados
-include "../../../src/services/conexão_com_banco.php";
-
-
-
-// Verificar se o usuário está autenticado como empresa
-$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-$emailUsuario = '';
-
-// Verificar se o usuário está autenticado e definir o e-mail do usuário
-if (isset ($_SESSION['email_session']) && isset ($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
-    // Se estiver autenticado com e-mail/senha e for do tipo empresa
-    $emailUsuario = $_SESSION['email_session'];
-    
-} elseif (isset ($_SESSION['google_session']) && isset ($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
-    // Se estiver autenticado com o Google e for do tipo empresa
-    $emailUsuario = $_SESSION['google_session'];
-} else {
-    // Se não estiver autenticado como empresa, redirecione para a página de login
-    header("Location: ../Login/login.html");
-    exit;
-}
-$nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-
-// Atribuindo os valores das variáveis de sessão
-$emailSession = isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
-$tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
-
-?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 

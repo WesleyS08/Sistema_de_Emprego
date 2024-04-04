@@ -58,7 +58,17 @@ function determinarImagemCategoria($categoria) {
         </ul>
     </nav>
     <div class="divTitle">
-        <div class="divCentraliza">
+        <div class="divCentraliza" id="divCentralizaComIcones">
+            <div class="divIconeFlutuante">
+                <lord-icon
+                    src="https://cdn.lordicon.com/vdjwmfqs.json"
+                    trigger="in"
+                    delay="500"
+                    state="in-assignment"
+                    colors="primary:#f5f5f5"
+                    style="width:170px;height:170px">
+                </lord-icon>
+            </div> 
             <div>
                 <div class="divTituloDigitavel">
                     <h1 id="tituloAutomatico">S</h1>
@@ -66,6 +76,16 @@ function determinarImagemCategoria($categoria) {
                 </div>
                 <p>Construa sua carreira onde habilidades geram oportunidades.<br>Seu emprego dos sonhos está a um clique de distância!</p>
                 <button onclick="location.href='src/views/Cadastro/cadastro.html'">Inscreva-se</button>
+            </div>
+            <div class="divIconeFlutuante">
+                <lord-icon
+                    src="https://cdn.lordicon.com/ppyvfomi.json"
+                    trigger="in"
+                    delay="500"
+                    state="in-work"
+                    colors="primary:#f5f5f5"
+                    style="width:170px;height:170px">
+                </lord-icon>
             </div>            
         </div>
     </div>

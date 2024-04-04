@@ -92,7 +92,16 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
     <div class="divCarrossel">
         <div class="divTitulo">
             <h2>Meus anúncios</h2>
-            <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="btnAdicionar">+</button>
+            <button class="btnAdicionar" onclick="window.location.href='../criarVaga/criarVaga.php'">
+                <lord-icon
+                    src="https://cdn.lordicon.com/zrkkrrpl.json"
+                    trigger="hover"
+                    stroke="bold"
+                    state="hover-rotation"
+                    colors="primary:#000000,secondary:#ffffff"
+                    style="width:40px;height:40px">
+                </lord-icon>
+            </button>
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftAnuncios">
@@ -156,7 +165,16 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
     <div class="divCarrossel">
         <div class="divTituloComBtn">
             <h2>Minhas avaliações</h2>
-            <button class="btnAdicionar">+</button>
+            <button class="btnAdicionar">
+                <lord-icon
+                    src="https://cdn.lordicon.com/zrkkrrpl.json"
+                    trigger="hover"
+                    stroke="bold"
+                    state="hover-rotation"
+                    colors="primary:#000000,secondary:#ffffff"
+                    style="width:40px;height:40px">
+                </lord-icon>
+            </button>
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftTestes">
@@ -370,6 +388,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <a>Avalie-nos</a>
         <p>SIAS 2024</p>
     </footer>
+    
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="modoNoturno.js"></script>
     <script src="carrosselAnuncios.js"></script>
     <script src="carrosselTestes.js"></script>

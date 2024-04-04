@@ -1,153 +1,34 @@
-/* ------------------------- Header -------------------------*/
-
-:root{
-    --laranja: #EC6809;
-    --laranjaClaro: #ee8840;
-    --laranjaEscuro: #a04809;
-    -webkit-tap-highlight-color: transparent;
-}
-
-*{
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    list-style: none;
-    box-sizing: border-box;
-    scroll-behavior: smooth !important;
-}
-
-body{
-    font-family: Arial, sans-serif;
-    background-color: whitesmoke;
-    transition: 0.5s;
-}
-
-nav{
-    background-color: var(--laranja);
-    height: 64px;
-    box-shadow: 0 0 6px 1px var(--laranjaEscuro);
-    position: relative;
-}
-
-nav #logo{
-    color: whitesmoke;
-    font-size: 22pt;
-    line-height: 64px;
-}
-
-nav ul{
-    float: right;
-    margin-right: 10px;
-}
-
-nav ul li{
-    display: inline-block;
-    line-height: 64px;
-}
-
-nav ul li a{
-    color: whitesmoke;
-    font-size: 10pt;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 20px;
-    transition: 0.5s;
-}
-
-nav ul li a:hover{
-    background: var(--laranjaClaro);
-    transition: 0.2s;
-}
-
-.btnModo{
-    cursor: pointer;
-    line-height: 64px;
-    float: right;
-    background: transparent;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 12px 12px 0px 0px;
-    border-radius: 20px;
-    border: none;
-}
-
-.btnModo:hover{
-    border: none;
-    background: transparent;
-    box-shadow: 0px 0px 8px var(--laranjaEscuro);
-}
-
-.menuBtn{
-    float: right;
-    line-height: 64px;
-    cursor: pointer;
-}
-
-#check, .menuBtn{
-    display: none;
-}
-
-@media(min-width:700px){
-    nav #logo{
-        padding-left: 50px;
-    }
-}
-
-@media (max-width: 700px){
-    nav #logo{
-        padding-left: 24px;
-    }
-    .menuBtn{
-        padding-right: 24px;
-        display: block;
-    }
-    ul{
-        position: fixed;
-        width: 100%;
-        height: 100vh;
-        background: var(--laranjaEscuro);
-        left: -100%;
-        text-align: center;
-        transition: all .5s;
-    }
-    nav ul li{
-        display: block;
-        margin: 10px 0;
-    }
-    nav ul li a{
-        font-size: 12pt;
-    }
-    nav ul li a:hover{
-        color: var(--laranjaClaro);
-        background-color: var(--laranjaEscuro);
-        transition: 0.2s;
-    }
-    #check:checked ~ ul{
-        left: 0;
-    }
-}
-
-/* ------------------------- Article -------------------------*/
-
-article h2{
-    margin: 20px 0px 30px 0px;
-    text-align: center;
-    font-size: 24pt;
+#divTituloCriacaoVaga{
+    width: 1200px;
 }
 
 .divFlexBox{
     display: flex;
-    justify-content: center;
+    height: 430px;
 }
+
+.divEsquerda{    
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.divDireita{
+    display: flex;
+    height: 100%;
+}
+
+small{
+    display: flex;
+    margin-left: 11px;
+    color: red;
+}
+
+/* ------------------------- INPUTS ANIMADOS -------------------------*/
 
 .inputsLadoALado{
     display: flex;
 }
-
-/* ------------------------- INPUTS ANIMADOS -------------------------*/
 
 .containerInput{
     margin: 0px 14px 28px 14px;
@@ -169,6 +50,10 @@ article h2{
     transition: 0.2s ease;
     background: transparent;    
     z-index: 1111;
+}
+
+#horario{
+    width: 100%;
 }
 
 .inputAnimado::placeholder{
@@ -201,13 +86,19 @@ article h2{
     z-index: 1111;
 }
 
-.containerInput small{
-    display: flex;
-    margin-left: 11px;
-    color: red;
+/* ------------------------- TEXTAREA ANIMADA -------------------------*/
+
+.divTextArea {
+    height: 130px;
 }
 
-/* ------------------------- TEXTAREA ANIMADA -------------------------*/
+.containerTextArea, .contentInputTextArea, .textAreaAnimada{
+    height: 100%;
+}
+
+.containerTextArea{
+    margin: 0px 14px;
+}
 
 .contentInputTextArea{
     display: flex;
@@ -216,7 +107,6 @@ article h2{
 
 .textAreaAnimada{
     width: 628px;
-    height: 100px;
     border: 1px solid grey;
     padding: 6px 10px;
     border-radius: 8px;
@@ -228,7 +118,7 @@ article h2{
     resize: none;
 }
 
-.textArealabelLine{
+.textArealabelLine{                                                     
     position: absolute;
     transition: 0.2s ease;
     margin: 8px 11px;
@@ -252,27 +142,22 @@ article h2{
 
 /* ------------------------- DIV DA DIREITA -------------------------*/
 
-.divDireita{
-    display: flex;
-}
-
 .divDireita .textAreaAnimada{
     width: 260px;
-    height: 280px;
 }
 
 /* ------------------------- RADIOS -------------------------*/
 
-.divRadios{
+.divFlexRadios{
     display: flex;
     justify-content: center;
 }
 
-.divRadiosContent{
-    margin: 0px 30px;
+.divRadioContent{
+    margin: 50px 30px;
 }
 
-.divRadios h3{
+.divFlexRadios h3{
     margin-bottom: 20px;
 }
 
@@ -296,20 +181,21 @@ input[type="radio"]{
 /* ------------------------- Button Salvar -------------------------*/
 
 .divSalvar{
-    margin: 50px 0px;
+    margin: 20px 0px;
     text-align: center;
 }
 
 .btnSalvar{
     cursor: pointer;
     border: 1px solid black;
-    font-size: 14pt;
+    font-size: 16pt;
     width: 200px;
-    height: 40px;
+    height: 50px;
     background-color: black;
     color: whitesmoke;
     border-radius: 14px;
-    transition: 0.5s;
+    transition: 0.2s ease;    
+    box-shadow: 0px 0px 8px silver;
 }
 
 .btnSalvar:hover{

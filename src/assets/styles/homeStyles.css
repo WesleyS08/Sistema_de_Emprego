@@ -183,6 +183,10 @@ nav ul li a:hover{
     align-items: center;
 }
 
+#divCentralizaComIcones{
+    justify-content: space-between;
+}
+
 .divTituloDigitavel{
     display: flex;
     justify-content: center;
@@ -196,7 +200,7 @@ nav ul li a:hover{
 .divTitle i{
     margin-left: 6px;
     width: 6px;
-    height: 60px;
+    height: 80px;
     background-color: whitesmoke;
     -webkit-animation: blinking 2s infinite;
     animation: blinking 1s infinite;
@@ -225,6 +229,28 @@ nav ul li a:hover{
     margin-top: 20px;
 }
 
+.divIconeFlutuante{
+    margin: 0px 32px 30px 32px;
+    animation-name: infiniteUpDown;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+    transition: all .3s;
+}
+
+@keyframes infiniteUpDown{
+    0%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(-20px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+}
 /* ------------------------- Div Comum -------------------------*/
 
 .divCommon{
@@ -266,7 +292,6 @@ nav ul li a:hover{
     height: 40px;
     margin-left: 14px;
     border-radius: 20px;
-    font-size: 22pt;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -396,7 +421,7 @@ nav ul li a:hover{
 
 .tipoVaga{
     font-size: 14pt;
-    margin-left: 4px;
+    margin-left: 6px;
 }
 
 .empresaVaga{

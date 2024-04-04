@@ -1,6 +1,6 @@
 const titulo = document.querySelector("#tituloAutomatico");
-const text1 = "eu futuro começa aqui!";
-const interval = 150; // variável do tempo de digitação
+const text1 = "eu futuro está aqui!";
+const interval = 140; // variável do tempo de digitação
 
 // método para fazer o título autodigitável
 function showText(titulo, text, interval){

@@ -1,6 +1,6 @@
 const titulo = document.querySelector("#tituloAutomatico");
 const nomeUsuario = "Pedro";
-const interval = 150; // variável do tempo de digitação
+const interval = 140; // variável do tempo de digitação
 
 function DeterminaHorario(){
     let hora = new Date().getHours().toString().padStart(2, '0')
