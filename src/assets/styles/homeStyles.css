@@ -306,14 +306,10 @@ nav ul li a:hover{
     width: 40px;
     height: 40px;
     margin-left: 14px;
-    border-radius: 20px;
+    border-radius: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.btnAdicionar:hover{
-    border: 1px solid black;
 }
 
 /* ------------------------- Div de testes -------------------------*/

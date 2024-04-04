@@ -28,60 +28,189 @@
             <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <div class="divBackgroundImg">
-                <button class="btnEditarFundo">
-                    <lord-icon
-                        src="https://cdn.lordicon.com/wuvorxbv.json"
-                        trigger="hover"
-                        stroke="bold"
-                        colors="primary:#f5f5f5,secondary:#f5f5f5"
-                        style="width:34px;height:34px">
-                    </lord-icon>
-                </button>
-                <div class="divFotoDePerfil"></div>
-            </div>
-            <div class="divInputs">
-                <div class="inputsLadoALado">
-                    <div class="containerInput">
-                        <div class="contentInput">
-                            <input class="inputAnimado" id="nome" name="nome" type="text" required>
-                            <div class="labelLine">Nome</div>
-                        </div>
-                        <small name="aviso"></small>
-                    </div>
-                    <div class="containerInput">
-                        <div class="contentInput">
-                            <input class="inputAnimado" id="email" name="email" type="text" required>
-                            <div class="labelLine">Email</div>
-                        </div>
-                        <small name="aviso"></small>
+            <form autocomplete="off">
+                <div class="divBackgroundImg">
+                    <button class="btnEditarFundo">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/wuvorxbv.json"
+                            trigger="hover"
+                            stroke="bold"
+                            colors="primary:#f5f5f5,secondary:#f5f5f5"
+                            style="width:34px;height:34px">
+                        </lord-icon>
+                    </button>
+                    <div class="divFotoDePerfil">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/wuvorxbv.json"
+                            trigger="hover"
+                            stroke="bold"
+                            colors="primary:#f5f5f5,secondary:#f5f5f5"
+                            style="width:34px;height:34px">
+                        </lord-icon>
                     </div>
                 </div>
-                <div class="inputsLadoALado">
-                    <div class="containerInput">
-                        <div class="contentInput">
-                            <input class="inputAnimado" id="data" name="data" type="date" required>
-                            <div class="labelLine">Data de Nascimento</div>
+                <div class="divContentPerfil">
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="nome" name="nome" type="text" required>
+                                <div class="labelLine">Nome</div>
+                            </div>
+                            <small name="aviso"></small>
                         </div>
-                        <small name="aviso"></small>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="email" name="email" type="text" required>
+                                <div class="labelLine">Email</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
                     </div>
-                    <div class="containerInput">
-                        <div class="contentInput">
-                            <input class="inputAnimado" id="nome" name="nome" type="text" required>
-                            <div class="labelLine">Nome</div>
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="data" name="data" type="date" required>
+                                <div class="labelLine">Data de Nascimento</div>
+                            </div>
+                            <small name="aviso"></small>
                         </div>
-                        <small name="aviso"></small>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="genero" name="genero" type="text" list="generoList" required>
+                                <div class="labelLine">Gênero</div>
+                                <datalist id="generoList">
+                                    <option>Homem Cisgênero</option>
+                                    <option>Mulher Cisgênero</option>
+                                    <option>Homem Transgênero</option>
+                                    <option>Mulher Transgênero</option>
+                                    <option>Não Binário</option>
+                                    <option>Agênero</option>
+                                </datalist>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="estado" name="estado" type="text" required>
+                                <div class="labelLine">Estado</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="cidade" name="cidade" type="text" required>
+                                <div class="labelLine">Cidade</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required>
+                                <div class="labelLine">Área de Atuação</div>
+                                <datalist id="areaList">
+                                    <option>Tecnologia da Informação</option>
+                                    <option>Medicia</option>
+                                    <option>Engenharia</option>
+                                    <option>Construção Civil</option>
+                                    <option>Educação</option>
+                                </datalist>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="breveDescricao" name="breveDescricao" type="text" required>
+                                <div class="labelLine">Breve descrição</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="divTextArea">                        
+                        <div class="containerTextArea">
+                            <div class="contentInputTextArea">
+                                <textarea class="textAreaAnimada" name="sobreMim" id="sobreMim" type="text" required></textarea>
+                                <div class="textArealabelLine">Sobre Mim</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="divElementos">
+                        <div class="divAdiconaElementos">                            
+                            <h2>Habilidades</h2>     
+                            <div class="divTituloAddElementos">                   
+                                <input class="inputSimples" id="habilidade" name="habilidade" type="text" placeholder="Ex: Manutenção de Computadores" required>
+                                <div class="btnAdicionarElemento" id="adicionaHabilidade">
+                                    <lord-icon
+                                        src="https://cdn.lordicon.com/zrkkrrpl.json"
+                                        trigger="hover"
+                                        stroke="bold"
+                                        state="hover-rotation"
+                                        colors="primary:#000000,secondary:#000000"
+                                        style="width:36px;height:36px">
+                                    </lord-icon>
+                                </div>
+                            </div>                            
+                            <small name="aviso" id="avisoHabilidades"></small>
+                            <ul class="elementosAdicionados" id="habilidadesAdicionadas"> 
+                            </ul>
+                        </div>
+                        <div class="divAdiconaElementos">
+                            <h2>Cursos e Formações</h2> 
+                            <div class="divTituloAddElementos">                       
+                                <input class="inputSimples" id="curso" name="curso" type="text" placeholder="Ex: Design de Interiores" required>
+                                <div class="btnAdicionarElemento" id="adicionaCurso">
+                                    <lord-icon
+                                        src="https://cdn.lordicon.com/zrkkrrpl.json"
+                                        trigger="hover"
+                                        stroke="bold"
+                                        state="hover-rotation"
+                                        colors="primary:#000000,secondary:#000000"
+                                        style="width:36px;height:36px">
+                                    </lord-icon>
+                                </div>
+                            </div>     
+                            <small name="aviso" id="avisoCursos"></small>
+                            <ul class="elementosAdicionados" id="cursosAdicionados">
+                            </ul>
+                        </div>
+                        <div class="divAdiconaElementos">
+                            <h2>Experiências de Trabalho</h2> 
+                            <div class="divTituloAddElementos">                       
+                                <input class="inputSimples" id="experiencia" name="experiencia" type="text" placeholder="Ex: Atendente de Telemarketing" required>
+                                <div class="btnAdicionarElemento" id="adicionaExperiencia">
+                                    <lord-icon
+                                        src="https://cdn.lordicon.com/zrkkrrpl.json"
+                                        trigger="hover"
+                                        stroke="bold"
+                                        state="hover-rotation"
+                                        colors="primary:#000000,secondary:#000000"
+                                        style="width:36px;height:36px">
+                                    </lord-icon>
+                                </div>
+                            </div>     
+                            <small name="aviso" id="avisoExperiencias"></small>
+                            <ul class="elementosAdicionados" id="experienciasAdicionadas">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="divBtnAtualizar">
+                        
+                        <input type="button" value="Atualizar">
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-    <!--<footer>
+    <footer>
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
         <p>SIAS 2024</p>
-    </footer>-->
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="adicionaElementos.js"></script>
 </body>
 </html>

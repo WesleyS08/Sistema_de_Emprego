@@ -162,14 +162,14 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                 </div>
             </div>
             <div class="divTextArea">                        
-                    <div class="containerTextArea">
-                        <div class="contentInputTextArea">
-                            <textarea class="textAreaAnimada" name="descricao" id="descricao" type="text" required></textarea>
-                            <div class="textArealabelLine">Descrição da Vaga</div>
-                        </div>
-                        <small name="aviso"></small>
+                <div class="containerTextArea">
+                    <div class="contentInputTextArea">
+                        <textarea class="textAreaAnimada" name="descricao" id="descricao" type="text" required></textarea>
+                        <div class="textArealabelLine">Descrição da Vaga</div>
                     </div>
+                    <small name="aviso"></small>
                 </div>
+            </div>
             <div class="divFlexRadios">
                 <div>
                     <div class="divRadioContent">

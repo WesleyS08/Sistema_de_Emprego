@@ -168,7 +168,7 @@ form{
 
 .inputAnimado:focus +.labelLine,
 .inputAnimado:valid +.labelLine{
-    transform: translate(10px,-16px) scale(0.84);
+    transform: translate(10px,-16px) scale(0.84) !important;
     padding: 0 6px;
     color: var(--laranja);
     z-index: 1111;

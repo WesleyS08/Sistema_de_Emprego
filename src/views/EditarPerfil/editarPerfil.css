@@ -1,8 +1,8 @@
 .divEdicaoPerfil{
     border-radius: 20px;
     border: 1px solid silver;
-    width: 800px;
-    height: 1000px;
+    width: 850px;
+    box-shadow: 0px 0px 20px silver;
 }
 
 .divBackgroundImg{
@@ -11,7 +11,7 @@
     background-size: cover;
     background-position: center;
     width: 100%;
-    height: 160px;
+    height: 190px;
     border-radius: 20px 20px 0px 0px;
     position: relative;
     display: flex;
@@ -24,10 +24,10 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    width: 140px;
-    height: 140px;
-    border-radius: 50px;
-    top: 86px;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    top: 108px;
     position: absolute;
 }
 
@@ -45,21 +45,16 @@
     top: 10px;
 }
 
-/* ------------------------- INPUTS ANIMADOS -------------------------*/
-
-.divInputs{
-    margin-top: 100px;
-    display: grid;
-    justify-content: center;
+.divContentPerfil{
+    padding: 100px;
 }
+
+/* ------------------------- INPUTS ANIMADOS -------------------------*/
 
 .inputsLadoALado{
     display: flex;
+    justify-content: space-between;
     margin-bottom: 40px;
-}
-
-.containerInput{
-    margin: 0px 30px;
 }
 
 .contentInput{
@@ -69,7 +64,8 @@
 }
 
 .inputAnimado{
-    width: 270px;
+    height: 32px;
+    width: 300px;
     border: none;
     border-bottom: 1px solid grey;
     padding: 6px 10px;
@@ -79,7 +75,6 @@
     background: transparent;    
     z-index: 1111;
 }
-
 
 .inputAnimado::placeholder{
     opacity: 0;
@@ -105,7 +100,7 @@
 
 .inputAnimado:focus +.labelLine,
 .inputAnimado:valid +.labelLine{
-    transform: translate(-4px,-20px) scale(0.84);
+    transform: translate(-8px,-20px) scale(0.84) !important; 
     padding: 0 6px;
     color: var(--laranja);
     z-index: 1111;
@@ -125,11 +120,149 @@ input[type=date]:focus::-webkit-datetime-edit {
 
 input[type=date]:focus +.labelLine,
 input[type=date]:valid +.labelLine{
-    transform: translate(-12px,-20px) scale(0.84);
+    transform: translate(-17px,-22px) scale(0.84) !important;
 }
 
 small{
     display: flex;
     margin-left: 11px;
     color: red;
+}
+
+/* ------------------------- TEXTAREA ANIMADA -------------------------*/
+
+.divTextArea {
+    display: flex;
+    height: 130px;
+    margin-top: 60px;
+}
+
+.containerTextArea, .contentInputTextArea, .textAreaAnimada{
+    height: 100%;
+    width: 100%;
+}
+
+.contentInputTextArea{
+    display: flex;
+    position: relative;
+}
+
+.textAreaAnimada{
+    border: 1px solid grey;
+    padding: 6px 10px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 12pt;
+    transition: 0.2s ease;
+    background: transparent;    
+    z-index: 1111;
+    resize: none;
+}
+
+.textArealabelLine{                                                     
+    position: absolute;
+    transition: 0.2s ease;
+    margin: 8px 11px;
+    color: grey;
+    background-color: whitesmoke;
+    font-size: 12pt;
+}
+
+.textAreaAnimada:focus,
+.textAreaAnimada:valid{
+    border: 1px solid var(--laranja);
+}
+
+.textAreaAnimada:focus +.textArealabelLine,
+.textAreaAnimada:valid +.textArealabelLine{
+    transform: translate(-6px,-17px) scale(0.84) !important;
+    padding: 0 6px;
+    color: var(--laranja);
+    z-index: 1111;
+}
+
+
+/* ------------------------- Adiciona Elementos -------------------------*/
+
+.divElementos{
+    display: grid;
+    margin-top: 50px;
+}
+
+.divAdiconaElementos{
+    min-height: 150px;
+}
+
+.divAdiconaElementos h2{
+    font-size: 18pt;
+}
+
+.divTituloAddElementos{
+    display: flex;
+    align-items:center;
+}
+
+.inputSimples{
+    outline: 0;
+    background: none;
+    border: none;
+    border-bottom: 1px solid gray;
+    margin: 10px 10px 0px 0px;
+    font-size: 12pt;
+    width: 280px;
+    padding: 0px 4px;
+}
+
+.btnAdicionarElemento{    
+    cursor: pointer;
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+.elementosAdicionados{
+    margin-top: 14px;
+}
+
+.elementosAdicionados li{
+    margin: 0px 20px 20px 0px;
+    padding: 10px;
+    border-radius: 10px;    
+    box-shadow: 0px 0px 6px gray;
+    transition: 0.2s ease;
+    cursor: default;
+    width: auto;
+    float: left;
+}
+
+.elementosAdicionados li:hover{
+    transform: scale(1.08);
+}
+
+
+/* ------------------------- Button -------------------------*/
+
+.divBtnAtualizar{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.divBtnAtualizar input{
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 16pt;
+    width: 200px;
+    height: 50px;
+    background-color: black;
+    color: whitesmoke;
+    border-radius: 14px;
+    transition: 0.2s ease;    
+    box-shadow: 0px 0px 8px silver;
+}
+
+.divBtnAtualizar input:hover{
+    transform: scale(1.1);
 }
