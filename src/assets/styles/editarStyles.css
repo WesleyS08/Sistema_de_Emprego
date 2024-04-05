@@ -73,7 +73,7 @@
 }
 
 .divAvisoInicial{
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     display: none;
     justify-content: center;
 }
@@ -83,6 +83,10 @@
 .inputsLadoALado{
     display: flex;
     justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.inputUnico{
     margin-bottom: 40px;
 }
 
@@ -103,6 +107,10 @@
     transition: 0.2s ease;
     background: transparent;    
     z-index: 1111;
+}
+
+#breveDescricao{
+    width: 100%;
 }
 
 .inputAnimado::placeholder{
@@ -162,8 +170,8 @@ small{
 
 .divTextArea {
     display: flex;
-    height: 130px;
-    margin-top: 60px;
+    height: 150px;
+    margin: 60px 0px;
 }
 
 .containerTextArea, .contentInputTextArea, .textAreaAnimada{
@@ -178,7 +186,7 @@ small{
 
 .textAreaAnimada{
     border: 1px solid grey;
-    padding: 6px 10px;
+    padding: 10px 14px;
     border-radius: 8px;
     outline: none;
     font-size: 12pt;
@@ -186,6 +194,7 @@ small{
     background: transparent;    
     z-index: 1111;
     resize: none;
+    text-align: justify;
 }
 
 .textArealabelLine{                                                     

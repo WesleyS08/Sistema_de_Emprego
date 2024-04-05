@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil</title>
-    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    <link rel="stylesheet" type="text/css" href="editarPerfil.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">    
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
 </head>
 <body>
     <nav>
@@ -65,8 +65,40 @@
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
+                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required>
+                                <div class="labelLine">Área de Atuação</div>
+                                <datalist id="areaList">
+                                    <option>Tecnologia da Informação</option>
+                                    <option>Medicia</option>
+                                    <option>Engenharia</option>
+                                    <option>Construção Civil</option>
+                                    <option>Educação</option>
+                                </datalist>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>     
+                    <div class="inputUnico">                                       
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="breveDescricao" name="breveDescricao" type="text" placeholder="Ex: Desenvolvedor Fullstack | Certificação AWS | Administrador de Rede |" required>
+                                <div class="labelLine">Breve descrição</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                    </div>
+                    <div class="inputsLadoALado">
+                        <div class="containerInput">
+                            <div class="contentInput">
                                 <input class="inputAnimado" id="email" name="email" type="text" required>
                                 <div class="labelLine">Email</div>
+                            </div>
+                            <small name="aviso"></small>
+                        </div>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" id="telefone" name="telefone" type="number" required>
+                                <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
@@ -111,33 +143,10 @@
                             <small name="aviso"></small>
                         </div>
                     </div>
-                    <div class="inputsLadoALado">
-                        <div class="containerInput">
-                            <div class="contentInput">
-                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required>
-                                <div class="labelLine">Área de Atuação</div>
-                                <datalist id="areaList">
-                                    <option>Tecnologia da Informação</option>
-                                    <option>Medicia</option>
-                                    <option>Engenharia</option>
-                                    <option>Construção Civil</option>
-                                    <option>Educação</option>
-                                </datalist>
-                            </div>
-                            <small name="aviso"></small>
-                        </div>
-                        <div class="containerInput">
-                            <div class="contentInput">
-                                <input class="inputAnimado" id="breveDescricao" name="breveDescricao" type="text" required>
-                                <div class="labelLine">Breve descrição</div>
-                            </div>
-                            <small name="aviso"></small>
-                        </div>
-                    </div>
                     <div class="divTextArea">                        
                         <div class="containerTextArea">
                             <div class="contentInputTextArea">
-                                <textarea class="textAreaAnimada" name="sobreMim" id="sobreMim" type="text" required></textarea>
+                                <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text" required></textarea>
                                 <div class="textArealabelLine">Sobre Mim</div>
                             </div>
                             <small name="aviso"></small>

@@ -1,7 +1,7 @@
-let sobreMim = document.querySelector("#sobreMim");
+let sobre = document.querySelector("#sobre");
 
 function verificaTexto(){
-    if(sobreMim.textContent==""){
+    if(sobre.textContent==""){
         document.querySelector(".divAvisoInicial").style.display="flex";
     }else{        
         document.querySelector(".divAvisoInicial").style.display="none";
