@@ -1,23 +1,14 @@
-#divTituloCriacaoVaga{
-    width: 1162px;
+.containerForm{
+    display: grid;
+    place-items: center;
 }
 
-.divFlexBox{
-    display: flex;
-    height: 270px;
-    margin-bottom: 30px;
+.containerSuperior{
+    width: 800px;  
 }
 
-.divEsquerda{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    
-}
-
-.divDireita{
-    display: flex;
-    height: 100%;
+.containerInferior{
+    width: 900px;  
 }
 
 small{
@@ -28,12 +19,19 @@ small{
 
 /* ------------------------- INPUTS ANIMADOS -------------------------*/
 
-.inputsLadoALado{
+.divInputs{
+    width: 650px;
+    margin: 0 auto;
+    padding: 20px 0px 8px 0px;
+}
+
+.divFlex{
     display: flex;
+    justify-content: space-between;
 }
 
 .containerInput{
-    margin: 0px 14px;
+    margin-bottom: 30px;
 }
 
 .contentInput{
@@ -43,9 +41,9 @@ small{
 }
 
 .inputAnimado{
-    width: 280px;
+    width: 300px;
     border: 1px solid grey;
-    padding: 6px 10px;
+    padding: 10px;
     border-radius: 8px;
     outline: none;
     font-size: 12pt;
@@ -82,7 +80,7 @@ small{
 
 .inputAnimado:focus +.labelLine,
 .inputAnimado:valid +.labelLine{
-    transform: translate(-4px,-17px) scale(0.84);
+    transform: translate(-4px,-20px) scale(0.84) !important;
     padding: 0 6px;
     color: var(--laranja);
     z-index: 1111;
@@ -90,28 +88,16 @@ small{
 
 /* ------------------------- TEXTAREA ANIMADA -------------------------*/
 
-.divTextArea {
-    display: flex;
-    height: 130px;
-}
-
-.containerTextArea, .contentInputTextArea, .textAreaAnimada{
-    height: 100%;
-    width: 100%;
-}
-
-.containerTextArea{
-    margin: 0px 14px;
-}
-
 .contentInputTextArea{
     display: flex;
     position: relative;
 }
 
-.textAreaAnimada{
+.textAreaAnimada{    
+    height: 200px;
+    width: 100%;
     border: 1px solid grey;
-    padding: 6px 10px;
+    padding: 10px 14px;
     border-radius: 8px;
     outline: none;
     font-size: 12pt;
@@ -137,16 +123,22 @@ small{
 
 .textAreaAnimada:focus +.textArealabelLine,
 .textAreaAnimada:valid +.textArealabelLine{
-    transform: translate(-6px,-17px) scale(0.84);
+    transform: translate(-6px,-17px) scale(0.84) !important;
     padding: 0 6px;
     color: var(--laranja);
     z-index: 1111;
 }
 
-/* ------------------------- DIV DA DIREITA -------------------------*/
 
-.divDireita .textAreaAnimada{
-    width: 260px;
+/* ------------------------- DIV FLEX TEXTAREA ANIMADA -------------------------*/
+
+#divFlexTextArea{
+    margin-top: 40px;
+}
+
+#divFlexTextArea .textAreaAnimada{    
+    height: 300px;
+    width: 380px;
 }
 
 /* ------------------------- RADIOS -------------------------*/
@@ -157,7 +149,7 @@ small{
 }
 
 .divRadioContent{
-    margin: 50px 30px;
+    margin: 50px
 }
 
 .divFlexRadios h3{
