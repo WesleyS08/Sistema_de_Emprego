@@ -313,7 +313,7 @@ function determinarImagemCategoria($categoria) {
                         </section>
                     </article>
                 </a>
-                <button id="btnRunningGuy" onclick="location.href='Login/login.html'">Faça parte!<br>
+                <button id="btnRunningGuy" onclick="location.href='src/views/Login/login.html'">Faça parte!<br>
                     <lord-icon
                         src="https://cdn.lordicon.com/gwvmctbb.json"
                         trigger="hover"
