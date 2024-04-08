@@ -24,7 +24,7 @@
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php'"><</button>
+            <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.html'"><</button>
             <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
@@ -68,11 +68,16 @@
                                 <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required>
                                 <div class="labelLine">Área de Atuação</div>
                                 <datalist id="areaList">
-                                    <option>Tecnologia da Informação</option>
+                                    <option>Tecnologia</option>
                                     <option>Medicia</option>
                                     <option>Engenharia</option>
-                                    <option>Construção Civil</option>
-                                    <option>Educação</option>
+                                    <option>Economia</option>                                        
+                                    <option>Vendas</option>  
+                                    <option>Educação</option>                                    
+                                    <option>Direito</option>                                                                          
+                                    <option>Administração</option>                                                                                                            
+                                    <option>Agronegócio</option>                                                                                                                                                  
+                                    <option>Gastronomia</option>
                                 </datalist>
                             </div>
                             <small name="aviso"></small>
@@ -143,7 +148,11 @@
                             <small name="aviso"></small>
                         </div>
                     </div>
-                    <div class="divTextArea">                        
+                    <div class="divCheckBox">
+                        <input type="checkbox" id="pcd">
+                        <label for="pcd">Pessoa com Deficiência</label>
+                    </div>
+                    <div class="divTextArea" id="divTextAreaCandidato">                        
                         <div class="containerTextArea">
                             <div class="contentInputTextArea">
                                 <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text" required></textarea>
@@ -211,8 +220,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="divBtnAtualizar">
-                        
+                    <div class="divBtnAtualizar">                        
                         <input type="button" value="Atualizar">
                     </div>
                 </div>
@@ -224,6 +232,7 @@
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
         <p>SIAS 2024</p>
+    </footer>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>    
     <script src="mostraIcone.js"></script>
     <script src="avisoInicial.js"></script>

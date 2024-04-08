@@ -28,7 +28,7 @@
     width: 160px;
     height: 160px;
     border-radius: 100%;
-    top: 108px;
+    top: 100px;
     position: absolute;
     display: flex;
     justify-content: center;
@@ -147,16 +147,16 @@ input:hover{
     cursor: text;
 }
 
-input[type=date]:required:invalid::-webkit-datetime-edit {
+input[type="date"]:required:invalid::-webkit-datetime-edit {
     color: transparent;
 }
 
-input[type=date]:focus::-webkit-datetime-edit {
+input[type="date"]:focus::-webkit-datetime-edit {
     color: black !important;
 }
 
-input[type=date]:focus +.labelLine,
-input[type=date]:valid +.labelLine{
+input[type="date"]:focus +.labelLine,
+input[type="date"]:valid +.labelLine{
     transform: translate(-17px,-22px) scale(0.84) !important;
 }
 
@@ -166,7 +166,26 @@ small{
     color: red;
 }
 
+.divCheckBox{
+    display: flex;
+    align-items: center;
+}
+
+.divCheckBox input, label{
+    cursor: pointer;
+}
+
+input[type="checkbox"]{
+    min-width: 20px;
+    min-height: 20px;
+    margin-right: 10px;
+}
+
 /* ------------------------- TEXTAREA ANIMADA -------------------------*/
+
+#divTextAreaCandidato{
+    margin: 42px 0px;
+}
 
 .divTextArea {
     display: flex;

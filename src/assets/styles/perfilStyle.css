@@ -1,0 +1,193 @@
+
+h3{
+    font-size: 20pt;
+}
+
+/* ------------------------- IMAGENS -------------------------*/
+
+#divBackgroundImgDefinida{
+    border-radius: 0%;
+    height: 240px;
+}
+
+#divFotoDePerfilDefinida{    
+    background-image: url("../../assets/images/figuras/pessoa.png");
+    top: 86px;
+    width: 220px;
+    height: 220px;
+    cursor: default;
+}
+
+#divFotoDePerfilDefinida:hover{
+    background: url("../../assets/images/figuras/pessoa.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.acessarEditarPerfil{
+    position: absolute;
+    bottom: -60px;
+    right: 40px;
+    transition: 0.2s ease;
+}
+
+.acessarEditarPerfil div{
+    padding: 6px 12px;
+    box-shadow: 0px 0px 6px silver;
+    display: flex;
+    align-items: center;
+    background-color: black;
+    color: whitesmoke;
+    border-radius: 10px;
+}
+
+.acessarEditarPerfil label{
+    margin-left: 10px;
+}
+
+.acessarEditarPerfil:hover{
+    transform: scale(1.08);
+}
+
+/* ------------------------- CONTAINER -------------------------*/
+
+.containerPerfil{
+    width: 1000px;
+    margin-top: 14px;    
+    font-size: 16pt;
+}
+
+#informacoesIniciais{
+    display: flex;
+    justify-content: center;
+}
+
+#informacoesIniciais label{
+    cursor: default;
+    font-size: 14pt;
+    margin-left: 4px;
+}
+
+.divFlex{
+    display: flex;
+    align-items: center;
+    margin: 0px 20px;
+}
+
+.contentPerfil{
+    margin: 40px 0px;
+    text-align: justify;
+    padding: 0px 32px;
+}
+
+#contentSobre{
+    padding: 0px;
+}
+
+.divTitulo{
+    text-align: center;
+    width: 650px;
+    margin: 0 auto;
+}
+
+#nomeUsuario{
+    font-size: 30pt;
+}
+
+#breveDescricao{    
+    font-size: 14pt;
+}
+
+fieldset{
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 6px silver;
+    border: none;
+}
+
+fieldset legend{
+    padding: 0px 12px;
+    background-color: whitesmoke;
+}
+
+#sobre{
+    font-size: 14pt;
+    line-height: 1.5em
+}
+
+
+/* ------------------------- CONTATO -------------------------*/
+
+.divFlexContato{
+    display: flex;
+    align-items: center;
+    margin: 12px 0px;
+}
+
+.divFlexContato a{
+    margin-left: 8px;
+    transition: 0.2s ease;
+}
+
+.divFlexContato a:hover{
+    color: var(--laranja);
+}
+
+/* ------------------------- ELEMENTOS -------------------------*/
+
+.divGridElementos{
+    display: grid;
+}
+
+.divGridElementos .contentPerfil{
+    margin: 20px 0px
+}
+
+.divGridElementos li{
+    font-size: 16pt;
+}
+
+
+/* ------------------------- PONTUACAO -------------------------*/
+
+#contentPerfilPontuacao{    
+    border-radius: 10px;
+    box-shadow: 0px 0px 6px silver;
+    padding: 20px 50px ;
+}
+
+#contentPerfilPontuacao h3{
+    font-size: 30pt;
+    margin: 0px 10px;
+}
+
+.divPontuacao{
+    margin-top: 40px;
+}
+
+.divPontuacao label{
+    cursor: default;
+}
+
+.divPontuacaoArea{    
+    margin: 20px 0px;
+}
+
+.divPontuacaoArea, .divProgresso{
+    display: flex;
+    align-items: center;    
+}
+
+.divProgresso label{
+    color: var(--laranja);
+    font-weight: bold;
+}
+
+.progresso{
+    max-width: 550px;
+    height: 20px;
+    background-color: var(--laranja);
+    width: 100px;
+    margin: 0px 8px 0px 4px;
+}
