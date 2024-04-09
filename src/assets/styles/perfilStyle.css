@@ -11,18 +11,11 @@ h3{
 }
 
 #divFotoDePerfilDefinida{    
-    background-image: url("../../assets/images/figuras/pessoa.png");
+    background-image: url("../../assets/images/figuras/avatar.svg");
     top: 86px;
     width: 220px;
     height: 220px;
     cursor: default;
-}
-
-#divFotoDePerfilDefinida:hover{
-    background: url("../../assets/images/figuras/pessoa.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
 }
 
 .acessarEditarPerfil{
