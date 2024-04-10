@@ -67,13 +67,13 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="homeRecrutador.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <a href="homeRecrutador.html"><img id="logo" ></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Anunciar</a></li>
             <li><a href="#">Minhas vagas</a></li>
             <li><a href="#">Meus testes</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
         </ul>
     </nav>
     <div class="divTitle">
@@ -198,10 +198,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         </a>
                         <a class="testeCarrosselLink">
                             <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
+                                
                                 <img src="../../../imagens/figma.svg"></img>
                                 <div class="divDetalhesTeste">
                                     <div>
