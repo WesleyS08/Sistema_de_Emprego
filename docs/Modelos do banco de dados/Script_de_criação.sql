@@ -81,15 +81,17 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Empresa` (
   `Avaliacao_de_Funcionarios` VARCHAR(45) NULL,
   `Avaliacao_Geral` VARCHAR(45) NULL,
   `Telefone` VARCHAR(12) NULL,
-  'Img_Perfil' varchar(255) NULL,
+  `Img_Perfil` VARCHAR(255) NULL,
   PRIMARY KEY (`CNPJ`),
-  INDEX `fk_Tb_Empresa_Tb_Pessoas1_idx` (`Tb_Pessoas_Id` ASC) ,
+  INDEX `fk_Tb_Empresa_Tb_Pessoas1_idx` (`Tb_Pessoas_Id` ASC),
   CONSTRAINT `fk_Tb_Empresa_Tb_Pessoas1`
     FOREIGN KEY (`Tb_Pessoas_Id`)
     REFERENCES `SIAS`.`Tb_Pessoas` (`Id_Pessoas`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
+
 
 
 -- -----------------------------------------------------
