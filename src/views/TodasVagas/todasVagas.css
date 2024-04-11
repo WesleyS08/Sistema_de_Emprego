@@ -1,0 +1,10 @@
+.divGridVagas{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    place-items: center;
+}
+
+.postLink{
+    margin-bottom: 90px;
+}

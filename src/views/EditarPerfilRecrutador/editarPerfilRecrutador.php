@@ -87,9 +87,8 @@ if ($result && mysqli_num_rows($result) > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <button class="btnVoltar" onclick="window.location.href='../PerfilRecrutador/perfilRecrutador.php'">
-                <</button>
-                    <h2>Editar Perfil</h2>
+            <a class="btnVoltar"><img src="../../assets/images/icones_diversos/back.svg"></a>
+            <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
             <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php" autocomplete="off"
