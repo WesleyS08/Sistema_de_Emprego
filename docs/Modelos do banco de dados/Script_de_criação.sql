@@ -150,7 +150,8 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Anuncios` (
   `Horario` varchar(45) NOT NULL,
   `Estado` varchar(45) NOT NULL,
   `Jornada` varchar(45) NOT NULL,
-  `CEP`VARCHAR(8) NOT NULL,
+  `CEP`VARCHAR(9) NOT NULL,
+   `Rua` varchar(45) NOT NULL,
   `Numero` TEXT NOT NULL,
   PRIMARY KEY (`Id_Anuncios`))
 ENGINE = InnoDB;

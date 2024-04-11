@@ -30,8 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $estado = "Aberta";
 
     // Inserir os dados da vaga na tabela Tb_anuncios para salvar no banco.
-    $sql_inserir_vaga = "INSERT INTO Tb_Anuncios (Categoria, Titulo, Descricao, Area, Cidade, Nivel_Operacional, Data_de_Criacao, Modalidade, Beneficios, Requisitos, Horario, Estado, Jornada, CEP, Numero) 
-                      VALUES ('$categoriaVaga', '$tituloVaga', '$descricaoVaga', '$areaVaga', '$cidadeVaga', '$nivelVaga', NOW(), '$modalidadeVaga', '$beneficiosVaga', '$requisitosVaga', '$horarioVaga', '$estadoVaga', '$jornadaVaga','$cep', '$numero')";
+    $sql_inserir_vaga = "INSERT INTO Tb_Anuncios (Categoria, Titulo, Descricao, Area, Cidade, Nivel_Operacional, Data_de_Criacao, Modalidade, Beneficios, Requisitos, Horario, Estado, Jornada, CEP, Rua, Numero) 
+                      VALUES ('$categoriaVaga', '$tituloVaga', '$descricaoVaga', '$areaVaga', '$cidadeVaga', '$nivelVaga', NOW(), '$modalidadeVaga', '$beneficiosVaga', '$requisitosVaga', '$horarioVaga', '$estadoVaga', '$jornadaVaga','$cep','$enderecoVaga', '$numero')";
 
 
     // Executar a consulta para inserir a vaga
