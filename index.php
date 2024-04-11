@@ -17,7 +17,8 @@ if ($result === false) {
 }
 
 // Função para determinar a imagem com base na categoria do trabalho
-function determinarImagemCategoria($categoria) {
+function determinarImagemCategoria($categoria)
+{
     switch ($categoria) {
         case 'Estágio':
             return 'estagio';
@@ -37,12 +38,14 @@ function determinarImagemCategoria($categoria) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="src/assets/styles/homeStyles.css">
 </head>
+
 <body>
     <nav>
         <input type="checkbox" id="check">
@@ -50,7 +53,7 @@ function determinarImagemCategoria($categoria) {
             <img src="imagens/menu.svg">
         </label>
         <a href="index.html"><img id="logo" src="src/assets/images/logos_empresa/logo_sias.png"></a>
-        <ul>            
+        <ul>
             <li><a href="#">Vagas</a></li>
             <li><a href="#">Pesquisar</a></li>
             <li><a href="#">Cursos</a></li>
@@ -60,47 +63,38 @@ function determinarImagemCategoria($categoria) {
     <div class="divTitle">
         <div class="divCentraliza" id="divCentralizaComIcones">
             <div class="divIconeFlutuante">
-                <lord-icon
-                    src="https://cdn.lordicon.com/vdjwmfqs.json"
-                    trigger="in"
-                    delay="500"
-                    state="in-assignment"
-                    colors="primary:#f5f5f5"
-                    style="width:170px;height:170px">
+                <lord-icon src="https://cdn.lordicon.com/vdjwmfqs.json" trigger="in" delay="500" state="in-assignment"
+                    colors="primary:#f5f5f5" style="width:170px;height:170px">
                 </lord-icon>
-            </div> 
+            </div>
             <div>
                 <div class="divTituloDigitavel">
                     <h1 id="tituloAutomatico">S</h1>
                     <i></i>
                 </div>
-                <p>Construa sua carreira onde habilidades geram oportunidades.<br>Seu emprego dos sonhos está a um clique de distância!</p>
+                <p>Construa sua carreira onde habilidades geram oportunidades.<br>Seu emprego dos sonhos está a um
+                    clique de distância!</p>
                 <button onclick="location.href='src/views/Cadastro/cadastro.html'">Inscreva-se</button>
             </div>
             <div class="divIconeFlutuante">
-                <lord-icon
-                    src="https://cdn.lordicon.com/ppyvfomi.json"
-                    trigger="in"
-                    delay="500"
-                    state="in-work"
-                    colors="primary:#f5f5f5"
-                    style="width:170px;height:170px">
+                <lord-icon src="https://cdn.lordicon.com/ppyvfomi.json" trigger="in" delay="500" state="in-work"
+                    colors="primary:#f5f5f5" style="width:170px;height:170px">
                 </lord-icon>
-            </div>            
+            </div>
         </div>
     </div>
     <div class="divCarrossel">
         <div class="divTitulo">
             <h2>Últimos anúncios</h2>
         </div>
-            <div class="container">
-                <a class="btnLeftSlider"></a>
-                <a class="btnRightSlider">></a> 
-                <div class="carrosselBox">                
+        <div class="container">
+            <a class="btnLeftSlider"></a>
+            <a class="btnRightSlider">></a>
+            <div class="carrosselBox">
                 <?php
                 // Loop para exibir as vagas restantes no carrossel
                 while ($row = $result->fetch_assoc()) {
-                    echo '<a class="postLink">';
+                    echo '<a class="postLink" href="src/views/Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                     echo '<article class="post">';
                     echo '<div class="divAcessos">';
                     echo '<img src="imagens/people.svg"></img>';
@@ -121,15 +115,15 @@ function determinarImagemCategoria($categoria) {
                     echo '</a>';
                 }
                 ?>
-            </div>               
+            </div>
         </div>
     </div>
     <div class="divCommon">
         <div class="divTitulo">
             <h2>Testes de Habilidades</h2>
             <p>Avalie seu conhecimento e ganhe destaque nos processos seletivos!</p>
-        </div>   
-        <div class="container">         
+        </div>
+        <div class="container">
             <div class="flexTestes">
                 <div class="gridTestes" style="margin-right: 12px;">
                     <a class="testeLink">
@@ -140,7 +134,7 @@ function determinarImagemCategoria($categoria) {
                             </div>
                             <img src="imagens/excel.svg"></img>
                             <div class="divDetalhesTeste">
-                                <div>                                    
+                                <div>
                                     <p class="nomeTeste">Excel Avançado</p>
                                     <small class="autorTeste">Por Jefferson Evangelista</small>
                                     <div class="divCompetencias">
@@ -159,7 +153,7 @@ function determinarImagemCategoria($categoria) {
                             </div>
                             <img src="imagens/figma.svg"></img>
                             <div class="divDetalhesTeste">
-                                <div>                                    
+                                <div>
                                     <p class="nomeTeste">Figma Básico</p>
                                     <small class="autorTeste">Por Jefferson Evangelista</small>
                                     <div class="divCompetencias">
@@ -180,7 +174,7 @@ function determinarImagemCategoria($categoria) {
                             </div>
                             <img src="imagens/word.svg"></img>
                             <div class="divDetalhesTeste">
-                                <div>                                    
+                                <div>
                                     <p class="nomeTeste">Word Básico</p>
                                     <small class="autorTeste">Por Jefferson Evangelista</small>
                                     <div class="divCompetencias">
@@ -199,7 +193,7 @@ function determinarImagemCategoria($categoria) {
                             </div>
                             <img src="imagens/python.svg"></img>
                             <div class="divDetalhesTeste">
-                                <div>                                    
+                                <div>
                                     <p class="nomeTeste">Python Intermediário</p>
                                     <small class="autorTeste">Por Jefferson Evangelista</small>
                                     <div class="divCompetencias">
@@ -216,10 +210,10 @@ function determinarImagemCategoria($categoria) {
         </div>
     </div>
     <div class="divCommon">
-        <div class="divTitulo">                
-            <h2>Quem se increve recomenda!</h2>  
-        </div>  
-        <div class="container">    
+        <div class="divTitulo">
+            <h2>Quem se increve recomenda!</h2>
+        </div>
+        <div class="container">
             <div class="divComentarios">
                 <a class="comentarioLink">
                     <article class="comentario">
@@ -238,7 +232,7 @@ function determinarImagemCategoria($categoria) {
                         <section>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
                         </section>
-                        <section class = "likes">
+                        <section class="likes">
                             <img src="imagens/like.svg">
                             <label class="qntdLikes">1000</label>
                         </section>
@@ -261,7 +255,7 @@ function determinarImagemCategoria($categoria) {
                         <section>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
                         </section>
-                        <section class = "likes">
+                        <section class="likes">
                             <img src="imagens/like.svg">
                             <label class="qntdLikes">1000</label>
                         </section>
@@ -284,7 +278,7 @@ function determinarImagemCategoria($categoria) {
                         <section>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
                         </section>
-                        <section class = "likes">
+                        <section class="likes">
                             <img src="imagens/like.svg">
                             <label class="qntdLikes">1000</label>
                         </section>
@@ -307,18 +301,15 @@ function determinarImagemCategoria($categoria) {
                         <section>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
                         </section>
-                        <section class = "likes">
+                        <section class="likes">
                             <img src="imagens/like.svg">
                             <label class="qntdLikes">1000</label>
                         </section>
                     </article>
                 </a>
                 <button id="btnRunningGuy" onclick="location.href='src/views/Login/login.html'">Faça parte!<br>
-                    <lord-icon
-                        src="https://cdn.lordicon.com/gwvmctbb.json"
-                        trigger="hover"
-                        colors="primary:#ffffff,secondary:#ffffff"
-                        style="width:90px;height:90px">
+                    <lord-icon src="https://cdn.lordicon.com/gwvmctbb.json" trigger="hover"
+                        colors="primary:#ffffff,secondary:#ffffff" style="width:90px;height:90px">
                     </lord-icon>
                 </button>
             </div>
@@ -352,8 +343,8 @@ function determinarImagemCategoria($categoria) {
                     <div class="slide">
                         <img src="imagens/css.svg">
                     </div>
-                    
-        
+
+
                     <div class="slide">
                         <img src="imagens/mysql.svg">
                     </div>
@@ -375,7 +366,7 @@ function determinarImagemCategoria($categoria) {
                     <div class="slide">
                         <img src="imagens/css.svg">
                     </div>
-                </div>            
+                </div>
             </div>
         </div>
     </div>
@@ -386,9 +377,10 @@ function determinarImagemCategoria($categoria) {
         <p>SIAS 2024</p>
     </footer>
 
-<script src="https://cdn.lordicon.com/lordicon.js"></script>
-<script src="tituloDigitavel.js"></script>
-<script src="carrossel.js"></script>
-<script src="trocaImagem.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="tituloDigitavel.js"></script>
+    <script src="carrossel.js"></script>
+    <script src="trocaImagem.js"></script>
 </body>
+
 </html>
