@@ -48,11 +48,18 @@ header div{
 }
 
 .sectionButton{
-    display: flex;
+    display: grid;
     justify-content: center;
 }
 
 .sectionButton button{
     font-size: 14pt;
     width: 200px;
+}
+
+.statusTeste{
+    margin-bottom: 16px;
+    color: royalblue;
+    font-weight: bold;
+    display: none;
 }

@@ -1,0 +1,107 @@
+nav{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: whitesmoke;
+    padding: 0px 50px;
+    position: fixed;
+}
+
+nav a{
+    display: flex;
+    align-items: center;
+    transition: 0.2s ease;
+    color: inherit; 
+}
+
+nav a:hover{
+    transform: scale(1.1);
+}
+
+a h3{
+    font-size: 20pt;
+    margin-left: 6px;
+}
+
+/* ------------------------- Container Teste -------------------------*/
+
+.containerTeste{
+    padding-top: 100px;
+    width: 100%;
+    display: grid;
+    justify-content: center;
+}
+
+.contentTeste{    
+    width: 1150px;
+}
+
+.contentTeste h2{
+    font-size: 38pt;
+}
+
+.divTitulo{
+    margin-bottom: 40px;
+}
+
+.divSubtitulo{
+    display: flex;
+    margin-top: 4px;
+    font-size: 14pt;
+    color: gray;
+}
+
+/* ------------------------- Questoes -------------------------*/
+
+.divQuestoes{
+    border: 1px solid silver;
+    padding: 40px 30px;
+    box-shadow: 0px 0px 6px silver;
+    border-radius: 10px;
+    margin: 20px 0px 100px 0px;
+}
+
+.articleQuestao{
+    margin-bottom: 50px;
+}
+
+.divPergunta{
+    display: flex;
+    font-size: 16pt;
+}
+
+.pergunta{
+    margin-left: 6px;
+}
+
+.divAlternativas{
+    margin: 10px 0px;
+}
+
+.divAlternativas div{
+    display: flex;
+    align-items: center;
+    width: 900px;
+}
+
+.divAlternativas div label{
+    line-height: 1.5em;
+}
+
+.divAlternativas input{
+    min-width: 20px;
+    min-height: 20px;
+    cursor: pointer;
+    margin: 12px 6px 12px 0px;
+}
+
+.divButton{
+    display: flex;
+    justify-content: center;
+}
+
+.divButton button{
+    font-size: 16pt;
+    width: 250px;
+}
