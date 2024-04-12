@@ -230,7 +230,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="divAdiconaElementos">                            
                             <h2>Habilidades e Tecnologias</h2>     
                             <div class="divTituloAddElementos">                   
-                                <input class="inputSimples" id="habilidade" name="habilidade" type="text" placeholder="Ex: Manutenção de Computadores" required>
+                                <input class="inputSimples" id="habilidade" name="habilidade" type="text" placeholder="Ex: Manutenção de Computadores">
                                 <div class="btnAdicionarElemento" id="adicionaHabilidade">
                                     <lord-icon
                                         src="https://cdn.lordicon.com/zrkkrrpl.json"
@@ -249,7 +249,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="divAdiconaElementos">
                             <h2>Cursos e Formações</h2> 
                             <div class="divTituloAddElementos">                       
-                                <input class="inputSimples" id="curso" name="curso" type="text" placeholder="Ex: Design de Interiores" required>
+                                <input class="inputSimples" id="curso" name="curso" type="text" placeholder="Ex: Design de Interiores">
                                 <div class="btnAdicionarElemento" id="adicionaCurso">
                                     <lord-icon
                                         src="https://cdn.lordicon.com/zrkkrrpl.json"
@@ -268,7 +268,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="divAdiconaElementos">
                             <h2>Experiências de Trabalho</h2> 
                             <div class="divTituloAddElementos">                       
-                                <input class="inputSimples" id="experiencia" name="experiencia" type="text" placeholder="Ex: Atendente de Telemarketing" required>
+                                <input class="inputSimples" id="experiencia" name="experiencia" type="text" placeholder="Ex: Atendente de Telemarketing">
                                 <div class="btnAdicionarElemento" id="adicionaExperiencia">
                                     <lord-icon
                                         src="https://cdn.lordicon.com/zrkkrrpl.json"
