@@ -59,7 +59,7 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <button class="btnVoltar" onclick="window.location.href='../homeRecrutador/homeRecrutador.php'"><</button>
+            <a class="btnVoltar"><img src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Criação de Vaga</h2>
         </div>
         <form id="formvaga" method="POST" action="../../../src/services/cadastros/vaga.php" autocomplete="off">
