@@ -48,8 +48,11 @@ if ($result) {
 $urlImagemPerfilAntiga = $dadosEmpresa['Img_Perfil'];
 $urlBannerAntigo = $dadosEmpresa['Banner'];
 
-// Processar o upload da nova imagem de perfil
-$imagemPerfil = $imagemPerfilExistente; // Definir a imagem de perfil como a existente por padrão
+// Salvar o valor atual das imagens
+$imagemPerfilAntiga = $imagemPerfil;
+$bannerAntigo = $banner;
+
+// Processar o upload da imagem de perfil
 if ($_FILES['foto_perfil_upload']['error'] == UPLOAD_ERR_OK) {
     // Se o campo de upload de arquivo para a foto de perfil estiver preenchido
     $diretorioDestinoPerfil = '../../assets/imagensPerfil/';
@@ -59,7 +62,8 @@ if ($_FILES['foto_perfil_upload']['error'] == UPLOAD_ERR_OK) {
         $imagemPerfil = $diretorioDestinoPerfil . $nomeArquivoPerfil;
 
         // Verificar se a imagem de perfil foi atualizada
-        if ($imagemPerfil != $urlImagemPerfilAntiga) {
+        if ($imagemPerfil != $imagemPerfilAntiga) {
+            $urlImagemPerfilAntiga = $imagemPerfil;
             echo "A imagem de perfil foi atualizada com sucesso.";
         }
     } else {
@@ -69,7 +73,6 @@ if ($_FILES['foto_perfil_upload']['error'] == UPLOAD_ERR_OK) {
 }
 
 // Processar o upload do banner
-$banner = $bannerExistente; // Definir o banner como o existente por padrão
 if ($_FILES['fundo_upload']['error'] == UPLOAD_ERR_OK) {
     // Se o campo de upload de arquivo para o banner estiver preenchido
     $diretorioDestinoBanner = '../../assets/banners/';
@@ -79,7 +82,8 @@ if ($_FILES['fundo_upload']['error'] == UPLOAD_ERR_OK) {
         $banner = $diretorioDestinoBanner . $nomeArquivoBanner;
 
         // Verificar se o banner foi atualizado
-        if ($banner != $urlBannerAntigo) {
+        if ($banner != $bannerAntigo) {
+            $urlBannerAntigo = $banner;
             echo "O banner foi atualizado com sucesso.";
         }
     } else {
@@ -87,7 +91,6 @@ if ($_FILES['fundo_upload']['error'] == UPLOAD_ERR_OK) {
         exit;
     }
 }
-
 
 
 // Atualizar o email da pessoa na tabela Tb_Pessoas
@@ -123,8 +126,6 @@ if (mysqli_query($_con, $queryAtualizarEmail)) {
         }
     }
 
-    // Continuar com a atualização dos dados da empresa
-    // ...
 
 } else {
     echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
@@ -132,7 +133,14 @@ if (mysqli_query($_con, $queryAtualizarEmail)) {
 }
 
 // Atualizar os dados da empresa no banco de dados
-$query = "UPDATE Tb_Empresa SET Nome_da_Empresa = '$nomeEmpresa', Area_da_Empresa = '$areaEmpresa', Telefone = '$telefoneEmpresa', Sobre_a_Empresa = '$sobreEmpresa', Facebook = '$facebookEmpresa', Github = '$githubEmpresa', Linkedin = '$linkedinEmpresa', Instagram = '$instagramEmpresa', Img_Perfil = '$imagemPerfil', Img_Banner='$banner' WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+$query = "UPDATE Tb_Empresa SET Nome_da_Empresa = '$nomeEmpresa', Area_da_Empresa = '$areaEmpresa', Telefone = '$telefoneEmpresa', Sobre_a_Empresa = '$sobreEmpresa', Facebook = '$facebookEmpresa', Github = '$githubEmpresa', Linkedin = '$linkedinEmpresa', Instagram = '$instagramEmpresa'";
+if ($urlImagemPerfilAntiga != $dadosEmpresa['Img_Perfil']) {
+    $query .= ", Img_Perfil = '$urlImagemPerfilAntiga'";
+}
+if ($urlBannerAntigo != $dadosEmpresa['Banner']) {
+    $query .= ", Img_Banner = '$urlBannerAntigo'";
+}
+$query .= " WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
     header("Location: ../../views/PerfilRecrutador/perfilRecrutador.php");
