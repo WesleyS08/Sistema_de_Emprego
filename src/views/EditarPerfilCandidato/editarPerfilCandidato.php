@@ -23,7 +23,7 @@ if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato'
 }
 
 // Recuperar informações do candidato do banco de dados com base no e-mail do usuário
-$query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Descricao, c.Area_de_Interesse, c.Experiencia, c.Cidade, c.Telefone, c.PCD, c.Idade, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
+$query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Descricao, c.Area_de_Interesse, c.Experiencia, c.Cidade, c.Telefone, c.PCD, c.Idade, c.Data_Nascimento, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
           INNER JOIN Tb_Candidato AS c ON p.Id_Pessoas = c.Tb_Pessoas_Id 
           WHERE p.Email = '$emailUsuario'";
@@ -36,7 +36,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     $areaUsuario = $dadosCandidato['Area_de_Interesse'];
     $autoDefinicaoUsuario = $dadosCandidato['Autodefinicao'];
     $telefoneUsuario = $dadosCandidato['Telefone'];
-    $dataNascimentoUsuario = $dadosCandidato['Idade'];
+    $dataNascimentoUsuario = $dadosCandidato['Data_Nascimento'];
     $generoUsuario = $dadosCandidato['Genero'];
     $estadoUsuario = $dadosCandidato['Estado_Civil'];
     $cidadeUsuario = $dadosCandidato['Cidade'];
@@ -175,10 +175,11 @@ if ($result && mysqli_num_rows($result) > 0) {
                     </div>
                     <div class="inputsLadoALado">
                         <div class="containerInput">
-                            <div class="contentInput">
-                                <input class="inputAnimado" id="data" name="data" type="date" value="<?php echo $dataNascimentoUsuario ?>" required>
-                                <div class="labelLine">Data de Nascimento</div>
-                            </div>
+                        <div class="contentInput">
+                            <!-- Preenche o campo de data com a data de nascimento do usuário -->
+                            <input class="inputAnimado" id="data" name="data" type="date" value="<?php echo htmlspecialchars($dataNascimentoUsuario); ?>" required>
+                            <div class="labelLine">Data de Nascimento</div>
+                        </div>
                             <small name="aviso"></small>
                         </div>
                         <div class="containerInput">
