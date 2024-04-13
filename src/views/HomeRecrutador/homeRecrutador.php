@@ -112,7 +112,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                         // Verifique se há resultados antes de iniciar o loop
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo '<a class="postLink">';
+                                echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                                 echo '<article class="post">';
                                 echo '<div class="divAcessos">';
                                 echo '<img src="../../../imagens/people.svg"></img>';
