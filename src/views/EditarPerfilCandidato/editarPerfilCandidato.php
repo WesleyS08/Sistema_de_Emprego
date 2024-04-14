@@ -23,7 +23,7 @@ if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato'
 }
 
 // Recuperar informações do candidato do banco de dados com base no e-mail do usuário
-$query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Descricao, c.Area_de_Interesse, c.Experiencia, c.Cidade, c.Telefone, c.PCD, c.Idade, c.Data_Nascimento, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
+$query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Descricao, c.Area_de_Interesse, c.Motivacoes, c.Experiencia, c.Cursos, c.Escolaridade, c.Cidade, c.Telefone, c.PCD, c.Idade, c.Data_Nascimento, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
           INNER JOIN Tb_Candidato AS c ON p.Id_Pessoas = c.Tb_Pessoas_Id 
           WHERE p.Email = '$emailUsuario'";
@@ -41,6 +41,9 @@ if ($result && mysqli_num_rows($result) > 0) {
     $estadoUsuario = $dadosCandidato['Estado_Civil'];
     $cidadeUsuario = $dadosCandidato['Cidade'];
     $sobreUsuario = $dadosCandidato['Descricao'];
+    $experienciaUsuario = $dadosCandidato['Experiencia'];
+    $cursoUsuario = $dadosCandidato['Cursos'];
+    $escolaridadeUsuario = $dadosCandidato['Escolaridade'];
     $pcdUsuario = $dadosCandidato['PCD'];
 } else {
     $nomeUsuario = 'Não informado';
@@ -234,8 +237,8 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <div class="divTextArea">                        
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="habilidades" id="habilidades" type="text" required></textarea>
-                                        <div class="textArealabelLine">Adicionar</div>
+                                        <textarea class="textAreaAnimada" name="habilidades" id="habilidades" type="text" required><?php echo $cursoUsuario ?></textarea>
+                                        <div class="textArealabelLine">Adicione cursos e tecnologias que você domina</div>
                                     </div>
                                     <small name="aviso"></small>
                                 </div>
@@ -246,8 +249,8 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <div class="divTextArea">                        
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="cursos" id="cursos" type="text" required></textarea>
-                                        <div class="textArealabelLine">Adicionar</div>
+                                        <textarea class="textAreaAnimada" name="cursos" id="cursos" type="text" required><?php echo $escolaridadeUsuario ?></textarea>
+                                        <div class="textArealabelLine">Adicione suas formações</div>
                                     </div>
                                     <small name="aviso"></small>
                                 </div>
@@ -258,8 +261,8 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <div class="divTextArea">                        
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="experiencias" id="experiencias" type="text" required></textarea>
-                                        <div class="textArealabelLine">Adicionar</div>
+                                        <textarea class="textAreaAnimada" name="experiencias" id="experiencias" type="text" required><?php echo $experienciaUsuario ?></textarea>
+                                        <div class="textArealabelLine">Adicione suas experiências profissionais</div>
                                     </div>
                                     <small name="aviso"></small>
                                 </div>

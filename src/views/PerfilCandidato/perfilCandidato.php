@@ -23,7 +23,7 @@ if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato'
 }
 
 // Recuperar informações do candidato do banco de dados com base no e-mail do usuário
-$query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Area_de_Interesse, c.Descricao, c.Experiencia, c.Idade, c.Cidade, c.Telefone, c.PCD, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
+$query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Area_de_Interesse, c.Descricao, c.Experiencia, c.Cursos, c.Experiencia, c.Escolaridade, c.Idade, c.Cidade, c.Telefone, c.PCD, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
           INNER JOIN Tb_Candidato AS c ON p.Id_Pessoas = c.Tb_Pessoas_Id 
           WHERE p.Email = '$emailUsuario'";
@@ -43,6 +43,9 @@ if ($result && mysqli_num_rows($result) > 0) {
     $sobreUsuario = $dadosCandidato['Descricao'];
     $caminhoImagemPerfil = $dadosCandidato['Img_Perfil'];
     $caminhoImagemBanner = $dadosCandidato['Banner'];
+    $experienciaUsuario = $dadosCandidato['Experiencia'];
+    $cursoUsuario = $dadosCandidato['Cursos'];
+    $escolaridadeUsuario = $dadosCandidato['Escolaridade'];
     $pcdUsuario = $dadosCandidato['PCD'];
 } else {
     $nomeUsuario = 'Não informado';
@@ -166,8 +169,27 @@ if ($result && mysqli_num_rows($result) > 0) {
             </div>
             <div class="divGridElementos">
                 <div class="contentPerfil">                
-                    <h3>Habilidades e Tecnologias</h3>
-                    <p id="habilidades">Python, Azure, Cisco Packet Tracer, Formatação de Windows</p>
+                <h3>Habilidades e Tecnologias</h3>
+                    <p id="habilidades">
+                        <?php
+                            // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
+                            $padroes_de_separacao = array("-", ",", ":");
+
+                            // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
+                            $cursoUsuario = str_replace($padroes_de_separacao, "§", $cursoUsuario);
+
+                            // Divida os dados em um array usando a marca única como separador
+                            $dados_array = explode("§", $cursoUsuario);
+
+                            // Imprima cada item do array em uma linha separada
+                            foreach ($dados_array as $dado) {
+                                // Se o dado não estiver vazio, imprima-o
+                                if (!empty(trim($dado))) {
+                                    echo "- $dado <br>";
+                                }
+                            }
+                        ?>
+                    </p>   
 
                     <!--
                     <ul class="elementosAdicionados" id="habilidadesAdicionadas">
@@ -180,8 +202,27 @@ if ($result && mysqli_num_rows($result) > 0) {
                     
                 </div>
                 <div class="contentPerfil">                
-                    <h3>Cursos e Formações</h3>
-                    <p id="cursos">Desenvolvimento de Software Muliplataforma, Redes de Computadores</p>
+                <h3>Cursos e Formações</h3>
+                    <p id="cursos">
+                        <?php
+                            // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
+                            $padroes_de_separacao = array("-", ",");
+
+                            // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
+                            $escolaridadeUsuario = str_replace($padroes_de_separacao, "§", $escolaridadeUsuario);
+
+                            // Divida os dados em um array usando a marca única como separador
+                            $dados_array = explode("§", $escolaridadeUsuario);
+
+                            // Imprima cada item do array em uma linha separada
+                            foreach ($dados_array as $dado) {
+                                // Se o dado não estiver vazio, imprima-o
+                                if (!empty(trim($dado))) {
+                                    echo "- $dado <br>";
+                                }
+                            }
+                        ?>
+                    </p>
                     
                     <!--
                     <ul class="elementosAdicionados" id="cursosAdicionados">
@@ -192,8 +233,28 @@ if ($result && mysqli_num_rows($result) > 0) {
                     
                 </div>
                 <div class="contentPerfil">                
-                    <h3>Experiências de Trabalho</h3>
-                    <p id="experiencias">Atendente de Telemarketing, Lixeiro, Desenvolvimento de Bomba Atômica</p>
+                <h3>Experiências de Trabalho</h3>
+                    <p id="experiencias">
+                        <?php
+                            // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
+                            $padroes_de_separacao = array("-", ",", ":");
+
+                            // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
+                            $experienciaUsuario = str_replace($padroes_de_separacao, "§", $experienciaUsuario);
+
+                            // Divida os dados em um array usando a marca única como separador
+                            $dados_array = explode("§", $experienciaUsuario);
+
+                            // Imprima cada item do array em uma linha separada
+                            foreach ($dados_array as $dado) {
+                                // Se o dado não estiver vazio, imprima-o
+                                if (!empty(trim($dado))) {
+                                    echo "- $dado <br>";
+                                }
+                            }
+                        ?>
+                    </p>
+                    
                     <!--
                     <ul class="elementosAdicionados" id="experienciasAdicionadas">
                         <li>Atendente de Telemarketing</li>

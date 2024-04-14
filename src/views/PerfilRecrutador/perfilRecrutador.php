@@ -88,7 +88,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                     src="../../assets/images/logos_empresa/logo_sias.png"></a>
             <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
             <ul>
-                <li><a href="#">Anunciar</a></li>
+                <li><a href="../../views/criarVaga/criarVaga.php">Anunciar</a></li>
                 <li><a href="#">Minhas vagas</a></li>
                 <li><a href="#">Meus testes</a></li>
                 <?php if ($podeEditar == true) { ?>

@@ -142,7 +142,7 @@ function determinarImagemCategoria($categoria)
                     <?php
                     // Loop para exibir as vagas restantes no carrossel
                     while ($row = $result->fetch_assoc()) {
-                        echo '<a class="postLink" href="src/views/Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
+                        echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                         echo '<article class="post">';
                         echo '<div class="divAcessos">';
                         echo '<img src="../../../imagens/people.svg"></img>';

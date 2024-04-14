@@ -28,6 +28,9 @@ $generoUsuario = $_POST['genero'] ?? '';
 $estadoUsuario = $_POST['estado'] ?? '';
 $cidadeUsuario = $_POST['cidade'] ?? '';
 $sobreUsuario = $_POST['sobre'] ?? '';
+$cursoUsuario = $_POST['habilidades']?? '';
+$escolaridadeUsuario = $_POST['cursos']??'';
+$experienciaUsuario = $_POST['experiencias']??'';
 $pcdUsuario = isset($_POST['pcd']) ? 1 : 0; // 1 se a opção foi marcada, 0 se não foi
 
 // Verifica se a data de nascimento foi fornecida
@@ -146,7 +149,7 @@ if (mysqli_query($_con, $queryAtualizarEmail)) {
 }
 
 // Atualizar os dados do candidato no banco de dados
-$query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoUsuario', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+$query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoUsuario', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
     header("Location: ../../views/PerfilCandidato/perfilCandidato.php");
