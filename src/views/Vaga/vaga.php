@@ -161,18 +161,18 @@ mysqli_close($_con);
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
         <?php
-        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=' . $dadosAnuncio['Id_Anuncios'] . '">';
+        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=' . $idAnuncio . '">';
         ?>
         <div style="padding: 6px 12px;
-                    box-shadow: 0px 0px 6px silver;
-                    display: flex;
-                    align-items: center;
-                    background-color: #000;
-                    color: whitesmoke;
-                    border-radius: 10px;
-                    width: 7%;
-                    margin-top: 1%;
-                    margin-left: 2%;">
+                box-shadow: 0px 0px 6px silver;
+                display: flex;
+                align-items: center;
+                background-color: #000;
+                color: whitesmoke;
+                border-radius: 10px;
+                width: 7%;
+                margin-top: 1%;
+                margin-left: 2%;">
             <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
                 colors="primary:#ffffff,secondary:#ffffff" style="width:30px;height:30px">
             </lord-icon>
@@ -181,6 +181,7 @@ mysqli_close($_con);
         </a>
     <?php } ?>
 
+
     <div class="divCommon">
         <div class="divTitulo" id="divTituloVaga">
             <h2 id="tituloVaga"><?php echo $Titulo; ?></h2>
@@ -188,10 +189,12 @@ mysqli_close($_con);
             <?php
 
             if (!empty($NomeEmpresa)) {
-                echo '<a href="../PerfilRecrutador/perfilRecrutador.php?empresa=' . urlencode($NomeEmpresa) . '">' . $NomeEmpresa . '</a><br>';
+                echo '<a href="../PerfilRecrutador/perfilRecrutador.php?empresa_nome=' . urlencode($NomeEmpresa) . '">' . $NomeEmpresa . '</a><br>';
             } else {
                 echo '<a id="empresa">Confidencial</a><br>';
             }
+
+
             ?>
 
 

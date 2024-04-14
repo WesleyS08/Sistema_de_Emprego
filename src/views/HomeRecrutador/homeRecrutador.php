@@ -22,8 +22,35 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
     exit;
 }
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+// Consulta para obter o ID da pessoa logada
+$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+$stmt = $_con->prepare($sql);
 
+// Verifique se a preparação da declaração foi bem-sucedida
+if ($stmt) {
+    // Vincule o parâmetro ao placeholder na consulta
+    $stmt->bind_param("s", $emailUsuario);
 
+    // Execute a declaração
+    $stmt->execute();
+
+    // Obtenha o resultado da consulta
+    $result = $stmt->get_result();
+
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o ID da pessoa
+        $row = $result->fetch_assoc();
+        $idPessoa = $row['Id_Pessoas'];
+
+        // Use o ID da pessoa como necessário no restante do seu código
+    } else {
+        // Se não houver resultados, lide com isso de acordo com sua lógica de aplicativo
+    }
+
+    // Feche a declaração
+    $stmt->close();
+}
 
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
 JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
@@ -47,6 +74,46 @@ if ($result === false) {
 $emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
 $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
 
+// Segunda consulta para obter o status da vaga
+$sql2 = "SELECT V.* 
+FROM Tb_Vagas V
+JOIN Tb_Empresa E ON V.Tb_Empresa_CNPJ = E.CNPJ
+JOIN Tb_Pessoas P ON E.Tb_Pessoas_Id = P.Id_Pessoas
+WHERE P.Email = ?";
+
+// Prepare a declaração
+$stmt = mysqli_prepare($_con, $sql2);
+
+// Verifique se a preparação da declaração foi bem-sucedida
+if ($stmt) {
+    // Vincule o parâmetro ao placeholder na consulta
+    mysqli_stmt_bind_param($stmt, "s", $email);
+
+    // Substitua $email pelo valor real do email
+    $email = $emailUsuario;
+
+    // Execute a declaração
+    mysqli_stmt_execute($stmt);
+
+    // Obtenha o resultado da consulta
+    $result2 = mysqli_stmt_get_result($stmt);
+
+    if ($result2 && mysqli_num_rows($result2) > 0) {
+        $row = mysqli_fetch_assoc($result2);
+        $Status = $row['Status'];
+    } else {
+        // Defina um valor padrão para $Status se a consulta não retornar resultados
+        $Status = '';
+    }
+
+    // Feche a declaração
+    mysqli_stmt_close($stmt);
+} else {
+    // Se a preparação da declaração falhar, lide com o erro aqui
+    echo "Erro na preparação da declaração: " . mysqli_error($_con);
+}
+
+
 ?>
 
 
@@ -67,13 +134,13 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="homeRecrutador.html"><img id="logo" ></a> 
+        <a href="homeRecrutador.html"><img id="logo"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Anunciar</a></li>
             <li><a href="#">Minhas vagas</a></li>
             <li><a href="#">Meus testes</a></li>
-            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <div class="divTitle">
@@ -83,8 +150,9 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                     <h1 id="tituloAutomatico">B</h1>
                     <i></i>
                 </div>
-                <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique agora
-                    mesmo!</p> 
+                <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique
+                    agora
+                    mesmo!</p>
                 <button onclick="window.location.href='../criarVaga/criarVaga.php'">Anunciar</button>
             </div>
         </div>
@@ -93,13 +161,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <div class="divTitulo">
             <h2>Meus anúncios</h2>
             <button class="btnAdicionar" onclick="window.location.href='../criarVaga/criarVaga.php'">
-                <lord-icon
-                    src="https://cdn.lordicon.com/zrkkrrpl.json"
-                    trigger="hover"
-                    stroke="bold"
-                    state="hover-rotation"
-                    colors="primary:#000000,secondary:#ffffff"
-                    style="width:40px;height:40px">
+                <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"
+                    state="hover-rotation" colors="primary:#000000,secondary:#ffffff" style="width:40px;height:40px">
                 </lord-icon>
             </button>
         </div>
@@ -118,7 +181,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                 echo '<img src="../../../imagens/people.svg"></img>';
                                 echo '<small class="qntdAcessos">28</small>';
                                 echo '</div>';
-                            
+                        
                                 echo '<header>';
                                 switch ($row["Categoria"]) {
                                     case "CLT":
@@ -126,10 +189,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                         echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                         break;
                                     case "Estágio":
-                                        echo '<img src="../../../imagens/estagio.svg">';
-                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                        break;
-                                    case "Jovem Aprendiz":
+                                    case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
                                         echo '<img src="../../../imagens/estagio.svg">';
                                         echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                         break;
@@ -141,16 +201,24 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                                         echo '<label class="tipoVaga">Categoria não definida</label>';
                                         break;
                                 }
-                            
-                                echo '</header>';
+                        
                                 echo '</header>';
                                 echo '<section>';
                                 echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
                                 echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
-                                echo '</section>';
-                                echo '<p class="statusVaga" style="color: green;">Aberta</p>';
+                              // Exibir o status da vaga e a data de criação
                                 $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                                $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+                                if ($row['Status'] == 'Aberto') {
+                                    echo '<p style="color: green;">' . $row['Status'] . '</p>';
+                                    echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                                } else {
+                                    echo '<p style="color: red;">' . $row['Status'] . '</p>';
+                                    echo '<p class="dataVaga">' . $datadeTermino . '</p>';
+                                }
+                            
+                                echo '</section>';
+                                echo '</section>';
                                 echo '</article>';
                                 echo '</a>';
                             }
@@ -159,6 +227,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                             echo '<p>Nenhuma postagem encontrada</p>';
                         }
                         ?>
+
                     </div>
         </div>
     </div>
@@ -166,80 +235,77 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <div class="divTituloComBtn">
             <h2>Minhas avaliações</h2>
             <button class="btnAdicionar">
-                <lord-icon
-                    src="https://cdn.lordicon.com/zrkkrrpl.json"
-                    trigger="hover"
-                    stroke="bold"
-                    state="hover-rotation"
-                    colors="primary:#000000,secondary:#ffffff"
-                    style="width:40px;height:40px">
+                <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"
+                    state="hover-rotation" colors="primary:#000000,secondary:#ffffff" style="width:40px;height:40px">
                 </lord-icon>
             </button>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftTestes"><</a>
-            <a class="btnRightSlider" id="rightTestes">></a> 
-            <div class="carrosselBox" id="carrosselTestes">
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/excel.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Excel Básico</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small></div>
-                            </div>
-                    </article>
-                </a>
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/figma.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Figma Intermediário</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/word.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Word Avançado</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/python.svg"></img>
-                        <div class="testeDetalhes">
-                            <div>
-                                <p class="nomeTeste">Python Básico</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-            </div>
+            <a class="btnLeftSlider" id="leftTestes">
+                <</a>
+                    <a class="btnRightSlider" id="rightTestes">></a>
+                    <div class="carrosselBox" id="carrosselTestes">
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
+                                <div class="divAcessos">
+                                    <img src="../../../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../../../imagens/excel.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>
+                                        <p class="nomeTeste">Excel Básico</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
+                                <div class="divAcessos">
+                                    <img src="../../../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../../../imagens/figma.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>
+                                        <p class="nomeTeste">Figma Intermediário</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
+                                <div class="divAcessos">
+                                    <img src="../../../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../../../imagens/word.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>
+                                        <p class="nomeTeste">Word Avançado</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                        <a class="testeCarrosselLink">
+                            <article class="testeCarrossel">
+                                <div class="divAcessos">
+                                    <img src="../../../imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="../../../imagens/python.svg"></img>
+                                <div class="testeDetalhes">
+                                    <div>
+                                        <p class="nomeTeste">Python Básico</p>
+                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                                    </div>
+                                </div>
+                            </article>
+                        </a>
+                    </div>
         </div>
     </div>
     <div class="divCarrossel">
@@ -247,76 +313,83 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
             <h2>Perfis de usuários</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftPerfis"><</a>
-            <a class="btnRightSlider" id="rightPerfis">></a>
-            <div class="carrosselBox" id="carrosselPerfis">
-                <a class="perfilLink">
-                    <article class="perfil">
-                            <div class="divImg"></div>
-                            <section>
-                                <p class="nomePessoa">Clarice Josefina</p>
-                            </section>
-                            <section>
-                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
-                            </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                            <div class="divImg"></div>
-                            <section>
-                                <p class="nomePessoa">Clarice Josefina</p>
-                            </section>
-                            <section>
-                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
-                            </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                            <div class="divImg"></div>
-                            <section>
-                                <p class="nomePessoa">Clarice Josefina</p>
-                            </section>
-                            <section>
-                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
-                            </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                            <div class="divImg"></div>
-                            <section>
-                                <p class="nomePessoa">Clarice Josefina</p>
-                            </section>
-                            <section>
-                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
-                            </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                            <div class="divImg"></div>
-                            <section>
-                                <p class="nomePessoa">Clarice Josefina</p>
-                            </section>
-                            <section>
-                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
-                            </section>
-                    </article>
-                </a>
-                <a class="perfilLink">
-                    <article class="perfil">
-                            <div class="divImg"></div>
-                            <section>
-                                <p class="nomePessoa">Clarice Josefina</p>
-                            </section>
-                            <section>
-                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
-                            </section>
-                    </article>
-                </a>
-            </div>
+            <a class="btnLeftSlider" id="leftPerfis">
+                <</a>
+                    <a class="btnRightSlider" id="rightPerfis">></a>
+                    <div class="carrosselBox" id="carrosselPerfis">
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                        <a class="perfilLink">
+                            <article class="perfil">
+                                <div class="divImg"></div>
+                                <section>
+                                    <p class="nomePessoa">Clarice Josefina</p>
+                                </section>
+                                <section>
+                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
+                                        | Azure</small>
+                                </section>
+                            </article>
+                        </a>
+                    </div>
         </div>
     </div>
     <div class="divCommon">
@@ -347,8 +420,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                     <div class="slide">
                         <img src="../../../imagens/css.svg">
                     </div>
-                    
-        
+
+
                     <div class="slide">
                         <img src="../../../imagens/mysql.svg">
                     </div>
@@ -370,8 +443,8 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
                     <div class="slide">
                         <img src="../../../imagens/css.svg">
                     </div>
-                </div>    
-            </div>                    
+                </div>
+            </div>
         </div>
     </div>
     <footer>
@@ -381,7 +454,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
         <p>SIAS 2024</p>
     </footer>
 
-    
+
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="modoNoturno.js"></script>
     <script src="carrosselAnuncios.js"></script>

@@ -10,11 +10,7 @@ use PHPMAILER\PHPMAILER\EXCEPTION;
 
 $mail = new PHPMailer(true);
 // Função para gerar um nome único para o arquivo de imagem
-function gerarNomeUnico($nomeOriginal) {
-    $extensao = pathinfo($nomeOriginal, PATHINFO_EXTENSION);
-    $nomeUnico = uniqid() . '.' . $extensao;
-    return $nomeUnico;
-}
+
 
 // Recuperar informações do formulário
 $nomeEmpresa = $_POST['nome'] ?? '';

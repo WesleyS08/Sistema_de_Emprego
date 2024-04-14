@@ -239,9 +239,9 @@ if ($result && mysqli_num_rows($result) > 0) {
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <?php
-        // Obtém a URL da imagem de perfil do banco de dados
-        $urlImagemPerfil = $dadosEmpresa['Img_Perfil'];
-        ?>
+// Obtém a URL da imagem de perfil do banco de dados
+$urlImagemPerfil = $dadosEmpresa['Img_Perfil'];
+?>
 
 <script>
 $(document).ready(function () {
