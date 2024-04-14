@@ -137,10 +137,14 @@ fieldset legend{
     margin: 20px 0px
 }
 
+.divGridElementos p{
+    margin: 12px 0px;    
+    line-height: 1.5em;
+}
+
 .divGridElementos li{
     font-size: 16pt;
 }
-
 
 /* ------------------------- PONTUACAO -------------------------*/
 

@@ -232,7 +232,7 @@ input[type="checkbox"]{
 
 .textAreaAnimada:focus +.textArealabelLine,
 .textAreaAnimada:valid +.textArealabelLine{
-    transform: translate(-6px,-17px) scale(0.84) !important;
+    transform: translate(-4px,-17px) scale(0.84) !important;
     padding: 0 6px;
     color: var(--laranja);
     z-index: 1111;
@@ -252,6 +252,11 @@ input[type="checkbox"]{
 
 .divAdiconaElementos{
     min-height: 150px;
+}
+
+.divAdiconaElementos .divTextArea{
+    height: 90px;
+    margin: 20px 0px 50px 0px;
 }
 
 .divAdiconaElementos h2{

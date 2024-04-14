@@ -166,30 +166,43 @@ if ($result && mysqli_num_rows($result) > 0) {
             </div>
             <div class="divGridElementos">
                 <div class="contentPerfil">                
-                    <h3>Habilidades, Cursos e Tecnologias</h3>
+                    <h3>Habilidades e Tecnologias</h3>
+                    <p id="habilidades">Python, Azure, Cisco Packet Tracer, Formatação de Windows</p>
+
+                    <!--
                     <ul class="elementosAdicionados" id="habilidadesAdicionadas">
                         <li>Python</li>
                         <li>Azure</li>
                         <li>Cisco Packet Tracer</li>
                         <li>Formatação de Windows</li>
                     </ul>
+                    -->                    
+                    
                 </div>
                 <div class="contentPerfil">                
-                    <h3>Formações Acadêmicas</h3>
+                    <h3>Cursos e Formações</h3>
+                    <p id="cursos">Desenvolvimento de Software Muliplataforma, Redes de Computadores</p>
+                    
+                    <!--
                     <ul class="elementosAdicionados" id="cursosAdicionados">
                         <li>Desenvolvimento de Software Muliplataforma</li>
                         <li>Redes de Computadores</li>
                     </ul>
+                    -->
+                    
                 </div>
                 <div class="contentPerfil">                
                     <h3>Experiências de Trabalho</h3>
+                    <p id="experiencias">Atendente de Telemarketing, Lixeiro, Desenvolvimento de Bomba Atômica</p>
+                    <!--
                     <ul class="elementosAdicionados" id="experienciasAdicionadas">
                         <li>Atendente de Telemarketing</li>
                         <li>Lixeiro</li>
                         <li>Desenvolvimento de Bomba Atômica</li>
                     </ul>
+                    -->                    
                 </div>
-            </div> 
+            </div>  
             <div class="contentPerfil" id="contentPerfilPontuacao">
                 <div class="divTituloDigitavel">
                     <lord-icon

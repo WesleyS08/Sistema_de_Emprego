@@ -228,10 +228,49 @@ if ($result && mysqli_num_rows($result) > 0) {
                         </div>
                     </div>
                     <div class="divElementos">
+
+                        <div class="divAdiconaElementos">
+                            <h2>Habilidades e Tecnologias</h2> 
+                            <div class="divTextArea">                        
+                                <div class="containerTextArea">
+                                    <div class="contentInputTextArea">
+                                        <textarea class="textAreaAnimada" name="habilidades" id="habilidades" type="text" required></textarea>
+                                        <div class="textArealabelLine">Adicionar</div>
+                                    </div>
+                                    <small name="aviso"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divAdiconaElementos">
+                            <h2>Cursos e Formações</h2> 
+                            <div class="divTextArea">                        
+                                <div class="containerTextArea">
+                                    <div class="contentInputTextArea">
+                                        <textarea class="textAreaAnimada" name="cursos" id="cursos" type="text" required></textarea>
+                                        <div class="textArealabelLine">Adicionar</div>
+                                    </div>
+                                    <small name="aviso"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divAdiconaElementos">
+                            <h2>Experiências de Trabalho</h2> 
+                            <div class="divTextArea">                        
+                                <div class="containerTextArea">
+                                    <div class="contentInputTextArea">
+                                        <textarea class="textAreaAnimada" name="experiencias" id="experiencias" type="text" required></textarea>
+                                        <div class="textArealabelLine">Adicionar</div>
+                                    </div>
+                                    <small name="aviso"></small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--
                         <div class="divAdiconaElementos">                            
                             <h2>Habilidades e Tecnologias</h2>     
                             <div class="divTituloAddElementos">                   
-                                <input class="inputSimples" id="habilidade" name="habilidade" type="text" placeholder="Ex: Manutenção de Computadores">
+                                <input class="inputSimples" id="habilidade" name="habilidade" type="text" placeholder="Ex: Manutenção de Computadores" required>
                                 <div class="btnAdicionarElemento" id="adicionaHabilidade">
                                     <lord-icon
                                         src="https://cdn.lordicon.com/zrkkrrpl.json"
@@ -247,10 +286,12 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <ul class="elementosAdicionados" id="habilidadesAdicionadas"> 
                             </ul>
                         </div>
-                        <div class="divAdiconaElementos">
+                        --> 
+
+                        <!--<div class="divAdiconaElementos">
                             <h2>Cursos e Formações</h2> 
                             <div class="divTituloAddElementos">                       
-                                <input class="inputSimples" id="curso" name="curso" type="text" placeholder="Ex: Design de Interiores">
+                                <input class="inputSimples" id="curso" name="curso" type="text" placeholder="Ex: Design de Interiores" required>
                                 <div class="btnAdicionarElemento" id="adicionaCurso">
                                     <lord-icon
                                         src="https://cdn.lordicon.com/zrkkrrpl.json"
@@ -265,11 +306,12 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <small name="aviso" id="avisoCursos"></small>
                             <ul class="elementosAdicionados" id="cursosAdicionados">
                             </ul>
-                        </div>
-                        <div class="divAdiconaElementos">
+                        </div-->
+
+                        <!--<div class="divAdiconaElementos">
                             <h2>Experiências de Trabalho</h2> 
                             <div class="divTituloAddElementos">                       
-                                <input class="inputSimples" id="experiencia" name="experiencia" type="text" placeholder="Ex: Atendente de Telemarketing">
+                                <input class="inputSimples" id="experiencia" name="experiencia" type="text" placeholder="Ex: Atendente de Telemarketing" required>
                                 <div class="btnAdicionarElemento" id="adicionaExperiencia">
                                     <lord-icon
                                         src="https://cdn.lordicon.com/zrkkrrpl.json"
@@ -284,7 +326,8 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <small name="aviso" id="avisoExperiencias"></small>
                             <ul class="elementosAdicionados" id="experienciasAdicionadas">
                             </ul>
-                        </div>
+                        </div>-->
+                        
                     </div>
                     <div class="divBtnAtualizar">                        
                         <input type="submit" value="Atualizar">
