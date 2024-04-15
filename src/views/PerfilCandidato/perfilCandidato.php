@@ -81,10 +81,10 @@ if ($result && mysqli_num_rows($result) > 0) {
         <a href="../HomeCandidato/homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
-            <li><a href="../TodasVagas/todasVagas.html">Vagas</a></li>
-            <li><a href="#">Testes</a></li>
-            <li><a href="#">Cursos</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="../TodosTeste/todosTeste.php">Testes</a></li>
+            <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
         </ul>
     </nav>
     <div class="divBackgroundImg" id="divBackgroundImgDefinida">

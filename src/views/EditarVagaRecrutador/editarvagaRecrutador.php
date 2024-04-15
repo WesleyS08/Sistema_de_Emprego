@@ -152,10 +152,10 @@ mysqli_close($_con);
         <a href="homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="#">Anunciar</a></li>
-            <li><a href="#">Minhas vagas</a></li>
-            <li><a href="#">Meus testes</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
         </ul>
     </nav>
     <div class="divCommon">

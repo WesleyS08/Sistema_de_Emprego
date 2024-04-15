@@ -191,10 +191,10 @@ if ($result && mysqli_num_rows($result) > 0) {
                 src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="#">Vagas</a></li>
-            <li><a href="#">Pesquisar</a></li>
-            <li><a href="#">Cursos</a></li>
-            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
+            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="../TodosTeste/todosTeste.php">Testes</a></li>
+            <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>>
         </ul>
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>

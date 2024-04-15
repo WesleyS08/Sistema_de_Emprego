@@ -137,9 +137,9 @@ if ($stmt) {
         <a href="homeRecrutador.html"><img id="logo"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="#">Anunciar</a></li>
-            <li><a href="#">Minhas vagas</a></li>
-            <li><a href="#">Meus testes</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>

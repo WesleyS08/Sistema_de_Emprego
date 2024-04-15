@@ -101,11 +101,10 @@ if ($result && mysqli_num_rows($result) > 0) {
                 src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="#">Anunciar</a></li>
-            <li><a href="#">Minhas vagas</a></li>
-            <li><a href="#">Meus testes</a></li>
-            <li><a href="../EditarPerfilRecrutador/editarPerfilRecrutador.php">Perfil</a></li>
-
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
         </ul>
     </nav>
     <div class="divBackgroundImg" id="divBackgroundImgDefinida">

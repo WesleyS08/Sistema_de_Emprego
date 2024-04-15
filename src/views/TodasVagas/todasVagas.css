@@ -14,7 +14,7 @@
 .divPesquisa{
     width: 500px;
     margin: 0 auto;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .divFlexInput{
@@ -47,13 +47,27 @@
 
 /* ------------------------- Filtros -------------------------*/
 
-.containerFiltros{
-    margin-top: 30px;
+#mostraFiltros{
+    cursor: pointer;
+    margin: 30px 0px;
+    display: flex;
+    align-items: center;
+    width: 110px;
+    transition: 0.2s ease;
 }
 
-#divMostraFiltros h3{
+#mostraFiltros:hover{
+    transform: scale(1.08);
+}
+
+#mostraFiltros h3{
     font-size: 20pt;
-    cursor: pointer;
+    margin-right: 2px;
+}
+
+.containerFiltros{
+    margin-top: 20px;
+    display: none;
 }
 
 .contentFiltro{
@@ -79,7 +93,7 @@
 }
 
 .btnCheckBox:hover{
-    border: 1px solid black;
+    border: 1px solid var(--laranja);
 }
 
 #flexContent{
@@ -101,7 +115,7 @@
 .selectArea{
     background: none;
     font-size: 12pt;
-    width: 150px;
+    width: 160px;
     padding: 4px;
     border-radius: 8px;
     outline: 0;
