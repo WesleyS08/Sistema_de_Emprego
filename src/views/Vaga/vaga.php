@@ -10,10 +10,12 @@ $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : ''
 
 // Verificar se o usuário está autenticado como empresa
 $autenticadoComoPublicador = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
+$autenticadoComoCandidato = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato';
 
 // definição de variaveis 
 $emailUsuario = '';
 $autenticadoComoEmpresa = false;
+$autenticadoComoCandidato = false;
 $candidatoInscrito = false;
 
 
@@ -22,12 +24,17 @@ $candidatoInscrito = false;
 if (isset($_SESSION['email_session'])) {
     // Se estiver autenticado com e-mail/senha e for do tipo candidato
     $emailUsuario = $_SESSION['email_session'];
+    $autenticadoComoEmpresa = true;
+    $autenticadoComoCandidato = true;
 } elseif (isset($_SESSION['google_session'])) {
     // Se estiver autenticado com o Google e for do tipo candidato
     $emailUsuario = $_SESSION['google_session'];
+    $autenticadoComoEmpresa = true;
+    $autenticadoComoCandidato = true;
 } else {
     // verificação para a possivel edição 
     $autenticadoComoEmpresa = false;
+    $autenticadoComoCandidato = false;
 }
 
 
@@ -37,17 +44,23 @@ if (isset($_GET['id'])) {
         die("Falha na conexão: " . $_con->connect_error);
     }
 
-    // Obter o ID do anúncio da variável GET
-    $idAnuncio = $_GET['id'];
+// Obter o ID do anúncio da variável GET
+$idAnuncio = $_GET['id'];
 
+// Primeira consulta no banco de dados para informações do anúncio
+$sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa, Tb_Empresa.Tb_Pessoas_Id AS Id_Pessoa_Empresa
+        FROM Tb_Anuncios
+        INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+        INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+        WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
-    // Primeira consulta no banco de dados para informações do anúncio
-    $sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa
-    FROM Tb_Anuncios
-    INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-    INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-    WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
+$result = mysqli_query($_con, $sql); // Executar a consulta SQL
 
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $nomeEmpresa = $row['Nome_da_Empresa'];
+    $idPessoaEmpresa = $row['Id_Pessoa_Empresa']; // Aqui está o ID da pessoa representando a empresa
+}
 
     // Verifica se retornou alguma coisa da pesquisa
     $result = mysqli_query($_con, $sql);
@@ -209,13 +222,15 @@ if (isset($_GET['id'])) {
 
     <div class="divCommon">
         <div class="divTitulo" id="divTituloVaga">
-            <h2 id="tituloVaga"><?php echo $Titulo; ?></h2>
+            <h2 id="tituloVaga">
+                <?php echo $Titulo; ?>
+            </h2>
             <label>Empresa: </label>
-
             <?php
 
             if (!empty($NomeEmpresa)) {
-                echo '<a href="../PerfilRecrutador/perfilRecrutador.php?empresa_nome=' . urlencode($NomeEmpresa) . '">' . $NomeEmpresa . '</a><br>';
+               echo '<a href="../PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaEmpresa . '">' . $NomeEmpresa . '</a><br>';
+
             } else {
                 echo '<a id="empresa">Confidencial</a><br>';
             }
@@ -234,9 +249,13 @@ if (isset($_GET['id'])) {
             </label><br>
             <label>Status:</label>
             <?php if ($Status == 'Aberto') { ?>
-                <label style="color: green;"><?php echo $Status; ?></label>
+                <label style="color: green;">
+                    <?php echo $Status; ?>
+                </label>
             <?php } else { ?>
-                <label style="color: red;"><?php echo $Status; ?></label>
+                <label style="color: red;">
+                    <?php echo $Status; ?>
+                </label>
             <?php } ?>
 
 
@@ -247,22 +266,30 @@ if (isset($_GET['id'])) {
                     <lord-icon src="https://cdn.lordicon.com/pbbsmkso.json" trigger="loop" state="loop-rotate"
                         colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
                     </lord-icon>
-                    <label id="nomeArea"><?php echo $Area; ?></label>
+                    <label id="nomeArea">
+                        <?php echo $Area; ?>
+                    </label>
                 </div>
                 <div class="divIconeENome">
                     <lord-icon src="https://cdn.lordicon.com/surcxhka.json" trigger="loop" stroke="bold"
                         state="loop-roll" colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
                     </lord-icon>
-                    <label id="cidade"><?php echo $Cidade; ?></label>
+                    <label id="cidade">
+                        <?php echo $Cidade; ?>
+                    </label>
                     <label>,&nbsp;</label>
-                    <label id="estado"><?php echo $Estado; ?></label>
+                    <label id="estado">
+                        <?php echo $Estado; ?>
+                    </label>
                 </div>
                 <div class="divIconeENome">
                     <lord-icon src="https://cdn.lordicon.com/qvyppzqz.json" trigger="loop" stroke="bold"
                         state="loop-oscillate" colors="primary:#242424,secondary:#c74b16"
                         style="width:34px;height:34px">
                     </lord-icon>
-                    <label id="cargaHoraria"><?php echo $Horario; ?></label>
+                    <label id="cargaHoraria">
+                        <?php echo $Horario; ?>
+                    </label>
                 </div>
             </div>
             <div class="divInformacoesPrincipais">
@@ -271,30 +298,43 @@ if (isset($_GET['id'])) {
                         <div class="divDetalhesCurtos">
                             <div class="divIconeENome">
                                 <img id="imgTipoProfissional" src="" class="icone">
-                                <label id="tipoProfissional"><?php echo $Categoria; ?></label>
+                                <label id="tipoProfissional">
+                                    <?php echo $Categoria; ?>
+                                </label>
                             </div>
                             <div class="divIconeENome">
                                 <img id="imgModalidade" src="" class="icone">
-                                <label id="modalidade"><?php echo $Modalidade; ?></label>
+                                <label id="modalidade">
+                                    <?php echo $Modalidade; ?>
+                                </label>
                             </div>
                             <div class="divIconeENome">
                                 <img id="imgJornada" src="" class="icone">
-                                <label id="jornada"><?php echo $Jornada; ?></label>
+                                <label id="jornada">
+                                    <?php echo $Jornada; ?>
+                                </label>
                             </div>
                             <div class="divIconeENome">
                                 <img id="imgNivel" src="" class="icone">
-                                <label id="nivel"><?php echo $Nivel_Operacional; ?></label>
+                                <label id="nivel">
+                                    <?php echo $Nivel_Operacional; ?>
+                                </label>
                             </div>
                         </div>
                         <div class="divDescricao">
                             <h3>Descrição da vaga</h3>
-                            <p><?php echo $Descricao; ?></p>
-                            <p><?php echo $autenticadoComoPublicador; ?></p>
+                            <p>
+                                <?php echo $Descricao; ?>
+                            </p>
+                            <p>
+                                <?php echo $autenticadoComoPublicador; ?>
+                            </p>
                         </div>
                     </div>
-                    <?php if ($autenticadoComoPublicador  == true) { ?>
+                    <?php if ($autenticadoComoPublicador == false) { ?>
                     <?php }
-                     elseif ($Status == 'Aberto' && !$candidatoInscrito) { ?>
+                    if ($autenticadoComoCandidato == false) { ?>
+                    <?php } elseif ($Status == 'Aberto' && !$candidatoInscrito) { ?>
                         <form method="POST"
                             action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
                             <div class="divSendButton">
@@ -315,8 +355,7 @@ if (isset($_GET['id'])) {
                                 </lord-icon>
                             </button>
                         </div>
-                    <?php }
-                     elseif ($Status != 'Aberto') { ?>
+                    <?php } elseif ($Status != 'Aberto') { ?>
                         <p>Status: Encerrado</p>
                     <?php } ?>
 
@@ -326,11 +365,15 @@ if (isset($_GET['id'])) {
                 <div class="divFlex" id="divBoxes">
                     <div class="divBox">
                         <h3>Requisitos</h3>
-                        <p><?php echo $Requisitos; ?></p>
+                        <p>
+                            <?php echo $Requisitos; ?>
+                        </p>
                     </div>
                     <div class="divBox">
                         <h3>Benefícios</h3>
-                        <p><?php echo $Beneficios; ?></p>
+                        <p>
+                            <?php echo $Beneficios; ?>
+                        </p>
                     </div>
 
                 </div>
