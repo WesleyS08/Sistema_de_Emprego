@@ -35,6 +35,7 @@ button{
     border-radius: 8px;
     cursor: pointer;
     transition: 0.2s ease;
+    font-weight: bold;
 }
 
 button:hover{
@@ -42,7 +43,8 @@ button:hover{
 }
 
 #btnRunningGuy{
-    padding: 12px;
+    height: 142px;
+    padding-top: 16px;
 }
 
 .divBtnVerMais{
@@ -249,7 +251,6 @@ nav ul li a:hover{
 
 .divTitle button{
     width: 200px;
-    font-size: 14pt;
     margin-top: 20px;
 }
 
