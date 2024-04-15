@@ -3,14 +3,20 @@ include "../../services/conexão_com_banco.php";
 
 session_start();
 
-// Verificar se o usuário está autenticado como candidato
+// Verificar o nome do usario
+
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-$emailUsuario = '';
-$autenticadoComoEmpresa = false; // Corrigido o nome da variável
-$candidatoInscrito = false;
+
 
 // Verificar se o usuário está autenticado como empresa
 $autenticadoComoPublicador = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
+
+// definição de variaveis 
+$emailUsuario = '';
+$autenticadoComoEmpresa = false;
+$candidatoInscrito = false;
+
+
 
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
 if (isset($_SESSION['email_session']) && $_SESSION['tipo_usuario'] == 'candidato') {
@@ -20,10 +26,11 @@ if (isset($_SESSION['email_session']) && $_SESSION['tipo_usuario'] == 'candidato
     // Se estiver autenticado com o Google e for do tipo candidato
     $emailUsuario = $_SESSION['google_session'];
 } else {
-    $autenticadoComoEmpresa = false; // Corrigido o nome da variável
+    // verificação para a possivel edição 
+    $autenticadoComoEmpresa = false;
 }
 
-
+// verifica se o id da vafa doi mandando pela url 
 if (isset($_GET['id'])) {
     if ($_con->connect_error) {
         die("Falha na conexão: " . $_con->connect_error);
@@ -32,19 +39,21 @@ if (isset($_GET['id'])) {
     // Obter o ID do anúncio da variável GET
     $idAnuncio = $_GET['id'];
 
+
+    // Primeira consulta no banco de dados para informações do anúncio
     $sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa
     FROM Tb_Anuncios
     INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
     INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
     WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
-    // Consulta SQL com o ID do anúncio como parâmetro
 
+    // Verifica se retornou alguma coisa da pesquisa
     $result = mysqli_query($_con, $sql);
     if ($result && mysqli_num_rows($result) > 0) {
         $dadosAnuncio = mysqli_fetch_assoc($result);
 
-        // Agora você pode acessar os detalhes do anúncio e o nome da empresa
+        // Atribuição das informações do banco de dados a variáveis
         $Categoria = $dadosAnuncio['Categoria'];
         $Titulo = $dadosAnuncio['Titulo'];
         $Descricao = $dadosAnuncio['Descricao'];
@@ -60,21 +69,9 @@ if (isset($_GET['id'])) {
         $Jornada = $dadosAnuncio['Jornada'];
         $CEP = $dadosAnuncio['CEP'];
         $Rua = $dadosAnuncio['Rua'];
+        $bairro = $dadosAnuncio['Bairro'];
         $Numero = $dadosAnuncio['Numero'];
         $NomeEmpresa = $dadosAnuncio['Nome_da_Empresa'];
-
-        $enderecoEmpresa = $Rua . ' ' . $Numero . ', ' . $Cidade . ', ' . $Estado . ', ' . $CEP;
-
-        // Verificar se o candidato já se inscreveu para este anúncio
-        if (isset($_SESSION['cpf_candidato'])) {
-            $cpfCandidato = $_SESSION['cpf_candidato'];
-            $sqlVerificaInscricao = "SELECT * FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = $idAnuncio AND Tb_Vagas_Tb_Empresa_CNPJ = '{$dadosAnuncio['Tb_Empresa_CNPJ']}' AND Tb_Candidato_CPF = '$cpfCandidato'";
-            $resultVerificaInscricao = mysqli_query($_con, $sqlVerificaInscricao);
-            if ($resultVerificaInscricao && mysqli_num_rows($resultVerificaInscricao) > 0) {
-                $candidatoInscrito = true;
-            }
-        }
-
     } else {
         // Caso não seja encontrado nenhum anúncio com o ID fornecido
         // Definir os campos como vazios
@@ -95,7 +92,27 @@ if (isset($_GET['id'])) {
         $Numero = '';
         $NomeEmpresa = '';
     }
-    // Segunda consulta para obter o status da vaga
+    // Segunda consulta no banco de dados para pegar o CPF do candidato
+    $sql = "SELECT Tb_Candidato.CPF
+       FROM Tb_Candidato
+       INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+       WHERE Tb_Pessoas.Email = '$emailUsuario'";
+
+    $result = mysqli_query($_con, $sql); // Executar a consulta
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result); // Obtém o resultado da consulta
+        $cpfCandidato = $row['CPF']; // Armazena o CPF do candidato
+    }
+
+    // Verifica se o usuário já se inscreveu para a vaga
+    if (isset($cpfCandidato)) {
+        $sqlVerificaInscricao = "SELECT * FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = $idAnuncio AND Tb_Vagas_Tb_Empresa_CNPJ = '{$dadosAnuncio['Tb_Empresa_CNPJ']}' AND Tb_Candidato_CPF = '$cpfCandidato'";
+        $resultVerificaInscricao = mysqli_query($_con, $sqlVerificaInscricao);
+        if ($resultVerificaInscricao && mysqli_num_rows($resultVerificaInscricao) > 0) {
+            $candidatoInscrito = true;
+        }
+    }
+    // Terceira consulta para obter o status da vaga
     $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = $idAnuncio";
     $result2 = mysqli_query($_con, $sql2);
 
@@ -107,6 +124,8 @@ if (isset($_GET['id'])) {
         $Status = '';
     }
 
+
+    // Quarta consulta para verificar se a sessão é a mesma que postou a vaga
     $sql = "SELECT Tb_Pessoas.Email
         FROM Tb_Pessoas
         JOIN Tb_Empresa ON Tb_Pessoas.Id_Pessoas = Tb_Empresa.Tb_Pessoas_Id
@@ -123,8 +142,6 @@ if (isset($_GET['id'])) {
         if ($emailCriadorVaga == $emailUsuario) {
             // Se o usuário atual é o mesmo que criou a vaga, definir $autenticadoComopublicador como true
             $autenticadoComoPublicador = true; // Corrigido o nome da variável
-            // Exibir um link para a página de edição da vaga
-            echo '<a href="../EditarVaga/editarVaga.php?id=' . $idAnuncio . '">Editar Vaga</a><br>';
         }
     }
 }
@@ -142,6 +159,9 @@ mysqli_close($_con);
     <title>Vaga</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="vaga.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
 </head>
 
 <body>
@@ -154,7 +174,7 @@ mysqli_close($_con);
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Vagas</a></li>
-            <li><a href="#">Testes</a></li>
+            <li><a href="#">Pesquisar</a></li>
             <li><a href="#">Cursos</a></li>
             <li><a href="#">Perfil</a></li>
         </ul>
@@ -193,11 +213,7 @@ mysqli_close($_con);
             } else {
                 echo '<a id="empresa">Confidencial</a><br>';
             }
-
-
             ?>
-
-
             <label>Data de anúncio: </label>
             <label>
                 <?php
@@ -285,7 +301,7 @@ mysqli_close($_con);
                                     </form>
                                 <?php } else { ?>
                                     <button disabled>
-                                        <h4>Já Inscrito</h4>
+                                        <h4>Já amInscrito</h4>
                                         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
                                             colors="primary:#f5f5f5" style="width:80px;height:80px">
                                         </lord-icon>
@@ -308,15 +324,17 @@ mysqli_close($_con);
                         <h3>Benefícios</h3>
                         <p><?php echo $Beneficios; ?></p>
                     </div>
+
                 </div>
+                <div id="map" style="height: 400px; margin-top:5%"></div>
             </div>
-            <div id="map"></div>
-
         </div>
-
-
     </div>
+    <div id="endereco" style="display: none;" data-rua="<?php echo $Rua; ?>" data-numero="<?php echo $Numero; ?>"
+        data-bairro="<?php echo $bairro; ?>" data-cidade="<?php echo $Cidade; ?>" data-estado="<?php echo $Estado; ?>"
+        data-cep="<?php echo $CEP; ?>">
     </div>
+
     <footer>
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
@@ -325,7 +343,59 @@ mysqli_close($_con);
     </footer>
     <script src="trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script>
+        // Função para inicializar o mapa com base no endereço fornecido
+        function initMap(latitude, longitude) {
+            var map = L.map('map').setView([latitude, longitude], 30);
 
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup('<?php echo !empty($NomeEmpresa) ? $NomeEmpresa : "Confidencial"; ?>')
+                .openPopup();
+
+
+        }
+
+
+        // Obtenha as informações de endereço do HTML
+        var enderecoDiv = document.getElementById('endereco');
+        var rua = enderecoDiv.getAttribute('data-rua');
+        var numero = enderecoDiv.getAttribute('data-numero');
+        var bairro = enderecoDiv.getAttribute('data-bairro');
+        var cidade = enderecoDiv.getAttribute('data-cidade');
+        var estado = enderecoDiv.getAttribute('data-estado');
+        var cep = enderecoDiv.getAttribute('data-cep');
+
+        // Verifique se todas as variáveis de endereço estão definidas e têm valores
+        if (rua && numero && bairro && cidade && estado && cep) {
+            var enderecoCompleto = rua + ', ' + numero + ', ' + bairro + ', ' + cidade + ', ' + estado + ', ' + cep;
+
+            // Faça a solicitação de geocodificação
+            var url = "https://api.tomtom.com/search/2/geocode/" + encodeURIComponent(enderecoCompleto) + ".json?key=RXAoSJz7XgFFtKpBXExayEkmyWdYw7xt";
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results && data.results.length > 0) {
+                        var latitude = data.results[0].position.lat;
+                        var longitude = data.results[0].position.lon;
+                        initMap(latitude, longitude);
+                    } else {
+                        console.error("Nenhum resultado encontrado para o endereço fornecido.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao fazer a solicitação:", error);
+                });
+        } else {
+            console.error("Alguma das variáveis de endereço não está definida ou está vazia.");
+        }
+    </script>
 </body>
 
 </html>
