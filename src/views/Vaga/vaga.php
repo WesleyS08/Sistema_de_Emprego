@@ -19,16 +19,17 @@ $candidatoInscrito = false;
 
 
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
-if (isset($_SESSION['email_session']) && $_SESSION['tipo_usuario'] == 'candidato') {
+if (isset($_SESSION['email_session'])) {
     // Se estiver autenticado com e-mail/senha e for do tipo candidato
     $emailUsuario = $_SESSION['email_session'];
-} elseif (isset($_SESSION['google_session']) && $_SESSION['google_usuario'] == 'candidato') {
+} elseif (isset($_SESSION['google_session'])) {
     // Se estiver autenticado com o Google e for do tipo candidato
     $emailUsuario = $_SESSION['google_session'];
 } else {
     // verificação para a possivel edição 
     $autenticadoComoEmpresa = false;
 }
+
 
 // verifica se o id da vafa doi mandando pela url 
 if (isset($_GET['id'])) {
@@ -92,26 +93,32 @@ if (isset($_GET['id'])) {
         $Numero = '';
         $NomeEmpresa = '';
     }
-    // Segunda consulta no banco de dados para pegar o CPF do candidato
-    $sql = "SELECT Tb_Candidato.CPF
-       FROM Tb_Candidato
-       INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-       WHERE Tb_Pessoas.Email = '$emailUsuario'";
+    // Segunda consulta no banco de dados para pegar o CPF do candidato e o CNPJ da empresa
+    $sql = "SELECT Tb_Candidato.CPF, Tb_Empresa.CNPJ
+   FROM Tb_Candidato
+   INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+   LEFT JOIN Tb_Empresa ON Tb_Candidato.Tb_Pessoas_Id = Tb_Empresa.Tb_Pessoas_Id
+   WHERE Tb_Pessoas.Email = '$emailUsuario'";
 
     $result = mysqli_query($_con, $sql); // Executar a consulta
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result); // Obtém o resultado da consulta
         $cpfCandidato = $row['CPF']; // Armazena o CPF do candidato
+        $cnpjEmpresa = $row['CNPJ']; // Armazena o CNPJ da empresa, se houver
+
+        // Verifica se o usuário já se inscreveu para a vaga (apenas se for um candidato)
+
+        if (isset($cpfCandidato) && !$autenticadoComoPublicador) {
+            $sqlVerificaInscricao = "SELECT * FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = $idAnuncio AND Tb_Candidato_CPF = '$cpfCandidato'";
+            $resultVerificaInscricao = mysqli_query($_con, $sqlVerificaInscricao);
+            if ($resultVerificaInscricao && mysqli_num_rows($resultVerificaInscricao) > 0) {
+                $candidatoInscrito = true;
+            }
+        }
+
     }
 
-    // Verifica se o usuário já se inscreveu para a vaga
-    if (isset($cpfCandidato)) {
-        $sqlVerificaInscricao = "SELECT * FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = $idAnuncio AND Tb_Vagas_Tb_Empresa_CNPJ = '{$dadosAnuncio['Tb_Empresa_CNPJ']}' AND Tb_Candidato_CPF = '$cpfCandidato'";
-        $resultVerificaInscricao = mysqli_query($_con, $sqlVerificaInscricao);
-        if ($resultVerificaInscricao && mysqli_num_rows($resultVerificaInscricao) > 0) {
-            $candidatoInscrito = true;
-        }
-    }
+
     // Terceira consulta para obter o status da vaga
     $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = $idAnuncio";
     $result2 = mysqli_query($_con, $sql2);
@@ -145,9 +152,6 @@ if (isset($_GET['id'])) {
         }
     }
 }
-
-// Fechar a conexão com o banco de dados
-mysqli_close($_con);
 ?>
 
 <!DOCTYPE html>
@@ -170,13 +174,14 @@ mysqli_close($_con);
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../../.."><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+                src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="#">Vagas</a></li>
             <li><a href="#">Pesquisar</a></li>
             <li><a href="#">Cursos</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
         </ul>
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
@@ -206,6 +211,7 @@ mysqli_close($_con);
         <div class="divTitulo" id="divTituloVaga">
             <h2 id="tituloVaga"><?php echo $Titulo; ?></h2>
             <label>Empresa: </label>
+
             <?php
 
             if (!empty($NomeEmpresa)) {
@@ -286,32 +292,31 @@ mysqli_close($_con);
 
                         </div>
                     </div>
-                    <?php if ($autenticadoComoEmpresa) { ?>
+                    <?php if (!$autenticadoComoEmpresa && $Status == 'Aberto' && !$candidatoInscrito) { ?>
+                        <form method="POST"
+                            action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
+                            <div class="divSendButton">
+                                <button>
+                                    <h4>Candidatar-se</h4>
+                                    <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
+                                        colors="primary:#f5f5f5" style="width:80px;height:80px">
+                                    </lord-icon>
+                                </button>
+                            </div>
+                        </form>
+                    <?php } elseif ($candidatoInscrito) { ?>
                         <div class="divSendButton">
-                            <?php if ($Status == 'Aberto') { ?>
-                                <?php if (!$candidatoInscrito) { ?>
-                                    <form method="POST" action="../../services/cadastros/processar_candidatura.php">
-                                        <input type="hidden" name="id_anuncio" value="<?php echo $idAnuncio; ?>">
-                                        <button type="submit">
-                                            <h4>Candidatar-se</h4>
-                                            <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                                colors="primary:#f5f5f5" style="width:80px;height:80px">
-                                            </lord-icon>
-                                        </button>
-                                    </form>
-                                <?php } else { ?>
-                                    <button disabled>
-                                        <h4>Já amInscrito</h4>
-                                        <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                            colors="primary:#f5f5f5" style="width:80px;height:80px">
-                                        </lord-icon>
-                                    </button>
-                                <?php } ?>
-                            <?php } else { ?>
-                                <p>Status: Encerrado</p>
-                            <?php } ?>
+                            <button disabled style="cursor: default; background-color:  #723911">
+                                <h4>Já inscrito</h4>
+                                <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
+                                    colors="primary:#f5f5f5" style="width:80px;height:80px">
+                                </lord-icon>
+                            </button>
                         </div>
+                    <?php } elseif ($Status != 'Aberto') { ?>
+                        <p>Status: Encerrado</p>
                     <?php } ?>
+
 
 
                 </div>
@@ -334,6 +339,10 @@ mysqli_close($_con);
         data-bairro="<?php echo $bairro; ?>" data-cidade="<?php echo $Cidade; ?>" data-estado="<?php echo $Estado; ?>"
         data-cep="<?php echo $CEP; ?>">
     </div>
+
+
+
+
 
     <footer>
         <a>Política de Privacidade</a>
