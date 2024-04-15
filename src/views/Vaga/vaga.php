@@ -289,10 +289,12 @@ if (isset($_GET['id'])) {
                         <div class="divDescricao">
                             <h3>Descrição da vaga</h3>
                             <p><?php echo $Descricao; ?></p>
-
+                            <p><?php echo $autenticadoComoPublicador; ?></p>
                         </div>
                     </div>
-                    <?php if (!$autenticadoComoEmpresa && $Status == 'Aberto' && !$candidatoInscrito) { ?>
+                    <?php if ($autenticadoComoPublicador  == true) { ?>
+                    <?php }
+                     elseif ($Status == 'Aberto' && !$candidatoInscrito) { ?>
                         <form method="POST"
                             action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
                             <div class="divSendButton">
@@ -313,7 +315,8 @@ if (isset($_GET['id'])) {
                                 </lord-icon>
                             </button>
                         </div>
-                    <?php } elseif ($Status != 'Aberto') { ?>
+                    <?php }
+                     elseif ($Status != 'Aberto') { ?>
                         <p>Status: Encerrado</p>
                     <?php } ?>
 
