@@ -114,7 +114,7 @@ function determinarImagemCategoria($categoria)
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
             <li><a href="#">Vagas</a></li>
-            <li><a href="#">Pesquisar</a></li>
+            <li><a href="#">Testes</a></li>
             <li><a href="#">Cursos</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
         </ul>
@@ -169,7 +169,7 @@ function determinarImagemCategoria($categoria)
     </div>
     <div class="divCarrossel">
         <div class="divTitulo">
-            <h2>Avaliações</h2>
+            <h2>Testes de Habilidades</h2>
             <p>Realize testes para ganhar pontos e se destacar em processos seletivos!</p>
         </div>
         <div class="container">
@@ -241,6 +241,9 @@ function determinarImagemCategoria($categoria)
                     </article>
                 </a>
             </div> 
+            <div class="divBtnVerMais">
+                <a href="src/views/todosTestes/todosTestes.html" class="btnVerMais"><button>Ver mais</button></a>
+            </div>
         </div> 
     </div>
     <div class="divCommon">

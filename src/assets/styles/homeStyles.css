@@ -45,6 +45,16 @@ button:hover{
     padding: 12px;
 }
 
+.divBtnVerMais{
+    margin-top: 10px;
+}
+
+.btnVerMais{
+    margin-left: 60px;
+    height: 100px;
+    background-color: yellow;
+}
+
 h2{
     font-size: 24pt;
 }

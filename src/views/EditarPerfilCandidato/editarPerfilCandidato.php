@@ -78,7 +78,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
             <li><a href="#">Vagas</a></li>
-            <li><a href="#">Pesquisar</a></li>
+            <li><a href="#">Testes</a></li>
             <li><a href="#">Cursos</a></li>
             <li><a href="#">Perfil</a></li>
         </ul>

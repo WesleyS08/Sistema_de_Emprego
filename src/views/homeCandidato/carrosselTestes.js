@@ -1,9 +1,9 @@
-const testes = document.querySelector("#testes");
+const carrosselTestes = document.querySelector("#carrosselTestes");
 let scrollPerClickTeste = 1040;
 let scrollAmountTeste = 0;
 
 function SliderScrollLeft(){
-    testes.scrollTo({
+    carrosselTestes.scrollTo({
         top:0,
         left: (scrollAmountTeste -= scrollPerClickTeste),
         behavior:"smooth"
@@ -15,8 +15,8 @@ function SliderScrollLeft(){
 }
 
 function SliderScrollRight(){
-    if(scrollAmountTeste <= testes.scrollWidth - testes.clientWidth){
-        testes.scrollTo({
+    if(scrollAmountTeste <= carrosselTestes.scrollWidth - carrosselTestes.clientWidth){
+        carrosselTestes.scrollTo({
             top:0,
             left: (scrollAmountTeste += scrollPerClickTeste),
             behavior:"smooth"
