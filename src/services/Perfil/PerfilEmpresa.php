@@ -22,6 +22,9 @@ $githubEmpresa = $_POST['github'] ?? '';
 $linkedinEmpresa = $_POST['linkedin'] ?? '';
 $instagramEmpresa = $_POST['instagram'] ?? '';
 $emailUsuario = $_POST['email_usuario'] ?? ''; // Verifique se o email do usuário está presente
+// Recuperar o nome da empresa da URL (supondo que seja passado como parâmetro "nomeEmpresa")
+$idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
+
 
 // Verificar se todas as informações necessárias foram fornecidas
 if (empty($nomeEmpresa) || empty($areaEmpresa) || empty($telefoneEmpresa) || empty($sobreEmpresa) || empty($emailUsuario)) {
@@ -139,7 +142,7 @@ if ($urlBannerAntigo != $dadosEmpresa['Banner']) {
 $query .= " WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
-    header("Location: ../../views/PerfilRecrutador/perfilRecrutador.php");
+    header("Location: ../../views/PerfilRecrutador/perfilRecrutador.php?id=" . $idPessoa);
 } else {
     echo "Erro ao salvar as alterações: " . mysqli_error($_con);
 }

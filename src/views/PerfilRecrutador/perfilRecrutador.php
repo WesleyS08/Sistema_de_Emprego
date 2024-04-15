@@ -24,52 +24,44 @@ if (isset($_SESSION['email_session'])) {
     $autenticadoComoEmpresa = false;
 }
 
-// Recuperar o nome da empresa da URL (supondo que seja passado como parâmetro "nomeEmpresa")
-$nomeEmpresa = isset($_GET['empresa_nome']) ? $_GET['empresa_nome'] : '';
+$idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
 // Evite inserção direta de variáveis na consulta SQL para prevenir injeção de SQL
 // Use declarações preparadas para evitar problemas de segurança
-$query = "SELECT * FROM Tb_Empresa WHERE Nome_da_Empresa = ?";
+$query = "SELECT e.*
+          FROM Tb_Pessoas p
+          INNER JOIN Tb_Empresa e ON p.Id_Pessoas = e.Tb_Pessoas_Id
+          WHERE p.Id_Pessoas = ?";
+          
 $stmt = mysqli_prepare($_con, $query);
 
 if ($stmt) {
     // Vincular parâmetros
-    mysqli_stmt_bind_param($stmt, "s", $nomeEmpresa);
+    mysqli_stmt_bind_param($stmt, "i", $idPessoa);
 
     // Executar a consulta
     mysqli_stmt_execute($stmt);
 
-    // Obter o resultado
-    $result = mysqli_stmt_get_result($stmt);
+    // Vincular variáveis de resultado
+    mysqli_stmt_bind_result($stmt, $CNPJ, $Tb_Pessoas_Id, $Img_Banner, $Area_de_Atuacao, $Facebook, $Github, $Linkedin, $Instagram, $Nome_da_Empresa, $Sobre_a_Empresa, $Area_da_Empresa, $Avaliacao_de_Funcionarios, $Avaliacao_Geral, $Telefone, $Img_Perfil);
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $dadosEmpresa = mysqli_fetch_assoc($result);
-        // Preencher os campos HTML com as informações recuperadas do banco de dados
-        $CNPJ = $dadosEmpresa['CNPJ'];
-        $nomeEmpresa = $dadosEmpresa['Nome_da_Empresa'];
-        $areaEmpresa = $dadosEmpresa['Area_da_Empresa'];
-        $sobreEmpresa = $dadosEmpresa['Sobre_a_Empresa'];
-        $telefoneEmpresa = $dadosEmpresa['Telefone'];
-        $facebookEmpresa = $dadosEmpresa['Facebook'];
-        $linkedinEmpresa = $dadosEmpresa['Linkedin'];
-        $instagramEmpresa = $dadosEmpresa['Instagram'];
-        $caminhoImagemPerfil = $dadosEmpresa['Img_Perfil'];
-        $caminhoImagemBanner = $dadosEmpresa['Img_Banner'];
-    } else {
-        // Se não houver informações da empresa, você pode definir valores padrão ou deixar em branco
-        $nomeEmpresa = '';
-        $areaEmpresa = '';
-        $sobreEmpresa = '';
-        $telefoneEmpresa = '';
-        $facebookEmpresa = '';
-        $linkedinEmpresa = '';
-        $instagramEmpresa = '';
-        $caminhoImagemPerfil = '';
-    }
+    // Obter o resultado
+    mysqli_stmt_fetch($stmt);
 
     // Fechar declaração
     mysqli_stmt_close($stmt);
 }
+
+// Definir valores padrão ou deixar em branco se não houver dados da empresa
+$nomeEmpresa = isset($Nome_da_Empresa) ? $Nome_da_Empresa : '';
+$areaEmpresa = isset($Area_da_Empresa) ? $Area_da_Empresa : '';
+$sobreEmpresa = isset($Sobre_a_Empresa) ? $Sobre_a_Empresa : '';
+$telefoneEmpresa = isset($Telefone) ? $Telefone : '';
+$facebookEmpresa = isset($Facebook) ? $Facebook : '';
+$linkedinEmpresa = isset($Linkedin) ? $Linkedin : '';
+$instagramEmpresa = isset($Instagram) ? $Instagram : '';
+$caminhoImagemPerfil = isset($Img_Perfil) ? $Img_Perfil : '';
+$caminhoImagemBanner = isset($Img_Banner) ? $Img_Banner : '';
 
 $query = "SELECT Email FROM Tb_Pessoas WHERE Id_Pessoas = (SELECT Tb_Pessoas_Id FROM Tb_Empresa WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario'))";
 $result = mysqli_query($_con, $query);
@@ -127,7 +119,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         </div>
         <?php if ($podeEditar) { ?>
             <a class="acessarEditarPerfil"
-                href="../EditarPerfilRecrutador/editarPerfilRecrutador.php?cnpj=<?php echo urlencode($CNPJ); ?>">
+                href="../EditarPerfilRecrutador/editarPerfilRecrutador.php?id=<?php echo $idPessoa; ?>">
                 <div>
                     <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
                         colors="primary:#ffffff,secondary:#ffffff" style="width:30px;height:30px">

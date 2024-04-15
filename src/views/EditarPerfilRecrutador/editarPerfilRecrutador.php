@@ -23,6 +23,7 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
     exit;
 }
 
+$idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
 // Recuperar informações da empresa do banco de dados com base no e-mail do usuário
 $query = "SELECT * FROM Tb_Empresa WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
@@ -91,8 +92,8 @@ if ($result && mysqli_num_rows($result) > 0) {
             <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php" autocomplete="off"
-                enctype="multipart/form-data">
+        <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
+
 
 
                 <div class="divBackgroundImg">
