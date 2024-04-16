@@ -170,7 +170,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="telefone" name="telefone" type="number" value="<?php echo $telefoneUsuario ?>"required>
+                                <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
                                 <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>
@@ -180,7 +180,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="containerInput">
                         <div class="contentInput">
                             <!-- Preenche o campo de data com a data de nascimento do usuário -->
-                            <input class="inputAnimado" id="data" name="data" type="date" value="<?php echo htmlspecialchars($dataNascimentoUsuario); ?>" required>
+                            <input class="inputAnimado" maxlength="10" id="data" name="data" type="text" value="<?php echo htmlspecialchars($dataNascimentoUsuario); ?>" required>
                             <div class="labelLine">Data de Nascimento</div>
                         </div>
                             <small name="aviso"></small>
@@ -350,6 +350,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     <script src="mostraIcone.js"></script>
     <script src="avisoInicial.js"></script>
     <script src="adicionaElementos.js"></script>
+    <script src="mascaras.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <?php
