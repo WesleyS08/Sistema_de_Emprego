@@ -109,18 +109,17 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 
 - public/: Contém arquivos estáticos públicos.
 
-- - index.html: Página principal HTML do aplicativo.
-- - manifest.json: Arquivo de manifesto da web.
-- - sw.js: Arquivo do Service Worker.
+- - index.php: Página principal PHP do sistema.
 
-- src/: Contém o código-fonte do aplicativo.
+
+- src/: Contém o código-fonte do sistema.
 
 - - assets/: Arquivos estáticos como imagens e estilos.
 - - components/: Componentes reutilizáveis.
 - - services/: Módulos para interações com serviços, como API.
 
 - - views/: Componentes específicos de visualização.
-- - App.js: Componente principal.
+
 
 -  .gitignore: Lista de arquivos e pastas ignorados pelo Git.
 
@@ -132,25 +131,22 @@ A escolha desta arquitetura segue princípios importantes para o desenvolvimento
 
 - A estrutura divide claramente as responsabilidades entre diferentes diretórios. O código-fonte, recursos estáticos e arquivos públicos são organizados de maneira lógica e fácil de entender.
 
-## 2 Service Worker para Funcionalidade Offline:
 
-- A presença do arquivo sw.js destaca a importância do Service Worker para possibilitar funcionalidades offline, caching e atualizações automáticas.
-
-## 3 Componentização para Reutilização e Manutenção:
+## 2 Componentização para Reutilização e Manutenção:
 
 - A organização em components/ facilita a reutilização de elementos de interface do usuário, promovendo uma manutenção mais eficiente e um código mais limpo.
 
-## 4 Centralização de Serviços em services/:
+## 3 Centralização de Serviços em services/:
 
 - O diretório services/ concentra módulos relacionados a serviços, como interações com APIs. Isso promove uma arquitetura mais escalável e fácil de testar.
 
-## 5 Configurações Padrão para Navegadores:
+## 4 Configurações Padrão para Navegadores:
 
 - A presença do arquivo manifest.json destaca a intenção de criar uma aplicação web progressiva, com configurações para ícones, cores e outros detalhes de apresentação.
 
 Adotar esta arquitetura busca equilibrar eficiência de desenvolvimento, manutenção e a conformidade com as melhores práticas para PWAs, proporcionando uma base sólida para a expansão e evolução do projeto ao longo do tempo.
 
-## Como Contribuir
+## Como Contribuir 
 Sinta-se à vontade para contribuir para o desenvolvimento do SIAS! Você pode clonar o repositório, abrir issues ou enviar pull requests. Certifique-se de seguir as diretrizes de contribuição.
 
 ## Instalação e Configuração
