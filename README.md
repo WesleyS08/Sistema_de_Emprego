@@ -7,8 +7,8 @@ Este projeto foi desenvolvido como parte da disciplina de Laboratório Web da fa
 Este projeto está sendo desenvolvido por uma equipe dedicada de estudantes da faculdade. Cada membro desempenha um papel crucial no desenvolvimento e contribui para o sucesso do SIAS.
 
 - **[DAVI DE BRITO JUNIOR:](https://github.com/DaveBrito)** Desenvolvedor Back-end
-- **[ERIC PENDERES CARNEIRO:](https://github.com/EricW900)** Desenvolvedor Back-end
-- **[PEDRO BORGE DE JESUS:](https://github.com/B0rga)** Desenvolvedor Front-end
+- **[ERIC PENERES CARNEIRO:](https://github.com/EricW900)** Desenvolvedor Back-end
+- **[PEDRO BORGES DE JESUS:](https://github.com/B0rga)** Desenvolvedor Front-end
 - **[JEFFERSON MOREIRA EVANGELISTA:](https://github.com/JeffersonEvangelista)** Designer UX/UI, Desenvolvedor Front-end
 - **[WESLEY SILVA DOS SANTOS:](https://github.com/WesleyS08)** Designer UX/UI, Desenvolvedor Back-end
 
@@ -32,19 +32,46 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 
  ```
 | -- docs/
-|   | -- word/
+|   | -- apresentação/
 |   | -- excel/
 |   | -- Modelos do banco de dados/
-|-- public/
-|   |-- index.html
-|   |-- manifest.json
-|   |-- sw.js
+|   | -- UML/
+|   | -- word/
+
+| -- imagens/
+
 |-- src/
 |   |-- assets/
+|   |   |-- banners/
+|   |   |-- imagensPerfil/
 |   |   |-- images/
 |   |   |-- styles/
+
+|   | -- views/
+|   | -- services/
+|   |   |-- conexão_com_banco.php
+|   |   |-- criar_banco.php
+|   |   |-- google_credentials.php
+|   |   | -- auth/
+|   |   | -- exemplo_de_senssion.php
+|   |   | -- processar_login_google.php
+|   |   | -- processar_login.php
+|   |   | -- verificarRecrutador.php
+|   |   | -- verificarUsuario.php
+|   | -- cadastros/
+|   |   | -- cadastro/
+|   |   | -- cadastro.php
+|   |   | -- cadastroRecrutador.php
+|   |   | -- processar_candidatura.php
+|   |   | -- vaga.php
+|   | -- CandidatarVaga/
+|   |   | -- candidatarVaga.php
+|   | -- Edição/
+|   |   | -- vagas.php
+
+
 |   |-- components/
-|   |   |-- PHPMailer-master
+|   |   |-- PHPMailer-master/
 |   |-- services/
 |   |   |-- auth/
 |   |   |   |-- processar_login.php
@@ -54,14 +81,29 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 |   |   |   |-- cadastro.php
 |   |   |   |-- cadastroRecrutador.php
 |   |   |-- api.js
-|   |   |-- conexão_com_banco.php
-|   |   |-- criar_banco.php
-|   |   |-- google_credentials.php
+
 |   |-- views/
-|   |-- App.js
-|   |-- index.js
-|-- .gitignore
+|   |   |-- Cadastro/
+|   |   |-- criarVaga/
+|   |   |-- EditarPerfilCandidato/
+|   |   |-- EditarPerfilRecrutador/
+|   |   |-- EditarVagaRecrutador/
+|   |   |-- homeCandidato/
+|   |   |-- HomeRecrutador/
+|   |   |-- Login/
+|   |   |-- PerfilCandidato/
+|   |   |-- PerfilRecrutador/
+|   |   |-- PreparaTeste/
+|   |   |-- Teste/
+|   |   |-- TodasVagas/
+|   |   |-- Vaga/
+
+| -- .gitignore/
+|-- carrossel.js
+|-- index.html
+|-- index.php
 |-- README.md
+|-- tituloDigitavel.js
  ```
 ## Descrição das Pastas Principais:
 
