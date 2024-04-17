@@ -9,6 +9,17 @@
     margin-bottom: 80px;
 }
 
+.divGridTestes{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+}
+
+.testeCarrosselLink{
+    margin: 0px 0px 50px 0px
+}
+
 /* ------------------------- Pesquisar -------------------------*/
 
 .divPesquisa{
@@ -33,7 +44,7 @@
     outline: 0;
 }
 
-.inputPesquisa:focus{    
+.inputPesquisa:focus, .inputPesquisa:hover{    
     border: 1px solid black;
 }
 
@@ -124,6 +135,11 @@
     cursor: pointer;
 }
 
-.selectArea:hover{
+.selectArea:focus, .selectArea:hover{
     border: 1px solid black;
+}
+
+#criadorFiltro{
+    width: 200px;
+    cursor: text;
 }

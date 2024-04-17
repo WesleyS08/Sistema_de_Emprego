@@ -192,7 +192,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-            <li><a href="../TodosTeste/todosTeste.php">Testes</a></li>
+            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>>
         </ul>
