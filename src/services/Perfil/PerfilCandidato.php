@@ -36,18 +36,21 @@ $pcdUsuario = isset($_POST['pcd']) ? 1 : 0; // 1 se a opção foi marcada, 0 se 
 /// Verifica se a data de nascimento foi fornecida
 if (!empty($dataNascimentoUsuario)) {
     // Converte a data de nascimento em um objeto DateTime
-    $dataNascimento = DateTime::createFromFormat('d/m/Y', $dataNascimentoUsuario);
+    $dataNascimentoformat = DateTime::createFromFormat('d/m/Y', $dataNascimentoUsuario);
     
     // Verifica se a conversão foi bem-sucedida
-    if ($dataNascimento) {
+    if ($dataNascimentoformat !== false) {
+        $dataNascimentoMySQL = $dataNascimentoformat->format('Y-m-d');
         // Calcula a diferença entre a data de nascimento e a data atual
-        $idade = $dataNascimento->diff(new DateTime())->y;
+        $idade = $dataNascimentoformat->diff(new DateTime())->y;
+    
     } else {
         echo "Formato de data inválido";
     }
 } else {
     echo "A data de nascimento não foi fornecida";
 }
+
 
 // Verificar se todas as informações necessárias foram fornecidas
 if (empty($nomeUsuario) || empty($areaUsuario) /*empty($telefoneUsuario) Colocar no banco futuramente*/ || empty($sobreUsuario) || empty($emailUsuario)) {
@@ -153,7 +156,7 @@ if (mysqli_query($_con, $queryAtualizarEmail)) {
 }
 
 // Atualizar os dados do candidato no banco de dados
-$query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoUsuario', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+$query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
     header("Location: ../../views/PerfilCandidato/perfilCandidato.php?id=" . $idPessoa);

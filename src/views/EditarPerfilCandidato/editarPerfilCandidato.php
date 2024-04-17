@@ -172,7 +172,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" maxlength="11" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
+                                <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
                                 <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>
