@@ -4,6 +4,8 @@ include "../../services/conexão_com_banco.php";
 // Iniciar a sessão
 session_start();
 
+$idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
+
 // Verificar se o usuário está autenticado como candidato
 if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
     // Se estiver autenticado como candidato
@@ -74,22 +76,22 @@ if ($result && mysqli_num_rows($result) > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeCandidato/homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php'"><</button>
-            <h2>Editar Perfil</h2>
+        <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'"><</button>
+        <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php" autocomplete="off" enctype="multipart/form-data">>
+            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
             <div class="divBackgroundImg">
                     <div class="btnEditarFundo">
                         <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
@@ -170,7 +172,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
+                                <input class="inputAnimado" maxlength="11" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
                                 <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>

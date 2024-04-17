@@ -9,58 +9,62 @@ $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : ''
 
 
 // Verificar se o usuário está autenticado como empresa
-$autenticadoComoPublicador = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
+$autenticadoComoEmpresa = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
+
+// Verificar se o usuário está autenticado como candidato
 $autenticadoComoCandidato = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato';
 
-// definição de variaveis 
+// Definição de variáveis
 $emailUsuario = '';
-$autenticadoComoEmpresa = false;
-$autenticadoComoCandidato = false;
 $candidatoInscrito = false;
-
-
+$autenticadoComoPublicador = false;
 
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
 if (isset($_SESSION['email_session'])) {
-    // Se estiver autenticado com e-mail/senha e for do tipo candidato
+    // Se estiver autenticado com e-mail/senha
     $emailUsuario = $_SESSION['email_session'];
-    $autenticadoComoEmpresa = true;
-    $autenticadoComoCandidato = true;
 } elseif (isset($_SESSION['google_session'])) {
-    // Se estiver autenticado com o Google e for do tipo candidato
+    // Se estiver autenticado com o Google
     $emailUsuario = $_SESSION['google_session'];
-    $autenticadoComoEmpresa = true;
-    $autenticadoComoCandidato = true;
-} else {
-    // verificação para a possivel edição 
-    $autenticadoComoEmpresa = false;
-    $autenticadoComoCandidato = false;
+}
+
+$sql = "SELECT Tb_Pessoas.Id_Pessoas
+FROM Tb_Pessoas
+WHERE Tb_Pessoas.Email = '$emailUsuario'";
+
+$result = mysqli_query($_con, $sql); // Executar a consulta
+
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result); // Obtém o resultado da consulta
+    $idPessoaUsuario = $row['Id_Pessoas']; // Armazena o ID da pessoa do usuário
 }
 
 
-// verifica se o id da vafa doi mandando pela url 
+// verifica se o id da vaga doi mandando pela url 
 if (isset($_GET['id'])) {
     if ($_con->connect_error) {
         die("Falha na conexão: " . $_con->connect_error);
     }
 
-// Obter o ID do anúncio da variável GET
-$idAnuncio = $_GET['id'];
+    // Obter o ID do anúncio da variável GET
+    $idAnuncio = $_GET['id'];
 
-// Primeira consulta no banco de dados para informações do anúncio
-$sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa, Tb_Empresa.Tb_Pessoas_Id AS Id_Pessoa_Empresa
-        FROM Tb_Anuncios
-        INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-        INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-        WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
+    // Primeira consulta no banco de dados para informações do anúncio
+    $sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa, Tb_Empresa.Tb_Pessoas_Id AS Id_Pessoa_Empresa,
+Tb_Vagas.Data_de_Termino
+FROM Tb_Anuncios
+INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
-$result = mysqli_query($_con, $sql); // Executar a consulta SQL
+    $result = mysqli_query($_con, $sql); // Executar a consulta SQL
 
-if ($result && mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $nomeEmpresa = $row['Nome_da_Empresa'];
-    $idPessoaEmpresa = $row['Id_Pessoa_Empresa']; // Aqui está o ID da pessoa representando a empresa
-}
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $nomeEmpresa = $row['Nome_da_Empresa'];
+        $idPessoaEmpresa = $row['Id_Pessoa_Empresa']; // Aqui está o ID da pessoa representando a empresa
+        $Data_de_Termino = $row['Data_de_Termino']; // Aqui está a data de término do anúncio
+    }
 
     // Verifica se retornou alguma coisa da pesquisa
     $result = mysqli_query($_con, $sql);
@@ -88,7 +92,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         $NomeEmpresa = $dadosAnuncio['Nome_da_Empresa'];
     } else {
         // Caso não seja encontrado nenhum anúncio com o ID fornecido
-        // Definir os campos como vazios
+// Definir os campos como vazios
         $Categoria = '';
         $Titulo = '';
         $Descricao = '';
@@ -105,7 +109,9 @@ if ($result && mysqli_num_rows($result) > 0) {
         $CEP = '';
         $Numero = '';
         $NomeEmpresa = '';
+        $Data_de_Termino = ''; // Definir também a data de término como vazia
     }
+
     // Segunda consulta no banco de dados para pegar o CPF do candidato e o CNPJ da empresa
     $sql = "SELECT Tb_Candidato.CPF, Tb_Empresa.CNPJ
    FROM Tb_Candidato
@@ -187,14 +193,32 @@ if ($result && mysqli_num_rows($result) > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
-                src="../../assets/images/logos_empresa/logo_sias.png"></a>
-        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+        <?php
+        if ($autenticadoComoEmpresa) {
+            echo '<a href="../HomeRecrutador/homeRecrutador.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>';
+            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
+        } elseif ($autenticadoComoCandidato) {
+            echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>';
+            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
+        } else {
+            echo '<a href="../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>';
+            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
+        }
+        ?>
         <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>>
+            <?php
+            if ($autenticadoComoCandidato) {
+                echo '<li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoaUsuario . '">Perfil</a></li>';
+            } elseif ($autenticadoComoEmpresa) {
+                echo '<li><a href="../PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaUsuario . '">Perfil</a></li>';
+            } else {
+                echo '<li><a href="../Login/login.html? ">Perfil</a></li>';
+            }
+            ?>
+
         </ul>
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
@@ -227,9 +251,8 @@ if ($result && mysqli_num_rows($result) > 0) {
             </h2>
             <label>Empresa: </label>
             <?php
-
             if (!empty($NomeEmpresa)) {
-               echo '<a href="../PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaEmpresa . '">' . $NomeEmpresa . '</a><br>';
+                echo '<a href="../PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaEmpresa . '">' . $NomeEmpresa . '</a><br>';
 
             } else {
                 echo '<a id="empresa">Confidencial</a><br>';
@@ -245,6 +268,17 @@ if ($result && mysqli_num_rows($result) > 0) {
 
                 // Exibe a data no formato desejado (dia/mês/ano)
                 echo "$dia/$mes/$ano";
+
+                // Se o status for 'Encerrado', exibe a data de encerramento das inscrições
+                if ($Status == 'Encerrado') {
+                    // Verifica se a data de término está definida
+                    if (!empty($Data_de_Termino)) {
+                        // Formata a data de término para o formato desejado (dia/mês/ano)
+                        $dataFormatada = date('d/m/Y \a\s H:i', strtotime($Data_de_Termino));
+                        // Exibe a mensagem com a data formatada
+                        echo "(Inscrições encerradas em $dataFormatada)";
+                    }
+                }
                 ?>
             </label><br>
             <label>Status:</label>
@@ -302,6 +336,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                                     <?php echo $Categoria; ?>
                                 </label>
                             </div>
+
                             <div class="divIconeENome">
                                 <img id="imgModalidade" src="" class="icone">
                                 <label id="modalidade">
@@ -325,9 +360,6 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <h3>Descrição da vaga</h3>
                             <p>
                                 <?php echo $Descricao; ?>
-                            </p>
-                            <p>
-                                <?php echo $autenticadoComoPublicador; ?>
                             </p>
                         </div>
                     </div>
@@ -362,21 +394,32 @@ if ($result && mysqli_num_rows($result) > 0) {
 
 
                 </div>
+                <?php
+                // Divida os requisitos e benefícios por vírgula e remova espaços em branco desnecessários
+                $arrayRequisitos = array_filter(array_map('trim', explode(',', $dadosAnuncio['Requisitos'])));
+                $arrayBeneficios = array_filter(array_map('trim', explode(',', $dadosAnuncio['Beneficios'])));
+                ?>
+
                 <div class="divFlex" id="divBoxes">
                     <div class="divBox">
                         <h3>Requisitos</h3>
-                        <p>
-                            <?php echo $Requisitos; ?>
-                        </p>
+                        <ul>
+                            <?php foreach ($arrayRequisitos as $requisito) { ?>
+                                <li><?php echo $requisito; ?></li>
+                            <?php } ?>
+                        </ul>
                     </div>
                     <div class="divBox">
                         <h3>Benefícios</h3>
-                        <p>
-                            <?php echo $Beneficios; ?>
-                        </p>
+                        <ul>
+                            <?php foreach ($arrayBeneficios as $beneficio) { ?>
+                                <li><?php echo $beneficio; ?></li>
+                            <?php } ?>
+                        </ul>
                     </div>
-
                 </div>
+
+
                 <div id="map" style="height: 400px; margin-top:5%"></div>
             </div>
         </div>

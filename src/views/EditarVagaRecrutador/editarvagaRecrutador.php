@@ -289,7 +289,8 @@ mysqli_close($_con);
                                         required><?php echo $dadosAnuncio['Requisitos']; ?></textarea>
                                     <div class="textArealabelLine">Requisitos</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso">Separe os elementos por vírgula</small>
+
                             </div>
 
                             <div class="containerTextArea">
@@ -298,7 +299,7 @@ mysqli_close($_con);
                                         required><?php echo $dadosAnuncio['Beneficios']; ?></textarea>
                                     <div class="textArealabelLine">Benefícios</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso">Separe os elementos por vírgula</small>
                             </div>
 
                         </div>

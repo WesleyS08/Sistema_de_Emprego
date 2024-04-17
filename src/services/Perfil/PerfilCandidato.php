@@ -33,14 +33,18 @@ $escolaridadeUsuario = $_POST['cursos']??'';
 $experienciaUsuario = $_POST['experiencias']??'';
 $pcdUsuario = isset($_POST['pcd']) ? 1 : 0; // 1 se a opção foi marcada, 0 se não foi
 
-// Verifica se a data de nascimento foi fornecida
+/// Verifica se a data de nascimento foi fornecida
 if (!empty($dataNascimentoUsuario)) {
     // Converte a data de nascimento em um objeto DateTime
-    $dataNascimento = new DateTime($dataNascimentoUsuario);
+    $dataNascimento = DateTime::createFromFormat('d/m/Y', $dataNascimentoUsuario);
     
-    // Calcula a diferença entre a data de nascimento e a data atual
-    $idade = $dataNascimento->diff(new DateTime())->y;
-
+    // Verifica se a conversão foi bem-sucedida
+    if ($dataNascimento) {
+        // Calcula a diferença entre a data de nascimento e a data atual
+        $idade = $dataNascimento->diff(new DateTime())->y;
+    } else {
+        echo "Formato de data inválido";
+    }
 } else {
     echo "A data de nascimento não foi fornecida";
 }
@@ -152,7 +156,7 @@ if (mysqli_query($_con, $queryAtualizarEmail)) {
 $query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoUsuario', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
-    header("Location: ../../views/PerfilCandidato/perfilCandidato.php");
+    header("Location: ../../views/PerfilCandidato/perfilCandidato.php?id=" . $idPessoa);
 } else {
     echo "Erro ao salvar as alterações: " . mysqli_error($_con);
 }
