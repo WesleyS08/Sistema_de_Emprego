@@ -159,14 +159,14 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                                     <textarea class="textAreaAnimada" name="requisitos" id="requisitos" type="text" required></textarea>
                                     <div class="textArealabelLine">Requisitos</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso">Separe os elementos por vírgula</small>
                             </div>
                             <div class="containerTextArea">
                                 <div class="contentInputTextArea">
                                     <textarea class="textAreaAnimada" name="beneficios" id="beneficios" type="text" required></textarea>
                                     <div class="textArealabelLine">Benefícios</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso">Separe os elementos por vírgula</small>
                             </div>
                         </div>
                     </div>                
