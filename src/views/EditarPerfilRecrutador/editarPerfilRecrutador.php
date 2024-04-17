@@ -12,12 +12,9 @@ $emailUsuario = '';
 if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
     // Se estiver autenticado com e-mail/senha e for do tipo empresa
     $emailUsuario = $_SESSION['email_session'];
-
-
 } elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
     // Se estiver autenticado com o Google e for do tipo empresa
     $emailUsuario = $_SESSION['google_session'];
-
 } else {
     header("Location: ../Login/login.html");
     exit;
@@ -42,7 +39,6 @@ if ($result && mysqli_num_rows($result) > 0) {
     $instagramEmpresa = $dadosEmpresa['Instagram'];
     $caminhoImagemPerfil = $dadosEmpresa['Img_Perfil'];
     $caminhoImagemBanner = $dadosEmpresa['Img_Banner'];
-
 } else {
     // Se não houver informações da empresa, você pode definir valores padrão ou deixar em branco
     $nomeEmpresa = '';
@@ -76,8 +72,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
-                src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
@@ -92,33 +87,28 @@ if ($result && mysqli_num_rows($result) > 0) {
             <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-        <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
+            <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
 
 
 
                 <div class="divBackgroundImg">
                     <div class="btnEditarFundo">
-                        <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
-                            colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:34px;height:34px">
+                        <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:34px;height:34px">
                         </lord-icon>
                     </div>
-                    <input type="file" id="fundo_upload" name="fundo_upload" style="display: none;"
-                        accept="image/jpeg, image/png">
+                    <input type="file" id="fundo_upload" name="fundo_upload" style="display: none;" accept="image/jpeg, image/png">
 
                     <!-- Adicione um campo de entrada de arquivo -->
-                    <input type="file" id="foto_perfil_upload" name="foto_perfil_upload" style="display: none;"
-                        accept="image/jpeg, image/png">
+                    <input type="file" id="foto_perfil_upload" name="foto_perfil_upload" style="display: none;" accept="image/jpeg, image/png">
 
                     <!-- Div de Foto de Perfil -->
                     <div class="divFotoDePerfil" id="divFotoDePerfil" style="position: relative;">
                         <!-- Div para exibir a imagem de perfil -->
-                        <div id="preview_container"
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;border-radius: 50%">
+                        <div id="preview_container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;border-radius: 50%">
                         </div>
                         <!-- Div para o ícone de edição -->
                         <div class="divIconeEditar">
-                            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
-                                colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:110px;height:110px">
+                            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:110px;height:110px">
                             </lord-icon>
                         </div>
                     </div>
@@ -133,16 +123,14 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="nome" name="nome" type="text" required
-                                        value="<?php echo $nomeEmpresa; ?>">
+                                    <input class="inputAnimado" id="nome" name="nome" type="text" required value="<?php echo $nomeEmpresa; ?>">
                                     <div class="labelLine">Nome da Empresa</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="area" name="area" type="text" list="areaList"
-                                        required value="<?php echo $areaEmpresa; ?>">
+                                    <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required value="<?php echo $areaEmpresa; ?>">
                                     <div class="labelLine">Área da Empresa</div>
                                     <datalist id="areaList">
                                         <option>Tecnologia da Informação</option>
@@ -158,16 +146,14 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="email" name="email" type="text" required
-                                        value="<?php echo $emailUsuario; ?>">
+                                    <input class="inputAnimado" id="email" name="email" type="text" required value="<?php echo $emailUsuario; ?>">
                                     <div class="labelLine">Email</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" required
-                                        value="<?php echo $telefoneEmpresa; ?>">
+                                    <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" required value="<?php echo $telefoneEmpresa; ?>">
                                     <div class="labelLine">Telefone</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -176,16 +162,14 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="facebook" name="facebook" type="text"
-                                        value="<?php echo $facebookEmpresa; ?>">
+                                    <input class="inputAnimado" id="facebook" name="facebook" type="text" value="<?php echo $facebookEmpresa; ?>">
                                     <div class="labelLine">Facebook</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="github" name="github" type="text"
-                                        value="<?php echo $githubEmpresa; ?>">
+                                    <input class="inputAnimado" id="github" name="github" type="text" value="<?php echo $githubEmpresa; ?>">
                                     <div class="labelLine">GitHub</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -194,16 +178,14 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="linkedin" name="linkedin" type="text"
-                                        value="<?php echo $linkedinEmpresa; ?>">
+                                    <input class="inputAnimado" id="linkedin" name="linkedin" type="text" value="<?php echo $linkedinEmpresa; ?>">
                                     <div class="labelLine">LinkedIn</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="instagram" name="instagram" type="text"
-                                        value="<?php echo $instagramEmpresa; ?>">
+                                    <input class="inputAnimado" id="instagram" name="instagram" type="text" value="<?php echo $instagramEmpresa; ?>">
                                     <div class="labelLine">Instagram</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -212,21 +194,33 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="divTextArea">
                             <div class="containerTextArea">
                                 <div class="contentInputTextArea">
-                                    <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text"
-                                        required><?php echo $sobreEmpresa; ?></textarea>
+                                    <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text" required><?php echo $sobreEmpresa; ?></textarea>
                                     <div class="textArealabelLine">Sobre a Empresa</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                         </div>
-                        <div class="divBtnAtualizar">
-                            <input type="submit" value="Atualizar">
-                        </div>
-                        <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
 
+                        <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php" autocomplete="off">
+                            <div class="divBtnAtualizar">
+                                <input type="submit" value="Atualizar">
+                            </div>
+                        </form>
+
+                        <form method="post" action="../../../src/services/ExcluirConta/excluirConta.php">
+                            <div class="divBtnAtualizar">
+                                <input type="submit" value="Excluir Conta">
+                            </div>
+                        </form>
                 </div>
-            </form>
+                <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
+
         </div>
+        </form>
+
+
+
+    </div>
     </div>
     <footer>
         <a>Política de Privacidade</a>
@@ -241,76 +235,76 @@ if ($result && mysqli_num_rows($result) > 0) {
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <?php
-// Obtém a URL da imagem de perfil do banco de dados
-$urlImagemPerfil = $dadosEmpresa['Img_Perfil'];
-?>
+        // Obtém a URL da imagem de perfil do banco de dados
+        $urlImagemPerfil = $dadosEmpresa['Img_Perfil'];
+        ?>
 
-<script>
-$(document).ready(function () {
-    // Adiciona um evento de clique ao botão de edição de foto de perfil
-    $('#divFotoDePerfil').click(function () {
-        $('#foto_perfil_upload').click(); // Simula o clique no campo de upload de foto de perfil
-    });
+        <script>
+            $(document).ready(function() {
+                // Adiciona um evento de clique ao botão de edição de foto de perfil
+                $('#divFotoDePerfil').click(function() {
+                    $('#foto_perfil_upload').click(); // Simula o clique no campo de upload de foto de perfil
+                });
 
-    // Evento disparado quando um arquivo é selecionado para a foto de perfil
-    $('#foto_perfil_upload').change(function () {
-        var file = this.files[0];
-        var reader = new FileReader();
+                // Evento disparado quando um arquivo é selecionado para a foto de perfil
+                $('#foto_perfil_upload').change(function() {
+                    var file = this.files[0];
+                    var reader = new FileReader();
 
-        // Define o que fazer quando o arquivo é lido
-        reader.onload = function (e) {
-            $('#preview_container').css('background-image', 'url(' + e.target.result + ')'); // Define a imagem de fundo com a imagem carregada
-            $('#preview_container').show(); // Exibe o contêiner de pré-visualização
-        };
+                    // Define o que fazer quando o arquivo é lido
+                    reader.onload = function(e) {
+                        $('#preview_container').css('background-image', 'url(' + e.target.result + ')'); // Define a imagem de fundo com a imagem carregada
+                        $('#preview_container').show(); // Exibe o contêiner de pré-visualização
+                    };
 
-        // Lê o arquivo como uma URL de dados
-        reader.readAsDataURL(file);
-    });
+                    // Lê o arquivo como uma URL de dados
+                    reader.readAsDataURL(file);
+                });
 
-    // Carrega a imagem de perfil ao carregar a página
-    $('#preview_container').css('background-image', 'url(<?php echo $urlImagemPerfil; ?>)');
-});
-</script>
+                // Carrega a imagem de perfil ao carregar a página
+                $('#preview_container').css('background-image', 'url(<?php echo $urlImagemPerfil; ?>)');
+            });
+        </script>
 
 
 
-<?php
-//
-$urlImagemFundo = $dadosEmpresa['Img_Banner']; 
-?>
-<script>
-$(document).ready(function () {
-    // Função para carregar a imagem de fundo com base na URL fornecida
-    function carregarImagemDeFundo(url) {
-        $('.divBackgroundImg').css('background-image', 'url(' + url + ')');
-    }
+        <?php
+        //
+        $urlImagemFundo = $dadosEmpresa['Img_Banner'];
+        ?>
+        <script>
+            $(document).ready(function() {
+                // Função para carregar a imagem de fundo com base na URL fornecida
+                function carregarImagemDeFundo(url) {
+                    $('.divBackgroundImg').css('background-image', 'url(' + url + ')');
+                }
 
-    // Carrega a imagem de fundo ao carregar a página
-    carregarImagemDeFundo('<?php echo $urlImagemFundo; ?>');
+                // Carrega a imagem de fundo ao carregar a página
+                carregarImagemDeFundo('<?php echo $urlImagemFundo; ?>');
 
-    // Adiciona um evento de clique ao botão de edição do fundo
-    $('.btnEditarFundo').click(function () {
-        // Simula o clique no campo de upload de fundo
-        $('#fundo_upload').click();
-    });
+                // Adiciona um evento de clique ao botão de edição do fundo
+                $('.btnEditarFundo').click(function() {
+                    // Simula o clique no campo de upload de fundo
+                    $('#fundo_upload').click();
+                });
 
-    // Evento disparado quando um arquivo é selecionado
-    $('#fundo_upload').change(function () {
-        // Lê o arquivo selecionado
-        var file = this.files[0];
-        var reader = new FileReader();
+                // Evento disparado quando um arquivo é selecionado
+                $('#fundo_upload').change(function() {
+                    // Lê o arquivo selecionado
+                    var file = this.files[0];
+                    var reader = new FileReader();
 
-        // Define o que fazer quando o arquivo é lido
-        reader.onload = function (e) {
-            // Aplica a imagem de fundo à div
-            carregarImagemDeFundo(e.target.result);
-        };
+                    // Define o que fazer quando o arquivo é lido
+                    reader.onload = function(e) {
+                        // Aplica a imagem de fundo à div
+                        carregarImagemDeFundo(e.target.result);
+                    };
 
-        // Lê o arquivo como uma URL de dados
-        reader.readAsDataURL(file);
-    });
-});
-</script>
+                    // Lê o arquivo como uma URL de dados
+                    reader.readAsDataURL(file);
+                });
+            });
+        </script>
 
 
 </body>
