@@ -155,6 +155,23 @@ if ($email != $emailUsuario) {
         echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
         exit;
     }
+    // Atualizar os dados da empresa no banco de dados
+$query = "UPDATE Tb_Empresa SET Nome_da_Empresa = '$nomeEmpresa', Area_da_Empresa = '$areaEmpresa', Telefone = '$telefoneEmpresa', Sobre_a_Empresa = '$sobreEmpresa', Facebook = '$facebookEmpresa', Github = '$githubEmpresa', Linkedin = '$linkedinEmpresa', Instagram = '$instagramEmpresa'";
+if ($urlImagemPerfilAntiga != $dadosEmpresa['Img_Perfil']) {
+    $query .= ", Img_Perfil = '$urlImagemPerfilAntiga'";
+}
+if ($urlBannerAntigo != $dadosEmpresa['Banner']) {
+    $query .= ", Img_Banner = '$urlBannerAntigo'";
+}
+$query .= " WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+
+if (mysqli_query($_con, $query)) {
+    header("Location: ../../views/Login/login.html?");
+} else {
+    echo "Erro ao salvar as alterações: " . mysqli_error($_con);
+}
+
+mysqli_close($_con);
 }
 
 
@@ -169,7 +186,7 @@ if ($urlBannerAntigo != $dadosEmpresa['Banner']) {
 $query .= " WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
-    header("Location: ../../views/Login/login.html?");
+    header("Location: ../../views/PerfilRecrutador/PerfilRecrutador.php?id=" . $idPessoa);
 } else {
     echo "Erro ao salvar as alterações: " . mysqli_error($_con);
 }

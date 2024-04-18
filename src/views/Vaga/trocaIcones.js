@@ -14,40 +14,40 @@ function trocaProfissional(){
     if(tipoProfissional.textContent == "Estágio" || tipoProfissional.textContent == "Jovem Aprendiz"){
         imgTipoProfissional.src="../../assets/images/icones_vaga/estudanteSemFundo.svg";
     }
-    if(tipoProfissional.textContent == "CLT"){
+    if(tipoProfissional.textContent.includes("CLT")){
         imgTipoProfissional.src="../../assets/images/icones_vaga/cltSemFundo.svg";
     }
-    if(tipoProfissional.textContent == "PJ"){
+    if(tipoProfissional.textContent.includes("PJ")){
         imgTipoProfissional.src="../../assets/images/icones_vaga/pjSemFundo.svg";
     }
 }
 
 function trocaModalidade(){
-    if(modalidade.textContent == "Presencial"){
+    if(modalidade.textContent.includes("Presencial")){
         imgModalidade.src="../../assets/images/icones_vaga/iconePresencial.svg";
     }
-    if(modalidade.textContent == "Remoto"){
+    if(modalidade.textContent.includes("Remoto")){
         imgModalidade.src="../../assets/images/icones_vaga/iconeRemoto.svg";
     }
 }
 
 function trocaJornada(){
-    if(jornada.textContent == "Tempo integral"){
+    if(jornada.textContent.includes("Tempo integral")){
         imgJornada.src="../../assets/images/icones_vaga/iconeTempoIntegral.svg";
     }
-    if(jornada.textContent == "Meio período"){
+    if(jornada.textContent.includes("Meio período")){
         imgJornada.src="../../assets/images/icones_vaga/iconeMeioPeriodo.svg";
     }
 }
 
 function trocaNivel(){
-    if(nivel.textContent == "Ensino Médio"){
+    if(nivel.textContent.includes("Médio")){
         imgNivel.src="../../assets/images/icones_vaga/iconeNivelMedio.svg";
     }
-    if(nivel.textContent == "Ensino Técnico"){
+    if(nivel.textContent.includes("Técnico")){
         imgNivel.src="../../assets/images/icones_vaga/iconeNivelTecnico.svg";
     }
-    if(nivel.textContent == "Ensino Superior"){
+    if(nivel.textContent.includes("Superior")){
         imgNivel.src="../../assets/images/icones_vaga/iconeNivelSuperior.svg";
     }
 }

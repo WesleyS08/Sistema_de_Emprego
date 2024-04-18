@@ -174,6 +174,14 @@ if ($email != $emailUsuario) {
         echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
         exit;
     }
+    // Atualizar os dados do candidato no banco de dados
+$query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+
+if (mysqli_query($_con, $query)) {
+    header("Location: ../../views/Login/login.html?");
+} else {
+    echo "Erro ao salvar as alterações: " . mysqli_error($_con);
+}
 }
 
 
@@ -181,7 +189,7 @@ if ($email != $emailUsuario) {
 $query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
-    header("Location: ../../views/Login/login.html?");
+    header("Location: ../../views/PerfilCandidato/perfilCandidato.php?id=" . $idPessoa);
 } else {
     echo "Erro ao salvar as alterações: " . mysqli_error($_con);
 }

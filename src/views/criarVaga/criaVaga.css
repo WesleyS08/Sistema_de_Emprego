@@ -8,7 +8,7 @@
 }
 
 .containerInferior{
-    width: 900px;  
+    width: 1200px;  
 }
 
 small{
@@ -161,9 +161,9 @@ input[type="radio"]{
 }
 
 .btnRadio{
+    padding: 10px;
     margin-right: 10px;
     cursor: pointer;
-    padding: 10px;
     border-radius: 18px;
     box-shadow: 0px 0px 8px silver;
     transition: 0.4s ease;

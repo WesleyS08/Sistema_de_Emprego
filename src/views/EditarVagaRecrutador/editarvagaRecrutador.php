@@ -131,16 +131,7 @@ mysqli_close($_con);
     <title>Anunciar</title>
     <link rel="stylesheet" type="text/css" href="../criarVaga/criaVaga.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    <style>
-        input[type="radio"]:checked+.btnRadio {
-            background-color: var(--laranja);
-            /* Substitua "var(--laranja)" pela cor desejada */
-            color: white;
-            /* Cor do texto dentro do botão quando selecionado */
-            box-shadow: 0px 0px 12px gray;
-            /* Sombras quando o botão está selecionado */
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -308,92 +299,62 @@ mysqli_close($_con);
                 <div class="containerInferior">
                     <div class="divFlexRadios">
                         <div>
-                            <div class="containerInput" style="margin-top: 7%; margin-left: -14%">
+                            <div class="divRadioContent">
                                 <h3>Tipo de profissional:</h3>
-                                <div class="contentInput">
-                                    <input type="radio" name="categoria" id="jovemAprendiz" value="Jovem Aprendiz"
-                                        required <?php echo ($dadosAnuncio['Categoria'] == 'Jovem Aprendiz') ? 'checked' : ''; ?>>
-                                    <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem
-                                        Aprendiz</label>
+                                <input type="radio" name="categoria" id="jovemAprendiz" value="Jovem Aprendiz" required <?php echo ($dadosAnuncio['Categoria'] == 'Jovem Aprendiz') ? 'checked' : ''; ?>>
+                                <input type="radio" name="categoria" id="estagio" value="Estágio" required <?php echo ($dadosAnuncio['Categoria'] == 'Estágio') ? 'checked' : ''; ?>>
+                                <input type="radio" name="categoria" id="clt" value="CLT" required <?php echo ($dadosAnuncio['Categoria'] == 'CLT') ? 'checked' : ''; ?>>
+                                <input type="radio" name="categoria" id="pj" value="PJ" required <?php echo ($dadosAnuncio['Categoria'] == 'PJ') ? 'checked' : ''; ?>>
 
-                                    <input type="radio" name="categoria" id="estagio" value="Estágio" required <?php echo ($dadosAnuncio['Categoria'] == 'Estágio') ? 'checked' : ''; ?>>
-                                    <label for="estagio" class="btnRadio" id="btnEstagio">Estágio</label>
-
-                                    <input type="radio" name="categoria" id="clt" value="CLT" required <?php echo ($dadosAnuncio['Categoria'] == 'CLT') ? 'checked' : ''; ?>>
-                                    <label for="clt" class="btnRadio" id="btnClt">CLT</label>
-
-                                    <input type="radio" name="categoria" id="pj" value="PJ" required <?php echo ($dadosAnuncio['Categoria'] == 'PJ') ? 'checked' : ''; ?>>
-                                    <label for="pj" class="btnRadio" id="btnPj">PJ</label>
-                                </div>
+                                <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem Aprendiz</label>
+                                <label for="estagio" class="btnRadio" id="btnEstagio">Estágio</label>
+                                <label for="clt" class="btnRadio" id="btnClt">CLT</label>
+                                <label for="pj" class="btnRadio" id="btnPj">PJ</label>
                                 <small name="aviso"></small>
                             </div>
-
-
-                            <div class="divFlex">
-                                <div class="containerInput" style="margin-left: -14%">
-                                    <h3>Nível de aprendizado:</h3>
-                                    <div class="contentInput">
-                                        <input type="radio" name="nivel" id="medio" value="Ensino Médio" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Médio') ? 'checked' : ''; ?>>
-                                        <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
-
-                                        <input type="radio" name="nivel" id="tecnico" value="Ensino Técnico" required
-                                            <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Técnico') ? 'checked' : ''; ?>>
-                                        <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label>
-
-                                        <input type="radio" name="nivel" id="superior" value="Ensino Superior" required
-                                            <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Superior') ? 'checked' : ''; ?>>
-                                        <label for="superior" class="btnRadio" id="btnSuperior">Ensino Superior</label>
-                                    </div>
-                                    <small name="aviso"></small>
-                                </div>
+                            <div class="divRadioContent">
+                                <h3>Nível de aprendizado:</h3>
+                                <input type="radio" name="nivel" id="medio" value="Ensino Médio" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Médio') ? 'checked' : ''; ?>>
+                                <input type="radio" name="nivel" id="tecnico" value="Ensino Técnico" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Técnico') ? 'checked' : ''; ?>>
+                                <input type="radio" name="nivel" id="superior" value="Ensino Superior" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Superior') ? 'checked' : ''; ?>>
+                                                                
+                                <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
+                                <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label>
+                                <label for="superior" class="btnRadio" id="btnSuperior">Ensino Superior</label>
+                                <small name="aviso"></small>
                             </div>
-
-
-
                         </div>
                         <div>
-                            <div class="containerInput" style="margin-top: 11%; margin-left: 6%">
+                            <div class="divRadioContent">
                                 <h3>Modalidade:</h3>
-                                <div class="contentInput">
-                                    <input type="radio" name="modalidade" id="remoto" value="Remoto" required <?php echo ($dadosAnuncio['Modalidade'] == 'Remoto') ? 'checked' : ''; ?>>
-                                    <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>
-
-                                    <input type="radio" name="modalidade" id="presencial" value="Presencial" required
-                                        <?php echo ($dadosAnuncio['Modalidade'] == 'Presencial') ? 'checked' : ''; ?>>
-                                    <label for="presencial" class="btnRadio" id="btnPresencial">Presencial</label>
-                                </div>
+                                <input type="radio" name="modalidade" id="remoto" value="Remoto" required <?php echo ($dadosAnuncio['Modalidade'] == 'Remoto') ? 'checked' : ''; ?>>
+                                <input type="radio" name="modalidade" id="presencial" value="Presencial" required <?php echo ($dadosAnuncio['Modalidade'] == 'Presencial') ? 'checked' : ''; ?>>
+                                <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>
+                                <label for="presencial" class="btnRadio" id="btnPresencial">Presencial</label>
                                 <small name="aviso"></small>
                             </div>
-
-                            <div class="containerInput" style="margin-top: 11%; margin-left: 6%">
+                            <div class="divRadioContent">
                                 <h3>Jornada:</h3>
-                                <div class="contentInput">
-                                    <input type="radio" name="jornada" id="meio_periodo" value="Meio período" required
-                                        <?php echo ($dadosAnuncio['Jornada'] == 'Meio período') ? 'checked' : ''; ?>>
-                                    <label for="meio_periodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>
-
-                                    <input type="radio" name="jornada" id="tempo_integral" value="Tempo integral"
-                                        required <?php echo ($dadosAnuncio['Jornada'] == 'Tempo integral') ? 'checked' : ''; ?>>
-                                    <label for="tempo_integral" class="btnRadio" id="btnTempoIntegral">Tempo
-                                        integral</label>
-                                </div>
+                                <input type="radio" name="jornada" id="meio_periodo" value="Meio período" required<?php echo ($dadosAnuncio['Jornada'] == 'Meio período') ? 'checked' : ''; ?>>
+                                <label for="meio_periodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>
+                                <input type="radio" name="jornada" id="tempo_integral" value="Tempo integral" required <?php echo ($dadosAnuncio['Jornada'] == 'Tempo integral') ? 'checked' : ''; ?>>
+                                <label for="tempo_integral" class="btnRadio" id="btnIntegral">Tempo integral</label>
                                 <small name="aviso"></small>
                             </div>
-
-                            <div class="containerInput" style="margin-top: 11%; margin-left: 6%">
+                        </div>
+                        <div>
+                            <div class="divRadioContent">
                                 <h3>Status:</h3>
                                 <div class="contentInput">
-                                    <input type="radio" name="status" id="aberto" value="Aberto" required <?php echo ($Status == 'Aberto') ? 'checked' : ''; ?>>
-                                    <label for="aberto" class="btnRadio" id="btnAberto">Aberto</label>
-
-                                    <input type="radio" name="status" id="encerrado" value="Encerrado" required <?php echo ($Status == 'Encerrado') ? 'checked' : ''; ?>>
-                                    <label for="encerrado" class="btnRadio" id="btnEncerrado">Encerrado</label>
-                                </div>
+                                <input type="radio" name="status" id="aberto" value="Aberto" required <?php echo ($Status == 'Aberto') ? 'checked' : ''; ?>>
+                                <input type="radio" name="status" id="encerrado" value="Encerrado" required <?php echo ($Status == 'Encerrado') ? 'checked' : ''; ?>>
+                                <label for="aberto" class="btnRadio" id="btnAberto">Aberto</label>
+                                <label for="encerrado" class="btnRadio" id="btnEncerrado">Encerrado</label>
                                 <small name="aviso"></small>
                             </div>
-
                         </div>
                     </div>
+                </div>
                     <input type="hidden" name="emailSession" value="<?php echo $emailUsuario; ?>">
                     <input type="hidden" name="idAnuncio" value="<?php echo $idAnuncio; ?>">
 
@@ -411,7 +372,6 @@ mysqli_close($_con);
         <a>Avalie-nos</a>
         <p>SIAS 2024</p>
     </footer>
-    <script src="modoNoturno.js"></script>
     <script src="radioButtons.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
