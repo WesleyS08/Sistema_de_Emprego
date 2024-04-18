@@ -80,7 +80,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
+            <li><a href="../TodosTeste/todosTeste.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
@@ -168,11 +168,12 @@ if ($result && mysqli_num_rows($result) > 0) {
                                 <input class="inputAnimado" id="email" name="email" type="text" value="<?php echo $emailUsuario ?>" required>
                                 <div class="labelLine">Email</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso" name="aviso" style="display: none;">Caso altere o email é necessário
+                                    realizar login novamente</small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
+                                <input class="inputAnimado" maxlength="11" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
                                 <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>
@@ -207,7 +208,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="containerInput">
                             <div class="contentInput">
                                 <input class="inputAnimado" id="estado" name="estado" type="text" value="<?php echo $estadoUsuario?>"required>
-                                <div class="labelLine">Estado</div>
+                                <div class="labelLine">Estado Civil</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
@@ -353,6 +354,15 @@ if ($result && mysqli_num_rows($result) > 0) {
     <script src="avisoInicial.js"></script>
     <script src="adicionaElementos.js"></script>
     <script src="mascaras.js"></script>
+    <script>
+            // Função para exibir o aviso quando o usuário alterar o campo de email
+            function exibirAviso() {
+                document.getElementById('aviso').style.display = 'block';
+            }
+
+            // Adicionar um evento de clique ao campo de email para chamar a função exibirAviso()
+            document.getElementById('email').addEventListener('change', exibirAviso);
+        </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <?php

@@ -21,7 +21,7 @@ function gerarNomeUnico($nomeOriginal) {
 $nomeUsuario = $_POST['nome'] ?? '';
 $areaUsuario = $_POST['area'] ?? '';
 $autoDefinicaoUsuario = $_POST['breveDescricao'] ?? '';
-$emailUsuario = $_POST['email'] ?? '';
+$emailUsuario = $_POST['email_usuario'] ?? '';
 $telefoneUsuario = $_POST['telefone'] ?? '';
 $dataNascimentoUsuario = $_POST['data'] ?? '';
 $generoUsuario = $_POST['genero'] ?? '';
@@ -32,6 +32,10 @@ $cursoUsuario = $_POST['habilidades']?? '';
 $escolaridadeUsuario = $_POST['cursos']??'';
 $experienciaUsuario = $_POST['experiencias']??'';
 $pcdUsuario = isset($_POST['pcd']) ? 1 : 0; // 1 se a opção foi marcada, 0 se não foi
+$email = $_POST['email'] ?? '';
+
+$idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
+
 
 /// Verifica se a data de nascimento foi fornecida
 if (!empty($dataNascimentoUsuario)) {
@@ -114,52 +118,70 @@ if ($_FILES['fundo_upload']['error'] == UPLOAD_ERR_OK) {
     }
 }
 
-// Atualizar o email da pessoa na tabela Tb_Pessoas
-$queryAtualizarEmail = "UPDATE Tb_Pessoas SET Email = '$emailUsuario' WHERE Email = '$emailUsuario'";
 
-if (mysqli_query($_con, $queryAtualizarEmail)) {
-    // Verificar se o campo "Verificado" está vazio
-    $queryVerificarVerificado = "SELECT Verificado FROM Tb_Pessoas WHERE Email = '$emailUsuario'";
-    $resultVerificado = mysqli_query($_con, $queryVerificarVerificado);
-    $row = mysqli_fetch_assoc($resultVerificado);
-    $verificado = $row['Verificado'];
+if ($email != $emailUsuario) {
+    // Atualizar o email da pessoa na tabela Tb_Pessoas
+    $queryAtualizarEmail = "UPDATE Tb_Pessoas SET Email = '$email', Token = NULL WHERE Email = '$emailUsuario'";
 
-    if (empty($verificado)) {
-        // Envio do email de confirmação
+    if (mysqli_query($_con, $queryAtualizarEmail)) {
+        // Envio do email de confirmação da alteração do email
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'sias99029@gmail.com';
         $mail->Password = 'xamb nshs dbkq phui';
         $mail->Port = 587;
-        
+
         $mail->setFrom('sias99029@gmail.com');
-        $mail->addAddress($emailUsuario); // Jamais colocar o $emailRecrutador entre aspas
-        
+        $mail->addAddress($email);
+
         $mail->isHTML(true);
-            
-        $mail->Subject = 'Email de confirmação';
-        $mail->Body = 'Olá, seu e-mail foi atualizado com sucesso!'; // Corpo do e-mail
+
+        $mail->Subject = 'Confirmação de alteração de email';
+        $mail->Body = 'Olá, seu email foi alterado com sucesso!';
 
         if (!$mail->send()) {
-            echo "Erro ao enviar o e-mail de confirmação: " . $mail->ErrorInfo;
+            echo "Erro ao enviar o email de confirmação: " . $mail->ErrorInfo;
             exit;
         }
+
+        // Verificar se o campo "Verificado" está vazio
+        $queryVerificarVerificado = "SELECT Verificado FROM Tb_Pessoas WHERE Email = '$email'";
+        $resultVerificado = mysqli_query($_con, $queryVerificarVerificado);
+        $row = mysqli_fetch_assoc($resultVerificado);
+        $verificado = $row['Verificado'];
+
+        if (empty($verificado)) {
+            $mail->clearAddresses(); 
+
+            $mail->addAddress($email);
+
+            $mail->Body = 'Olá, Candidato! Obrigado por se inscrever em nosso sistema confirme o seu email!';
+            $mail->Body .= '<br>Clique no link abaixo para ativar o seu cadastro.<br>';
+            $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $idPessoa;
+            $mail->Body .= '<a href="' . $link . '">Clique aqui para verificar seu cadastro</a>';
+            
+            $mail->AltBody = 'Olá, Candidato! Obrigado por se inscrever em nosso site e confiar em nosso sistema!';
+            $mail->AltBody .= 'Clique no link abaixo para ativar o seu cadastro.';
+            $mail->AltBody .= 'Link: ' . $link;
+
+            if (!$mail->send()) {
+                echo "Erro ao enviar o email de verificação: " . $mail->ErrorInfo;
+                exit;
+            }
+        }
+    } else {
+        echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
+        exit;
     }
-
-    // Continuar com a atualização dos dados do candidato
-    // ...
-
-} else {
-    echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
-    exit;
 }
+
 
 // Atualizar os dados do candidato no banco de dados
 $query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 
 if (mysqli_query($_con, $query)) {
-    header("Location: ../../views/PerfilCandidato/perfilCandidato.php?id=" . $idPessoa);
+    header("Location: ../../views/Login/login.html?");
 } else {
     echo "Erro ao salvar as alterações: " . mysqli_error($_con);
 }
