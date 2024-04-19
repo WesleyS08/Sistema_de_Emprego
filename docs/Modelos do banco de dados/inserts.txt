@@ -1,4 +1,4 @@
-Usar estes insert's para testar os questionários, só colar e testar.
+-- Usar estes insert's para testar os questionários, só colar e testar.
 
 -- Inserir um novo questionário na tabela Tb_Questionarios
 INSERT INTO Tb_Questionarios (Area, Questoes)
