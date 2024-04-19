@@ -1,0 +1,29 @@
+Usar estes insert's para testar os questionários, só colar e testar.
+
+-- Inserir um novo questionário na tabela Tb_Questionarios
+INSERT INTO Tb_Questionarios (Area, Questoes)
+VALUES ('Ciências', 'Questionário sobre Ciências');
+
+-- Recuperar o ID do questionário recém-inserido
+SET @Id_Questionario = LAST_INSERT_ID();
+
+-- Inserir cinco novas questões na tabela Tb_Questoes
+INSERT INTO Tb_Questoes (Enunciado, Nivel_de_Dificuldade, Area)
+VALUES 
+('Qual é o planeta mais próximo do Sol?', 'Fácil', 'Astronomia'),
+('Qual é o maior osso do corpo humano?', 'Fácil', 'Anatomia'),
+('Qual é o símbolo químico do ouro?', 'Médio', 'Química'),
+('Qual é a capital da França?', 'Fácil', 'Geografia'),
+('Quem escreveu a obra "Dom Quixote"?', 'Médio', 'Literatura');
+
+-- Recuperar o ID da primeira questão inserida
+SET @Id_Questao1 = LAST_INSERT_ID();
+
+-- Inserir cinco alternativas para cada questão na tabela Tb_Alternativas
+INSERT INTO Tb_Alternativas (Texto, Correta, Tb_Questoes_Id_Questao)
+VALUES 
+('Mercúrio', 1, @Id_Questao1), ('Vênus', 0, @Id_Questao1), ('Marte', 0, @Id_Questao1), ('Júpiter', 0, @Id_Questao1), ('Saturno', 0, @Id_Questao1),
+('Fêmur', 1, @Id_Questao1 + 1), ('Tíbia', 0, @Id_Questao1 + 1), ('Fíbula', 0, @Id_Questao1 + 1), ('Úmero', 0, @Id_Questao1 + 1), ('Rádio', 0, @Id_Questao1 + 1),
+('Au', 1, @Id_Questao1 + 2), ('Ag', 0, @Id_Questao1 + 2), ('Pt', 0, @Id_Questao1 + 2), ('Cu', 0, @Id_Questao1 + 2), ('Fe', 0, @Id_Questao1 + 2),
+('Paris', 0, @Id_Questao1 + 3), ('Londres', 0, @Id_Questao1 + 3), ('Berlim', 0, @Id_Questao1 + 3), ('Madri', 0, @Id_Questao1 + 3), ('Roma', 1, @Id_Questao1 + 3),
+('Miguel de Cervantes', 1, @Id_Questao1 + 4), ('William Shakespeare', 0, @Id_Questao1 + 4), ('Jorge Luis Borges', 0, @Id_Questao1 + 4), ('Machado de Assis', 0, @Id_Questao1 + 4), ('Gabriel García Márquez', 0, @Id_Questao1 + 4);

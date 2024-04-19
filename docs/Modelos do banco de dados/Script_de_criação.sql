@@ -6,7 +6,7 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=`ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION`;
 
 -- -----------------------------------------------------
 -- Schema SIAS
@@ -106,12 +106,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionarios` (
   `Id_Questionario` INT NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(255) NOT NULL,
   `Area` VARCHAR(255) NULL,
-  `Nivel_de_Dificuldade` VARCHAR(55) NULL,
+  -- `Nivel_de_Dificuldade` VARCHAR(55) NULL,
+  `Descricao` VARCHAR(255) NULL,
   `Questoes` VARCHAR(255) NULL,
   PRIMARY KEY (`Id_Questionario`))
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Resultados`
@@ -252,7 +253,7 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `SIAS`.`Tb_Respostas`
+-- Table `SIAS`.`Tb_Respostas` - Esta tabela pode não ser mais necessária.
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Respostas` (
   `Id_Respostas` INT NOT NULL AUTO_INCREMENT,
@@ -271,9 +272,45 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Respostas` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `SIAS`.`Tb_Questoes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questoes` (
+    `Id_Questao` INT NOT NULL AUTO_INCREMENT,
+    `Enunciado` TEXT NOT NULL,
+    `Nivel_de_Dificuldade` VARCHAR(55),
+    `Area` VARCHAR(255),
+    PRIMARY KEY (`Id_Questao`)
+)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `SIAS`.`Tb_Alternativas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Alternativas` (
+    `Id_Alternativa` INT NOT NULL AUTO_INCREMENT,
+    `Texto` VARCHAR(255) NOT NULL,
+    `Correta` BOOLEAN NOT NULL,
+    `Tb_Questoes_Id_Questao` INT NOT NULL,
+    PRIMARY KEY (`Id_Alternativa`),
+    FOREIGN KEY (`Tb_Questoes_Id_Questao`) REFERENCES `Tb_Questoes` (`Id_Questao`) ON DELETE CASCADE
+)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `SIAS`.`Tb_Questionario_Questoes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionario_Questoes` (
+    `Id_Questionario_Questoes` INT NOT NULL AUTO_INCREMENT,
+    `Id_Questionario` INT NOT NULL,
+    `Tb_Questoes_Id_Questao` INT NOT NULL,
+    PRIMARY KEY (`Id_Questionario_Questoes`),
+    FOREIGN KEY (`Id_Questionario`) REFERENCES `Tb_Questionarios` (`Id_Questionario`) ON DELETE CASCADE,
+    FOREIGN KEY (`Tb_Questoes_Id_Questao`) REFERENCES `Tb_Questoes` (`Id_Questao`) ON DELETE CASCADE
+)
+ENGINE = InnoDB;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
-
