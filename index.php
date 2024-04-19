@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+// Verificar se a variável de sessão 'email_session' ou 'google_session' está definida
+if (isset($_SESSION['email_session']) || isset($_SESSION['google_session'])) {
+    // Destruir a sessão atual
+    session_destroy();
+    // Encerrar o script após destruir a sessão
+    exit;
+}
+
+
 include "src/services/conexão_com_banco.php";
 
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
@@ -15,7 +26,6 @@ if ($result === false) {
     echo "Erro na consulta: " . $_con->error;
     exit;
 }
-
 // Função para determinar a imagem com base na categoria do trabalho
 function determinarImagemCategoria($categoria)
 {
@@ -54,10 +64,10 @@ function determinarImagemCategoria($categoria)
         </label>
         <a href="index.html"><img id="logo" src="src/assets/images/logos_empresa/logo_sias.png"></a>
         <ul>
-            <li><a href="#">Vagas</a></li>
-            <li><a href="#">Pesquisar</a></li>
+            <li><a href="src/views/TodasVagas/todasVagas.html">Vagas</a></li>
+            <li><a href="src/views/PreparaTeste/preparaTeste.html">Testes</a></li>
             <li><a href="#">Cursos</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="src/views/Login/login.html">Perfil</a></li>
         </ul>
     </nav>
     <div class="divTitle">
@@ -94,11 +104,29 @@ function determinarImagemCategoria($categoria)
                 <?php
                 // Loop para exibir as vagas restantes no carrossel
                 while ($row = $result->fetch_assoc()) {
+                    // Consulta para contar o número de inscritos para esta vaga
+                    $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
+                    $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
+                    $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
+                    $stmt_inscricoes->execute();
+                    $result_inscricoes = $stmt_inscricoes->get_result();
+
+                    // Verificar se a consulta teve sucesso
+                    if ($result_inscricoes === false) {
+                        // Tratar o erro, se necessário
+                        echo "Erro na consulta de contagem de inscrições: " . $_con->error;
+                        exit;
+                    }
+
+                    // Obter o resultado da contagem de inscrições
+                    $row_inscricoes = $result_inscricoes->fetch_assoc();
+                    $total_inscricoes = $row_inscricoes['total_inscricoes'];
+
                     echo '<a class="postLink" href="src/views/Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                     echo '<article class="post">';
                     echo '<div class="divAcessos">';
                     echo '<img src="imagens/people.svg"></img>';
-                    echo '<small class="qntdAcessos">28</small>';
+                    echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>'; // Exibindo o número total de inscrições
                     echo '</div>';
                     echo '<header>';
                     echo '<img src="imagens/' . determinarImagemCategoria($row["Categoria"]) . '.svg">'; // Determina a imagem com base na categoria do trabalho
@@ -206,7 +234,7 @@ function determinarImagemCategoria($categoria)
                     </a>
                 </div>
             </div>
-            <button>Ver mais</button>
+            <a href="src/views/Login/login.html"><button>Ver mais</button></a>
         </div>
     </div>
     <div class="divCommon">

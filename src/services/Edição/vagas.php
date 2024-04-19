@@ -50,7 +50,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     Horario = '$horario', 
                     Descricao = '$descricao', 
                     Requisitos = '$requisitos', 
-                    Beneficios = '$beneficios' 
+                    Beneficios = '$beneficios', 
+                    Nivel_Operacional = '$nivel', 
+                    Categoria = '$categoria', 
+                    Modalidade = '$modalidade', 
+                    Jornada = '$jornada'
                 WHERE Id_Anuncios = $idAnuncio";
 
         // Executar a consulta SQL de atualização

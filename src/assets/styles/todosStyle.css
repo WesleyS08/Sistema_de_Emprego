@@ -1,0 +1,145 @@
+.divGridVagas{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    place-items: center;
+}
+
+.postLink{
+    margin-bottom: 80px;
+}
+
+.divGridTestes{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+}
+
+.testeCarrosselLink{
+    margin: 0px 0px 50px 0px
+}
+
+/* ------------------------- Pesquisar -------------------------*/
+
+.divPesquisa{
+    width: 500px;
+    margin: 0 auto;
+    padding-bottom: 10px;
+}
+
+.divFlexInput{
+    display: flex;
+    height: 50px;
+}
+
+.inputPesquisa{
+    width: 100%;
+    font-size: 16pt;
+    padding: 8px;
+    border-radius: 10px;
+    background:none;
+    border: 1px solid gray;
+    transition: 0.2s ease;
+    outline: 0;
+}
+
+.inputPesquisa:focus, .inputPesquisa:hover{    
+    border: 1px solid black;
+}
+
+.searchButton{
+    margin-left: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ------------------------- Filtros -------------------------*/
+
+#mostraFiltros{
+    cursor: pointer;
+    margin: 30px 0px;
+    display: flex;
+    align-items: center;
+    width: 110px;
+    transition: 0.2s ease;
+}
+
+#mostraFiltros:hover{
+    transform: scale(1.08);
+}
+
+#mostraFiltros h3{
+    font-size: 20pt;
+    margin-right: 2px;
+}
+
+.containerFiltros{
+    margin-top: 20px;
+    display: none;
+}
+
+.contentFiltro{
+    margin-bottom: 30px;
+}
+
+.nomeFiltro{
+    font-size: 14pt;
+    margin-right: 10px;
+}
+
+.checkBoxTipo{
+    display: none;
+}
+
+.btnCheckBox{
+    margin-right: 14px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid gray;
+    transition: 0.4s ease;
+}
+
+.btnCheckBox:hover{
+    border: 1px solid var(--laranja);
+}
+
+#flexContent{
+    display: flex;
+    align-items: center;
+}
+
+#flexContent .nomeFiltro{
+    cursor: pointer;
+}
+
+#apenasVagasAbertas{
+    min-height: 20px;
+    min-width: 20px;
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+.selectArea{
+    background: none;
+    font-size: 12pt;
+    width: 160px;
+    padding: 4px;
+    border-radius: 8px;
+    outline: 0;
+    border: 1px solid gray;
+    transition: 0.4s ease;
+    cursor: pointer;
+}
+
+.selectArea:focus, .selectArea:hover{
+    border: 1px solid black;
+}
+
+#criadorFiltro{
+    width: 200px;
+    cursor: text;
+}

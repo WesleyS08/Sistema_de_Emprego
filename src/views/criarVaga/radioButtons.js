@@ -18,7 +18,6 @@ let btnSuperior = document.querySelector("#btnSuperior");
 function MeioPeriodo(){
     btnMeioPeriodo.style.backgroundColor = "var(--laranja)";
     btnMeioPeriodo.style.color = "whitesmoke";
-    btnMeioPeriodo.style.transform = "scale(1.06)";
 
     btnIntegral.style = "initial";
 }
@@ -26,7 +25,6 @@ function MeioPeriodo(){
 function Integral(){
     btnIntegral.style.backgroundColor = "var(--laranja)";
     btnIntegral.style.color = "whitesmoke";
-    btnIntegral.style.transform = "scale(1.06)";
 
     btnMeioPeriodo.style = "initial";
 }
@@ -36,7 +34,6 @@ function Integral(){
 function Remoto(){
     btnRemoto.style.backgroundColor = "var(--laranja)";
     btnRemoto.style.color = "whitesmoke";
-    btnRemoto.style.transform = "scale(1.06)";
 
     btnPresencial.style = "initial";
 }
@@ -44,7 +41,6 @@ function Remoto(){
 function Presencial(){
     btnPresencial.style.backgroundColor = "var(--laranja)";
     btnPresencial.style.color = "whitesmoke";
-    btnPresencial.style.transform = "scale(1.06)";
 
     btnRemoto.style = "initial";
 }
@@ -54,7 +50,6 @@ function Presencial(){
 function JovemAprendiz(){
     btnJovemAprendiz.style.backgroundColor = "var(--laranja)";
     btnJovemAprendiz.style.color = "whitesmoke";
-    btnJovemAprendiz.style.transform = "scale(1.06)";
 
     btnEstagio.style = "initial";
     btnClt.style = "initial";
@@ -64,7 +59,6 @@ function JovemAprendiz(){
 function Estagio(){
     btnEstagio.style.backgroundColor = "var(--laranja)";
     btnEstagio.style.color = "whitesmoke";
-    btnEstagio.style.transform = "scale(1.06)";
 
     btnJovemAprendiz.style = "initial";
     btnClt.style = "initial";
@@ -74,7 +68,6 @@ function Estagio(){
 function Clt(){
     btnClt.style.backgroundColor = "var(--laranja)";
     btnClt.style.color = "whitesmoke";
-    btnClt.style.transform = "scale(1.06)";
 
     btnJovemAprendiz.style = "initial";
     btnEstagio.style = "initial";
@@ -84,7 +77,6 @@ function Clt(){
 function Pj(){
     btnPj.style.backgroundColor = "var(--laranja)";
     btnPj.style.color = "whitesmoke";
-    btnPj.style.transform = "scale(1.06)";
 
     btnJovemAprendiz.style = "initial";
     btnClt.style = "initial";
@@ -94,7 +86,6 @@ function Pj(){
 function Medio(){
     btnMedio.style.backgroundColor = "var(--laranja)";
     btnMedio.style.color = "whitesmoke";
-    btnMedio.style.transform = "scale(1.06)";
 
     btnTecnico.style = "initial";
     btnSuperior.style = "initial";
@@ -103,7 +94,6 @@ function Medio(){
 function Tecnico(){
     btnTecnico.style.backgroundColor = "var(--laranja)";
     btnTecnico.style.color = "whitesmoke";
-    btnTecnico.style.transform = "scale(1.06)";
 
     btnMedio.style = "initial";
     btnSuperior.style = "initial";
@@ -112,7 +102,6 @@ function Tecnico(){
 function Superior(){
     btnSuperior.style.backgroundColor = "var(--laranja)";
     btnSuperior.style.color = "whitesmoke";
-    btnSuperior.style.transform = "scale(1.06)";
 
     btnMedio.style = "initial";
     btnTecnico.style = "initial";

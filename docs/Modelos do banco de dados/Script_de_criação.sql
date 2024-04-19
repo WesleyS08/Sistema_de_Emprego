@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Inscricoes` (
   `Tb_Vagas_Tb_Anuncios_Id` INT NOT NULL,
   `Tb_Vagas_Tb_Empresa_CNPJ` VARCHAR(14) NOT NULL,
   `Tb_Candidato_CPF` VARCHAR(11) NOT NULL,
-  `Data_de _Inscricao` DATETIME NULL,
+  `Data_de_Inscricao` DATETIME NULL,
   PRIMARY KEY (`Tb_Vagas_Tb_Anuncios_Id`, `Tb_Vagas_Tb_Empresa_CNPJ`, `Tb_Candidato_CPF`),
   INDEX `fk_Tb_Vagas_has_Tb_Candidato_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC) ,
   INDEX `fk_Tb_Vagas_has_Tb_Candidato_Tb_Vagas1_idx` (`Tb_Vagas_Tb_Anuncios_Id` ASC, `Tb_Vagas_Tb_Empresa_CNPJ` ASC) ,

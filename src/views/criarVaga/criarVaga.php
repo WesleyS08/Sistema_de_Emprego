@@ -51,10 +51,10 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
         <a href="homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="#">Anunciar</a></li>
-            <li><a href="#">Minhas vagas</a></li>
-            <li><a href="#">Meus testes</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
         </ul>
     </nav>
     <div class="divCommon">
@@ -159,14 +159,14 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                                     <textarea class="textAreaAnimada" name="requisitos" id="requisitos" type="text" required></textarea>
                                     <div class="textArealabelLine">Requisitos</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso">Separe os elementos por vírgula</small>
                             </div>
                             <div class="containerTextArea">
                                 <div class="contentInputTextArea">
                                     <textarea class="textAreaAnimada" name="beneficios" id="beneficios" type="text" required></textarea>
                                     <div class="textArealabelLine">Benefícios</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso">Separe os elementos por vírgula</small>
                             </div>
                         </div>
                     </div>                

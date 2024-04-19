@@ -4,6 +4,8 @@ include "../../services/conexão_com_banco.php";
 // Iniciar a sessão
 session_start();
 
+$idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
+
 // Verificar se o usuário está autenticado como candidato
 if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
     // Se estiver autenticado como candidato
@@ -74,22 +76,22 @@ if ($result && mysqli_num_rows($result) > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeCandidato/homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
-            <li><a href="#">Vagas</a></li>
-            <li><a href="#">Pesquisar</a></li>
-            <li><a href="#">Cursos</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="../TodosTeste/todosTeste.php">Testes</a></li>
+            <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php'"><</button>
-            <h2>Editar Perfil</h2>
+        <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'"><</button>
+        <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php" autocomplete="off" enctype="multipart/form-data">>
+            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
             <div class="divBackgroundImg">
                     <div class="btnEditarFundo">
                         <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
@@ -166,11 +168,12 @@ if ($result && mysqli_num_rows($result) > 0) {
                                 <input class="inputAnimado" id="email" name="email" type="text" value="<?php echo $emailUsuario ?>" required>
                                 <div class="labelLine">Email</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso" name="aviso" style="display: none;">Caso altere o email é necessário
+                                    realizar login novamente</small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="telefone" name="telefone" type="number" value="<?php echo $telefoneUsuario ?>"required>
+                                <input class="inputAnimado" maxlength="11" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
                                 <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>
@@ -180,7 +183,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="containerInput">
                         <div class="contentInput">
                             <!-- Preenche o campo de data com a data de nascimento do usuário -->
-                            <input class="inputAnimado" id="data" name="data" type="date" value="<?php echo htmlspecialchars($dataNascimentoUsuario); ?>" required>
+                            <input class="inputAnimado" maxlength="10" id="data" name="data" type="text" value="<?php echo htmlspecialchars($dataNascimentoUsuario); ?>" required>
                             <div class="labelLine">Data de Nascimento</div>
                         </div>
                             <small name="aviso"></small>
@@ -205,7 +208,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <div class="containerInput">
                             <div class="contentInput">
                                 <input class="inputAnimado" id="estado" name="estado" type="text" value="<?php echo $estadoUsuario?>"required>
-                                <div class="labelLine">Estado</div>
+                                <div class="labelLine">Estado Civil</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
@@ -350,6 +353,16 @@ if ($result && mysqli_num_rows($result) > 0) {
     <script src="mostraIcone.js"></script>
     <script src="avisoInicial.js"></script>
     <script src="adicionaElementos.js"></script>
+    <script src="mascaras.js"></script>
+    <script>
+            // Função para exibir o aviso quando o usuário alterar o campo de email
+            function exibirAviso() {
+                document.getElementById('aviso').style.display = 'block';
+            }
+
+            // Adicionar um evento de clique ao campo de email para chamar a função exibirAviso()
+            document.getElementById('email').addEventListener('change', exibirAviso);
+        </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <?php

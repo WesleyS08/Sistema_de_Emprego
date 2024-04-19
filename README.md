@@ -7,8 +7,8 @@ Este projeto foi desenvolvido como parte da disciplina de Laboratório Web da fa
 Este projeto está sendo desenvolvido por uma equipe dedicada de estudantes da faculdade. Cada membro desempenha um papel crucial no desenvolvimento e contribui para o sucesso do SIAS.
 
 - **[DAVI DE BRITO JUNIOR:](https://github.com/DaveBrito)** Desenvolvedor Back-end
-- **[ERIC PENDERES CARNEIRO:](https://github.com/EricW900)** Desenvolvedor Back-end
-- **[PEDRO BORGE DE JESUS:](https://github.com/B0rga)** Desenvolvedor Front-end
+- **[ERIC PENERES CARNEIRO:](https://github.com/EricW900)** Desenvolvedor Back-end
+- **[PEDRO BORGES DE JESUS:](https://github.com/B0rga)** Desenvolvedor Front-end
 - **[JEFFERSON MOREIRA EVANGELISTA:](https://github.com/JeffersonEvangelista)** Designer UX/UI, Desenvolvedor Front-end
 - **[WESLEY SILVA DOS SANTOS:](https://github.com/WesleyS08)** Designer UX/UI, Desenvolvedor Back-end
 
@@ -32,19 +32,46 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 
  ```
 | -- docs/
-|   | -- word/
+|   | -- apresentação/
 |   | -- excel/
 |   | -- Modelos do banco de dados/
-|-- public/
-|   |-- index.html
-|   |-- manifest.json
-|   |-- sw.js
+|   | -- UML/
+|   | -- word/
+
+| -- imagens/
+
 |-- src/
 |   |-- assets/
+|   |   |-- banners/
+|   |   |-- imagensPerfil/
 |   |   |-- images/
 |   |   |-- styles/
+
+|   | -- views/
+|   | -- services/
+|   |   |-- conexão_com_banco.php
+|   |   |-- criar_banco.php
+|   |   |-- google_credentials.php
+|   |   | -- auth/
+|   |   | -- exemplo_de_senssion.php
+|   |   | -- processar_login_google.php
+|   |   | -- processar_login.php
+|   |   | -- verificarRecrutador.php
+|   |   | -- verificarUsuario.php
+|   | -- cadastros/
+|   |   | -- cadastro/
+|   |   | -- cadastro.php
+|   |   | -- cadastroRecrutador.php
+|   |   | -- processar_candidatura.php
+|   |   | -- vaga.php
+|   | -- CandidatarVaga/
+|   |   | -- candidatarVaga.php
+|   | -- Edição/
+|   |   | -- vagas.php
+
+
 |   |-- components/
-|   |   |-- PHPMailer-master
+|   |   |-- PHPMailer-master/
 |   |-- services/
 |   |   |-- auth/
 |   |   |   |-- processar_login.php
@@ -54,31 +81,45 @@ Explore o design do projeto no Figma [aqui](https://www.figma.com/file/QxHUCHfEu
 |   |   |   |-- cadastro.php
 |   |   |   |-- cadastroRecrutador.php
 |   |   |-- api.js
-|   |   |-- conexão_com_banco.php
-|   |   |-- criar_banco.php
-|   |   |-- google_credentials.php
+
 |   |-- views/
-|   |-- App.js
-|   |-- index.js
-|-- .gitignore
+|   |   |-- Cadastro/
+|   |   |-- criarVaga/
+|   |   |-- EditarPerfilCandidato/
+|   |   |-- EditarPerfilRecrutador/
+|   |   |-- EditarVagaRecrutador/
+|   |   |-- homeCandidato/
+|   |   |-- HomeRecrutador/
+|   |   |-- Login/
+|   |   |-- PerfilCandidato/
+|   |   |-- PerfilRecrutador/
+|   |   |-- PreparaTeste/
+|   |   |-- Teste/
+|   |   |-- TodasVagas/
+|   |   |-- Vaga/
+
+| -- .gitignore/
+|-- carrossel.js
+|-- index.html
+|-- index.php
 |-- README.md
+|-- tituloDigitavel.js
  ```
 ## Descrição das Pastas Principais:
 
 - public/: Contém arquivos estáticos públicos.
 
-- - index.html: Página principal HTML do aplicativo.
-- - manifest.json: Arquivo de manifesto da web.
-- - sw.js: Arquivo do Service Worker.
+- - index.php: Página principal PHP do sistema.
 
-- src/: Contém o código-fonte do aplicativo.
+
+- src/: Contém o código-fonte do sistema.
 
 - - assets/: Arquivos estáticos como imagens e estilos.
 - - components/: Componentes reutilizáveis.
 - - services/: Módulos para interações com serviços, como API.
 
 - - views/: Componentes específicos de visualização.
-- - App.js: Componente principal.
+
 
 -  .gitignore: Lista de arquivos e pastas ignorados pelo Git.
 
@@ -90,25 +131,22 @@ A escolha desta arquitetura segue princípios importantes para o desenvolvimento
 
 - A estrutura divide claramente as responsabilidades entre diferentes diretórios. O código-fonte, recursos estáticos e arquivos públicos são organizados de maneira lógica e fácil de entender.
 
-## 2 Service Worker para Funcionalidade Offline:
 
-- A presença do arquivo sw.js destaca a importância do Service Worker para possibilitar funcionalidades offline, caching e atualizações automáticas.
-
-## 3 Componentização para Reutilização e Manutenção:
+## 2 Componentização para Reutilização e Manutenção:
 
 - A organização em components/ facilita a reutilização de elementos de interface do usuário, promovendo uma manutenção mais eficiente e um código mais limpo.
 
-## 4 Centralização de Serviços em services/:
+## 3 Centralização de Serviços em services/:
 
 - O diretório services/ concentra módulos relacionados a serviços, como interações com APIs. Isso promove uma arquitetura mais escalável e fácil de testar.
 
-## 5 Configurações Padrão para Navegadores:
+## 4 Configurações Padrão para Navegadores:
 
 - A presença do arquivo manifest.json destaca a intenção de criar uma aplicação web progressiva, com configurações para ícones, cores e outros detalhes de apresentação.
 
 Adotar esta arquitetura busca equilibrar eficiência de desenvolvimento, manutenção e a conformidade com as melhores práticas para PWAs, proporcionando uma base sólida para a expansão e evolução do projeto ao longo do tempo.
 
-## Como Contribuir
+## Como Contribuir 
 Sinta-se à vontade para contribuir para o desenvolvimento do SIAS! Você pode clonar o repositório, abrir issues ou enviar pull requests. Certifique-se de seguir as diretrizes de contribuição.
 
 ## Instalação e Configuração

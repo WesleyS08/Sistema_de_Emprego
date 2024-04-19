@@ -137,9 +137,9 @@ if ($stmt) {
         <a href="homeRecrutador.html"><img id="logo"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="#">Anunciar</a></li>
-            <li><a href="#">Minhas vagas</a></li>
-            <li><a href="#">Meus testes</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
@@ -171,63 +171,74 @@ if ($stmt) {
                 <</a>
                     <a class="btnRightSlider" id="rightAnuncios">></a>
                     <div class="carrosselBox" id="carrosselAnuncios">
-                        <?php
-                        // Verifique se há resultados antes de iniciar o loop
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
-                                echo '<article class="post">';
-                                echo '<div class="divAcessos">';
-                                echo '<img src="../../../imagens/people.svg"></img>';
-                                echo '<small class="qntdAcessos">28</small>';
-                                echo '</div>';
-                        
-                                echo '<header>';
-                                switch ($row["Categoria"]) {
-                                    case "CLT":
-                                        echo '<img src="../../../imagens/clt.svg">';
-                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                        break;
-                                    case "Estágio":
-                                    case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
-                                        echo '<img src="../../../imagens/estagio.svg">';
-                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                        break;
-                                    case "PJ":
-                                        echo '<img src="../../../imagens/pj.svg">';
-                                        echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                        break;
-                                    default:
-                                        echo '<label class="tipoVaga">Categoria não definida</label>';
-                                        break;
-                                }
-                        
-                                echo '</header>';
-                                echo '<section>';
-                                echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                                echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
-                              // Exibir o status da vaga e a data de criação
-                                $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                                $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
-                                if ($row['Status'] == 'Aberto') {
-                                    echo '<p style="color: green;">' . $row['Status'] . '</p>';
-                                    echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-                                } else {
-                                    echo '<p style="color: red;">' . $row['Status'] . '</p>';
-                                    echo '<p class="dataVaga">' . $datadeTermino . '</p>';
-                                }
-                            
-                                echo '</section>';
-                                echo '</section>';
-                                echo '</article>';
-                                echo '</a>';
+                    <?php
+                        // Loop para exibir as vagas restantes no carrossel
+                        while ($row = $result->fetch_assoc()) {
+                            // Consulta para contar o número de inscritos para esta vaga
+                            $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
+                            $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
+                            $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
+                            $stmt_inscricoes->execute();
+                            $result_inscricoes = $stmt_inscricoes->get_result();
+
+                            // Verificar se a consulta teve sucesso
+                            if ($result_inscricoes === false) {
+                                // Tratar o erro, se necessário
+                                echo "Erro na consulta de contagem de inscrições: " . $_con->error;
+                                exit;
                             }
-                        } else {
-                            // Se não houver resultados, exiba uma mensagem alternativa
-                            echo '<p>Nenhuma postagem encontrada</p>';
+
+                            // Obter o resultado da contagem de inscrições
+                            $row_inscricoes = $result_inscricoes->fetch_assoc();
+                            $total_inscricoes = $row_inscricoes['total_inscricoes'];
+
+                            // Exibir a vaga e o número de inscritos
+                            echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
+                            echo '<article class="post">';
+                            echo '<div class="divAcessos">';
+                            echo '<img src="../../../imagens/people.svg"></img>';
+                            echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
+                            echo '</div>';
+
+                            echo '<header>';
+                            switch ($row["Categoria"]) {
+                                case "CLT":
+                                    echo '<img src="../../../imagens/clt.svg">';
+                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                    break;
+                                case "Estágio":
+                                case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
+                                    echo '<img src="../../../imagens/estagio.svg">';
+                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                    break;
+                                case "PJ":
+                                    echo '<img src="../../../imagens/pj.svg">';
+                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                    break;
+                                default:
+                                    echo '<label class="tipoVaga">Categoria não definida</label>';
+                                    break;
+                            }
+                            echo '</header>';
+                            echo '<section>';
+                            echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
+                            echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
+                            // Exibir o status da vaga e a data de criação
+                            $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
+                            $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+                            if ($row['Status'] == 'Aberto') {
+                                echo '<p style="color: green;">' . $row['Status'] . '</p>';
+                                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                            } else {
+                                echo '<p style="color: red;">' . $row['Status'] . '</p>';
+                                echo '<p class="dataVaga">' . $datadeTermino . '</p>';
+                            }
+
+                            echo '</section>';
+                            echo '</article>';
+                            echo '</a>';
                         }
                         ?>
-
                     </div>
         </div>
     </div>

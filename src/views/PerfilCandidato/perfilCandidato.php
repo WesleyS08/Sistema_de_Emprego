@@ -22,6 +22,8 @@ if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato'
     exit;
 }
 
+$idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
+
 // Recuperar informações do candidato do banco de dados com base no e-mail do usuário
 $query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Area_de_Interesse, c.Descricao, c.Experiencia, c.Cursos, c.Experiencia, c.Escolaridade, c.Idade, c.Cidade, c.Telefone, c.PCD, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
@@ -59,8 +61,16 @@ if ($result && mysqli_num_rows($result) > 0) {
     $sobreUsuario = 'Não Informado';
 }
 
-
+// Verificar se o perfil tem o mesmo email da sessão que está ativada
+if ($emailUsuario == $dadosCandidato['Email']) {
+    // O perfil tem o mesmo email da sessão
+    $podeEditar = true;
+} else {
+    // O perfil não tem o mesmo email da sessão
+    $podeEditar = false;
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -78,13 +88,13 @@ if ($result && mysqli_num_rows($result) > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeCandidato/homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
-            <li><a href="#">Vagas</a></li>
-            <li><a href="#">Pesquisar</a></li>
-            <li><a href="#">Cursos</a></li>
-            <li><a href="#">Perfil</a></li>
+            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
+            <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <div class="divBackgroundImg" id="divBackgroundImgDefinida">
@@ -93,8 +103,8 @@ if ($result && mysqli_num_rows($result) > 0) {
             <img src="<?php echo $caminhoImagemPerfil; ?>" alt=""
                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
         </div>
-        <?php if ($autenticadoComoCandidato) { ?>
-            <a class="acessarEditarPerfil" href="../EditarPerfilCandidato/editarPerfilCandidato.php">
+        <?php if ($podeEditar) { ?>
+            <a class="acessarEditarPerfil" href="../EditarPerfilCandidato/editarPerfilCandidato.php?id=<?php echo $idPessoa; ?>">
                 <div>
                     <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
                         colors="primary:#ffffff,secondary:#ffffff" style="width:30px;height:30px">
