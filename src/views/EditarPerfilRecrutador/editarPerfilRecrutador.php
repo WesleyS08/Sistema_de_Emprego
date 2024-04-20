@@ -21,6 +21,8 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
 }
 
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
+$idAnuncio = isset($_GET['Id_Anuncios']) ? $_GET['Id_Anuncios'] : '';// Aqui você define o ID do anúncio, pode ser recuperando-o de algum lugar no seu sistema.
+
 
 // Recuperar informações da empresa do banco de dados com base no e-mail do usuário
 $query = "SELECT * FROM Tb_Empresa WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
@@ -205,16 +207,17 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <input type="submit" value="Atualizar">
                         </div>
 
-                        <div class="divBtnAtualizar">
-                            <a href="ExcluirConta/excluirconta.php?id=<?php echo $idPessoa; ?>">
-                                <div>
-                                <label>Excluir Conta</label>
-                                </div>
-                            </a>
-                        </div>
+                        <form method="post" action="../../../src/services/ExcluirConta/excluirConta.php" autocomplete="off">
+                            <div class="divBtnAtualizar">
+                            <a href="../../../src/services/ExcluirConta/excluirConta.php?id=<?php echo $idPessoa; ?>&Id_Anuncios=<?php echo $idAnuncio; ?>">Excluir Conta</a>
+
+                            </div>
+                        </form>
+
                         <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
 
                 </div>
+
             </form>
         </div>
     </div>
