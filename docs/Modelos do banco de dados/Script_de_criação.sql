@@ -280,7 +280,9 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questoes` (
     `Enunciado` TEXT NOT NULL,
     `Nivel_de_Dificuldade` VARCHAR(55),
     `Area` VARCHAR(255),
-    PRIMARY KEY (`Id_Questao`)
+    `Id_Questionario` INT NOT NULL,
+    PRIMARY KEY (`Id_Questao`),
+    FOREIGN KEY (`Id_Questionario`) REFERENCES `Tb_Questionarios` (`Id_Questionario`) ON DELETE CASCADE ON UPDATE CASCADE
 )
 ENGINE = InnoDB;
 
