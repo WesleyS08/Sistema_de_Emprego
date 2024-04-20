@@ -146,15 +146,15 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Anuncios` (
   `Id_Anuncios` INT NOT NULL AUTO_INCREMENT,
   `Categoria` varchar(45) DEFAULT NULL,
-  `Titulo` varchar(45) DEFAULT NULL,
-  `Descricao` varchar(45) DEFAULT NULL,
+  `Titulo` varchar(50) DEFAULT NULL,
+  `Descricao` varchar(255) DEFAULT NULL,
   `Area` varchar(45) DEFAULT NULL,
   `Cidade` varchar(45) DEFAULT NULL,
   `Nivel_Operacional` varchar(45) DEFAULT NULL,
   `Data_de_Criacao` datetime DEFAULT NULL,
   `Modalidade` varchar(45) DEFAULT NULL,
-  `Beneficios` varchar(45) DEFAULT NULL,
-  `Requisitos` varchar(45) DEFAULT NULL,
+  `Beneficios` varchar(255) DEFAULT NULL,
+  `Requisitos` varchar(255) DEFAULT NULL,
   `Horario` varchar(45) NOT NULL,
   `Estado` varchar(45) NOT NULL,
   `Jornada` varchar(45) NOT NULL,
@@ -280,7 +280,9 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questoes` (
     `Enunciado` TEXT NOT NULL,
     `Nivel_de_Dificuldade` VARCHAR(55),
     `Area` VARCHAR(255),
-    PRIMARY KEY (`Id_Questao`)
+    `Id_Questionario` INT NOT NULL,
+    PRIMARY KEY (`Id_Questao`),
+    FOREIGN KEY (`Id_Questionario`) REFERENCES `Tb_Questionarios` (`Id_Questionario`) ON DELETE CASCADE ON UPDATE CASCADE
 )
 ENGINE = InnoDB;
 

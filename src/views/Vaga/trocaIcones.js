@@ -11,8 +11,8 @@ let nivel = document.querySelector("#nivel");
 let imgNivel = document.querySelector("#imgNivel");
 
 function trocaProfissional(){
-    if(tipoProfissional.textContent == "Estágio" || tipoProfissional.textContent == "Jovem Aprendiz"){
-        imgTipoProfissional.src="../../assets/images/icones_vaga/estudanteSemFundo.svg";
+    if (tipoProfissional.textContent.includes("Estágio") || tipoProfissional.textContent.includes("Jovem Aprendiz")) {
+        imgTipoProfissional.src = "../../assets/images/icones_vaga/estudanteSemFundo.svg";
     }
     if(tipoProfissional.textContent.includes("CLT")){
         imgTipoProfissional.src="../../assets/images/icones_vaga/cltSemFundo.svg";
