@@ -4,31 +4,27 @@ include "../../services/conexão_com_banco.php";
 // Iniciar a sessão
 session_start();
 
-// Verificar se o usuário está autenticado como candidato
-if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
-    // Se estiver autenticado como candidato
-    $autenticadoComoCandidato = true;
-    $emailUsuario = '';
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$emailUsuario = '';
+$candidatoInscrito = false;
+$autenticadoComoPublicador = false;
 
-    // Definir o e-mail do usuário com base no tipo de sessão
-    if (isset($_SESSION['email_session'])) {
-        $emailUsuario = $_SESSION['email_session'];
-    } elseif (isset($_SESSION['google_session'])) {
-        $emailUsuario = $_SESSION['google_session'];
-    }    
-} else {
-    // Se não estiver autenticado como candidato, redirecione para a página de login
-    header("Location: ../Login/login.html");
-    exit;
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset($_SESSION['email_session'])) {
+    // Se estiver autenticado com e-mail/senha
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session'])) {
+    // Se estiver autenticado com o Google
+    $emailUsuario = $_SESSION['google_session'];
 }
 
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
-// Recuperar informações do candidato do banco de dados com base no e-mail do usuário
+// Recuperar informações do candidato do banco de dados com base no ID fornecido na URL
 $query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Area_de_Interesse, c.Descricao, c.Experiencia, c.Cursos, c.Experiencia, c.Escolaridade, c.Idade, c.Cidade, c.Telefone, c.PCD, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
           INNER JOIN Tb_Candidato AS c ON p.Id_Pessoas = c.Tb_Pessoas_Id 
-          WHERE p.Email = '$emailUsuario'";
+          WHERE p.Id_Pessoas = '$idPessoa'";
 $result = mysqli_query($_con, $query);
 
 if ($result && mysqli_num_rows($result) > 0) {
@@ -49,26 +45,24 @@ if ($result && mysqli_num_rows($result) > 0) {
     $cursoUsuario = $dadosCandidato['Cursos'];
     $escolaridadeUsuario = $dadosCandidato['Escolaridade'];
     $pcdUsuario = $dadosCandidato['PCD'];
+
+    // Verificar se o perfil tem o mesmo email da sessão que está ativada
+    if ($emailUsuario == $dadosCandidato['Email']) {
+        // O perfil tem o mesmo email da sessão
+        $podeEditar = true;
+    } else {
+        // O perfil não tem o mesmo email da sessão
+        $podeEditar = false;
+    }
 } else {
-    $nomeUsuario = 'Não informado';
-    $areaUsuario = 'Não informado';
-    $autoDefinicaoUsuario = 'Não informado';
-    $telefoneUsuario = 'Não informado';
-    $dataNascimentoUsuario = 'Não informado';
-    $generoUsuario = 'Não informado';
-    $estadoUsuario = 'Não informado';
-    $cidadeUsuario = 'Não Informado';
-    $sobreUsuario = 'Não Informado';
+    // Caso não encontre o candidato com o ID fornecido
+    // Você pode redirecionar o usuário ou exibir uma mensagem de erro
+    echo "Candidato não encontrado.";
+    // Ou pode redirecionar para uma página de erro
+    // header("Location: erro.php");
+    exit(); // Termina o script após exibir a mensagem
 }
 
-// Verificar se o perfil tem o mesmo email da sessão que está ativada
-if ($emailUsuario == $dadosCandidato['Email']) {
-    // O perfil tem o mesmo email da sessão
-    $podeEditar = true;
-} else {
-    // O perfil não tem o mesmo email da sessão
-    $podeEditar = false;
-}
 ?>
 
 

@@ -181,7 +181,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaga</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    <link rel="stylesheet" type="text/css" href="vaga.css">
+    <link rel="stylesheet" type="text/css" href="minhaVaga.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
@@ -216,6 +216,28 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
         </ul>
     </nav>
+    <?php if ($autenticadoComoPublicador == true) { ?>
+        <?php
+        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=' . $idAnuncio . '">';
+        ?>
+        <div style="padding: 6px 12px;
+                box-shadow: 0px 0px 6px silver;
+                display: flex;
+                align-items: center;
+                background-color: #000;
+                color: whitesmoke;
+                border-radius: 10px;
+                width: 7%;
+                margin-top: 1%;
+                margin-left: 2%;">
+            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
+                colors="primary:#ffffff,secondary:#ffffff" style="width:30px;height:30px">
+            </lord-icon>
+            <label>Editar</label>
+        </div>
+        </a>
+    <?php } ?>
+
     <div class="divCommon">
         <div class="divTitulo" id="divTituloVaga">
             <h2 id="tituloVaga">
@@ -390,12 +412,74 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                         </ul>
                     </div>
                 </div>
-
-
-                <div id="map" style="height: 400px; margin-top:5%"></div>
             </div>
         </div>
     </div>
+    <div class="divCarrossel">
+        <div class="divTitulo">
+            <h2>Candidaturas</h2>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftPerfis">
+                <</a>
+                    <a class="btnRightSlider" id="rightPerfis">></a>
+                    <div class="carrosselBox" id="carrosselPerfis">
+                        <?php
+                        $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Foto_Perfil, p.Nome
+                                   FROM Tb_Candidato c
+                                   JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+                                   JOIN Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
+                                   WHERE i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio";
+
+                        $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
+
+                        // Verificar se a consulta retornou resultados
+                        if ($resultCandidatos && mysqli_num_rows($resultCandidatos) > 0) {
+                            // Loop sobre as informações das candidaturas
+                            while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
+                                ?>
+                                <a class="perfilLink"
+                                    href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>">
+                                <article class="perfil">
+                                    <div class="divImg">
+                                        <!-- Mostrar a imagem de perfil -->
+                                        <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt="Foto de Perfil"
+                                            style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
+                                    </div>
+
+                                    <section>
+                                        <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
+                                    </section>
+                                    <section>
+                                        <?php
+                                        $limite_caracteres = 55; // Defina o limite de caracteres desejado
+                                        $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
+                                
+                                        if (strlen($autodefinicao) > $limite_caracteres) {
+                                            $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
+                                        }
+                                        ?>
+                                        <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
+                                    </section>
+                                </article>
+                    </a>
+                    <?php
+                            }
+
+                        } else {
+                            // Caso não haja candidatos inscritos
+                            echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para esta vaga.</p>";
+
+                        }
+                        ?>
+        </div>
+    </div>
+    </div>
+
+
+    <div id="map" style="height: 400px;margin-top: 1%;position: relative;outline: none;width: 95%;margin-left: 3%;">
+    </div>
+
     <div id="endereco" style="display: none;" data-rua="<?php echo $Rua; ?>" data-numero="<?php echo $Numero; ?>"
         data-bairro="<?php echo $bairro; ?>" data-cidade="<?php echo $Cidade; ?>" data-estado="<?php echo $Estado; ?>"
         data-cep="<?php echo $CEP; ?>">
@@ -413,6 +497,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     </footer>
     <script src="trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="carrosselPerfis.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
