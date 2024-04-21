@@ -17,7 +17,7 @@ if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato'
         $emailUsuario = $_SESSION['email_session'];
     } elseif (isset($_SESSION['google_session'])) {
         $emailUsuario = $_SESSION['google_session'];
-    }    
+    }
 } else {
     // Se não estiver autenticado como candidato, redirecione para a página de login
     header("Location: ../Login/login.html");
@@ -58,27 +58,49 @@ if ($result && mysqli_num_rows($result) > 0) {
     $cidadeUsuario = 'Não Informado';
     $sobreUsuario = 'Não Informado';
 }
+
+$sql_areas = "
+    SELECT DISTINCT Area 
+    FROM Tb_Anuncios 
+    ORDER BY Area ASC
+";
+
+// Preparar e executar a consulta para obter as áreas únicas
+$stmt_areas = $_con->prepare($sql_areas);
+$stmt_areas->execute();
+$result_areas = $stmt_areas->get_result();
+
+if ($result_areas && $result_areas->num_rows > 0) {
+    while ($row = $result_areas->fetch_assoc()) {
+        $areas[] = $row['Area']; // Adicionar áreas ao array
+    }
+}
+
+
 ?>
 
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil</title>
-    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">    
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
 </head>
+
 <body>
     <nav>
         <input type="checkbox" id="check">
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
-        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
-        <ul>            
+        <a href="../HomeCandidato/homeCandidato.php"><img id="logo"
+                src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+        <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTeste/todosTeste.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
@@ -87,12 +109,15 @@ if ($result && mysqli_num_rows($result) > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-        <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'"><</button>
-        <h2>Editar Perfil</h2>
+            <button class="btnVoltar"
+                onclick="window.location.href='../perfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'">
+                << /button>
+                    <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
-            <div class="divBackgroundImg">
+            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>"
+                autocomplete="off" enctype="multipart/form-data">
+                <div class="divBackgroundImg">
                     <div class="btnEditarFundo">
                         <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
                             colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:34px;height:34px">
@@ -121,42 +146,40 @@ if ($result && mysqli_num_rows($result) > 0) {
 
                 </div>
                 <div class="divContentPerfil">
-                    <div class="divAvisoInicial">                        
+                    <div class="divAvisoInicial">
                         <small>Há informações que podem estar faltando!</small>
                     </div>
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="nome" name="nome" type="text" required value= "<?php echo $nomeUsuario?>">
+                                <input class="inputAnimado" id="nome" name="nome" type="text" required
+                                    value="<?php echo $nomeUsuario ?>">
                                 <div class="labelLine">Nome</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required value="<?php echo $areaUsuario?>">
+                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required
+                                    value="<?php echo $areaUsuario ?>">
                                 <div class="labelLine">Área de Atuação</div>
                                 <datalist id="areaList">
-                                    <option>Tecnologia</option>
-                                    <option>Medicia</option>
-                                    <option>Engenharia</option>
-                                    <option>Economia</option>                                        
-                                    <option>Vendas</option>  
-                                    <option>Educação</option>                                    
-                                    <option>Direito</option>                                                                          
-                                    <option>Administração</option>                                                                                                            
-                                    <option>Agronegócio</option>                                                                                                                                                  
-                                    <option>Gastronomia</option>
+                                    <?php
+                                    foreach ($areas as $area) {
+                                        echo "<option value='$area'>$area</option>";
+                                    }
+                                    ?>
                                 </datalist>
                             </div>
                             <small name="aviso"></small>
                         </div>
-                    </div>     
-                    <div class="inputUnico">                                       
+                    </div>
+                    <div class="inputUnico">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="breveDescricao" name="breveDescricao" type="text" placeholder="Ex: Desenvolvedor Fullstack | Certificação AWS | Administrador de Rede |" 
-                                value="<?php echo $autoDefinicaoUsuario ?>" required>
+                                <input class="inputAnimado" id="breveDescricao" name="breveDescricao" type="text"
+                                    placeholder="Ex: Desenvolvedor Fullstack | Certificação AWS | Administrador de Rede |"
+                                    value="<?php echo $autoDefinicaoUsuario ?>" required>
                                 <div class="labelLine">Breve descrição</div>
                             </div>
                             <small name="aviso"></small>
@@ -165,15 +188,17 @@ if ($result && mysqli_num_rows($result) > 0) {
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="email" name="email" type="text" value="<?php echo $emailUsuario ?>" required>
+                                <input class="inputAnimado" id="email" name="email" type="text"
+                                    value="<?php echo $emailUsuario ?>" required>
                                 <div class="labelLine">Email</div>
                             </div>
                             <small id="aviso" name="aviso" style="display: none;">Caso altere o email é necessário
-                                    realizar login novamente</small>
+                                realizar login novamente</small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" maxlength="11" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>"required>
+                                <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text"
+                                    value="<?php echo $telefoneUsuario ?>" required>
                                 <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>
@@ -181,16 +206,23 @@ if ($result && mysqli_num_rows($result) > 0) {
                     </div>
                     <div class="inputsLadoALado">
                         <div class="containerInput">
-                        <div class="contentInput">
-                            <!-- Preenche o campo de data com a data de nascimento do usuário -->
-                            <input class="inputAnimado" maxlength="10" id="data" name="data" type="text" value="<?php echo htmlspecialchars($dataNascimentoUsuario); ?>" required>
-                            <div class="labelLine">Data de Nascimento</div>
-                        </div>
+                            <?php
+                            $dataNascimentoUsuario_formatada = date('d/m/Y', strtotime($dataNascimentoUsuario));
+                            ?>
+
+                            <div class="contentInput">
+                                <!-- Preenche o campo de data com a data de nascimento do usuário -->
+                                <input class="inputAnimado" maxlength="10" id="data" name="data" type="text"
+                                    value="<?php echo htmlspecialchars($dataNascimentoUsuario_formatada); ?>" required>
+                                <div class="labelLine">Data de Nascimento</div>
+                            </div>
+
                             <small name="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="genero" name="genero" type="text" list="generoList" value="<?php echo $generoUsuario?>" required>
+                                <input class="inputAnimado" id="genero" name="genero" type="text" list="generoList"
+                                    value="<?php echo $generoUsuario ?>" required>
                                 <div class="labelLine">Gênero</div>
                                 <datalist id="generoList">
                                     <option>Homem Cisgênero</option>
@@ -207,14 +239,24 @@ if ($result && mysqli_num_rows($result) > 0) {
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="estado" name="estado" type="text" value="<?php echo $estadoUsuario?>"required>
+                                <select class="inputAnimado" id="estado" name="estado" required>
+                                    <option value="Solteiro(a)" <?php echo ($estadoUsuario == 'Solteiro(a)') ? 'selected' : ''; ?>>Solteiro(a)</option>
+                                    <option value="Casado(a)" <?php echo ($estadoUsuario == 'Casado(a)') ? 'selected' : ''; ?>>Casado(a)</option>
+                                    <option value="Divorciado(a)" <?php echo ($estadoUsuario == 'Divorciado(a)') ? 'selected' : ''; ?>>Divorciado(a)</option>
+                                    <option value="Viúvo(a)" <?php echo ($estadoUsuario == 'Viúvo(a)') ? 'selected' : ''; ?>>Viúvo(a)</option>
+                                    <option value="União Estável" <?php echo ($estadoUsuario == 'União Estável') ? 'selected' : ''; ?>>União Estável</option>
+                                    <!-- Adicione mais opções conforme necessário -->
+                                </select>
                                 <div class="labelLine">Estado Civil</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
+
+
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="cidade" name="cidade" type="text" value="<?php echo $cidadeUsuario ?>" required>
+                                <input class="inputAnimado" id="cidade" name="cidade" type="text"
+                                    value="<?php echo $cidadeUsuario ?>" required>
                                 <div class="labelLine">Cidade</div>
                             </div>
                             <small name="aviso"></small>
@@ -224,10 +266,11 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <input type="checkbox" id="pcd" name="pcd" <?php echo $pcdUsuario == 1 ? 'checked' : ''; ?>>
                         <label for="pcd">Pessoa com Deficiência</label>
                     </div>
-                    <div class="divTextArea" id="divTextAreaCandidato">                        
+                    <div class="divTextArea" id="divTextAreaCandidato">
                         <div class="containerTextArea">
                             <div class="contentInputTextArea">
-                                <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text" required><?php echo $sobreUsuario?></textarea>
+                                <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text"
+                                    required><?php echo $sobreUsuario ?></textarea>
                                 <div class="textArealabelLine">Sobre Mim</div>
                             </div>
                             <small name="aviso"></small>
@@ -236,23 +279,26 @@ if ($result && mysqli_num_rows($result) > 0) {
                     <div class="divElementos">
 
                         <div class="divAdiconaElementos">
-                            <h2>Habilidades e Tecnologias</h2> 
-                            <div class="divTextArea">                        
+                            <h2>Habilidades e Tecnologias</h2>
+                            <div class="divTextArea">
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="habilidades" id="habilidades" type="text" required><?php echo $cursoUsuario ?></textarea>
-                                        <div class="textArealabelLine">Adicione cursos e tecnologias que você domina</div>
+                                        <textarea class="textAreaAnimada" name="habilidades" id="habilidades"
+                                            type="text" required><?php echo $cursoUsuario ?></textarea>
+                                        <div class="textArealabelLine">Adicione cursos e tecnologias que você domina
+                                        </div>
                                     </div>
                                     <small name="aviso"></small>
                                 </div>
                             </div>
                         </div>
                         <div class="divAdiconaElementos">
-                            <h2>Cursos e Formações</h2> 
-                            <div class="divTextArea">                        
+                            <h2>Cursos e Formações</h2>
+                            <div class="divTextArea">
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="cursos" id="cursos" type="text" required><?php echo $escolaridadeUsuario ?></textarea>
+                                        <textarea class="textAreaAnimada" name="cursos" id="cursos" type="text"
+                                            required><?php echo $escolaridadeUsuario ?></textarea>
                                         <div class="textArealabelLine">Adicione suas formações</div>
                                     </div>
                                     <small name="aviso"></small>
@@ -260,11 +306,12 @@ if ($result && mysqli_num_rows($result) > 0) {
                             </div>
                         </div>
                         <div class="divAdiconaElementos">
-                            <h2>Experiências de Trabalho</h2> 
-                            <div class="divTextArea">                        
+                            <h2>Experiências de Trabalho</h2>
+                            <div class="divTextArea">
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="experiencias" id="experiencias" type="text" required><?php echo $experienciaUsuario ?></textarea>
+                                        <textarea class="textAreaAnimada" name="experiencias" id="experiencias"
+                                            type="text" required><?php echo $experienciaUsuario ?></textarea>
                                         <div class="textArealabelLine">Adicione suas experiências profissionais</div>
                                     </div>
                                     <small name="aviso"></small>
@@ -292,7 +339,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <ul class="elementosAdicionados" id="habilidadesAdicionadas"> 
                             </ul>
                         </div>
-                        --> 
+                        -->
 
                         <!--<div class="divAdiconaElementos">
                             <h2>Cursos e Formações</h2> 
@@ -333,9 +380,9 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <ul class="elementosAdicionados" id="experienciasAdicionadas">
                             </ul>
                         </div>-->
-                        
+
                     </div>
-                    <div class="divBtnAtualizar">                        
+                    <div class="divBtnAtualizar">
                         <input type="submit" value="Atualizar">
                     </div>
                     <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
@@ -349,25 +396,25 @@ if ($result && mysqli_num_rows($result) > 0) {
         <a>Avalie-nos</a>
         <p>SIAS 2024</p>
     </footer>
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>    
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="mostraIcone.js"></script>
     <script src="avisoInicial.js"></script>
     <script src="adicionaElementos.js"></script>
     <script src="mascaras.js"></script>
     <script>
-            // Função para exibir o aviso quando o usuário alterar o campo de email
-            function exibirAviso() {
-                document.getElementById('aviso').style.display = 'block';
-            }
+        // Função para exibir o aviso quando o usuário alterar o campo de email
+        function exibirAviso() {
+            document.getElementById('aviso').style.display = 'block';
+        }
 
-            // Adicionar um evento de clique ao campo de email para chamar a função exibirAviso()
-            document.getElementById('email').addEventListener('change', exibirAviso);
-        </script>
+        // Adicionar um evento de clique ao campo de email para chamar a função exibirAviso()
+        document.getElementById('email').addEventListener('change', exibirAviso);
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <?php
-        // Obtém a URL da imagem de perfil do banco de dados
-        $urlImagemPerfil = $dadosCandidato['Img_Perfil'];
+    // Obtém a URL da imagem de perfil do banco de dados
+    $urlImagemPerfil = $dadosCandidato['Img_Perfil'];
     ?>
 
     <script>
@@ -397,10 +444,10 @@ if ($result && mysqli_num_rows($result) > 0) {
         });
     </script>
 
-    <?php    
-        $urlImagemFundo = $dadosCandidato['Banner']; 
-        ?>
-        <script>
+    <?php
+    $urlImagemFundo = $dadosCandidato['Banner'];
+    ?>
+    <script>
         $(document).ready(function () {
             // Função para carregar a imagem de fundo com base na URL fornecida
             function carregarImagemDeFundo(url) {
@@ -435,4 +482,5 @@ if ($result && mysqli_num_rows($result) > 0) {
     </script>
 
 </body>
+
 </html>

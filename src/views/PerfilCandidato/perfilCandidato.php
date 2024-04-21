@@ -55,11 +55,9 @@ if ($result && mysqli_num_rows($result) > 0) {
         $podeEditar = false;
     }
 } else {
-    // Caso não encontre o candidato com o ID fornecido
-    // Você pode redirecionar o usuário ou exibir uma mensagem de erro
+
     echo "Candidato não encontrado.";
-    // Ou pode redirecionar para uma página de erro
-    // header("Location: erro.php");
+    
     exit(); // Termina o script após exibir a mensagem
 }
 

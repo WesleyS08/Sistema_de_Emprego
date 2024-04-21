@@ -36,7 +36,6 @@ $email = $_POST['email'] ?? '';
 
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
-
 /// Verifica se a data de nascimento foi fornecida
 if (!empty($dataNascimentoUsuario)) {
     // Converte a data de nascimento em um objeto DateTime
@@ -54,7 +53,6 @@ if (!empty($dataNascimentoUsuario)) {
 } else {
     echo "A data de nascimento não foi fornecida";
 }
-
 
 // Verificar se todas as informações necessárias foram fornecidas
 if (empty($nomeUsuario) || empty($areaUsuario) /*empty($telefoneUsuario) Colocar no banco futuramente*/ || empty($sobreUsuario) || empty($emailUsuario)) {
@@ -75,11 +73,14 @@ if ($result) {
 }
 
 // Armazenar os URLs das imagens existentes
-$urlImagemPerfilAntiga = $dadosEmpresa['Img_Perfil'];
-$urlBannerAntigo = $dadosEmpresa['Banner'];
+$queryImagens = "SELECT Img_Perfil, Banner FROM Tb_Candidato WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+$resultImagens = mysqli_query($_con, $queryImagens);
+$dadosImagens = mysqli_fetch_assoc($resultImagens);
+$urlImagemPerfilAntiga = $dadosImagens['Img_Perfil'];
+$urlBannerAntigo = $dadosImagens['Banner'];
 
 // Processar o upload da nova imagem de perfil
-$imagemPerfil = $imagemPerfilExistente; // Definir a imagem de perfil como a existente por padrão
+$imagemPerfil = $urlImagemPerfilAntiga; // Definir a imagem de perfil como a existente por padrão
 if ($_FILES['foto_perfil_upload']['error'] == UPLOAD_ERR_OK) {
     // Se o campo de upload de arquivo para a foto de perfil estiver preenchido
     $diretorioDestinoPerfil = '../../assets/imagensPerfil/';
@@ -99,7 +100,7 @@ if ($_FILES['foto_perfil_upload']['error'] == UPLOAD_ERR_OK) {
 }
 
 // Processar o upload do banner
-$banner = $bannerExistente; // Definir o banner como o existente por padrão
+$banner = $urlBannerAntigo; // Definir o banner como o existente por padrão
 if ($_FILES['fundo_upload']['error'] == UPLOAD_ERR_OK) {
     // Se o campo de upload de arquivo para o banner estiver preenchido
     $diretorioDestinoBanner = '../../assets/banners/';
@@ -118,11 +119,9 @@ if ($_FILES['fundo_upload']['error'] == UPLOAD_ERR_OK) {
     }
 }
 
-
+// Atualizar o email da pessoa na tabela Tb_Pessoas, se houver alteração
 if ($email != $emailUsuario) {
-    // Atualizar o email da pessoa na tabela Tb_Pessoas
     $queryAtualizarEmail = "UPDATE Tb_Pessoas SET Email = '$email', Token = NULL WHERE Email = '$emailUsuario'";
-
     if (mysqli_query($_con, $queryAtualizarEmail)) {
         // Envio do email de confirmação da alteração do email
         $mail->isSMTP();
@@ -136,7 +135,6 @@ if ($email != $emailUsuario) {
         $mail->addAddress($email);
 
         $mail->isHTML(true);
-
         $mail->Subject = 'Confirmação de alteração de email';
         $mail->Body = 'Olá, seu email foi alterado com sucesso!';
 
@@ -153,14 +151,11 @@ if ($email != $emailUsuario) {
 
         if (empty($verificado)) {
             $mail->clearAddresses(); 
-
             $mail->addAddress($email);
-
             $mail->Body = 'Olá, Candidato! Obrigado por se inscrever em nosso sistema confirme o seu email!';
             $mail->Body .= '<br>Clique no link abaixo para ativar o seu cadastro.<br>';
             $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $idPessoa;
             $mail->Body .= '<a href="' . $link . '">Clique aqui para verificar seu cadastro</a>';
-            
             $mail->AltBody = 'Olá, Candidato! Obrigado por se inscrever em nosso site e confiar em nosso sistema!';
             $mail->AltBody .= 'Clique no link abaixo para ativar o seu cadastro.';
             $mail->AltBody .= 'Link: ' . $link;
@@ -174,16 +169,7 @@ if ($email != $emailUsuario) {
         echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
         exit;
     }
-    // Atualizar os dados do candidato no banco de dados
-$query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
-
-if (mysqli_query($_con, $query)) {
-    header("Location: ../../views/Login/login.html?");
-} else {
-    echo "Erro ao salvar as alterações: " . mysqli_error($_con);
 }
-}
-
 
 // Atualizar os dados do candidato no banco de dados
 $query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
