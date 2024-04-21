@@ -29,6 +29,25 @@ $nomeUsuario = isset ($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '
 $emailSession = isset ($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
 $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
 
+$sql_areas = "
+    SELECT DISTINCT Area 
+    FROM Tb_Anuncios 
+    ORDER BY Area ASC
+";
+
+// Preparar e executar a consulta para obter as áreas únicas
+$stmt_areas = $_con->prepare($sql_areas);
+$stmt_areas->execute();
+$result_areas = $stmt_areas->get_result();
+
+$areas = ["Tecnologia da Informação", "Construção Civil"]; // Adicionar a opção "Todas" ao início do array
+
+if ($result_areas && $result_areas->num_rows > 0) {
+    while ($row = $result_areas->fetch_assoc()) {
+        $areas[] = $row['Area']; // Adicionar áreas ao array
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -79,11 +98,11 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                                     <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required>
                                     <div class="labelLine">Área</div>
                                     <datalist id="areaList">
-                                        <option>Tecnologia da Informação</option>
-                                        <option>Medicina</option>
-                                        <option>Engenharia</option>
-                                        <option>Construção Civil</option>
-                                        <option>Educação</option>
+                                    <?php
+                            foreach ($areas as $area) {
+                                echo "<option value='$area'>$area</option>";
+                            }
+                            ?>
                                     </datalist>
                                 </div>
                                 <small name="aviso"></small>

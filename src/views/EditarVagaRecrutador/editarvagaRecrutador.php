@@ -117,6 +117,25 @@ if (isset($_GET['id'])) {
         }
     }
 }
+$sql_areas = "
+    SELECT DISTINCT Area 
+    FROM Tb_Anuncios 
+    ORDER BY Area ASC
+";
+
+// Preparar e executar a consulta para obter as áreas únicas
+$stmt_areas = $_con->prepare($sql_areas);
+$stmt_areas->execute();
+$result_areas = $stmt_areas->get_result();
+
+$areas = ["Tecnologia da Informação", "Construção Civil"]; // Adicionar a opção "Todas" ao início do array
+
+if ($result_areas && $result_areas->num_rows > 0) {
+    while ($row = $result_areas->fetch_assoc()) {
+        $areas[] = $row['Area']; // Adicionar áreas ao array
+    }
+}
+
 
 // Fechar a conexão com o banco de dados
 mysqli_close($_con);
@@ -187,11 +206,11 @@ mysqli_close($_con);
                                         required value="<?php echo $dadosAnuncio['Area'] ?>">
                                     <div class="labelLine">Área</div>
                                     <datalist id="areaList">
-                                        <option>Tecnologia da Informação</option>
-                                        <option>Medicia</option>
-                                        <option>Engenharia</option>
-                                        <option>Construção Civil</option>
-                                        <option>Educação</option>
+                                    <?php
+                            foreach ($areas as $area) {
+                                echo "<option value='$area'>$area</option>";
+                            }
+                            ?>
                                     </datalist>
                                 </div>
                                 <small name="aviso"></small>
