@@ -185,6 +185,85 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
+    <style>
+        .modal {
+            display: none;
+            /* Esconde o modal por padrão */
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            /* Permite rolar se necessário */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Fundo translúcido para o overlay */
+        }
+
+        .modal-content {
+
+            background-color: white;
+            margin: 15% auto;
+            /* Centraliza o modal na tela */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            /* Tamanho do modal */
+            text-align: center;
+            /* Centraliza o texto */
+            border-radius: 10px;
+        }
+
+        .modal-content p {
+            text-align: center;
+            padding: 10px 20px;
+
+        }
+
+        .modal-content .let {
+            text-align: center;
+            padding: 10px 20px;
+
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .delete-button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            background-color: gray;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover,
+        .cancel-button:hover {
+            opacity: 0.8;
+        }
+    </style>
 </head>
 
 <body>
@@ -237,6 +316,37 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         </div>
         </a>
     <?php } ?>
+    <?php if ($autenticadoComoPublicador == true): ?>
+        <a class="acessarEditarPerfil" href="#"
+            onclick="openModal('LInK do Arquivo para delete .php?id=<?php echo $idAnuncio; ?>&action=delete')">
+            <div style="padding: 6px 12px;
+                    box-shadow: 0px 0px 6px silver;
+                    display: flex;
+                    align-items: center;
+                    background-color: #830404; /* Corrigido o duplo # */
+                    color: whitesmoke;
+                    border-radius: 10px;
+                    width: 9%;
+                    margin-top: -3%;
+                    margin-left: 89%;">
+                <lord-icon src="https://cdn.lordicon.com/wpyrrmcq.json" trigger="hover" colors="primary:#ffffff"
+                    style="width:30px;height:30px">
+                </lord-icon>
+                <label>Deletar</label>
+            </div>
+        </a>
+    <?php endif; ?>
+    <!-- Modal de Confirmação -->
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Confirmação de Deleção</h2>
+            <p>Você tem certeza de que deseja deletar esta vaga?</p>
+            <button class="cancel-button" onclick="closeModal()">Cancelar</button>
+            <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
+        </div>
+    </div>
+
 
     <div class="divCommon">
         <div class="divTitulo" id="divTituloVaga">
@@ -426,10 +536,10 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                     <div class="carrosselBox" id="carrosselPerfis">
                         <?php
                         $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Foto_Perfil, p.Nome
-                                   FROM Tb_Candidato c
-                                   JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
-                                   JOIN Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
-                                   WHERE i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio";
+                                FROM Tb_Candidato c
+                                JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+                                JOIN Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
+                                WHERE i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio";
 
                         $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
 
@@ -440,30 +550,30 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                                 ?>
                                 <a class="perfilLink"
                                     href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>">
-                                <article class="perfil">
-                                    <div class="divImg">
-                                        <!-- Mostrar a imagem de perfil -->
-                                        <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt="Foto de Perfil"
-                                            style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
-                                    </div>
+                                    <article class="perfil">
+                                        <div class="divImg">
+                                            <!-- Mostrar a imagem de perfil -->
+                                            <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt="Foto de Perfil"
+                                                style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
+                                        </div>
 
-                                    <section>
-                                        <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
-                                    </section>
-                                    <section>
-                                        <?php
-                                        $limite_caracteres = 55; // Defina o limite de caracteres desejado
-                                        $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
-                                
-                                        if (strlen($autodefinicao) > $limite_caracteres) {
-                                            $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
-                                        }
-                                        ?>
-                                        <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
-                                    </section>
-                                </article>
-                    </a>
-                    <?php
+                                        <section>
+                                            <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
+                                        </section>
+                                        <section>
+                                            <?php
+                                            $limite_caracteres = 55; // Defina o limite de caracteres desejado
+                                            $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
+                                    
+                                            if (strlen($autodefinicao) > $limite_caracteres) {
+                                                $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
+                                            }
+                                            ?>
+                                            <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
+                                        </section>
+                                    </article>
+                                </a>
+                                <?php
                             }
 
                         } else {
@@ -472,8 +582,8 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
                         }
                         ?>
+                    </div>
         </div>
-    </div>
     </div>
 
 
@@ -550,6 +660,29 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         } else {
             console.error("Alguma das variáveis de endereço não está definida ou está vazia.");
         }
+    </script>
+    <script>
+        function openModal(deleteUrl) {
+            // Define o URL de deleção
+            document.getElementById("confirmDeleteButton").setAttribute("href", deleteUrl);
+            // Exibe o modal
+            document.getElementById("confirmDeleteModal").style.display = "block";
+        }
+
+        function closeModal() {
+            // Fecha o modal
+            document.getElementById("confirmDeleteModal").style.display = "none";
+        }
+
+        document.querySelector(".close-button").addEventListener("click", closeModal);
+
+        // Fecha o modal ao clicar fora do modal
+        window.onclick = function (event) {
+            if (event.target == document.getElementById("confirmDeleteModal")) {
+                closeModal();
+            }
+        };
+
     </script>
 </body>
 

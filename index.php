@@ -98,7 +98,7 @@ function determinarImagemCategoria($categoria)
             <h2>Últimos anúncios</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider"></a>
+            <a class="btnLeftSlider"><</a>
             <a class="btnRightSlider">></a>
             <div class="carrosselBox">
                 <?php
@@ -134,7 +134,7 @@ function determinarImagemCategoria($categoria)
                     echo '</header>';
                     echo '<section>';
                     echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                    echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
+                    echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? (strlen($row["Descricao"]) > 55 ? substr($row["Descricao"], 0, 55) . '...' : $row["Descricao"]) : "Descrição não definida") . '</p>';
                     echo '</section>';
                     echo '<p class="statusVaga" style="color: green;">Aberta</p>';
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
