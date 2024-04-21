@@ -207,10 +207,9 @@ if ($result && mysqli_num_rows($result) > 0) {
                             <input type="submit" value="Atualizar">
                         </div>
 
-                        <form method="post" action="../../../src/services/ExcluirConta/excluirConta.php" autocomplete="off">
+                        <form method="post" action="../../../src/services/ExcluirConta/excluirConta.php">
                             <div class="divBtnAtualizar">
-                            <a href="../../../src/services/ExcluirConta/excluirConta.php?id=<?php echo $idPessoa; ?>&Id_Anuncios=<?php echo $idAnuncio; ?>">Excluir Conta</a>
-
+                            <a href="../../../src/services/ExcluirConta/excluirConta.php?id=<?php echo $idPessoa; ?>">Excluir Conta</a>
                             </div>
                         </form>
 

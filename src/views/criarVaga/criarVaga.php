@@ -80,7 +80,7 @@ $tokenSession = isset ($_SESSION['token_session']) ? $_SESSION['token_session'] 
                                     <div class="labelLine">Área</div>
                                     <datalist id="areaList">
                                         <option>Tecnologia da Informação</option>
-                                        <option>Medicia</option>
+                                        <option>Medicina</option>
                                         <option>Engenharia</option>
                                         <option>Construção Civil</option>
                                         <option>Educação</option>
