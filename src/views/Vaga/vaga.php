@@ -354,7 +354,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                         <div class="divSendButton">
                             <button disabled style="cursor: default; background-color:  #723911">
                                 <h4>Já inscrito</h4>
-                                <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
+                                <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"
                                     colors="primary:#f5f5f5" style="width:80px;height:80px">
                                 </lord-icon>
                             </button>
