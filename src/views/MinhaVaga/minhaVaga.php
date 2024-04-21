@@ -32,6 +32,9 @@ $sql = "SELECT Tb_Pessoas.Id_Pessoas
 FROM Tb_Pessoas
 WHERE Tb_Pessoas.Email = '$emailUsuario'";
 
+
+
+
 $result = mysqli_query($_con, $sql); // Executar a consulta
 
 if ($result && mysqli_num_rows($result) > 0) {
@@ -318,7 +321,8 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     <?php } ?>
     <?php if ($autenticadoComoPublicador == true): ?>
         <a class="acessarEditarPerfil" href="#"
-            onclick="openModal('LInK do Arquivo para delete .php?id=<?php echo $idAnuncio; ?>&action=delete')">
+            onclick="openModal('../../services/deletar/DeletarVaga.php?id=<?php echo $idAnuncio; ?>&idPessoa=<?php echo $idPessoaUsuario; ?>&action=delete')">
+
             <div style="padding: 6px 12px;
                     box-shadow: 0px 0px 6px silver;
                     display: flex;
@@ -531,7 +535,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftPerfis">
-                <</a>
+                << /a>
                     <a class="btnRightSlider" id="rightPerfis">></a>
                     <div class="carrosselBox" id="carrosselPerfis">
                         <?php
