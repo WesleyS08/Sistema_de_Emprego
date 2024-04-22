@@ -158,7 +158,7 @@ if ($stmt) {
         </div>
     </div>
     <div class="divCarrossel">
-        <div class="divTitulo">
+        <div class="divTituloComBtn">
             <h2>Meus anúncios</h2>
             <button class="btnAdicionar" onclick="window.location.href='../criarVaga/criarVaga.php'">
                 <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"
