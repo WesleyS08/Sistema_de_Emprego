@@ -168,8 +168,11 @@ function determinarImagemCategoria($categoria)
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftMinhasVagas">
-                <</a>
-                    <a class="btnRightSlider" id="rightMinhasVagas">></a>
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightMinhasVagas">                
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
                     <div class="carrosselBox">
                         <?php
                         // Loop para exibir as vagas restantes no carrossel
@@ -250,8 +253,11 @@ function determinarImagemCategoria($categoria)
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftTestes">
-                <</a>
-                    <a class="btnRightSlider" id="rightTestes">></a>
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightTestes">                
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
                     <div class="carrosselBox" id="carrosselTestes">
                         <a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.html">
                             <article class="testeCarrossel">
@@ -331,49 +337,49 @@ function determinarImagemCategoria($categoria)
         <div class="container">
             <div class="carrosselInfinito">
                 <div class="trilhaCarrossel">
-                    <div class="slide">
-                        <img src="../../../imagens/mysql.svg">
+                <div class="slide">
+                        <img src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/php.svg">
+                        <img src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/firebase.svg">
+                        <img src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
-                        <img class="logoFatec" src="../../../imagens/fatec.png">
+                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/javascript.svg">
+                        <img src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/html.svg">
+                        <img src="../../assets/images/logos_parceiros/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/css.svg">
+                        <img src="../../assets/images/logos_parceiros/css.svg">
                     </div>
-
-
+                    
+        
                     <div class="slide">
-                        <img src="../../../imagens/mysql.svg">
-                    </div>
-                    <div class="slide">
-                        <img src="../../../imagens/php.svg">
+                        <img src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/firebase.svg">
+                        <img src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img class="logoFatec" src="../../../imagens/fatec.png">
+                        <img src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/javascript.svg">
+                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/html.svg">
+                        <img src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/css.svg">
+                        <img src="../../assets/images/logos_parceiros/html.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../../assets/images/logos_parceiros/css.svg">
                     </div>
                 </div>
             </div>

@@ -534,9 +534,12 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
             <h2>Candidaturas</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftPerfis">
-                << /a>
-                    <a class="btnRightSlider" id="rightPerfis">></a>
+            <a class="btnLeftSlider" id="leftPerfis">                
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightPerfis">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
                     <div class="carrosselBox" id="carrosselPerfis">
                         <?php
                         $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Foto_Perfil, p.Nome

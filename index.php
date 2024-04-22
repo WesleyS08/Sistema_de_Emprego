@@ -98,8 +98,12 @@ function determinarImagemCategoria($categoria)
             <h2>Últimos anúncios</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider"><</a>
-            <a class="btnRightSlider">></a>
+            <a class="btnLeftSlider">
+                <img src="src/assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider">
+                <img src="src/assets/images/icones_diversos/rightSlider.svg">
+            </a>
             <div class="carrosselBox">
                 <?php
                 // Loop para exibir as vagas restantes no carrossel

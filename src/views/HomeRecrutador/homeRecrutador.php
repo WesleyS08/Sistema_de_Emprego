@@ -167,9 +167,12 @@ if ($stmt) {
             </button>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftAnuncios">
-                <</a>
-                    <a class="btnRightSlider" id="rightAnuncios">></a>
+            <a class="btnLeftSlider" id="leftAnuncios">                
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightAnuncios">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
                     <div class="carrosselBox" id="carrosselAnuncios">
                     <?php
                         // Loop para exibir as vagas restantes no carrossel
@@ -255,8 +258,11 @@ if ($stmt) {
         </div>
         <div class="container">
             <a class="btnLeftSlider" id="leftTestes">
-                <</a>
-                    <a class="btnRightSlider" id="rightTestes">></a>
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightTestes">                
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
                     <div class="carrosselBox" id="carrosselTestes">
                         <a class="testeCarrosselLink">
                             <article class="testeCarrossel">
@@ -326,9 +332,12 @@ if ($stmt) {
             <h2>Perfis de usuários</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftPerfis">
-                <</a>
-                    <a class="btnRightSlider" id="rightPerfis">></a>
+            <a class="btnLeftSlider" id="leftPerfis">                
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightPerfis">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
                     <div class="carrosselBox" id="carrosselPerfis">
                         <a class="perfilLink">
                             <article class="perfil">
@@ -413,48 +422,48 @@ if ($stmt) {
             <div class="carrosselInfinito">
                 <div class="trilhaCarrossel">
                     <div class="slide">
-                        <img src="../../../imagens/mysql.svg">
+                        <img src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/php.svg">
+                        <img src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../imagens/firebase.svg">
+                        <img src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
-                        <img class="logoFatec" src="../../../imagens/fatec.png">
+                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/javascript.svg">
+                        <img src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/html.svg">
+                        <img src="../../assets/images/logos_parceiros/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/css.svg">
+                        <img src="../../assets/images/logos_parceiros/css.svg">
                     </div>
-
-
+                    
+        
                     <div class="slide">
-                        <img src="../../../imagens/mysql.svg">
-                    </div>
-                    <div class="slide">
-                        <img src="../../../imagens/php.svg">
+                        <img src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/firebase.svg">
+                        <img src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img class="logoFatec" src="../../../imagens/fatec.png">
+                        <img src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/javascript.svg">
+                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../../../imagens/html.svg">
+                        <img src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../../imagens/css.svg">
+                        <img src="../../assets/images/logos_parceiros/html.svg">
+                    </div>
+                    <div class="slide">
+                        <img src="../../assets/images/logos_parceiros/css.svg">
                     </div>
                 </div>
             </div>
