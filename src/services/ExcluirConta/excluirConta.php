@@ -1,173 +1,153 @@
 <?php
 // Inclui o arquivo de conexão com o banco de dados
-include "../../services/conexão_com_banco.php";
+include "../../../src/services/conexão_com_banco.php";
 
 // Inicia a sessão
 session_start();
 
+// Definir variáveis para armazenar informações excluídas
+$inscricoesExcluidas = [];
+$vagasExcluidas = [];
+$empresaExcluida = [];
+$pessoaExcluida = [];
+$anunciosExcluidos = [];
+
 // Verifica se o ID da pessoa foi fornecido na URL
-if (isset($_GET['id'])) {
-    $idUsuario = $_GET['id'];
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $idUsuario = intval($_GET['id']);  // Converte para número inteiro
 
-    // Consulta para obter os IDs dos anúncios associados às vagas de emprego da empresa usando o ID do usuário
-    $sql_select_anuncios = "
-        SELECT Tb_Anuncios_Id 
-        FROM Tb_Vagas 
-        WHERE Tb_Empresa_CNPJ IN (
-            SELECT CNPJ 
-            FROM Tb_Empresa 
-            WHERE Tb_Pessoas_Id = ?
-        )";
-
-    // Prepara a consulta para selecionar os IDs dos anúncios
-    $stmt_select_anuncios = mysqli_prepare($_con, $sql_select_anuncios);
-
-    if (!$stmt_select_anuncios) {
-        die("Erro ao preparar a consulta para selecionar os anúncios: " . mysqli_error($_con));
-    }
-
-    // Associa o parâmetro para a consulta
-    mysqli_stmt_bind_param($stmt_select_anuncios, "i", $idUsuario);
-
-    // Executa a consulta
-    mysqli_stmt_execute($stmt_select_anuncios);
-
-    // Associa o resultado da consulta a uma variável
-    mysqli_stmt_bind_result($stmt_select_anuncios, $idAnuncio);
-
-    // Inicializa um array para armazenar os IDs dos anúncios
-    $anunciosParaExcluir = array();
-
-    // Percorre os resultados da consulta e armazena os IDs dos anúncios no array
-    while (mysqli_stmt_fetch($stmt_select_anuncios)) {
-        $anunciosParaExcluir[] = $idAnuncio;
-    }
-
-    // Fecha o statement da consulta
-    mysqli_stmt_close($stmt_select_anuncios);
-
-    // Exclui os anúncios encontrados
-    foreach ($anunciosParaExcluir as $anuncio) {
-        // Consulta para excluir o anúncio
-        $sql_delete_anuncio = "DELETE FROM Tb_Anuncios WHERE Tb_Anuncios_Id = ?";
-        // Prepara a consulta para excluir o anúncio
-        $stmt_delete_anuncio = mysqli_prepare($_con, $sql_delete_anuncio);
-
-        if (!$stmt_delete_anuncio) {
-            die("Erro ao preparar a consulta para excluir o anúncio: " . mysqli_error($_con));
-        }
-
-        // Associa o parâmetro para a consulta
-        mysqli_stmt_bind_param($stmt_delete_anuncio, "i", $anuncio);
-
-        // Executa a consulta para excluir o anúncio
-        mysqli_stmt_execute($stmt_delete_anuncio);
-
-        // Fecha o statement da consulta
-        mysqli_stmt_close($stmt_delete_anuncio);
-    }
-
-    // Consulta para excluir as inscrições associadas às vagas de emprego da empresa usando o ID do usuário
-    $sql_delete_inscricoes = "
-        DELETE FROM Tb_Inscricoes 
-        WHERE (Tb_Vagas_Tb_Anuncios_Id, Tb_Vagas_Tb_Empresa_CNPJ) IN (
-            SELECT Tb_Anuncios_Id, Tb_Empresa_CNPJ 
-            FROM Tb_Vagas 
+    // 1. Excluir todas as inscrições associadas às vagas de emprego da empresa
+    $sql_delete_inscricoes = "DELETE FROM Tb_Inscricoes WHERE (Tb_Vagas_Tb_Anuncios_Id, Tb_Vagas_Tb_Empresa_CNPJ) IN (
+            SELECT Id_Anuncios, Tb_Empresa_CNPJ
+            FROM Tb_Vagas
             WHERE Tb_Empresa_CNPJ IN (
-                SELECT CNPJ 
-                FROM Tb_Empresa 
+                SELECT CNPJ
+                FROM Tb_Empresa
                 WHERE Tb_Pessoas_Id = ?
             )
         )";
 
-    // Prepara a consulta para excluir as inscrições
     $stmt_delete_inscricoes = mysqli_prepare($_con, $sql_delete_inscricoes);
-
     if (!$stmt_delete_inscricoes) {
         die("Erro ao preparar a consulta para excluir as inscrições: " . mysqli_error($_con));
     }
 
-    // Associa o parâmetro para a consulta
     mysqli_stmt_bind_param($stmt_delete_inscricoes, "i", $idUsuario);
 
-    // Executa a consulta para excluir as inscrições
-    mysqli_stmt_execute($stmt_delete_inscricoes);
+    if (!mysqli_stmt_execute($stmt_delete_inscricoes)) {
+        die("Erro ao executar a consulta para excluir as inscrições: " . mysqli_stmt_error($stmt_delete_inscricoes));
+    }
 
-    // Fecha o statement da consulta
-    mysqli_stmt_close($stmt_delete_inscricoes);
+    mysqli_stmt_close($stmt_delete_inscricoes);  // Limpa o recurso
 
-    // Consulta para excluir as vagas de emprego associadas à empresa usando o ID da pessoa
-    $sql_delete_vagas = "
-        DELETE FROM Tb_Vagas 
-        WHERE Tb_Empresa_CNPJ IN (
-            SELECT CNPJ 
-            FROM Tb_Empresa 
+    // Armazenar informações excluídas
+    $inscricoesExcluidas[] = "Todas as inscrições associadas à empresa com ID $idUsuario";
+
+    // 2. Excluir as vagas de emprego associadas à empresa
+    $sql_delete_vagas = "DELETE FROM Tb_Vagas WHERE Tb_Empresa_CNPJ IN (
+            SELECT CNPJ
+            FROM Tb_Empresa
             WHERE Tb_Pessoas_Id = ?
         )";
 
-    // Prepara a consulta para excluir as vagas de emprego
     $stmt_delete_vagas = mysqli_prepare($_con, $sql_delete_vagas);
-
     if (!$stmt_delete_vagas) {
         die("Erro ao preparar a consulta para excluir as vagas de emprego: " . mysqli_error($_con));
     }
 
-    // Associa o parâmetro para a consulta
     mysqli_stmt_bind_param($stmt_delete_vagas, "i", $idUsuario);
 
-    // Executa a consulta para excluir as vagas de emprego
-    mysqli_stmt_execute($stmt_delete_vagas);
+    if (!mysqli_stmt_execute($stmt_delete_vagas)) {
+        die("Erro ao executar a consulta para excluir as vagas de emprego: " . mysqli_stmt_error($stmt_delete_vagas));
+    }
 
-    // Fecha o statement da consulta
     mysqli_stmt_close($stmt_delete_vagas);
 
-    // Consulta para excluir o registro da empresa usando o ID da pessoa
-    $sql_delete_empresa = "DELETE FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?";
+    // Armazenar informações excluídas
+    $vagasExcluidas[] = "Todas as vagas de emprego associadas à empresa com ID $idUsuario";
 
-    // Prepara a consulta para excluir a empresa
+    // 3. Excluir os anúncios associados às vagas de emprego
+    $sql_delete_anuncios = "DELETE FROM Tb_Anuncios WHERE Id_Anuncios IN (
+            SELECT Tb_Anuncios_Id
+            FROM Tb_Vagas
+            WHERE Tb_Empresa_CNPJ IN (
+                SELECT CNPJ
+                FROM Tb_Empresa
+                WHERE Tb_Pessoas_Id = ?
+            )
+        )";
+
+    $stmt_delete_anuncios = mysqli_prepare($_con, $sql_delete_anuncios);
+    if (!$stmt_delete_anuncios) {
+        die("Erro ao preparar a consulta para excluir os anúncios: " . mysqli_error($_con));
+    }
+
+    mysqli_stmt_bind_param($stmt_delete_anuncios, "i", $idUsuario);
+
+    if (!mysqli_stmt_execute($stmt_delete_anuncios)) {
+        die("Erro ao executar a consulta para excluir os anúncios: " . mysqli_stmt_error($stmt_delete_anuncios));
+    }
+
+    mysqli_stmt_close($stmt_delete_anuncios);
+
+    // Armazenar informações excluídas
+    $anunciosExcluidos[] = "Todos os anúncios associados à empresa com ID $idUsuario";
+
+    // 4. Excluir a empresa associada ao ID da pessoa
+    $sql_delete_empresa = "DELETE FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?";
     $stmt_delete_empresa = mysqli_prepare($_con, $sql_delete_empresa);
 
     if (!$stmt_delete_empresa) {
         die("Erro ao preparar a consulta para excluir a empresa: " . mysqli_error($_con));
     }
 
-    // Associa o parâmetro para a consulta
     mysqli_stmt_bind_param($stmt_delete_empresa, "i", $idUsuario);
 
-    // Executa a consulta para excluir a empresa
-    mysqli_stmt_execute($stmt_delete_empresa);
+    if (!mysqli_stmt_execute($stmt_delete_empresa)) {
+        die("Erro ao executar a consulta para excluir a empresa: " . mysqli_stmt_error($stmt_delete_empresa));
+    }
 
-    // Fecha o statement da consulta
-    mysqli_stmt_close($stmt_delete_empresa);
+    mysqli_stmt_close($stmt_delete_empresa);  // Limpa o recurso
 
-    // Consulta para excluir o registro da pessoa usando o ID da pessoa
+    // Armazenar informações excluídas
+    $empresaExcluida[] = "Empresa associada ao ID da pessoa $idUsuario";
+
+    // 5. Excluir a pessoa associada ao ID
     $sql_delete_pessoa = "DELETE FROM Tb_Pessoas WHERE Id_Pessoas = ?";
-
-    // Prepara a consulta para excluir a pessoa
     $stmt_delete_pessoa = mysqli_prepare($_con, $sql_delete_pessoa);
 
     if (!$stmt_delete_pessoa) {
         die("Erro ao preparar a consulta para excluir a pessoa: " . mysqli_error($_con));
     }
 
-    // Associa o parâmetro para a consulta
     mysqli_stmt_bind_param($stmt_delete_pessoa, "i", $idUsuario);
 
-    // Executa a consulta para excluir a pessoa
-    mysqli_stmt_execute($stmt_delete_pessoa);
+    if (!mysqli_stmt_execute($stmt_delete_pessoa)) {
+        die("Erro ao executar a consulta para excluir a pessoa: " . mysqli_stmt_error($stmt_delete_pessoa));
+    }
 
-    // Fecha o statement da consulta
-    mysqli_stmt_close($stmt_delete_pessoa);
+    mysqli_stmt_close($stmt_delete_pessoa);  // Limpa o recurso
 
-    // Destroi a sessão independentemente do sucesso da exclusão
+    // Armazenar informações excluídas
+    $pessoaExcluida[] = "Pessoa com ID $idUsuario";
+
+    // Destruir a sessão
     session_destroy();
 
-    // Redireciona para uma página de confirmação
-    header("Location: ../../../index.php");
+    // Redirecionar para a página de confirmação
+
+    // Mostrar informações excluídas
+    echo "<h1>Informações Excluídas:</h1>";
+    echo "<p>" . implode("<br>", $inscricoesExcluidas) . "</p>";
+    echo "<p>" . implode("<br>", $vagasExcluidas) . "</p>";
+    echo "<p>" . implode("<br>", $anunciosExcluidos) . "</p>";
+    echo "<p>" . implode("<br>", $empresaExcluida) . "</p>";
+    echo "<p>" . implode("<br>", $pessoaExcluida) . "</p>";
+
     exit();
 } else {
-    // Se o ID da pessoa não foi fornecido, redireciona para alguma página de erro
-    header("Location: ../../../index.php");
+    // Se o ID não foi encontrado, redireciona para uma página de erro
+
     exit();
 }
 ?>
