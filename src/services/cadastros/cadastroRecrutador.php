@@ -1,114 +1,149 @@
 <?php
+// Inclui arquivos necessários para conexão ao banco e PHPMailer
 include "../conexão_com_banco.php";
 
 include "../../components/PHPMailer-master/src/PHPMailer.php";
 include "../../components/PHPMailer-master/src/SMTP.php";
 include "../../components/PHPMailer-master/src/Exception.php";
 
-use PHPMAILER\PHPMAILER\PHPMAILER;
-use PHPMAILER\PHPMAILER\SMTP;
-use PHPMAILER\PHPMAILER\EXCEPTION;
+// Usa os namespaces necessários para PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 $mail = new PHPMailer(true);
 
+// Verifica se a requisição é POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Autenticação do usuário candidato
-
+    // Obter dados do formulário
     $nomeRecrutador = $_POST['nome'];
     $emailRecrutador = $_POST['email'];
     $cnpjRecrutador = $_POST['cnpj'];
     $senhaRecrutador = $_POST['senha'];
 
     // Criptografia da senha
-
     $senhaCriptografada = sha1($senhaRecrutador);
 
-    // Verificar se o CPF já existe na tabela de candidatos
+    // Verificar se o CNPJ já existe
+    $checkCNPJ = $_con->prepare("SELECT COUNT(*) AS total FROM tb_empresa WHERE CNPJ = ?");
+    $checkCNPJ->bind_param("s", $cnpjRecrutador);
+    $checkCNPJ->execute();
+    $cnpjExists = $checkCNPJ->get_result()->fetch_assoc()['total'];
 
-    $checkCPF = $_con->prepare("SELECT COUNT(*) AS total FROM tb_empresa WHERE CNPJ = ?");
-    $checkCPF->bind_param("s", $cnpjUsuario);
-    $checkCPF->execute();
-    $cpfExists = $checkCPF->get_result()->fetch_assoc()['total'];
-
-    if ($cpfExists > 0) {
-        echo "Erro ao inserir registro: CNPJ já existe.";        
+    if ($cnpjExists > 0) {
+        echo "Erro ao inserir registro: CNPJ já existe.";
     } else {
-        // Iniciar a transação
+        // Iniciar transação para inserir dados no banco
         $_con->begin_transaction();
 
-        // Prevenir SQL Injection usando prepared statements
+        // Inserção na tabela de pessoas
         $stmt1 = $_con->prepare("INSERT INTO tb_pessoas (Nome, Email, Senha) VALUES (?, ?, ?)");
         $stmt1->bind_param("sss", $nomeRecrutador, $emailRecrutador, $senhaCriptografada);
-
-        $stmt2 = $_con->prepare("INSERT INTO tb_empresa (CNPJ, Tb_Pessoas_Id) VALUES (?, ?)");
-        $stmt2->bind_param("si", $cnpjRecrutador, $userId);
-
-        // Executar as instruções SQL dentro da transação
         $stmt1->execute();
 
-        // Obtenção do Id do usuário inserido na última tabela (tb_pessoas)
-        $userId = $_con->query("SELECT LAST_INSERT_ID()")->fetch_row()[0];        
+        // Obter o ID do usuário recém inserido
+        $userId = $_con->query("SELECT LAST_INSERT_ID()")->fetch_row()[0];
 
+        // Inserção na tabela de empresa
+        $stmt2 = $_con->prepare("INSERT INTO tb_empresa (CNPJ, Tb_Pessoas_Id) VALUES (?, ?)");
+        $stmt2->bind_param("si", $cnpjRecrutador, $userId);
         $stmt2->execute();
 
-        //////////////////////
-
-        // Verificar se ambas as inserções foram bem-sucedidas
+        // Verifica se ambas as operações foram bem-sucedidas
         if ($stmt1->affected_rows > 0 && $stmt2->affected_rows > 0) {
-            // Confirmar a transação
+            // Confirma a transação
             $_con->commit();
             echo "Registro inserido com sucesso!";
+            
+            // Envio de e-mail de confirmação
+            try {
+                // Configurações do PHPMailer
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'sias99029@gmail.com';
+                $mail->Password = 'xamb nshs dbkq phui';
+                $mail->Port = 587;
+
+                // Configurações do e-mail
+                $mail->setFrom('sias99029@gmail.com');
+                $mail->addAddress($emailRecrutador);
+                $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $userId;
+
+                // Conteúdo do e-mail
+                $mail->isHTML(true);
+                $mail->Subject = 'SIAS - Email de autenticação';
+                $mail->CharSet = 'UTF-8';
+
+                $styles = "
+                    <style>
+                        body { font-family: Arial, sans-serif; }
+                        .header { background-color: #f2f2f2; padding: 10px; text-align: center; }
+                        .header h1 { margin: 0; }
+                        .content { padding: 20px; }
+                        .button { 
+                            background-color: #ec6809;
+                            color: #ffffff;
+                            padding: 10px 20px;
+                            text-align: center;
+                            text-decoration: none;
+                            font-size: 16px;
+                            border-radius: 5px;
+                            margin: 20px auto;
+                            display: block;
+                            width: 155px;
+                        }
+                        .footer { background-color: #f2f2f2; text-align: center; padding: 10px; }
+                        .content a {  color: #ffffff;}
+                    </style>
+                ";
+
+                $mail->Body = "
+                    <html>
+                    <head>
+                        $styles
+                    </head>
+                    <body>
+                        <div class='header'>
+                            <h1>Bem-vindo ao SIAS!</h1>
+                        </div>
+                        <div class='content'>
+                            <p'>Olá, recrutador, $nomeRecrutador!</p>
+                            <p>Obrigado por se inscrever em nosso sistema!</p>
+                            <p>Para ativar seu cadastro, clique no botão abaixo:</p>
+                            <a href='$link' class='button'>Ativar Cadastro</a>
+                        </div>
+                        <div class='footer'>
+                            <p>Se você não se inscreveu, ignore este e-mail.</p>
+                            <p>© 2024 SIAS - Todos os direitos reservados</p>
+                        </div>
+                    </body>
+                    </html>
+                ";
+
+                $mail->AltBody = "Olá, recrutador!\n\nPara ativar seu cadastro, clique no seguinte link:\n$link";
+
+                // Enviar e-mail
+                if ($mail->send()) {
+                    header("Location: ../../views/Login/login.html?cadastro=sucesso");
+                    exit();
+                } else {
+                    echo 'Erro ao enviar e-mail.';
+                }
+            } catch (Exception $e) {
+                echo "Erro grave ao enviar e-mail: {$mail->ErrorInfo}";
+            }
+
         } else {
-            // Desfazer a transação em caso de erro
+            // Se a transação falhar, rollback
             $_con->rollback();
             echo "Erro ao inserir registro. Por favor, tente novamente.";
         }
 
-        // Fechar as declarações preparadas
+        // Fecha as instruções preparadas
         $stmt1->close();
         $stmt2->close();
-
-        // Envio do email de confirmação        
-
-        try {
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER; Não é necessário, apenas para testes
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'sias99029@gmail.com';
-            $mail->Password = 'xamb nshs dbkq phui';
-            $mail->Port = 587;
-        
-            $mail->setFrom('sias99029@gmail.com');
-            $mail->addAddress($emailRecrutador); // Jamais colocar o $emailRecrutador entre aspas
-        
-            $mail->isHTML(true);
-            $mail->Subject = 'SIAS - Email de autenticação';
-            
-            // Corpo do e-mail
-            $mail->Body = 'Olá, recrutador! Obrigado por se inscrever em nosso site e confiar em nosso sistema para sua empresa!';
-            $mail->Body .= '<br>Clique no link abaixo para ativar o seu cadastro e publicar as vagas.<br>';
-            $link = 'http://localhost/Sistema_de_Emprego/src/services/auth/verificarRecrutador.php?id=' . $userId; // Link + protocolo HTTP
-            $mail->Body .= '<a href="' . $link . '">Clique aqui para verificar seu cadastro</a>';
-            
-            $mail->AltBody = 'Olá, recrutador! Obrigado por se inscrever em nosso site e confiar em nosso sistema para sua empresa!';
-            $mail->AltBody .= 'Clique no link abaixo para ativar o seu cadastro e publicar as vagas.';
-            $mail->AltBody .= 'Link: ' . $link;
-        
-            if($mail->send()) {
-                header("Location: ../../views/Login/login.html?cadastro=" . urlencode("sucesso"));
-
-                exit();
-            } else {
-                echo 'Email não enviado';
-            }
-        } catch (Exception $e) {
-            echo "Erro grave ao enviar e-mail: {$mail->ErrorInfo}";
-        }
-
     }
 } else {
-    $aviso = "Ocorreu um erro ao processar o formulário.";
+    echo "Ocorreu um erro ao processar o formulário.";
 }
-?>

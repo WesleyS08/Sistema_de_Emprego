@@ -101,7 +101,7 @@ if ($_FILES['fundo_upload']['error'] == UPLOAD_ERR_OK) {
 }
 
 if ($email != $emailUsuario) {
-    // Atualizar o email da pessoa na tabela Tb_Pessoas
+    // Atualizar dados da empresa
     $queryAtualizarEmail = "UPDATE Tb_Pessoas SET Email = '$email', Token = NULL WHERE Email = '$emailUsuario'";
 
     if (mysqli_query($_con, $queryAtualizarEmail)) {
@@ -110,16 +110,62 @@ if ($email != $emailUsuario) {
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'sias99029@gmail.com';
-        $mail->Password = 'xamb nshs dbkq phui';
+        $mail->Password = 'xamb nshs dbkq phui'; // Considere usar uma variável de ambiente para proteger a senha
         $mail->Port = 587;
+        $mail->SMTPSecure = 'tls'; // Use 'tls' ou 'ssl' para conexão segura
 
-        $mail->setFrom('sias99029@gmail.com');
+        // Detalhes do e-mail
+        $mail->setFrom('sias99029@gmail.com', 'SIAS');
         $mail->addAddress($email);
-
+        $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
-
+        $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $idPessoa;
         $mail->Subject = 'Confirmação de alteração de email';
-        $mail->Body = 'Olá, seu email foi alterado com sucesso!';
+
+        // O corpo do e-mail corrigido
+        $styles = "
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .header { background-color: #f2f2f2; padding: 10px; text-align: center; }
+            .header h1 { margin: 0; }
+            .content { padding: 20px; }
+            .button { 
+                background-color: #ec6809;
+                color: #ffffff;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                border-radius: 5px;
+                margin: 20px auto;
+                display: block;
+                width: 155px;
+            }
+            .footer { background-color: #f2f2f2; text-align: center; padding: 10px; }
+            .content a {  color: #ffffff; }
+        </style>
+    ";
+
+        $mail->Body = '
+        <html>
+        <head>
+            ' . $styles . '
+        </head>
+        <body>
+            <div class="header">
+                <h1>SIAS! Confirmação de Alterações na conta</h1>
+            </div>
+            <div class="content">
+                <p>Olá, recrutador, ' . htmlspecialchars($nomeEmpresa, ENT_QUOTES, 'UTF-8') . '!</p>
+                <p>Informamos que seu e-mail foi alterado com sucesso!</p>     
+            </div>
+            <div class="footer">
+                <p>Se você não se inscreveu, ignore este e-mail.</p>
+                <p>© 2024 SIAS - Todos os direitos reservados</p>
+            </div>
+        </body>
+        </html>
+    ';
 
         if (!$mail->send()) {
             echo "Erro ao enviar o email de confirmação: " . $mail->ErrorInfo;
@@ -133,18 +179,34 @@ if ($email != $emailUsuario) {
         $verificado = $row['Verificado'];
 
         if (empty($verificado)) {
-            $mail->clearAddresses(); 
+            $mail->clearAddresses();
 
             $mail->addAddress($email);
 
-            $mail->Body = 'Olá, recrutador! Obrigado por se inscrever em nosso sistema confirme o seu email!';
-            $mail->Body .= '<br>Clique no link abaixo para ativar o seu cadastro e publicar as vagas.<br>';
-            $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $idPessoa;
-            $mail->Body .= '<a href="' . $link . '">Clique aqui para verificar seu cadastro</a>';
-            
-            $mail->AltBody = 'Olá, recrutador! Obrigado por se inscrever em nosso site e confiar em nosso sistema para sua empresa!';
-            $mail->AltBody .= 'Clique no link abaixo para ativar o seu cadastro e publicar as vagas.';
-            $mail->AltBody .= 'Link: ' . $link;
+            $mail->Body = "
+            <html>
+            <head>
+                $styles
+            </head>
+            <body>
+                <div class='header'>
+                    <h1>Bem-vindo ao SIAS!</h1>
+                </div>
+                <div class='content'>
+                    <p'>Olá, recrutador, $nomeEmpresa!</p>
+                    <p>Obrigado por se inscrever em nosso sistema!</p>
+                    <p>Para ativar seu cadastro, clique no botão abaixo:</p>
+                    <a href='$link' class='button'>Ativar Cadastro</a>
+                </div>
+                <div class='footer'>
+                    <p>Se você não se inscreveu, ignore este e-mail.</p>
+                    <p>© 2024 SIAS - Todos os direitos reservados</p>
+                </div>
+            </body>
+            </html>
+        ";
+
+            $mail->AltBody = "Olá, recrutador!\n\nPara ativar seu cadastro, clique no seguinte link:\n$link";
 
             if (!$mail->send()) {
                 echo "Erro ao enviar o email de verificação: " . $mail->ErrorInfo;
@@ -155,23 +217,17 @@ if ($email != $emailUsuario) {
         echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
         exit;
     }
-    // Atualizar os dados da empresa no banco de dados
-$query = "UPDATE Tb_Empresa SET Nome_da_Empresa = '$nomeEmpresa', Area_da_Empresa = '$areaEmpresa', Telefone = '$telefoneEmpresa', Sobre_a_Empresa = '$sobreEmpresa', Facebook = '$facebookEmpresa', Github = '$githubEmpresa', Linkedin = '$linkedinEmpresa', Instagram = '$instagramEmpresa'";
-if ($urlImagemPerfilAntiga != $dadosEmpresa['Img_Perfil']) {
-    $query .= ", Img_Perfil = '$urlImagemPerfilAntiga'";
-}
-if ($urlBannerAntigo != $dadosEmpresa['Banner']) {
-    $query .= ", Img_Banner = '$urlBannerAntigo'";
-}
-$query .= " WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+    // Atualizar os dados do candidato no banco de dados
+    $query = "UPDATE Tb_Empresa SET Nome_da_Empresa = '$nomeEmpresa', Area_da_Empresa = '$areaEmpresa', Telefone = '$telefoneEmpresa', Sobre_a_Empresa = '$sobreEmpresa', Facebook = '$facebookEmpresa', Github = '$githubEmpresa', Linkedin = '$linkedinEmpresa', Instagram = '$instagramEmpresa'";
 
-if (mysqli_query($_con, $query)) {
-    header("Location: ../../views/Login/login.html?");
-} else {
-    echo "Erro ao salvar as alterações: " . mysqli_error($_con);
-}
 
-mysqli_close($_con);
+    if (mysqli_query($_con, $query)) {
+        header("Location: ../../views/Login/login.html?");
+    } else {
+        echo "Erro ao salvar as alterações: " . mysqli_error($_con);
+    }
+
+    mysqli_close($_con);
 }
 
 

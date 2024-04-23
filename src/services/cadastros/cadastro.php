@@ -82,26 +82,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
             $mail->setFrom('sias99029@gmail.com');
             $mail->addAddress($emailUsuario); // Jamais colocar o $emailUsuario entre aspas
-        
+            $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $userId;
+
+
             $mail->isHTML(true);
             $mail->Subject = 'SIAS - Email de autenticação';
-            
-            // Corpo do e-mail
-            $mail->Body = 'Olá, candidato! Obrigado por se inscrever em nosso site';
-            $mail->Body .= '<br>Clique no link abaixo para ativar o seu cadastro e acessar as vagas.<br>';
-            $link = 'http://localhost/Sistema_de_Emprego/src/services/auth/verificarUsuario.php?id=' . $userId; // Link + protocolo HTTP
-            $mail->Body .= '<a href="' . $link . '">Clique aqui para verificar seu cadastro</a>';
-            
-            $mail->AltBody = 'Olá, candidato! Obrigado por se inscrever em nosso site';
-            $mail->AltBody .= 'Clique no link abaixo para ativar o seu cadastro e acessar as vagas.';
-            $mail->AltBody .= 'Link: ' . $link;
-        
-            if($mail->send()) {
-                header("Location: ../../views/Login/login.html?cadastro=" . urlencode("sucesso"));
+            $mail->CharSet = 'UTF-8';
 
+            $styles = "
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    .header { background-color: #f2f2f2; padding: 10px; text-align: center; }
+                    .header h1 { margin: 0; }
+                    .content { padding: 20px; }
+                    .button { 
+                        background-color: #ec6809;
+                        color: #ffffff;
+                        padding: 10px 20px;
+                        text-align: center;
+                        text-decoration: none;
+                        font-size: 16px;
+                        border-radius: 5px;
+                        margin: 20px auto;
+                        display: block;
+                        width: 155px;
+                    }
+                    .footer { background-color: #f2f2f2; text-align: center; padding: 10px; }
+                    .content a {  color: #ffffff;}
+                </style>
+            ";
+
+            $mail->Body = "
+                <html>
+                <head>
+                    $styles
+                </head>
+                <body>
+                    <div class='header'>
+                        <h1>Bem-vindo ao SIAS!</h1>
+                    </div>
+                    <div class='content'>
+                        <p'>Olá, Candidato, $nomeUsuario!</p>
+                        <p>Obrigado por se inscrever em nosso sistema!</p>
+                        <p>Para ativar seu cadastro, clique no botão abaixo:</p>
+                        <a href='$link' class='button'>Ativar Cadastro</a>
+                    </div>
+                    <div class='footer'>
+                        <p>Se você não se inscreveu, ignore este e-mail.</p>
+                        <p>© 2024 SIAS - Todos os direitos reservados</p>
+                    </div>
+                </body>
+                </html>
+            ";
+
+            $mail->AltBody = "Olá, Candidato!\n\nPara ativar seu cadastro, clique no seguinte link:\n$link";
+
+            // Enviar e-mail
+            if ($mail->send()) {
+                header("Location: ../../views/Login/login.html?cadastro=sucesso");
                 exit();
             } else {
-                echo 'Email não enviado';
+                echo 'Erro ao enviar e-mail.';
             }
         } catch (Exception $e) {
             echo "Erro grave ao enviar e-mail: {$mail->ErrorInfo}";

@@ -11,7 +11,8 @@ use PHPMAILER\PHPMAILER\EXCEPTION;
 $mail = new PHPMailer(true);
 
 // Função para gerar um nome único para o arquivo de imagem
-function gerarNomeUnico($nomeOriginal) {
+function gerarNomeUnico($nomeOriginal)
+{
     $extensao = pathinfo($nomeOriginal, PATHINFO_EXTENSION);
     $nomeUnico = uniqid() . '.' . $extensao;
     return $nomeUnico;
@@ -28,9 +29,9 @@ $generoUsuario = $_POST['genero'] ?? '';
 $estadoUsuario = $_POST['estado'] ?? '';
 $cidadeUsuario = $_POST['cidade'] ?? '';
 $sobreUsuario = $_POST['sobre'] ?? '';
-$cursoUsuario = $_POST['habilidades']?? '';
-$escolaridadeUsuario = $_POST['cursos']??'';
-$experienciaUsuario = $_POST['experiencias']??'';
+$cursoUsuario = $_POST['habilidades'] ?? '';
+$escolaridadeUsuario = $_POST['cursos'] ?? '';
+$experienciaUsuario = $_POST['experiencias'] ?? '';
 $pcdUsuario = isset($_POST['pcd']) ? 1 : 0; // 1 se a opção foi marcada, 0 se não foi
 $email = $_POST['email'] ?? '';
 
@@ -40,13 +41,13 @@ $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 if (!empty($dataNascimentoUsuario)) {
     // Converte a data de nascimento em um objeto DateTime
     $dataNascimentoformat = DateTime::createFromFormat('d/m/Y', $dataNascimentoUsuario);
-    
+
     // Verifica se a conversão foi bem-sucedida
     if ($dataNascimentoformat !== false) {
         $dataNascimentoMySQL = $dataNascimentoformat->format('Y-m-d');
         // Calcula a diferença entre a data de nascimento e a data atual
         $idade = $dataNascimentoformat->diff(new DateTime())->y;
-    
+
     } else {
         echo "Formato de data inválido";
     }
@@ -128,15 +129,62 @@ if ($email != $emailUsuario) {
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'sias99029@gmail.com';
-        $mail->Password = 'xamb nshs dbkq phui';
+        $mail->Password = 'xamb nshs dbkq phui'; // Considere usar uma variável de ambiente para proteger a senha
         $mail->Port = 587;
+        $mail->SMTPSecure = 'tls'; // Use 'tls' ou 'ssl' para conexão segura
 
-        $mail->setFrom('sias99029@gmail.com');
+        // Detalhes do e-mail
+        $mail->setFrom('sias99029@gmail.com', 'SIAS');
         $mail->addAddress($email);
-
+        $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
+        $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $idPessoa;
         $mail->Subject = 'Confirmação de alteração de email';
-        $mail->Body = 'Olá, seu email foi alterado com sucesso!';
+
+        // O corpo do e-mail corrigido
+        $styles = "
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .header { background-color: #f2f2f2; padding: 10px; text-align: center; }
+            .header h1 { margin: 0; }
+            .content { padding: 20px; }
+            .button { 
+                background-color: #ec6809;
+                color: #ffffff;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                border-radius: 5px;
+                margin: 20px auto;
+                display: block;
+                width: 155px;
+            }
+            .footer { background-color: #f2f2f2; text-align: center; padding: 10px; }
+            .content a {  color: #ffffff; }
+        </style>
+    ";
+
+        $mail->Body = '
+        <html>
+        <head>
+            ' . $styles . '
+        </head>
+        <body>
+            <div class="header">
+                <h1>SIAS! Confirmação de Alterações na conta</h1>
+            </div>
+            <div class="content">
+                <p>Olá, Candidato, ' . htmlspecialchars($nomeUsuario, ENT_QUOTES, 'UTF-8') . '!</p>
+                <p>Informamos que seu e-mail foi alterado com sucesso!</p>     
+            </div>
+            <div class="footer">
+                <p>Se você não se inscreveu, ignore este e-mail.</p>
+                <p>© 2024 SIAS - Todos os direitos reservados</p>
+            </div>
+        </body>
+        </html>
+    ';
 
         if (!$mail->send()) {
             echo "Erro ao enviar o email de confirmação: " . $mail->ErrorInfo;
@@ -150,15 +198,32 @@ if ($email != $emailUsuario) {
         $verificado = $row['Verificado'];
 
         if (empty($verificado)) {
-            $mail->clearAddresses(); 
+            $mail->clearAddresses();
             $mail->addAddress($email);
-            $mail->Body = 'Olá, Candidato! Obrigado por se inscrever em nosso sistema confirme o seu email!';
-            $mail->Body .= '<br>Clique no link abaixo para ativar o seu cadastro.<br>';
-            $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $idPessoa;
-            $mail->Body .= '<a href="' . $link . '">Clique aqui para verificar seu cadastro</a>';
-            $mail->AltBody = 'Olá, Candidato! Obrigado por se inscrever em nosso site e confiar em nosso sistema!';
-            $mail->AltBody .= 'Clique no link abaixo para ativar o seu cadastro.';
-            $mail->AltBody .= 'Link: ' . $link;
+            $mail->Body = $mail->Body = "
+                <html>
+                <head>
+                    $styles
+                </head>
+                <body>
+                    <div class='header'>
+                        <h1>Bem-vindo ao SIAS!</h1>
+                    </div>
+                    <div class='content'>
+                        <p'>Olá, Candidato, $nomeUsuario!</p>
+                        <p>Obrigado por se inscrever em nosso sistema!</p>
+                        <p>Para ativar seu cadastro, clique no botão abaixo:</p>
+                        <a href='$link' class='button'>Ativar Cadastro</a>
+                    </div>
+                    <div class='footer'>
+                        <p>Se você não se inscreveu, ignore este e-mail.</p>
+                        <p>© 2024 SIAS - Todos os direitos reservados</p>
+                    </div>
+                </body>
+                </html>
+            ";
+
+            $mail->AltBody = "Olá, Candidato!\n\nPara ativar seu cadastro, clique no seguinte link:\n$link";
 
             if (!$mail->send()) {
                 echo "Erro ao enviar o email de verificação: " . $mail->ErrorInfo;
@@ -169,6 +234,15 @@ if ($email != $emailUsuario) {
         echo "Erro ao atualizar o email da pessoa: " . mysqli_error($_con);
         exit;
     }
+    // Atualizar os dados do candidato no banco de dados
+    $query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$email')";
+    if (mysqli_query($_con, $query)) {
+        header("Location: ../../views/Login/login.html?");
+    } else {
+        echo "Erro ao salvar as alterações: " . mysqli_error($_con);
+    }
+
+    mysqli_close($_con);
 }
 
 // Atualizar os dados do candidato no banco de dados
