@@ -164,16 +164,16 @@ function determinarImagemCategoria($categoria)
     <div class="divCarrossel">
         <div class="divTitulo">
             <?php $emailUsuario ?>
-            <h2>Minhas vagas</h2>
+            <h2>Últimas vagas</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftMinhasVagas">
+        <a class="btnLeftSlider" id="leftMinhasVagas">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
-            <a class="btnRightSlider" id="rightMinhasVagas">                
+            <a class="btnRightSlider" id="rightMinhasVagas">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                    <div class="carrosselBox">
+                    <div class="carrosselBox" id="minhasVagas">
                         <?php
                         // Loop para exibir as vagas restantes no carrossel
                         while ($row = $result->fetch_assoc()) {
