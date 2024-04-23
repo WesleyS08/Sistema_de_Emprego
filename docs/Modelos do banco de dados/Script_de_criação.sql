@@ -26,9 +26,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Pessoas` (
   `Email` VARCHAR(45) NULL,
   `Senha` VARCHAR(255) NULL,
   `Nome` VARCHAR(45) NULL,
-  `Sobrenome` VARCHAR(45) NULL,
   `Token` TEXT NULL,
-  `Img(Perfil)` VARCHAR(45) NULL,
   `Verificado` BLOB NULL,
   PRIMARY KEY (`Id_Pessoas`)
 )
@@ -85,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Empresa` (
   `Area_da_Empresa` VARCHAR(255) NULL,
   `Avaliacao_de_Funcionarios` VARCHAR(45) NULL,
   `Avaliacao_Geral` VARCHAR(45) NULL,
-  `Telefone` VARCHAR(12) NULL,
+  `Telefone` VARCHAR(15) NULL,
   `Img_Perfil` VARCHAR(255) NULL,
   PRIMARY KEY (`CNPJ`),
   INDEX `fk_Tb_Empresa_Tb_Pessoas1_idx` (`Tb_Pessoas_Id` ASC),
