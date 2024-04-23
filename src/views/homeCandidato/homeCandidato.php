@@ -156,8 +156,8 @@ function determinarImagemCategoria($categoria)
                     <h1 id="tituloAutomatico">B</h1>
                     <i></i>
                 </div>
-                <p>Encontre vagas que combinam com você!<br>Clique e explore as oportunidades.</p>
-                <button onclick="location.href=''">Ver todas as vagas</button>
+                <p class="sinopse">Encontre vagas que combinam com você!<br>Clique e explore as oportunidades.</p>
+                <button onclick="location.href='../TodasVagas/todasVagas.php'" class="btnInicial">Ver todas as vagas</button>
             </div>
         </div>
     </div>
@@ -338,48 +338,48 @@ function determinarImagemCategoria($categoria)
             <div class="carrosselInfinito">
                 <div class="trilhaCarrossel">
                 <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/mysql.svg">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/php.svg">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/firebase.svg">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
                         <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/javascript.svg">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/html.svg">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/css.svg">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
                     </div>
                     
         
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/mysql.svg">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/php.svg">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/firebase.svg">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
                         <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/javascript.svg">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/html.svg">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/css.svg">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
                     </div>
                 </div>
             </div>
@@ -389,11 +389,12 @@ function determinarImagemCategoria($categoria)
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
-        <p>SIAS 2024</p>
+        <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="carrosselUltimosAnuncios.js"></script>
     <script src="carrosselMinhasVagas.js"></script>
-    <script src="carrosselTestes.js"></script>
+    <script src="carrosselTestes.js"></script>    
+    <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
         var nomeUsuario = "<?php echo $nomeUsuario; ?>";

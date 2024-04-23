@@ -311,11 +311,12 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
-        <p>SIAS 2024</p>
+        <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="checkButtons.js"></script>
-    <script src="mostrarFiltros.js"></script>
+    <script src="mostrarFiltros.js"></script>    
+    <script src="../../../modoNoturno.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!--================================ Buscar Vagas por filtros ======================================= -->

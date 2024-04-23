@@ -610,11 +610,12 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
-        <p>SIAS 2024</p>
+        <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <script src="carrosselPerfis.js"></script>
+    <script src="carrosselPerfis.js"></script>    
+    <script src="../../../modoNoturno.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>

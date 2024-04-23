@@ -31,6 +31,7 @@ $result = $_con->query($sql);
             <h2>:</h2>
             <h2 id="segundos">00</h2>
         </div>
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
     </nav>
     <div class="containerTeste">
         <div class="contentTeste">

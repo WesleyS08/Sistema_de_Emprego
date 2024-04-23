@@ -153,7 +153,7 @@ if ($stmt) {
                 <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique
                     agora
                     mesmo!</p>
-                <button onclick="window.location.href='../criarVaga/criarVaga.php'">Anunciar</button>
+                <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="btnInicial">Anunciar</button>
             </div>
         </div>
     </div>
@@ -473,15 +473,15 @@ if ($stmt) {
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
-        <p>SIAS 2024</p>
+        <p class="sinopse">SIAS 2024</p>
     </footer>
 
 
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <script src="modoNoturno.js"></script>
     <script src="carrosselAnuncios.js"></script>
     <script src="carrosselTestes.js"></script>
-    <script src="carrosselPerfis.js"></script>
+    <script src="carrosselPerfis.js"></script>    
+    <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
         var nomeUsuario = "<?php echo $nomeUsuario; ?>";

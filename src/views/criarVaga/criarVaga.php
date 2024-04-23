@@ -243,9 +243,9 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
-        <p>SIAS 2024</p>
+        <p class="sinopse">SIAS 2024</p>
     </footer>
-    <script src="modoNoturno.js"></script>
+    <script src="../../../modoNoturno.js"></script>
     <script src="radioButtons.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

@@ -18,6 +18,10 @@ nav{
     transform: scale(1.1);
 }
 
+.btnModo{    
+    margin: 0px;
+}
+
 /* ------------------------- Container Teste -------------------------*/
 
 .containerTeste{

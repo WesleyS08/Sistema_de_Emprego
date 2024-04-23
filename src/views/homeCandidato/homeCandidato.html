@@ -28,8 +28,8 @@
                     <h1 id="tituloAutomatico">B</h1>
                     <i></i>
                 </div>
-                <p>Encontre vagas que combinam com você!<br>Clique e explore as oportunidades.</p>
-                <button onclick="location.href=''">Ver todas as vagas</button>
+                <p class="sinopse">Encontre vagas que combinam com você!<br>Clique e explore as oportunidades.</p>
+                <button onclick="location.href='../TodasVagas/todasVagas.html'" class="btnInicial">Ver todas as vagas</button>
             </div>
         </div>
     </div>
@@ -38,13 +38,69 @@
             <h2>Minhas vagas</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider">
+            <a class="btnLeftSlider" id="leftMinhasVagas">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
-            <a class="btnRightSlider">
+            <a class="btnRightSlider" id="rightMinhasVagas">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a> 
             <div class="carrosselBox" id="minhasVagas">
+                <a class="postLink" href="../Vaga/vaga.html">
+                    <article class="post">
+                        <header>
+                            <img src="../../../imagens/estagio.svg">
+                            <label class="tipoVaga">Estágio</label>
+                        </header>
+                        <section>
+                            <h3 class="nomeVaga">Analista de Suporte</h3>
+                            <p class="empresaVaga">Microsoft</p>
+                        </section>
+                        <label class="statusVaga" style="color:royalblue;">Em processo</label>
+                        <label class="dataVaga">10/03/2024</label>
+                    </article>
+                </a>
+                <a class="postLink" href="../Vaga/vaga.html">
+                    <article class="post">
+                        <header>
+                            <img src="../../../imagens/estagio.svg">
+                            <label class="tipoVaga">Estágio</label>
+                        </header>
+                        <section>
+                            <h3 class="nomeVaga">Analista de Suporte</h3>
+                            <p class="empresaVaga">Microsoft</p>
+                        </section>
+                        <label class="statusVaga" style="color:royalblue;">Em processo</label>
+                        <label class="dataVaga">10/03/2024</label>
+                    </article>
+                </a>
+                <a class="postLink" href="../Vaga/vaga.html">
+                    <article class="post">
+                        <header>
+                            <img src="../../../imagens/estagio.svg">
+                            <label class="tipoVaga">Estágio</label>
+                        </header>
+                        <section>
+                            <h3 class="nomeVaga">Analista de Suporte</h3>
+                            <p class="empresaVaga">Microsoft</p>
+                        </section>
+                        <label class="statusVaga" style="color:royalblue;">Em processo</label>
+                        <label class="dataVaga">10/03/2024</label>
+                    </article>
+                </a>
+                <a class="postLink" href="../Vaga/vaga.html">
+                    <article class="post">
+                        <header>
+                            <img src="../../../imagens/estagio.svg">
+                            <label class="tipoVaga">Estágio</label>
+                        </header>
+                        <section>
+                            <h3 class="nomeVaga">Analista de Suporte</h3>
+                            <p class="empresaVaga">Microsoft</p>
+                        </section>
+                        <label class="statusVaga" style="color:royalblue;">Em processo</label>
+                        <label class="dataVaga">10/03/2024</label>
+                    </article>
+                </a>
                 <a class="postLink" href="../Vaga/vaga.html">
                     <article class="post">
                         <header>
@@ -226,7 +282,7 @@
                 </a>
             </div>      
             <div class="divBtnVerMais">
-                <a href="src/views/Login/login.html" class="btnVerMais"><button>Ver mais</button></a>
+                <a href="src/views/Login/login.html" class="btnVerMais"><button class="verMais">Ver mais</button></a>
             </div>       
         </div> 
     </div>
@@ -238,48 +294,48 @@
             <div class="carrosselInfinito">
                 <div class="trilhaCarrossel">
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/mysql.svg">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/php.svg">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/firebase.svg">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
                         <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/javascript.svg">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/html.svg">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/css.svg">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
                     </div>
                     
         
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/mysql.svg">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/php.svg">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/firebase.svg">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
                         <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/javascript.svg">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/html.svg">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/css.svg">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
                     </div>
                 </div>            
             </div>
@@ -289,11 +345,12 @@
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
-        <p>SIAS 2024</p>
+        <p class="sinopse">SIAS 2024</p>
     </footer>
 <script src="tituloDigitavel.js"></script>
 <script src="carrosselUltimosAnuncios.js"></script>
 <script src="carrosselMinhasVagas.js"></script>
 <script src="carrosselTestes.js"></script>
+<script src="../../../modoNoturno.js"></script>
 </body>
 </html>

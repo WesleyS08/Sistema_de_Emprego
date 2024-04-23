@@ -54,7 +54,6 @@ button:hover{
 .btnVerMais{
     margin-left: 60px;
     height: 100px;
-    background-color: yellow;
 }
 
 h2{
@@ -281,7 +280,7 @@ nav ul li a:hover{
 .divCommon{
     display: grid;  
     place-items: center;
-    margin: 70px 0px;
+    margin: 100px 0px;
 }
 
 .divCommon .container{
@@ -301,7 +300,7 @@ nav ul li a:hover{
 .divCarrossel{
     display: grid;
     place-items: center;
-    margin: 70px 0px;
+    margin: 100px 0px;
 }
 
 .divCarrossel .container{
@@ -319,7 +318,8 @@ nav ul li a:hover{
     border-radius: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;    
+    box-shadow: 0px 0px 6px silver;
 }
 
 /* ------------------------- Div de testes -------------------------*/
