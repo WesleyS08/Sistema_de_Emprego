@@ -18,7 +18,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
     // 1. Excluir todas as inscrições associadas às vagas de emprego da empresa
     $sql_delete_inscricoes = "DELETE FROM Tb_Inscricoes WHERE (Tb_Vagas_Tb_Anuncios_Id, Tb_Vagas_Tb_Empresa_CNPJ) IN (
-            SELECT Id_Anuncios, Tb_Empresa_CNPJ
+            SELECT Tb_Vagas_Tb_Anuncios_Id, Tb_Empresa_CNPJ
             FROM Tb_Vagas
             WHERE Tb_Empresa_CNPJ IN (
                 SELECT CNPJ
@@ -128,8 +128,36 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
     mysqli_stmt_close($stmt_delete_pessoa);  // Limpa o recurso
 
-    // Armazenar informações excluídas
+
     $pessoaExcluida[] = "Pessoa com ID $idUsuario";
+
+
+
+    $sql_delete_anuncios = "DELETE FROM Tb_Anuncios WHERE Id_Anuncios = ?";
+   $stmt_delete_anuns = mysqli_prepare($_con, $sql_delete_anuncios);
+
+
+    if (!$stmt_delete_anuns) {
+        die("Erro ao preparar a consulta para excluir ANUNCIO: " . mysqli_error($_con));
+    }
+
+    mysqli_stmt_bind_param($stmt_delete_anuns, "i", $idUsuario);
+
+    if (!mysqli_stmt_execute($stmt_delete_anuns)) {
+        die("Erro ao executar a consulta para excluir a pessoa: " . mysqli_stmt_error($stmt_delete_anuns));
+    }
+
+    mysqli_stmt_close($stmt_delete_anuns);  // Limpa o recurso
+
+
+
+
+
+
+
+
+    // Armazenar informações excluídas
+   
 
     // Destruir a sessão
     session_destroy();
