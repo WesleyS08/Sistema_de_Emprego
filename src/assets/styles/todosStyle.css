@@ -1,3 +1,38 @@
+
+.divCommon{
+    margin-top: 50px;
+}
+
+#divTituloDigitavelTodos{
+    width: 100%;
+    margin-top: 40px;
+    font-size: 24pt;
+    margin-bottom: 0px;
+}
+
+#divTituloDigitavelTodos i{    
+    margin-left: 6px;
+    width: 6px;
+    height: 60px;
+    background-color: black;
+    -webkit-animation: pisca 1s infinite;
+    animation: pisca 1s infinite;
+}
+
+@keyframes pisca {
+    0% {
+        background-color: transparent;
+    }
+    49% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: black;
+    }
+}
+
+/* ------------------------- Grid -------------------------*/
+
 .divGridVagas{
     margin-top: 20px;
     display: grid;
@@ -5,7 +40,7 @@
     place-items: center;
 }
 
-.postLink{
+.divGridVagas .postLink{
     margin-bottom: 80px;
 }
 
@@ -42,10 +77,6 @@
     border: 1px solid gray;
     transition: 0.2s ease;
     outline: 0;
-}
-
-.inputPesquisa:focus, .inputPesquisa:hover{    
-    border: 1px solid black;
 }
 
 .searchButton{

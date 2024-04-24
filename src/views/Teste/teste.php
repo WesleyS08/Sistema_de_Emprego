@@ -109,7 +109,8 @@ $result = $_con->query($sql);
         </div>
     </div>    
     <iframe width="110" height="100" src="https://www.myinstants.com/instant/ram-tchum-2-4173/embed/" frameborder="0" scrolling="no"></iframe>
-    <script src="cronometro.js"></script> 
+    <script src="cronometro.js"></script>     
+    <script src="tituloDigitavel.js"></script>
     <script src="contagemQuestoes.js"></script>
     <script src="finalizarTeste.js"></script>
 </body>

@@ -227,7 +227,7 @@ nav ul li a:hover{
     width: 6px;
     height: 80px;
     background-color: whitesmoke;
-    -webkit-animation: blinking 2s infinite;
+    -webkit-animation: blinking 1s infinite;
     animation: blinking 1s infinite;
 }
   
@@ -236,7 +236,7 @@ nav ul li a:hover{
         background-color: transparent;
     }
     49% {
-        background-color: transparent
+        background-color: transparent;
     }
     50% {
         background-color: whitesmoke;
@@ -421,7 +421,7 @@ nav ul li a:hover{
 
 .postLink:hover{
     transform: scale(1.04);
-    transition: 0.2s;
+    transition: 0.2s ease;
 }
 
 .post{
@@ -729,7 +729,7 @@ nav ul li a:hover{
 /* ------------------------- Footer -------------------------*/
 
 footer{    
-    margin-top: 100px;
+    margin-top: 120px;
     background-color: var(--laranja);
     padding: 40px;
 }

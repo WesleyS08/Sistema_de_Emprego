@@ -54,7 +54,7 @@ function Noturno(){
         verMais.style.backgroundColor = "whitesmoke";    
         verMais.style.border = "1px solid whitesmoke ";
     }
-    catch{       
+    finally{       
         modo="noturno";
     }
 }
@@ -84,7 +84,7 @@ function Claro(){
     
         verMais.style = "initial";
     }
-    catch{
+    finally{
         modo="claro";
     }
 }

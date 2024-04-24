@@ -184,11 +184,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
             <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
         </ul>
     </nav>
+    <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
+        <h1 id="tituloAutomatico">M</h1>
+        <i></i>
+    </div>
     <div class="divCommon">
-        <div class="divTituloComBtn">
-            <a class="btnVoltar"><img src="../../assets/images/icones_diversos/back.svg"></a>
-            <h2>Minhas vagas</h2>
-        </div>
         <div class="container">
             <div class="divPesquisa">
                 <div class="divFlexInput">
@@ -318,6 +318,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="mostrarFiltros.js"></script>    
     <script src="../../../modoNoturno.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="tituloDigitavel.js"></script>
 
     <!--================================ Buscar Vagas por filtros ======================================= -->
     <script>

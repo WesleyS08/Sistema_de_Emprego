@@ -1,0 +1,98 @@
+#cursosGratuitos, #cursosPagos, #certificacoes{
+    height: 150px;
+}
+
+.btnLeftSlider, .btnRightSlider{
+    margin-top: 50px;
+}
+
+.cursoLink{
+    margin: 0 10px;
+    transition: 0.5s ease;
+    width: 360px;
+    height: 130px;
+}
+
+.cursoLink:hover{    
+    transform: scale(1.04);
+    transition: 0.2s ease;
+}
+
+.curso{
+    width: 360px;
+    height: 130px;
+    border: 1px solid silver;
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px silver;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.divLogoCurso img{
+    width: 100px;
+}
+
+.curso section{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    row-gap: 8px;
+    margin-left: 14px;
+}
+
+.curso h3{
+    font-size: 16pt;
+}
+
+#empresaCurso{
+    font-size: 14pt;
+}
+
+.divFlexSpace{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.divAviso{
+    width: 500px;
+    box-shadow: 0px 0px 6px silver;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.divFlex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.divFlex h2{
+    margin: 0px 10px;
+}
+
+.divTextoAviso{
+    display: flex;
+    justify-content: center;
+}
+
+.divTextoAviso p{
+    text-align: justify;
+    line-height: 1.5em;
+}
+
+.divTituloComBtn h2{
+    margin: 0px 20px;
+}
+
+.divGridCursos{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+}
+
+.divGridCursos .cursoLink{
+    margin: 20px 0px
+}
