@@ -133,23 +133,25 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
 
 
-    $sql_delete_anuncios = "DELETE FROM Tb_Anuncios WHERE Id_Anuncios = ?";
-   $stmt_delete_anuns = mysqli_prepare($_con, $sql_delete_anuncios);
 
 
+
+    
+    $sql_delete_anuncios = "DELETE FROM Tb_Anuncios";
+    $stmt_delete_anuns = mysqli_prepare($_con, $sql_delete_anuncios);
+    
     if (!$stmt_delete_anuns) {
-        die("Erro ao preparar a consulta para excluir ANUNCIO: " . mysqli_error($_con));
+        die("Erro ao preparar a consulta para excluir os anúncios: " . mysqli_error($_con));
     }
-
-    mysqli_stmt_bind_param($stmt_delete_anuns, "i", $idUsuario);
-
+    
     if (!mysqli_stmt_execute($stmt_delete_anuns)) {
-        die("Erro ao executar a consulta para excluir a pessoa: " . mysqli_stmt_error($stmt_delete_anuns));
+        die("Erro ao executar a consulta para excluir os anúncios: " . mysqli_stmt_error($stmt_delete_anuns));
     }
-
-    mysqli_stmt_close($stmt_delete_anuns);  // Limpa o recurso
-
-
+    
+    mysqli_stmt_close($stmt_delete_anuns); // Limpa o recurso
+    
+    // Informação excluída
+    $anunciosExcluidos[] = "Todos os anúncios foram excluídos";
 
 
 
