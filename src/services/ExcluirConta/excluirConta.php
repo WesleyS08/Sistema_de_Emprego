@@ -80,9 +80,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
 
 
-
-
-
     // Delete de Anuncios
     $sql_delete_anuncios = "DELETE FROM Tb_Anuncios";
     $stmt_delete_anuns = mysqli_prepare($_con, $sql_delete_anuncios);

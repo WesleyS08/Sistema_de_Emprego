@@ -325,7 +325,7 @@ function determinarImagemCategoria($categoria)
                         </a>
                     </div>
                     <div class="divBtnVerMais">
-                        <a href="src/views/todosTestes/todosTestes.html" class="btnVerMais"><button>Ver
+                        <a href="src/views/todosTestes/todosTestes.html" class="btnVerMais"><button class="verMais">Ver
                                 mais</button></a>
                     </div>
         </div>
