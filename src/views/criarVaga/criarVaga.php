@@ -249,6 +249,79 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="radioButtons.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+    $(document).ready(function () {
+    let tituloValido = false; // Variável para rastrear se o título é válido
+ 
+    function verificarTitulo(palavra, callback) {
+        if (palavra) {
+            $.ajax({
+                url: "verificar-palavra.php", // Endpoint para verificar a palavra
+                type: "POST",
+                data: { palavra: palavra },
+                success: function (response) {
+                    console.log("Resposta recebida:", response); // Log para depuração
+                    try {
+                        const resultado = JSON.parse(response); // Converte para objeto
+                        if (resultado.proibido) { // Se contiver palavra proibida
+                            $("#aviso").text("O título contém palavras proibidas. Por favor, escolha outro título.");
+                            tituloValido = false;
+                        } else if (!resultado.existe) { // Se a palavra não existe
+                            $("#aviso").text("Palavra não existe, por favor digite outra palavra.");
+                            tituloValido = false;
+                        } else {
+                            $("#aviso").text(""); // Limpa a mensagem se a palavra existir
+                            tituloValido = true;
+                        }
+                    } catch (e) {
+                        console.error("Erro ao processar resposta do servidor:", e);
+                        $("#aviso").text("Erro ao processar resposta do servidor.");
+                        tituloValido = false;
+                    }
+                    callback(); // Notifica que a verificação terminou
+                },
+                error: function (xhr, status, error) {
+                    console.error("Erro na requisição AJAX:", error);
+                    $("#aviso").text("Erro ao verificar palavra. Tente novamente.");
+                    tituloValido = false;
+                    callback(); // Notifica que houve erro
+                },
+                timeout: 10000 // Aumenta o tempo limite para 10 segundos
+            });
+        } else {
+            $("#aviso").text("Por favor, insira uma palavra antes de sair."); // Se estiver vazio
+            tituloValido = false;
+            callback(); // Notifica que a verificação terminou
+        }
+    }
+ 
+    // Verificar o título ao sair do campo
+    $("#titulo").on("blur", function () {
+        const palavra = $(this).val();
+        verificarTitulo(palavra, function () {
+            console.log("Verificação do título concluída."); // Log para depuração
+        });
+    });
+ 
+    // Impede o envio do formulário se o título não for válido
+    $("#formvaga").on("submit", function (e) {
+        const palavra = $("#titulo").val();
+        
+        // Use uma função de retorno de chamada para aguardar a resposta do AJAX
+        verificarTitulo(palavra, function () {
+            if (!tituloValido) { // Se título é inválido
+                e.preventDefault(); // Impede o envio
+                alert("O formulário não pode ser enviado, o título é inválido."); // Mostra mensagem
+            }
+        });
+ 
+        // Bloqueia o envio do formulário para aguardar a resposta do AJAX
+        if (!tituloValido) {
+            e.preventDefault(); // Impede o envio até que o AJAX confirme que o título é válido
+        }
+    });
+});
+</script>
+    <script>
     $(document).ready(function() {
         $('#cep').on('change', function() {
             var cep = $(this).val().replace(/\D/g, ''); // Remove caracteres não numéricos
