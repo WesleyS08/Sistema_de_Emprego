@@ -40,7 +40,7 @@ $stmt_areas = $_con->prepare($sql_areas);
 $stmt_areas->execute();
 $result_areas = $stmt_areas->get_result();
 
-$areas = ["Tecnologia da Informação", "Construção Civil"]; // Adicionar a opção "Todas" ao início do array
+
 
 if ($result_areas && $result_areas->num_rows > 0) {
     while ($row = $result_areas->fetch_assoc()) {
