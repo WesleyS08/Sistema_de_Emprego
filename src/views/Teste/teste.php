@@ -9,8 +9,16 @@ $sql = "SELECT q.Id_Questao, q.Enunciado, a.Id_Alternativa, a.Texto
         FROM Tb_Questoes q
         INNER JOIN Tb_Alternativas a ON q.Id_Questao = a.Tb_Questoes_Id_Questao
         ORDER BY q.Id_Questao, a.Id_Alternativa";
-        
+
+$sql = "SELECT Nome, Nivel FROM Tb_Questionarios WHERE Id_Questionario = $id_questionario";
+
 $result = $_con->query($sql);
+
+if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    $nomeQuestionario = $row['Nome'];
+    $nivelQuestionario = $row['Nivel'];
+}
 
 ?>
 
@@ -36,14 +44,14 @@ $result = $_con->query($sql);
     <div class="containerTeste">
         <div class="contentTeste">
             <div class="divTitulo">                
-                <h2>Python para Análise de Dados</h2>
+                <h2><?php echo $nomeQuestionario ?></h2>
                 <div class="divSubtitulo">
                     <p>Por:&nbsp;</p>
                     <p id="autorTeste">Microsoft</p>
                 </div>
                 <div class="divSubtitulo">
                     <p>Nível:&nbsp;</p>
-                    <p id="nivelTeste">Intermediário</p>
+                    <p id="nivelTeste"><?php echo $nivelQuestionario ?></p>
                 </div>
             </div>
             <div class="divQuestoes">

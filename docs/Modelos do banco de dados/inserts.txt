@@ -1,20 +1,18 @@
--- Usar estes insert's para testar os questionários, só colar e testar.
-
 -- Inserir um novo questionário na tabela Tb_Questionarios
-INSERT INTO Tb_Questionarios (Area, Questoes)
-VALUES ('Ciências', 'Questionário sobre Ciências');
+INSERT INTO Tb_Questionarios (Nome, Area, Data, Nivel, Descricao)
+VALUES ('Ciências', 'Ciências', '2024-04-20', 'Fácil', 'Questionário sobre Ciências');
 
 -- Recuperar o ID do questionário recém-inserido
 SET @Id_Questionario = LAST_INSERT_ID();
 
 -- Inserir cinco novas questões na tabela Tb_Questoes
-INSERT INTO Tb_Questoes (Enunciado, Nivel_de_Dificuldade, Area, Id_Questionario)
+INSERT INTO Tb_Questoes (Enunciado, Area, Id_Questionario)
 VALUES 
-('Qual é o planeta mais próximo do Sol?', 'Fácil', 'Astronomia', @Id_Questionario),
-('Qual é o maior osso do corpo humano?', 'Fácil', 'Anatomia', @Id_Questionario),
-('Qual é o símbolo químico do ouro?', 'Médio', 'Química', @Id_Questionario),
-('Qual é a capital da França?', 'Fácil', 'Geografia', @Id_Questionario),
-('Quem escreveu a obra "Dom Quixote"?', 'Médio', 'Literatura', @Id_Questionario);
+('Qual é o planeta mais próximo do Sol?', 'Astronomia', @Id_Questionario),
+('Qual é o maior osso do corpo humano?', 'Anatomia', @Id_Questionario),
+('Qual é o símbolo químico do ouro?', 'Química', @Id_Questionario),
+('Qual é a capital da França?', 'Geografia', @Id_Questionario),
+('Quem escreveu a obra "Dom Quixote"?', 'Literatura', @Id_Questionario);
 
 -- Recuperar o ID da primeira questão inserida
 SET @Id_Questao1 = LAST_INSERT_ID();
@@ -33,20 +31,20 @@ VALUES
 --
 
 -- Inserir um novo questionário na tabela Tb_Questionarios
-INSERT INTO Tb_Questionarios (Area, Questoes)
-VALUES ('História', 'Questionário sobre o Japão Feudal');
+INSERT INTO Tb_Questionarios (Nome, Area, Data, Nivel, Descricao)
+VALUES ('História', 'História', '2024-04-20', 'Médio', 'Questionário sobre o Japão Feudal');
 
 -- Recuperar o ID do questionário recém-inserido
 SET @Id_Questionario = LAST_INSERT_ID();
 
 -- Inserir cinco novas questões na tabela Tb_Questoes
-INSERT INTO Tb_Questoes (Enunciado, Nivel_de_Dificuldade, Area, Id_Questionario)
+INSERT INTO Tb_Questoes (Enunciado, Area, Id_Questionario)
 VALUES 
-('Quem foi o primeiro xogum do Japão Feudal?', 'Médio', 'História', @Id_Questionario),
-('Qual era o sistema de governo predominante no Japão Feudal?', 'Médio', 'História', @Id_Questionario),
-('O que eram os samurais no contexto do Japão Feudal?', 'Fácil', 'História', @Id_Questionario),
-('Quem eram os daimyos no Japão Feudal?', 'Fácil', 'História', @Id_Questionario),
-('O que foi o código de conduta seguido pelos samurais?', 'Fácil', 'História', @Id_Questionario);
+('Quem foi o primeiro xogum do Japão Feudal?', 'História', @Id_Questionario),
+('Qual era o sistema de governo predominante no Japão Feudal?', 'História', @Id_Questionario),
+('O que eram os samurais no contexto do Japão Feudal?', 'História', @Id_Questionario),
+('Quem eram os daimyos no Japão Feudal?', 'História', @Id_Questionario),
+('O que foi o código de conduta seguido pelos samurais?', 'História', @Id_Questionario);
 
 -- Recuperar o ID da primeira questão inserida
 SET @Id_Questao11 = LAST_INSERT_ID();
@@ -59,3 +57,67 @@ VALUES
 ('Guerreiros samurais', 1, @Id_Questao11 + 2), ('Comerciantes', 0, @Id_Questao11 + 2), ('Camponeses', 0, @Id_Questao11 + 2), ('Artesãos', 0, @Id_Questao11 + 2), ('Nobres', 0, @Id_Questao11 + 2),
 ('Senhores feudais', 1, @Id_Questao11 + 3), ('Guerrilheiros', 0, @Id_Questao11 + 3), ('Camponeses', 0, @Id_Questao11 + 3), ('Comerciantes', 0, @Id_Questao11 + 3), ('Artistas', 0, @Id_Questao11 + 3),
 ('Bushido', 1, @Id_Questao11 + 4), ('Hagakure', 0, @Id_Questao11 + 4), ('Ninjutsu', 0, @Id_Questao11 + 4), ('Kamikaze', 0, @Id_Questao11 + 4), ('Geishas', 0, @Id_Questao11 + 4);
+
+--
+-- Terceiro questionário
+--
+
+-- Inserir um novo questionário sobre Fórmula 1 na tabela Tb_Questionarios
+INSERT INTO Tb_Questionarios (Nome, Area, Data, Nivel, Descricao)
+VALUES ('Fórmula 1', 'Esporte', '2024-04-21', 'Médio', 'Questionário sobre Fórmula 1');
+
+-- Recuperar o ID do questionário recém-inserido
+SET @Id_Questionario2 = LAST_INSERT_ID();
+
+-- Inserir cinco novas questões sobre Fórmula 1 na tabela Tb_Questoes
+INSERT INTO Tb_Questoes (Enunciado, Area, Id_Questionario)
+VALUES 
+('Quem é o piloto com mais títulos na história da Fórmula 1?', 'Esporte', @Id_Questionario2),
+('Qual é a equipe com mais títulos de construtores na Fórmula 1?', 'Esporte', @Id_Questionario2),
+('Qual é o circuito mais longo do calendário da Fórmula 1?', 'Esporte', @Id_Questionario2),
+('Quantos títulos mundiais de pilotos Michael Schumacher conquistou?', 'Esporte', @Id_Questionario2),
+('Quem foi o último piloto brasileiro a vencer o campeonato mundial de Fórmula 1?', 'Esporte', @Id_Questionario2);
+
+-- Recuperar o ID da primeira questão inserida sobre Fórmula 1
+SET @Id_Questao6 = LAST_INSERT_ID();
+
+-- Inserir cinco alternativas para cada questão sobre Fórmula 1 na tabela Tb_Alternativas
+INSERT INTO Tb_Alternativas (Texto, Correta, Tb_Questoes_Id_Questao)
+VALUES 
+('Michael Schumacher', 1, @Id_Questao6), ('Ayrton Senna', 0, @Id_Questao6), ('Lewis Hamilton', 0, @Id_Questao6), ('Sebastian Vettel', 0, @Id_Questao6), ('Juan Manuel Fangio', 0, @Id_Questao6),
+('Ferrari', 1, @Id_Questao6 + 1), ('Mercedes', 0, @Id_Questao6 + 1), ('McLaren', 0, @Id_Questao6 + 1), ('Red Bull Racing', 0, @Id_Questao6 + 1), ('Williams', 0, @Id_Questao6 + 1),
+('Circuito de Spa-Francorchamps', 1, @Id_Questao6 + 2), ('Circuito de Mônaco', 0, @Id_Questao6 + 2), ('Circuito de Suzuka', 0, @Id_Questao6 + 2), ('Circuito de Interlagos', 0, @Id_Questao6 + 2), ('Circuito de Silverstone', 0, @Id_Questao6 + 2),
+('Sete títulos', 1, @Id_Questao6 + 3), ('Cinco títulos', 0, @Id_Questao6 + 3), ('Três títulos', 0, @Id_Questao6 + 3), ('Quatro títulos', 0, @Id_Questao6 + 3), ('Seis títulos', 0, @Id_Questao6 + 3),
+('Emerson Fittipaldi', 0, @Id_Questao6 + 4), ('Ayrton Senna', 1, @Id_Questao6 + 4), ('Rubens Barrichello', 0, @Id_Questao6 + 4), ('Nelson Piquet', 0, @Id_Questao6 + 4), ('Felipe Massa', 0, @Id_Questao6 + 4);
+
+--
+-- Quarto Questionario
+--
+
+-- Inserir um novo questionário sobre Scania na tabela Tb_Questionarios
+INSERT INTO Tb_Questionarios (Nome, Area, Data, Nivel, Descricao)
+VALUES ('Scania', 'Indústria Automotiva', '2024-04-22', 'Fácil', 'Questionário sobre a marca Scania');
+
+-- Recuperar o ID do questionário recém-inserido
+SET @Id_Questionario3 = LAST_INSERT_ID();
+
+-- Inserir cinco novas questões sobre Scania na tabela Tb_Questoes
+INSERT INTO Tb_Questoes (Enunciado, Area, Id_Questionario)
+VALUES 
+('Em qual país a Scania tem sede?', 'Indústria Automotiva', @Id_Questionario3),
+('Qual é o principal produto da Scania?', 'Indústria Automotiva', @Id_Questionario3),
+('Qual é a origem da marca Scania?', 'Indústria Automotiva', @Id_Questionario3),
+('Quem é o fundador da Scania?', 'Indústria Automotiva', @Id_Questionario3),
+('Em que ano a Scania foi fundada?', 'Indústria Automotiva', @Id_Questionario3);
+
+-- Recuperar o ID da primeira questão inserida sobre Scania
+SET @Id_Questao11 = LAST_INSERT_ID();
+
+-- Inserir cinco alternativas para cada questão sobre Scania na tabela Tb_Alternativas
+INSERT INTO Tb_Alternativas (Texto, Correta, Tb_Questoes_Id_Questao)
+VALUES 
+('Suécia', 1, @Id_Questao11), ('Alemanha', 0, @Id_Questao11), ('Itália', 0, @Id_Questao11), ('Estados Unidos', 0, @Id_Questao11), ('França', 0, @Id_Questao11),
+('Caminhões', 1, @Id_Questao11 + 1), ('Carros de passeio', 0, @Id_Questao11 + 1), ('Motos', 0, @Id_Questao11 + 1), ('Ônibus', 0, @Id_Questao11 + 1), ('Aviões', 0, @Id_Questao11 + 1),
+('Fundição', 1, @Id_Questao11 + 2), ('Indústria de papel', 0, @Id_Questao11 + 2), ('Construção civil', 0, @Id_Questao11 + 2), ('Alimentícia', 0, @Id_Questao11 + 2), ('Eletrônica', 0, @Id_Questao11 + 2),
+('Gustaf Erikson', 1, @Id_Questao11 + 3), ('Erik Scania', 0, @Id_Questao11 + 3), ('Anders Wall', 0, @Id_Questao11 + 3), ('Lars Magnus Ericsson', 0, @Id_Questao11 + 3), ('Sven Wingquist', 0, @Id_Questao11 + 3),
+('1891', 0, @Id_Questao11 + 4), ('1901', 0, @Id_Questao11 + 4), ('1911', 0, @Id_Questao11 + 4), ('1921', 1, @Id_Questao11 + 4), ('1931', 0, @Id_Questao11 + 4);

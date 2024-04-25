@@ -104,10 +104,11 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionarios` (
   `Id_Questionario` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(255) NOT NULL,
   `Area` VARCHAR(255) NULL,
-  -- `Nivel_de_Dificuldade` VARCHAR(55) NULL,
+  `Data` DATE NOT NULL,
+  `Nivel` VARCHAR(55) NOT NULL,
   `Descricao` VARCHAR(255) NULL,
-  `Questoes` VARCHAR(255) NULL,
-  PRIMARY KEY (`Id_Questionario`))
+  PRIMARY KEY (`Id_Questionario`)
+)
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -274,7 +275,6 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questoes` (
     `Id_Questao` INT NOT NULL AUTO_INCREMENT,
     `Enunciado` TEXT NOT NULL,
-    `Nivel_de_Dificuldade` VARCHAR(55),
     `Area` VARCHAR(255),
     `Id_Questionario` INT NOT NULL,
     PRIMARY KEY (`Id_Questao`),

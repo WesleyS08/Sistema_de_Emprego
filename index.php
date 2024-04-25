@@ -9,7 +9,6 @@ if (isset($_SESSION['email_session']) || isset($_SESSION['google_session'])) {
     exit;
 }
 
-
 include "src/services/conexão_com_banco.php";
 
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
@@ -65,7 +64,7 @@ function determinarImagemCategoria($categoria)
         <a href="index.html"><img id="logo" src="src/assets/images/logos_empresa/logo_sias.png"></a>
         <ul>
             <li><a href="src/views/TodasVagas/todasVagas.html">Vagas</a></li>
-            <li><a href="src/views/PreparaTeste/preparaTeste.html">Testes</a></li>
+            <li><a href="src/views/PreparaTeste/preparaTeste.php?id=0">Testes</a></li>
             <li><a href="#">Cursos</a></li>
             <li><a href="src/views/Login/login.html">Perfil</a></li>
         </ul>
@@ -150,93 +149,66 @@ function determinarImagemCategoria($categoria)
             </div>
         </div>
     </div>
+    
+    <?php    
+    $sql = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios LIMIT 4"; // Limitar a 4 questionários para não ficar muitos questionários poluindo a tela    
+    $result = $_con->query($sql);
+    ?>
     <div class="divCommon">
         <div class="divTitulo">
             <h2>Testes de Habilidades</h2>
             <p>Avalie seu conhecimento e ganhe destaque nos processos seletivos!</p>
-        </div>
-        <div class="container">
+        </div>   
+        <div class="container">         
             <div class="flexTestes">
-                <div class="gridTestes" style="margin-right: 12px;">
-                    <a class="testeLink">
-                        <article class="teste">
-                            <div class="divAcessos">
-                                <img src="imagens/people.svg"></img>
-                                <small class="qntdAcessos">800</small>
-                            </div>
-                            <img src="imagens/excel.svg"></img>
-                            <div class="divDetalhesTeste">
-                                <div>
-                                    <p class="nomeTeste">Excel Avançado</p>
-                                    <small class="autorTeste">Por Jefferson Evangelista</small>
-                                    <div class="divCompetencias">
-                                        <small>Competências: </small>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                <?php
+                $counter = 0; // Inicializa um contador para controlar os questionários por linha
+                if ($result->num_rows > 0) {
+                    // Loop através dos resultados da consulta
+                    while ($row = $result->fetch_assoc()) { 
+                        $idQuestionario = $row['Id_Questionario'];                       
+                        $nome = $row['Nome'];
+                        $area = $row['Area'];
+                        // Verifica se é hora de começar uma nova linha
+                        if ($counter % 2 == 0) {
+                            echo '<div class="gridTestes" style="margin-right: 12px;">';
+                        }
+                ?>
+                        <a class="testeLink" href="src/views/PreparaTeste/preparaTeste.php?id=<?php echo $idQuestionario?>">
+                            <article class="teste">
+                                <div class="divAcessos">
+                                    <img src="imagens/people.svg"></img>
+                                    <small class="qntdAcessos">800</small>
+                                </div>
+                                <img src="imagens/excel.svg"></img>
+                                <div class="divDetalhesTeste">
+                                    <div>                                    
+                                        <p class="nomeTeste"><?php echo $nome; ?></p>
+                                        <small class="autorTeste">Por Jefferson Evangelista</small>
+                                        <div class="divCompetencias">
+                                            <small>Competências: </small>
+                                            <small class="competenciasTeste"><?php echo $area; ?></small>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </article>
-                    </a>
-                    <a class="testeLink">
-                        <article class="teste">
-                            <div class="divAcessos">
-                                <img src="imagens/people.svg"></img>
-                                <small class="qntdAcessos">800</small>
-                            </div>
-                            <img src="imagens/figma.svg"></img>
-                            <div class="divDetalhesTeste">
-                                <div>
-                                    <p class="nomeTeste">Figma Básico</p>
-                                    <small class="autorTeste">Por Jefferson Evangelista</small>
-                                    <div class="divCompetencias">
-                                        <small>Competências: </small>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    </a>
-                </div>
-                <div class="gridTestes" style="margin-left: 12px;">
-                    <a class="testeLink">
-                        <article class="teste">
-                            <div class="divAcessos">
-                                <img src="imagens/people.svg"></img>
-                                <small class="qntdAcessos">800</small>
-                            </div>
-                            <img src="imagens/word.svg"></img>
-                            <div class="divDetalhesTeste">
-                                <div>
-                                    <p class="nomeTeste">Word Básico</p>
-                                    <small class="autorTeste">Por Jefferson Evangelista</small>
-                                    <div class="divCompetencias">
-                                        <small>Competências: </small>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    </a>
-                    <a class="testeLink">
-                        <article class="teste">
-                            <div class="divAcessos">
-                                <img src="imagens/people.svg"></img>
-                                <small class="qntdAcessos">800</small>
-                            </div>
-                            <img src="imagens/python.svg"></img>
-                            <div class="divDetalhesTeste">
-                                <div>
-                                    <p class="nomeTeste">Python Intermediário</p>
-                                    <small class="autorTeste">Por Jefferson Evangelista</small>
-                                    <div class="divCompetencias">
-                                        <small>Competências: </small>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    </a>
-                </div>
+                            </article>
+                        </a>
+                <?php
+                        // Verifica se é hora de fechar a linha
+                        if ($counter % 2 == 1) {
+                            echo '</div>'; // Fecha a div "gridTestes"
+                        }
+                        $counter++;
+                    }
+                    // Verifica se a última linha precisa ser fechada
+                    if ($counter % 2 != 0) {
+                        echo '</div>'; // Fecha a div "gridTestes"
+                    }
+                } else {
+                    echo "Nenhum questionário encontrado.";
+                }
+                ?>
+
             </div>
             <a href="src/views/Login/login.html"><button>Ver mais</button></a>
         </div>
