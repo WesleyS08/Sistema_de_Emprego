@@ -91,7 +91,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     <input class="inputAnimado" id="titulo" name="titulo" type="text" required>
                                     <div class="labelLine">Título</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso" id="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
