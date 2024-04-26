@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Checar se senhas inseridas são iguais
+// Checar se senhas inseridas são iguais, maiores que 6 caracteres e se possuem caracteres especiais para torná-la complexa
 
 // Variável global para rastrear se as senhas são iguais
 let senhasIguaisCandidato = true;
@@ -114,6 +114,29 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!senhasIguaisCandidato) {
             event.preventDefault(); // Impedir o envio do formulário se as senhas não forem iguais
         }
+    });
+
+    inputSenha.addEventListener('input', function(event) {
+        const senha = inputSenha.value.trim();
+        const senhaLength = senha.length;
+
+        // console.log("Senha Length: ", senhaLength);
+
+        // Verificar se a senha tem pelo menos 6 caracteres
+        if (senhaLength < 6) {
+            avisoSenha.textContent = 'A senha deve ter pelo menos 6 caracteres';
+            return;
+        }
+
+        // Verificar se a senha é complexa usando regex
+        const regexComplexa = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+        if (!regexComplexa.test(senha)) {
+            avisoSenha.textContent = 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial';
+            return;
+        }
+
+        // Limpar aviso se a senha atender aos critérios
+        avisoSenha.textContent = '';
     });
 });
 

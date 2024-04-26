@@ -1,6 +1,16 @@
 <?php
 include "../../services/conexão_com_banco.php";
 
+// Iniciar a sessão
+session_start();
+
+// Verificar se a sessão não está ativada
+if (!isset($_SESSION['email_session']) && !isset($_SESSION['google_session'])) {
+    // Redirecionar o usuário para a página anterior
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit(); // Terminar o script após o redirecionamento
+}
+
 // Recuperar o ID do questionário da URL
 $id_questionario = $_GET['id'];
 
@@ -62,10 +72,10 @@ if ($result) {
 
                         // Select no SQL para puxar as questões com base no id do questionário
                         $sql = "SELECT q.Id_Questao, q.Enunciado, a.Id_Alternativa, a.Texto
-                                FROM Tb_Questoes q
-                                INNER JOIN Tb_Alternativas a ON q.Id_Questao = a.Tb_Questoes_Id_Questao
-                                WHERE q.Id_Questionario = $id_questionario
-                                ORDER BY q.Id_Questao, a.Id_Alternativa";
+                        FROM Tb_Questoes q
+                        INNER JOIN Tb_Alternativas a ON q.Id_Questao = a.Tb_Questoes_Id_Questao
+                        WHERE q.Id_Questionario = $id_questionario
+                        ORDER BY RAND(), q.Id_Questao, a.Id_Alternativa";
 
                         $result = $_con->query($sql);
 
@@ -115,8 +125,7 @@ if ($result) {
                 </div> 
             </div>          
         </div>
-    </div>    
-    <iframe width="110" height="100" src="https://www.myinstants.com/instant/ram-tchum-2-4173/embed/" frameborder="0" scrolling="no"></iframe>
+    </div>
     <script src="cronometro.js"></script>     
     <script src="tituloDigitavel.js"></script>
     <script src="contagemQuestoes.js"></script>
