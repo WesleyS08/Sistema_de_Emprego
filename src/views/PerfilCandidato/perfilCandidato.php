@@ -30,7 +30,7 @@ $result = mysqli_query($_con, $query);
 if ($result && mysqli_num_rows($result) > 0) {
     $dadosCandidato = mysqli_fetch_assoc($result);
     // Preencher os campos HTML com as informações recuperadas do banco de dados
-    $nomeUsuario = $dadosCandidato['Nome'] . ' ' . $dadosCandidato['Sobrenome'];
+    $nomeUsuario = $dadosCandidato['Nome'];
     $areaUsuario = $dadosCandidato['Area_de_Interesse'];
     $autoDefinicaoUsuario = $dadosCandidato['Autodefinicao'];
     $telefoneUsuario = $dadosCandidato['Telefone'];

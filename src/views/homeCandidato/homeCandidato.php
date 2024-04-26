@@ -70,6 +70,19 @@ if ($result_verificar_candidato === false) {
     exit;
 }
 
+// Consulta para puxar os questionários
+$sql_puxarQuestionarios = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios ORDER BY RAND() LIMIT 7";
+$stmt_questionarios = $_con->prepare($sql_puxarQuestionarios);
+$stmt_questionarios->execute();
+$result_questionarios = $stmt_questionarios->get_result();
+
+// Verificar se a consulta obteve sucesso
+if ($result_questionarios === false) {
+    echo "Erro na consulta" . $_con->error;
+    exit;
+}
+
+
 // Obter dados do candidato
 $candidato = $result_verificar_candidato->fetch_assoc();
 
@@ -258,76 +271,43 @@ function determinarImagemCategoria($categoria)
             <a class="btnRightSlider" id="rightTestes">                
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                    <div class="carrosselBox" id="carrosselTestes">
-                        <a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.html">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/excel.svg"></img>
-                                <div class="divDetalhesTeste">
-                                    <div>
-                                        <p class="nomeTeste">Excel Básico</p>
-                                        <small class="autorTeste">Por Jefferson Evangelista</small><br>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeCarrosselLink">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/figma.svg"></img>
-                                <div class="divDetalhesTeste">
-                                    <div>
-                                        <p class="nomeTeste">Figma Intermediário</p>
-                                        <small class="autorTeste">Por Jefferson Evangelista</small><br>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeCarrosselLink">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/word.svg"></img>
-                                <div class="divDetalhesTeste">
-                                    <div>
-                                        <p class="nomeTeste">Word Avançado</p>
-                                        <small class="autorTeste">Por Jefferson Evangelista</small><br>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeCarrosselLink">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/python.svg"></img>
-                                <div class="divDetalhesTeste">
-                                    <div>
-                                        <p class="nomeTeste">Python Básico</p>
-                                        <small class="autorTeste">Por Jefferson Evangelista</small><br>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                    </div>
-                    <div class="divBtnVerMais">
-                        <a href="src/views/todosTestes/todosTestes.html" class="btnVerMais"><button class="verMais">Ver
-                                mais</button></a>
-                    </div>
+                <div class="carrosselBox" id="carrosselTestes">                       
+                    <a class="testeCarrosselLink">
+                    <?php
+                        if ($result->num_rows > 0) {
+                            // Loop através dos resultados da consulta
+                            while ($row = $result_questionarios->fetch_assoc()) {
+                                // Extrai os dados do questionário
+                                $idQuestionario = $row['Id_Questionario'];
+                                $nome = $row['Nome'];
+                                $area = $row['Area'];
+                                // Saída HTML para cada questionário no carrossel
+                                echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
+                                echo '<article class="testeCarrossel">';
+                                echo '<div class="divAcessos">';
+                                echo '<img src="../../../imagens/people.svg"></img>';
+                                echo '<small class="qntdAcessos">800</small>';
+                                echo '</div>';
+                                echo '<img src="../../../imagens/excel.svg"></img>';
+                                echo '<div class="divDetalhesTeste">';
+                                echo '<div>';
+                                echo '<p class="nomeTeste">' . $nome . '</p>';
+                                echo '<small class="autorTeste">Por Jefferson Evangelista</small><br>';
+                                echo '<small class="competenciasTeste">' . $area . '</small>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</article>';
+                                echo '</a>';
+                            }
+                        } else {
+                            echo "Nenhum questionário encontrado.";
+                        }
+                    ?>
+                    </a>
+                </div>
+                <div class="divBtnVerMais">
+                    <a href="../todosTestes/todosTestes.php" class="btnVerMais"><button class="verMais">Ver mais</button></a>
+                </div>
         </div>
     </div>
     <div class="divCommon">
