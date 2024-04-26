@@ -65,7 +65,7 @@ if(isset($_GET['id'])) {
                     <p id="areaTeste"><?php echo $areaQuestionario; ?></p>
                 </div>
                 <div>                    
-                    <p>Descrição:&nbsp;</p>
+                    <p>Data do teste:&nbsp;</p>
                     <p id="dataTeste"><?php echo $dataQuestionario; ?></p>
                 </div>
             </header>            
