@@ -1,4 +1,3 @@
--- Inserir 25 registros na tabela `Tb_Pessoas` com a senha em SHA1
 INSERT INTO `SIAS`.`Tb_Pessoas` (`Email`, `Senha`, `Nome`, `Token`, `Verificado`)
 VALUES
 ('john.doe@example.com', SHA1('123'), 'John Doe', NULL, 1),
@@ -25,30 +24,90 @@ VALUES
 ('kathy.martin@example.com', SHA1('123'), 'Kathy Martin', NULL, 1),
 ('rachel.hall@example.com', SHA1('123'), 'Rachel Hall', NULL, 1),
 ('victor.green@example.com', SHA1('123'), 'Victor Green', NULL, 1),
-('laura.adams@example.com', SHA1('123'), 'Laura Adams', NULL, 1);
+('laura.adams@example.com', SHA1('123'), 'Laura Adams', NULL, 1),
+('tom.baker@example.com', SHA1('123'), 'Tom Baker', NULL, 1),
+('nancy.thomas@example.com', SHA1('123'), 'Nancy Thomas', NULL, 1),
+('linda.brown@example.com', SHA1('123'), 'Linda Brown', NULL, 1),
+('steve.wilson@example.com', SHA1('123'), 'Steve Wilson', NULL, 1),
+('lisa.martin@example.com', SHA1('123'), 'Lisa Martin', NULL, 1),
+('eric.garcia@example.com', SHA1('123'), 'Eric Garcia', NULL, 1),
+('emma.rodriguez@example.com', SHA1('123'), 'Emma Rodriguez', NULL, 1),
+('david.harris@example.com', SHA1('123'), 'David Harris', NULL, 1),
+('susan.clark@example.com', SHA1('123'), 'Susan Clark', NULL, 1),
+('paul.lee@example.com', SHA1('123'), 'Paul Lee', NULL, 1),
+('karen.walker@example.com', SHA1('123'), 'Karen Walker', NULL, 1),
+('william.moore@example.com', SHA1('123'), 'William Moore', NULL, 1),
+('maria.turner@example.com', SHA1('123'), 'Maria Turner', NULL, 1),
+('joseph.young@example.com', SHA1('123'), 'Joseph Young', NULL, 1),
+('carolyn.king@example.com', SHA1('123'), 'Carolyn King', NULL, 1),
+('jason.hill@example.com', SHA1('123'), 'Jason Hill', NULL, 1),
+('rachel.wright@example.com', SHA1('123'), 'Rachel Wright', NULL, 1),
+('patrick.lopez@example.com', SHA1('123'), 'Patrick Lopez', NULL, 1),
+('diana.scott@example.com', SHA1('123'), 'Diana Scott', NULL, 1),
+('frank.green@example.com', SHA1('123'), 'Frank Green', NULL, 1),
+('michael.adams@example.com', SHA1('123'), 'Michael Adams', NULL, 1),
+('theresa.wright@example.com', SHA1('123'), 'Theresa Wright', NULL, 1),
+('gregory.campbell@example.com', SHA1('123'), 'Gregory Campbell', NULL, 1),
+('sharon.phillips@example.com', SHA1('123'), 'Sharon Phillips', NULL, 1),
+('raymond.evans@example.com', SHA1('123'), 'Raymond Evans', NULL, 1);
 
--- Criar uma tabela temporária para armazenar IDs
+
+
+-- Criar uma tabela temporária para armazenar os primeiros 50 IDs sequenciais
 CREATE TEMPORARY TABLE `temp_ids` AS
-SELECT `Id_Pessoas` FROM `SIAS`.`Tb_Pessoas`
-ORDER BY RAND()
-LIMIT 25;
+SELECT `Id_Pessoas`
+FROM `SIAS`.`Tb_Pessoas`
+ORDER BY `Id_Pessoas` ASC
+LIMIT 50;
 
--- Inserir 13 IDs aleatórios em `Tb_Candidato`
-INSERT INTO `SIAS`.`Tb_Candidato` (`CPF`, `Tb_Pessoas_Id`, `Area_de_Interesse`, `Tipo_de_Contratacao`, `Descricao`, `Experiencia`, `Motivacoes`, `Cursos`, `Escolaridade`, `Genero`, `Estado_Civil`, `Idade`, `Autodefinicao`, `Telefone`, `Data_Nascimento`, `Cidade`, `PCD`, `Img_Perfil`, `Banner`)
-SELECT RIGHT(MD5(CONCAT(`Id_Pessoas`, RAND())), 11), `Id_Pessoas`, 'Tecnologia', 'CLT', 'Descrição exemplo', 'Experiência exemplo', 'Motivação exemplo', 'Cursos exemplo', 'Graduação', 'Masculino', 'Solteiro', 30, 'Autodefinição exemplo', '5511987654321', '1990-01-01', 'São Paulo', false, NULL, NULL
+-- Inserir 30 IDs aleatórios em Tb_Candidato
+INSERT INTO `SIAS`.`Tb_Candidato`
+(`CPF`, `Tb_Pessoas_Id`, `Area_de_Interesse`, `Tipo_de_Contratacao`, `Descricao`, `Experiencia`, `Motivacoes`, `Cursos`, `Escolaridade`, `Genero`, `Estado_Civil`, `Idade`, `Telefone`, `Data_Nascimento`, `Cidade`, `PCD`, `Img_Perfil`, `Banner`)
+SELECT
+  RIGHT(MD5(CONCAT(`Id_Pessoas`, RAND())), 11),  -- CPF fictício
+  `Id_Pessoas`,
+  'Tecnologia',
+  'CLT',
+  'Descrição exemplo',
+  'Experiência exemplo',
+  'Motivação exemplo',
+  'Cursos exemplo',
+  'Graduação',
+  'Masculino',
+  'Solteiro',
+  30,
+  '5511987654321',
+  '1990-01-01',
+  'São Paulo',
+  false,
+  NULL,
+  NULL
 FROM `temp_ids`
-ORDER BY RAND()
-LIMIT 13;
+LIMIT 30;
 
--- Inserir 12 IDs aleatórios restantes em `Tb_Empresa`
-INSERT INTO `SIAS`.`Tb_Empresa` (`CNPJ`, `Tb_Pessoas_Id`, `Img_Banner`, `Facebook`, `Github`, `Linkedin`, `Instagram`, `Nome_da_Empresa`, `Sobre_a_Empresa`, `Area_da_Empresa`, `Avaliacao_de_Funcionarios`, `Avaliacao_Geral`, `Telefone`, `Img_Perfil`)
-SELECT RIGHT(MD5(CONCAT(`Id_Pessoas`, RAND())), 14), `Id_Pessoas`, NULL, 'facebook.com/empresa', 'github.com/empresa', 'linkedin.com/empresa', 'instagram.com/empresa', 'Empresa Exemplo', 'Texto sobre a empresa', 'Área de exemplo', '4', '5', '5511987654321', NULL
+
+-- Inserir 20 IDs restantes em `Tb_Empresa`
+INSERT INTO `SIAS`.`Tb_Empresa`
+(`CNPJ`, `Tb_Pessoas_Id`, `Img_Banner`, `Facebook`, `Github`, `Linkedin`, `Instagram`, `Nome_da_Empresa`, `Sobre_a_Empresa`, `Area_da_Empresa`, `Avaliacao_de_Funcionarios`, `Avaliacao_Geral`, `Telefone`, `Img_Perfil`)
+SELECT
+  RIGHT(MD5(CONCAT(`Id_Pessoas`, RAND())), 14),  -- CNPJ fictício
+  `Id_Pessoas`,  -- Referência a `Tb_Pessoas`
+  NULL,  -- Imagem de banner
+  'facebook.com/empresa',  -- Link para Facebook
+  'github.com/empresa',  -- Link para GitHub
+  'linkedin.com/empresa',  -- Link para LinkedIn
+  'instagram.com/empresa',  -- Link para Instagram
+  'Empresa Exemplo',  -- Nome da empresa
+  'Texto sobre a empresa',  -- Sobre a empresa
+  'Área de exemplo',  -- Área de atuação da empresa
+  '4',  -- Avaliação de funcionários
+  '5',  -- Avaliação geral
+  '5511987654321',  -- Telefone
+  NULL  -- Imagem de perfil
 FROM `temp_ids`
-ORDER BY RAND()
-LIMIT 12;
+WHERE `Id_Pessoas` >= 21 AND `Id_Pessoas` <= 50
+LIMIT 20;-- Inserir 20 IDs para empresas
 
--- Limpar tabela temporária
-DROP TEMPORARY TABLE `temp_ids`;
 
 -- Inserir 50 anúncios na tabela `SIAS`.`Tb_Anuncios`
 INSERT INTO `SIAS`.`Tb_Anuncios`
@@ -87,32 +146,41 @@ VALUES
 ('PJ', 'Administrador de Sistemas', 'Gerenciamento de sistemas e servidores.', 'TI', 'Recife', 'Sênior', NOW(), 'Remoto', 'Plano de saúde, Vale alimentação', 'Experiência com administração de sistemas', '09:00 - 18:00', 'PE', 'Integral', '23000-000', 'Rua da Aurora', '123', 'Boa Vista');
 
 
+-- Definir o início do ID para o anúncio (substitua pelo valor correto, como o próximo ID na sequência)
+SET @next_anuncio_id = 1;  -- Começando com o ID 1 para exemplo
+
 -- Inserir 10 registros na tabela `Tb_Vagas` usando CNPJs aleatórios da tabela `Tb_Empresa`
 INSERT INTO `SIAS`.`Tb_Vagas`
 (`Tb_Anuncios_Id`, `Tb_Empresa_CNPJ`, `Status`, `Data_de_Termino`)
 SELECT 
-  `Anuncios`.`Id_Anuncios`, -- Vínculo com o anúncio
-  `Empresas`.`CNPJ`,        -- Vínculo com uma empresa aleatória
-  'Aberta',                 -- Status padrão
-  NOW() + INTERVAL FLOOR(RAND() * 365) DAY -- Data de término aleatória entre 0 e 365 dias
+  @next_anuncio_id + ROW_NUMBER() OVER (),  -- IDs sequenciais para anúncios
+  `Empresas`.`CNPJ`,  -- Vínculo com empresas aleatórias
+  'Aberto',  -- Status padrão
+  NOW() + INTERVAL FLOOR(RAND() * 365) DAY  -- Data de término aleatória entre 0 e 365 dias
 FROM 
-  `SIAS`.`Tb_Anuncios` AS `Anuncios`, 
-  `SIAS`.`Tb_Empresa` AS `Empresas`
+  `SIAS`.`Tb_Empresa` AS `Empresas`  -- Seleção aleatória de CNPJs de `Tb_Empresa`
 ORDER BY RAND()
-LIMIT 31;
+LIMIT 50;  -- Inserir 10 registros
 
--- Inserir inscrições aleatórias na tabela `Tb_Inscricoes`
+
+-- Inserir 25 inscrições aleatórias na tabela `Tb_Inscricoes`
 INSERT INTO `SIAS`.`Tb_Inscricoes`
 (`Tb_Vagas_Tb_Anuncios_Id`, `Tb_Vagas_Tb_Empresa_CNPJ`, `Tb_Candidato_CPF`, `Data_de_Inscricao`)
 SELECT
-  `Vagas`.`Tb_Anuncios_Id`,
-  `Vagas`.`Tb_Empresa_CNPJ`,
-  `Candidato`.`CPF`,
-  NOW() -- Data da inscrição
+  `Vagas`.`Tb_Anuncios_Id`,  -- Id do anúncio da vaga
+  `Vagas`.`Tb_Empresa_CNPJ`, -- CNPJ da empresa relacionada à vaga
+  `Candidato`.`CPF`,         -- CPF do candidato inscrito
+  NOW()                      -- Data da inscrição
 FROM
-  (SELECT DISTINCT `Tb_Anuncios_Id`, `Tb_Empresa_CNPJ` FROM `SIAS`.`Tb_Vagas` ORDER BY RAND() LIMIT 31) AS `Vagas`,
-  (SELECT `CPF` FROM `SIAS`.`Tb_Candidato` ORDER BY RAND() LIMIT 13) AS `Candidato`
-ORDER BY RAND() -- Ordenação aleatória para variar as inscrições
-LIMIT 31; -- Quantidade de inscrições a inserir
-
-
+  -- Selecionar 31 vagas aleatórias
+  (SELECT `Tb_Anuncios_Id`, `Tb_Empresa_CNPJ` 
+   FROM `SIAS`.`Tb_Vagas` 
+   ORDER BY RAND() 
+   LIMIT 31) AS `Vagas`,
+  -- Selecionar 13 candidatos aleatórios
+  (SELECT `CPF` 
+   FROM `SIAS`.`Tb_Candidato` 
+   ORDER BY RAND() 
+   LIMIT 13) AS `Candidato`
+ORDER BY RAND() -- Ordem aleatória para distribuir as inscrições
+LIMIT 25;       -- Inserir 25 inscrições
