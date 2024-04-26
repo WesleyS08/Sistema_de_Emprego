@@ -125,11 +125,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Enviar e-mail
                 if ($mail->send()) {
-                    header("Location: ../../views/Login/login.html?cadastro=sucesso");
+                    header("Location: ../../views/AvisoVerificaEmail/avisoVerificaEmail.html");
                     exit();
                 } else {
                     echo 'Erro ao enviar e-mail.';
                 }
+
+                /*// Enviar e-mail
+                if ($mail->send()) {
+                    header("Location: ../../views/Login/login.html?cadastro=sucesso");
+                    exit();
+                } else {
+                    echo 'Erro ao enviar e-mail.';
+                }*/
+                
             } catch (Exception $e) {
                 echo "Erro grave ao enviar e-mail: {$mail->ErrorInfo}";
             }
