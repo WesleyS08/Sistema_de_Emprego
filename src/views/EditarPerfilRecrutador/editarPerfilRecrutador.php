@@ -289,7 +289,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     align-content: center;
     margin-left: 35%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                                 <a
-                                    href="../../../src/services/ExcluirConta/excluirConta.php?id=<?php echo $idPessoa; ?>">Excluir
+                                    href="../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>">Excluir
                                     Conta</a>
                             </div>
                         </form>
