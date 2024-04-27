@@ -28,20 +28,34 @@ if (isset($_SESSION['email_session'])) {
     $emailUsuario = $_SESSION['google_session'];
 }
 
-$sql = "SELECT Tb_Pessoas.Id_Pessoas
-FROM Tb_Pessoas
-WHERE Tb_Pessoas.Email = '$emailUsuario'";
+$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+$stmt = $_con->prepare($sql);
 
+// Verifique se a preparação da declaração foi bem-sucedida
+if ($stmt) {
+    // Vincule o parâmetro ao placeholder na consulta
+    $stmt->bind_param("s", $emailUsuario);
 
+    // Execute a declaração
+    $stmt->execute();
 
+    // Obtenha o resultado da consulta
+    $result = $stmt->get_result();
 
-$result = mysqli_query($_con, $sql); // Executar a consulta
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o ID da pessoa
+        $row = $result->fetch_assoc();
+        $idPessoa = $row['Id_Pessoas'];
 
-if ($result && mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result); // Obtém o resultado da consulta
-    $idPessoaUsuario = $row['Id_Pessoas']; // Armazena o ID da pessoa do usuário
+        // Use o ID da pessoa como necessário no restante do seu código
+    } else {
+        // Se não houver resultados, lide com isso de acordo com sua lógica de aplicativo
+    }
+
+    // Feche a declaração
+    $stmt->close();
 }
-
 
 // verifica se o id da vaga doi mandando pela url 
 if (isset($_GET['id'])) {
@@ -174,6 +188,32 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         }
     }
 }
+// Quartar consulta para selecionar o tema que  a pessoa selecionou 
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    // Execute a query com o parâmetro
+    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->execute();
+
+    // Obter resultado usando o método correto
+    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
+    if ($result) {
+        $row = $result->fetch_assoc(); // Obter a linha como array associativo
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // No caso de não haver resultado
+        }
+    } else {
+        $tema = null; // Se o resultado for nulo
+    }
+} else {
+    die("Erro ao preparar a query.");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -275,27 +315,14 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <?php
-        if ($autenticadoComoCandidato) {
-            echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>';
-            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
-        } else {
-            echo '<a href="../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>';
-            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
-        }
-        ?>
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+                src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
-            <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <?php
-            if ($autenticadoComoCandidato) {
-                echo '<li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoaUsuario . '">Perfil</a></li>';
-            } else {
-                echo '<li><a href="../Login/login.html? ">Perfil</a></li>';
-            }
-            ?>
-
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li> <!--Arrumar esse link  -->
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
@@ -355,7 +382,10 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     <div class="divCommon">
         <div class="divTitulo" id="divTituloVaga">
             <h2 id="tituloVaga">
-                <?php echo $Titulo; ?>
+                <?php
+                $wrappedText = wordwrap($Titulo, 39, "<br>\n", true);
+
+                echo $wrappedText; ?>
             </h2>
             <label>Empresa: </label>
             <?php
@@ -467,7 +497,10 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                         <div class="divDescricao">
                             <h3>Descrição da vaga</h3>
                             <p>
-                                <?php echo $Descricao; ?>
+                                <?php
+                                $wrappedText = wordwrap($Descricao, 40, "<br>\n", true);
+
+                                echo $wrappedText; ?>
                             </p>
                         </div>
                     </div>
@@ -534,62 +567,62 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
             <h2>Candidaturas</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftPerfis">                
+            <a class="btnLeftSlider" id="leftPerfis">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
             <a class="btnRightSlider" id="rightPerfis">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                    <div class="carrosselBox" id="carrosselPerfis">
-                        <?php
-                        $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Foto_Perfil, p.Nome
+            <div class="carrosselBox" id="carrosselPerfis">
+                <?php
+                $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Foto_Perfil, p.Nome
                                 FROM Tb_Candidato c
                                 JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
                                 JOIN Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
                                 WHERE i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio";
 
-                        $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
+                $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
 
-                        // Verificar se a consulta retornou resultados
-                        if ($resultCandidatos && mysqli_num_rows($resultCandidatos) > 0) {
-                            // Loop sobre as informações das candidaturas
-                            while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
-                                ?>
-                                <a class="perfilLink"
-                                    href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>">
-                                    <article class="perfil">
-                                        <div class="divImg">
-                                            <!-- Mostrar a imagem de perfil -->
-                                            <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt="Foto de Perfil"
-                                                style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
-                                        </div>
-
-                                        <section>
-                                            <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
-                                        </section>
-                                        <section>
-                                            <?php
-                                            $limite_caracteres = 55; // Defina o limite de caracteres desejado
-                                            $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
-                                    
-                                            if (strlen($autodefinicao) > $limite_caracteres) {
-                                                $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
-                                            }
-                                            ?>
-                                            <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
-                                        </section>
-                                    </article>
-                                </a>
-                                <?php
-                            }
-
-                        } else {
-                            // Caso não haja candidatos inscritos
-                            echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para esta vaga.</p>";
-
-                        }
+                // Verificar se a consulta retornou resultados
+                if ($resultCandidatos && mysqli_num_rows($resultCandidatos) > 0) {
+                    // Loop sobre as informações das candidaturas
+                    while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
                         ?>
-                    </div>
+                        <a class="perfilLink"
+                            href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>">
+                            <article class="perfil">
+                                <div class="divImg">
+                                    <!-- Mostrar a imagem de perfil -->
+                                    <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt="Foto de Perfil"
+                                        style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
+                                </div>
+
+                                <section>
+                                    <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
+                                </section>
+                                <section>
+                                    <?php
+                                    $limite_caracteres = 55; // Defina o limite de caracteres desejado
+                                    $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
+                            
+                                    if (strlen($autodefinicao) > $limite_caracteres) {
+                                        $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
+                                    }
+                                    ?>
+                                    <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
+                                </section>
+                            </article>
+                        </a>
+                        <?php
+                    }
+
+                } else {
+                    // Caso não haja candidatos inscritos
+                    echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para esta vaga.</p>";
+
+                }
+                ?>
+            </div>
         </div>
     </div>
 
@@ -612,10 +645,45 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         <a>Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
     </footer>
-    <script src="trocaIcones.js"></script>
+    <script src="../Vaga/trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <script src="carrosselPerfis.js"></script>    
+    <script src="carrosselPerfis.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
     <script src="../../../modoNoturno.js"></script>
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            }
+
+        });
+    </script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
@@ -631,8 +699,6 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
             L.marker([latitude, longitude]).addTo(map)
                 .bindPopup('<?php echo !empty($NomeEmpresa) ? $NomeEmpresa : "Confidencial"; ?>')
                 .openPopup();
-
-
         }
 
 
