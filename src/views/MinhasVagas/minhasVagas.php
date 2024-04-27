@@ -201,7 +201,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a  href="../HomeRecrutador/homeRecrutador.php" ><img id="logo"
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
                 src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
@@ -342,7 +342,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </footer>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="checkButtons.js"></script>
-    <script src="mostrarFiltros.js"></script>    
+    <script src="mostrarFiltros.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="tituloDigitavel.js"></script>
@@ -383,42 +383,42 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <!--================================ Buscar Vagas por filtros ======================================= -->
     <script>
         $(document).ready(function () {
-    // Quando houver uma mudança em qualquer filtro
-    $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
-        aplicarFiltros(); // Chama a função para aplicar filtros
-    });
+            // Quando houver uma mudança em qualquer filtro
+            $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
+                aplicarFiltros(); // Chama a função para aplicar filtros
+            });
 
-    function aplicarFiltros() {
-        // Obter valores dos filtros
-        var area = $('.selectArea').val(); // Valor do filtro de área
-        var tipos = []; // Armazena valores das checkboxes selecionadas
-        $('.checkBoxTipo:checked').each(function () {
-            tipos.push($(this).val()); // Adiciona valores ao array
-        });
+            function aplicarFiltros() {
+                // Obter valores dos filtros
+                var area = $('.selectArea').val(); // Valor do filtro de área
+                var tipos = []; // Armazena valores das checkboxes selecionadas
+                $('.checkBoxTipo:checked').each(function () {
+                    tipos.push($(this).val()); // Adiciona valores ao array
+                });
 
-        var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked'); // Status do checkbox
-        var termoPesquisa = $('.inputPesquisa').val(); // Termo de pesquisa por título
+                var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked'); // Status do checkbox
+                var termoPesquisa = $('.inputPesquisa').val(); // Termo de pesquisa por título
 
-        // Fazer chamada AJAX para buscar vagas com base nos filtros
-        $.ajax({
-            url: 'buscar_vagas_filtros.php', // Endereço do endpoint PHP
-            method: 'POST',
-            data: {
-                area: area,
-                tipos: tipos,
-                vagasAbertas: apenasVagasAbertas,
-                termo: termoPesquisa // Enviar o termo de pesquisa por título
-            },
-            success: function (response) {
-                // Atualiza o conteúdo com vagas filtradas
-                $('.divGridVagas').html(response);
-            },
-            error: function () {
-                console.error("Erro ao buscar vagas com filtros.");
+                // Fazer chamada AJAX para buscar vagas com base nos filtros
+                $.ajax({
+                    url: 'buscar_vagas_filtros.php', // Endereço do endpoint PHP
+                    method: 'POST',
+                    data: {
+                        area: area,
+                        tipos: tipos,
+                        vagasAbertas: apenasVagasAbertas,
+                        termo: termoPesquisa // Enviar o termo de pesquisa por título
+                    },
+                    success: function (response) {
+                        // Atualiza o conteúdo com vagas filtradas
+                        $('.divGridVagas').html(response);
+                    },
+                    error: function () {
+                        console.error("Erro ao buscar vagas com filtros.");
+                    }
+                });
             }
         });
-    }
-});
 
     </script>
 

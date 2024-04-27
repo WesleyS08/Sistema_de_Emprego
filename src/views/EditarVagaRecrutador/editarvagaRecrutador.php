@@ -3,143 +3,182 @@ include "../../services/conexão_com_banco.php";
 
 session_start();
 
-// Verificar se o usuário está autenticado como candidato
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-$emailUsuario = '';
+$emailUsuario = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
 $autenticadoComoEmpresa = false; // Corrigido o nome da variável
 $candidatoInscrito = false;
 
-// Verificar se o usuário está autenticado como empresa
-$autenticadoComoPublicador = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
-
-// Verificar se o usuário está autenticado e definir o e-mail do usuário
-if (isset($_SESSION['email_session']) && $_SESSION['tipo_usuario'] == 'candidato') {
-    // Se estiver autenticado com e-mail/senha e for do tipo candidato
-    $emailUsuario = $_SESSION['email_session'];
-} elseif (isset($_SESSION['google_session']) && $_SESSION['google_usuario'] == 'candidato') {
-    // Se estiver autenticado com o Google e for do tipo candidato
-    $emailUsuario = $_SESSION['google_session'];
-} else {
-    $autenticadoComoEmpresa = false; // Corrigido o nome da variável
+if (empty($emailUsuario)) {
+    die("Erro: O e-mail do usuário não está definido. Verifique a sessão.");
 }
 
+if ($_con->connect_error) {
+    die("Erro: Falha na conexão com o banco de dados: " . $_con->connect_error);
+}
 
+// Verificar se há um ID de anúncio nos parâmetros GET
 if (isset($_GET['id'])) {
-    if ($_con->connect_error) {
-        die("Falha na conexão: " . $_con->connect_error);
-    }
+    $idAnuncio = intval($_GET['id']); // Converte para um número inteiro por segurança
 
-    // Obter o ID do anúncio da variável GET
-    $idAnuncio = $_GET['id'];
-
+    // Consulta para obter dados do anúncio
     $sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa
-        FROM Tb_Anuncios
-        INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-        INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-        WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
+            FROM Tb_Anuncios
+            INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+            INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+            WHERE Tb_Anuncios.Id_Anuncios = ?";
 
-    $result = mysqli_query($_con, $sql);
+    $stmt = $_con->prepare($sql);
 
+    if ($stmt) {
+        $stmt->bind_param("i", $idAnuncio);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $dadosAnuncio = mysqli_fetch_assoc($result);
-
-        // Agora você pode acessar os detalhes do anúncio e o nome da empresa
-        $Categoria = $dadosAnuncio['Categoria'];
-        $Titulo = $dadosAnuncio['Titulo'];
-        $Descricao = $dadosAnuncio['Descricao'];
-        $Area = $dadosAnuncio['Area'];
-        $Cidade = $dadosAnuncio['Cidade'];
-        $Nivel_Operacional = $dadosAnuncio['Nivel_Operacional'];
-        $Data_de_Criacao = $dadosAnuncio['Data_de_Criacao'];
-        $Modalidade = $dadosAnuncio['Modalidade'];
-        $Beneficios = $dadosAnuncio['Beneficios'];
-        $Requisitos = $dadosAnuncio['Requisitos'];
-        $Horario = $dadosAnuncio['Horario'];
-        $Estado = $dadosAnuncio['Estado'];
-        $Jornada = $dadosAnuncio['Jornada'];
-        $CEP = $dadosAnuncio['CEP'];
-        $Rua = $dadosAnuncio['Rua'];
-        $Numero = $dadosAnuncio['Numero'];
-        $bairro = $dadosAnuncio['Bairro'];
-        $NomeEmpresa = $dadosAnuncio['Nome_da_Empresa'];
-
-    } else {
-        // Definir os campos como vazios
-        $Categoria = '';
-        $Titulo = '';
-        $Descricao = '';
-        $Area = '';
-        $Cidade = '';
-        $Nivel_Operacional = '';
-        $Data_de_Criacao = '';
-        $Modalidade = '';
-        $Beneficios = '';
-        $Requisitos = '';
-        $Horario = '';
-        $Estado = '';
-        $Jornada = '';
-        $CEP = '';
-        $Numero = '';
-        $bairro = '';
-        $NomeEmpresa = '';
-    }
-    // Segunda consulta para obter o status da vaga
-    $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = $idAnuncio";
-    $result2 = mysqli_query($_con, $sql2);
-
-    if ($result2 && mysqli_num_rows($result2) > 0) {
-        $row = mysqli_fetch_assoc($result2);
-        $Status = $row['Status'];
-    } else {
-        // Defina um valor padrão para $Status se a consulta não retornar resultados
-        $Status = '';
-    }
-
-    $sql = "SELECT Tb_Pessoas.Email
-            FROM Tb_Pessoas
-            JOIN Tb_Empresa ON Tb_Pessoas.Id_Pessoas = Tb_Empresa.Tb_Pessoas_Id
-            JOIN Tb_Vagas ON Tb_Empresa.CNPJ = Tb_Vagas.Tb_Empresa_CNPJ
-            WHERE Tb_Vagas.Tb_Anuncios_Id = $idAnuncio";
-
-    $result = mysqli_query($_con, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        // A consulta foi bem-sucedida e retornou pelo menos uma linha
-        $row = mysqli_fetch_assoc($result);
-        $emailCriadorVaga = $row['Email'];
-
-        if ($emailCriadorVaga == $emailUsuario) {
-            // Se o usuário atual é o mesmo que criou a vaga, definir $autenticadoComopublicador como true
-            $autenticadoComoPublicador = true; // Corrigido o nome da variável
-            // Exibir um link para a página de edição da vaga
-            echo '<a href="../EditarVaga/editarVaga.php?id=' . $idAnuncio . '">Editar Vaga</a><br>';
+        if ($result && $result->num_rows > 0) {
+            $dadosAnuncio = mysqli_fetch_assoc($result);
+            // Atribuição dos valores dos campos
+            $Categoria = $dadosAnuncio['Categoria'];
+            $Titulo = $dadosAnuncio['Titulo'];
+            $Descricao = $dadosAnuncio['Descricao'];
+            $Area = $dadosAnuncio['Area'];
+            $Cidade = $dadosAnuncio['Cidade'];
+            $Nivel_Operacional = $dadosAnuncio['Nivel_Operacional'];
+            $Data_de_Criacao = $dadosAnuncio['Data_de_Criacao'];
+            $Modalidade = $dadosAnuncio['Modalidade'];
+            $Beneficios = $dadosAnuncio['Beneficios'];
+            $Requisitos = $dadosAnuncio['Requisitos'];
+            $Horario = $dadosAnuncio['Horario'];
+            $Estado = $dadosAnuncio['Estado'];
+            $Jornada = $dadosAnuncio['Jornada'];
+            $CEP = $dadosAnuncio['CEP'];
+            $Rua = $dadosAnuncio['Rua'];
+            $Numero = $dadosAnuncio['Numero'];
+            $Bairro = $dadosAnuncio['Bairro'];
+            $NomeEmpresa = $dadosAnuncio['Nome_da_Empresa'];
+        } else {
+            die("Erro: Anúncio não encontrado.");
         }
+
+        $stmt->close();
+    } else {
+        die("Erro ao preparar a consulta para obter detalhes do anúncio.");
+    }
+
+    // Consulta para obter o status da vaga
+    $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = ?";
+    $stmt2 = $_con->prepare($sql2);
+
+    if ($stmt2) {
+        $stmt2->bind_param("i", $idAnuncio);
+        $stmt2->execute();
+        $result2 = $stmt2->get_result();
+
+        if ($result2 && $result2->num_rows > 0) {
+            $row = mysqli_fetch_assoc($result2);
+            $Status = $row['Status'];
+        } else {
+            $Status = ''; // Valor padrão se não houver resultados
+        }
+
+        $stmt2->close();
+    } else {
+        die("Erro ao preparar a consulta para obter o status da vaga.");
+    }
+
+    // Consulta para verificar se o usuário é o publicador da vaga
+    $sql3 = "SELECT Tb_Pessoas.Email 
+            FROM Tb_Pessoas 
+            JOIN Tb_Empresa ON Tb_Pessoas.Id_Pessoas = Tb_Empresa.Tb_Pessoas_Id 
+            JOIN Tb_Vagas ON Tb_Empresa.CNPJ = Tb_Vagas.Tb_Empresa_CNPJ 
+            WHERE Tb_Vagas.Tb_Anuncios_Id = ?";
+
+    $stmt3 = $_con->prepare($sql3);
+
+    if ($stmt3) {
+        $stmt3->bind_param("i", $idAnuncio);
+        $stmt3->execute();
+        $result3 = $stmt3->get_result();
+
+        if ($result3 && $result3->num_rows > 0) {
+            $row = mysqli_fetch_assoc($result3);
+            $emailCriadorVaga = $row['Email'];
+
+            if ($emailCriadorVaga == $emailUsuario) {
+                $autenticadoComoPublicador = true; // O usuário é o publicador da vaga
+            }
+        }
+
+        $stmt3->close();
+    } else {
+        die("Erro ao preparar a consulta para verificar o criador da vaga.");
+    }
+
+    // Consulta para obter as áreas únicas
+    $sql_areas = "SELECT DISTINCT Area FROM Tb_Anuncios ORDER BY Area ASC";
+    $stmt_areas = $_con->prepare($sql_areas);
+
+    if ($stmt_areas) {
+        $stmt_areas->execute();
+        $result_areas = $stmt_areas->get_result();
+
+        if ($result_areas && $result_areas->num_rows > 0) {
+            $areas = [];
+            while ($row = $result_areas->fetch_assoc()) {
+                $areas[] = $row['Area'];
+            }
+        } else {
+            $areas = []; // No caso de não haver resultados
+        }
+
+        $stmt_areas->close();
+    } else {
+        die("Erro ao preparar a consulta para obter áreas.");
+    }
+
+    // Consulta para obter o ID da pessoa com base no e-mail
+    $sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+    $stmt = $_con->prepare($sql);
+
+    if ($stmt) {
+        $stmt->bind_param("s", $emailUsuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $idPessoa = $row['Id_Pessoas'];
+        } else {
+            die("Erro: Usuário não encontrado.");
+        }
+
+        $stmt->close();
+    } else {
+        die("Erro ao preparar a consulta para obter o ID da pessoa.");
+    }
+
+    // Consulta para obter o tema selecionado pelo usuário
+    $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+    $stmt_tema = $_con->prepare($query);
+
+    if ($stmt_tema) {
+        $stmt_tema->bind_param("i", $idPessoa);
+        $stmt_tema->execute();
+        $result_tema = $stmt_tema->get_result();
+
+        if ($result_tema && $result_tema->num_rows > 0) {
+            $row = $result_tema->fetch_assoc();
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // Valor padrão se não houver resultados
+        }
+
+        $stmt_tema->close();
+    } else {
+        die("Erro ao preparar a consulta para obter o tema do usuário.");
     }
 }
-$sql_areas = "
-    SELECT DISTINCT Area 
-    FROM Tb_Anuncios 
-    ORDER BY Area ASC
-";
-
-// Preparar e executar a consulta para obter as áreas únicas
-$stmt_areas = $_con->prepare($sql_areas);
-$stmt_areas->execute();
-$result_areas = $stmt_areas->get_result();
-
-$areas = ["Tecnologia da Informação", "Construção Civil"]; // Adicionar a opção "Todas" ao início do array
-
-if ($result_areas && $result_areas->num_rows > 0) {
-    while ($row = $result_areas->fetch_assoc()) {
-        $areas[] = $row['Area']; // Adicionar áreas ao array
-    }
-}
-
-
-// Fechar a conexão com o banco de dados
-mysqli_close($_con);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -150,7 +189,7 @@ mysqli_close($_con);
     <title>Anunciar</title>
     <link rel="stylesheet" type="text/css" href="../criarVaga/criaVaga.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    
+
 </head>
 
 <body>
@@ -159,13 +198,14 @@ mysqli_close($_con);
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+                src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
-            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
-            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li> <!--Arrumar esse link  -->
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <div class="divCommon">
@@ -174,7 +214,7 @@ mysqli_close($_con);
             // Verificar se o parâmetro 'id' está definido na URL
             if (isset($_GET['id'])) {
                 $idAnuncio = $_GET['id'];
-                echo '<a class="btnVoltar" href="../Vaga/vaga.php?id=' . $idAnuncio . '">';
+                echo '<a class="btnVoltar" href="../MinhaVaga/Minhavaga.php?id=' . $idAnuncio . '">';
             } else {
                 // Se 'id' não estiver definido na URL, exibir uma mensagem de erro
                 echo '<p class="error">ID do anúncio não especificado na URL</p>';
@@ -206,11 +246,11 @@ mysqli_close($_con);
                                         required value="<?php echo $dadosAnuncio['Area'] ?>">
                                     <div class="labelLine">Área</div>
                                     <datalist id="areaList">
-                                    <?php
-                            foreach ($areas as $area) {
-                                echo "<option value='$area'>$area</option>";
-                            }
-                            ?>
+                                        <?php
+                                        foreach ($areas as $area) {
+                                            echo "<option value='$area'>$area</option>";
+                                        }
+                                        ?>
                                     </datalist>
                                 </div>
                                 <small name="aviso"></small>
@@ -320,7 +360,8 @@ mysqli_close($_con);
                         <div>
                             <div class="divRadioContent">
                                 <h3>Tipo de profissional:</h3>
-                                <input type="radio" name="categoria" id="jovemAprendiz" value="Jovem Aprendiz" required <?php echo ($dadosAnuncio['Categoria'] == 'Jovem Aprendiz') ? 'checked' : ''; ?>>
+                                <input type="radio" name="categoria" id="jovemAprendiz" value="Jovem Aprendiz" required
+                                    <?php echo ($dadosAnuncio['Categoria'] == 'Jovem Aprendiz') ? 'checked' : ''; ?>>
                                 <input type="radio" name="categoria" id="estagio" value="Estágio" required <?php echo ($dadosAnuncio['Categoria'] == 'Estágio') ? 'checked' : ''; ?>>
                                 <input type="radio" name="categoria" id="clt" value="CLT" required <?php echo ($dadosAnuncio['Categoria'] == 'CLT') ? 'checked' : ''; ?>>
                                 <input type="radio" name="categoria" id="pj" value="PJ" required <?php echo ($dadosAnuncio['Categoria'] == 'PJ') ? 'checked' : ''; ?>>
@@ -336,7 +377,7 @@ mysqli_close($_con);
                                 <input type="radio" name="nivel" id="medio" value="Ensino Médio" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Médio') ? 'checked' : ''; ?>>
                                 <input type="radio" name="nivel" id="tecnico" value="Ensino Técnico" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Técnico') ? 'checked' : ''; ?>>
                                 <input type="radio" name="nivel" id="superior" value="Ensino Superior" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Superior') ? 'checked' : ''; ?>>
-                                                                
+
                                 <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
                                 <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label>
                                 <label for="superior" class="btnRadio" id="btnSuperior">Ensino Superior</label>
@@ -354,26 +395,37 @@ mysqli_close($_con);
                             </div>
                             <div class="divRadioContent">
                                 <h3>Jornada:</h3>
-                                <input type="radio" name="jornada" id="meio_periodo" value="Meio período" required<?php echo ($dadosAnuncio['Jornada'] == 'Meio período') ? 'checked' : ''; ?>>
+                                <!-- Botão de rádio para meio período -->
+                                <input type="radio" name="jornada" id="meio_periodo" value="Meio período" required <?php echo ($dadosAnuncio['Jornada'] === 'Meio período') ? 'checked' : ''; ?>>
                                 <label for="meio_periodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>
-                                <input type="radio" name="jornada" id="tempo_integral" value="Tempo integral" required <?php echo ($dadosAnuncio['Jornada'] == 'Tempo integral') ? 'checked' : ''; ?>>
+
+                                <!-- Botão de rádio para tempo integral -->
+                                <input type="radio" name="jornada" id="tempo_integral" value="Tempo integral" required
+                                    <?php echo ($dadosAnuncio['Jornada'] === 'Tempo integral') ? 'checked' : ''; ?>>
                                 <label for="tempo_integral" class="btnRadio" id="btnIntegral">Tempo integral</label>
-                                <small name="aviso"></small>
+
+                                <small name="aviso"></small> <!-- Mensagens de validação -->
                             </div>
+
+
                         </div>
                         <div>
                             <div class="divRadioContent">
                                 <h3>Status:</h3>
                                 <div class="contentInput">
-                                <input type="radio" name="status" id="aberto" value="Aberto" required <?php echo ($Status == 'Aberto') ? 'checked' : ''; ?>>
-                                <input type="radio" name="status" id="encerrado" value="Encerrado" required <?php echo ($Status == 'Encerrado') ? 'checked' : ''; ?>>
-                                <label for="aberto" class="btnRadio" id="btnAberto">Aberto</label>
-                                <label for="encerrado" class="btnRadio" id="btnEncerrado">Encerrado</label>
-                                <small name="aviso"></small>
+                                    <!-- Verifique se $Status tem o valor esperado -->
+                                    <input type="radio" name="status" id="aberto" value="Aberto" required <?php echo ($Status === 'Aberto') ? 'checked' : ''; ?>>
+                                    <input type="radio" name="status" id="encerrado" value="Encerrado" required <?php echo ($Status === 'Encerrado') ? 'checked' : ''; ?>>
+
+                                    <label for="aberto" class="btnRadio" id="btnAberto">Aberto</label>
+                                    <label for="encerrado" class="btnRadio" id="btnEncerrado">Encerrado</label>
+
+                                    <small name="aviso"></small> <!-- Mensagem de aviso ou validação -->
+                                </div>
                             </div>
+
                         </div>
                     </div>
-                </div>
                     <input type="hidden" name="emailSession" value="<?php echo $emailUsuario; ?>">
                     <input type="hidden" name="idAnuncio" value="<?php echo $idAnuncio; ?>">
 
@@ -389,10 +441,47 @@ mysqli_close($_con);
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
-        <p>SIAS 2024</p>
+        <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="radioButtons.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
+    <script src="../../../modoNoturno.js"></script>
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            }
+
+        });
+    </script>
+
     <script>
         $(document).ready(function () {
             $('#cep').on('change', function () {
