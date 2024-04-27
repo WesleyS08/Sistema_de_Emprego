@@ -3,107 +3,87 @@ include "../../services/conexão_com_banco.php";
 
 session_start();
 
+// Obter informações de sessão
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$emailUsuario = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : (isset($_SESSION['google_session']) ? $_SESSION['google_session'] : '');
 
-// Verificar se o usuário está autenticado como empresa
+// Verificar se o usuário está autenticado como publicador
 $autenticadoComoPublicador = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
 
-// Definição de variáveis 
-$emailUsuario = '';
-$podeEditar = false; // Inicialize $podeEditar como false
-
-// Verificar se o usuário está autenticado e definir o e-mail do usuário
-if (isset($_SESSION['email_session'])) {
-    // Se estiver autenticado com e-mail/senha e for do tipo candidato
-    $emailUsuario = $_SESSION['email_session'];
-} elseif (isset($_SESSION['google_session'])) {
-    // Se estiver autenticado com o Google e for do tipo candidato
-    $emailUsuario = $_SESSION['google_session'];
-} else {
-    // Verificação para a possível edição 
-    $autenticadoComoEmpresa = false;
-}
-
+// Inicializar variáveis
+$podeEditar = false;
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
-
-// Quartar consulta para selecionar o tema que  a pessoa selecionou 
+// Consulta para obter o tema da pessoa
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
 
-// Verifique se a preparação foi bem-sucedida
 if ($stmt) {
-    // Execute a query com o parâmetro
-    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+    
+    // Verificar resultado
+    $result = $stmt->get_result();
+    $tema = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['Tema'] : null;
+
+    $stmt->close();
+} else {
+    die("Erro ao preparar a consulta para obter o tema.");
+}
+
+// Consulta para obter informações da empresa
+$query = "SELECT * FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?";
+$stmt = $_con->prepare($query);
+
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
     $stmt->execute();
 
-    // Obter resultado usando o método correto
-    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
-    if ($result) {
-        $row = $result->fetch_assoc(); // Obter a linha como array associativo
-        if ($row && isset($row['Tema'])) {
-            $tema = $row['Tema'];
-        } else {
-            $tema = null; // No caso de não haver resultado
-        }
-    } else {
-        $tema = null; // Se o resultado for nulo
+    // Obter o resultado como um array associativo
+    $result = $stmt->get_result();
+    if ($result && $result->num_rows > 0) {
+        $empresa = $result->fetch_assoc();
+        
+        // Extrair valores da empresa
+        $CNPJ = isset($empresa['CNPJ']) ? $empresa['CNPJ'] : '';
+        $nomeEmpresa = isset($empresa['Nome_da_Empresa']) ? $empresa['Nome_da_Empresa'] : '';
+        $areaEmpresa = isset($empresa['Area_da_Empresa']) ? $empresa['Area_da_Empresa'] : '';
+        $sobreEmpresa = isset($empresa['Sobre_a_Empresa']) ? $empresa['Sobre_a_Empresa'] : '';
+        $telefoneEmpresa = isset($empresa['Telefone']) ? $empresa['Telefone'] : '';
+        $facebookEmpresa = isset($empresa['Facebook']) ? $empresa['Facebook'] : '';
+        $linkedinEmpresa = isset($empresa['Linkedin']) ? $empresa['Linkedin'] : '';
+        $instagramEmpresa = isset($empresa['Instagram']) ? $empresa['Instagram'] : '';
+        $caminhoImagemPerfil = isset($empresa['Img_Perfil']) ? $empresa['Img_Perfil'] : '';
+        $caminhoImagemBanner = isset($empresa['Img_Banner']) ? $empresa['Img_Banner'] : '';
     }
+
+    $stmt->close();
 } else {
-    die("Erro ao preparar a query.");
+    die("Erro ao preparar a consulta para obter informações da empresa.");
 }
 
-// Evite inserção direta de variáveis na consulta SQL para prevenir injeção de SQL
-// Use declarações preparadas para evitar problemas de segurança
-$query = "SELECT e.*
-          FROM Tb_Pessoas p
-          INNER JOIN Tb_Empresa e ON p.Id_Pessoas = e.Tb_Pessoas_Id
-          WHERE p.Id_Pessoas = ?";
-
-$stmt = mysqli_prepare($_con, $query);
+// Verificar se o usuário pode editar
+$query = "SELECT Email FROM Tb_Pessoas WHERE Id_Pessoas = (SELECT Tb_Pessoas_Id FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?)";
+$stmt = $_con->prepare($query);
 
 if ($stmt) {
-    // Vincular parâmetros
-    mysqli_stmt_bind_param($stmt, "i", $idPessoa);
-
-    // Executar a consulta
-    mysqli_stmt_execute($stmt);
-
-    // Vincular variáveis de resultado
-    mysqli_stmt_bind_result($stmt, $CNPJ, $Tb_Pessoas_Id, $Img_Banner, $Area_de_Atuacao, $Facebook, $Github, $Linkedin, $Instagram, $Nome_da_Empresa, $Sobre_a_Empresa, $Area_da_Empresa, $Avaliacao_de_Funcionarios, $Avaliacao_Geral, $Telefone, $Img_Perfil);
-
-    // Obter o resultado
-    mysqli_stmt_fetch($stmt);
-
-    // Fechar declaração
-    mysqli_stmt_close($stmt);
-}
-
-// Definir valores padrão ou deixar em branco se não houver dados da empresa
-$nomeEmpresa = isset($Nome_da_Empresa) ? $Nome_da_Empresa : '';
-$areaEmpresa = isset($Area_da_Empresa) ? $Area_da_Empresa : '';
-$sobreEmpresa = isset($Sobre_a_Empresa) ? $Sobre_a_Empresa : '';
-$telefoneEmpresa = isset($Telefone) ? $Telefone : '';
-$facebookEmpresa = isset($Facebook) ? $Facebook : '';
-$linkedinEmpresa = isset($Linkedin) ? $Linkedin : '';
-$instagramEmpresa = isset($Instagram) ? $Instagram : '';
-$caminhoImagemPerfil = isset($Img_Perfil) ? $Img_Perfil : '';
-$caminhoImagemBanner = isset($Img_Banner) ? $Img_Banner : '';
-
-$query = "SELECT Email FROM Tb_Pessoas WHERE Id_Pessoas = (SELECT Tb_Pessoas_Id FROM Tb_Empresa WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario'))";
-$result = mysqli_query($_con, $query);
-
-if ($result && mysqli_num_rows($result) > 0) {
-    $dadosUsuario = mysqli_fetch_assoc($result);
-    $emailUsuarioBanco = $dadosUsuario['Email'];
-
-    // Verificar se o usuário tem permissão para editar
-    if ($emailUsuario == $emailUsuarioBanco) {
-        $podeEditar = true;
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    
+    if ($result && $result->num_rows > 0) {
+        $emailUsuarioBanco = $result->fetch_assoc()['Email'];
+        
+        $podeEditar = ($emailUsuario == $emailUsuarioBanco);
     }
-}
-?>
 
+    $stmt->close();
+} else {
+    die("Erro ao preparar a consulta para verificar a permissão de edição.");
+}
+
+?>
 
 
 <!DOCTYPE html>
