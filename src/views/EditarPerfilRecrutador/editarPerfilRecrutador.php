@@ -49,10 +49,6 @@ if ($stmt) {
     die("Erro ao preparar a query.");
 }
 
-
-$idAnuncio = isset($_GET['Id_Anuncios']) ? $_GET['Id_Anuncios'] : '';// Aqui você define o ID do anúncio, pode ser recuperando-o de algum lugar no seu sistema.
-
-
 // Recuperar informações da empresa do banco de dados com base no e-mail do usuário
 $query = "SELECT * FROM Tb_Empresa WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
 $result = mysqli_query($_con, $query);
@@ -274,7 +270,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             <input type="submit" value="Atualizar">
                         </div>
 
-                        <form method="post" action="../../../src/services/ExcluirConta/excluirConta.php">
+                        <form method="post" action="../../../src/services/ExcluirConta/excluirContaEmpresa.php">
                             <div style="    text-align: center;
     margin-top: 20px;
     cursor: pointer;
