@@ -3,18 +3,14 @@ include "../../services/conexão_com_banco.php";
 
 session_start();
 
-
 // Verificar se o usuário está autenticado como empresa
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 $emailUsuario = '';
 
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
 if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
-    // Se estiver autenticado com e-mail/senha e for do tipo empresa
     $emailUsuario = $_SESSION['email_session'];
-
 } elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
-    // Se estiver autenticado com o Google e for do tipo empresa
     $emailUsuario = $_SESSION['google_session'];
 } else {
     // Se não estiver autenticado como empresa, redirecione para a página de login
@@ -22,7 +18,8 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
     exit;
 }
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-// Consulta para obter o ID da pessoa logada
+
+// Primeira consulta para obter o ID da pessoa logada
 $sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
 
@@ -30,33 +27,26 @@ $stmt = $_con->prepare($sql);
 if ($stmt) {
     // Vincule o parâmetro ao placeholder na consulta
     $stmt->bind_param("s", $emailUsuario);
-
     // Execute a declaração
     $stmt->execute();
-
     // Obtenha o resultado da consulta
     $result = $stmt->get_result();
-
     // Verifique se a consulta retornou resultados
     if ($result->num_rows > 0) {
         // Obtenha o ID da pessoa
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
-
-        // Use o ID da pessoa como necessário no restante do seu código
     } else {
-        // Se não houver resultados, lide com isso de acordo com sua lógica de aplicativo
     }
-
-    // Feche a declaração
     $stmt->close();
 }
 
+// Segunda consulta para obter os Anuncios 
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
-JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-WHERE Tb_Pessoas.Email = ?";
+    JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+    JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+    JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+    WHERE Tb_Pessoas.Email = ?";
 
 $stmt = $_con->prepare($sql_verificar_empresa);
 $stmt->bind_param("s", $emailUsuario);
@@ -74,17 +64,14 @@ if ($result === false) {
 $emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
 $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
 
-// Segunda consulta para obter o status da vaga
+// Terceira consulta para obter o status da vaga
 $sql2 = "SELECT V.* 
-FROM Tb_Vagas V
-JOIN Tb_Empresa E ON V.Tb_Empresa_CNPJ = E.CNPJ
-JOIN Tb_Pessoas P ON E.Tb_Pessoas_Id = P.Id_Pessoas
-WHERE P.Email = ?";
+    FROM Tb_Vagas V
+    JOIN Tb_Empresa E ON V.Tb_Empresa_CNPJ = E.CNPJ
+    JOIN Tb_Pessoas P ON E.Tb_Pessoas_Id = P.Id_Pessoas
+    WHERE P.Email = ?";
 
-// Prepare a declaração
 $stmt = mysqli_prepare($_con, $sql2);
-
-// Verifique se a preparação da declaração foi bem-sucedida
 if ($stmt) {
     // Vincule o parâmetro ao placeholder na consulta
     mysqli_stmt_bind_param($stmt, "s", $email);
@@ -105,15 +92,49 @@ if ($stmt) {
         // Defina um valor padrão para $Status se a consulta não retornar resultados
         $Status = '';
     }
-
     // Feche a declaração
     mysqli_stmt_close($stmt);
 } else {
-    // Se a preparação da declaração falhar, lide com o erro aqui
     echo "Erro na preparação da declaração: " . mysqli_error($_con);
 }
 
+// Quartar consulta para selecionar o tema que  a pessoa selecionou 
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
 
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    // Execute a query com o parâmetro
+    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->execute();
+
+    // Obter resultado usando o método correto
+    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
+    if ($result) {
+        $row = $result->fetch_assoc(); // Obter a linha como array associativo
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // No caso de não haver resultado
+        }
+    } else {
+        $tema = null; // Se o resultado for nulo
+    }
+} else {
+    die("Erro ao preparar a query.");
+}
+$sql = "SELECT e.CNPJ
+        FROM Tb_Pessoas p
+        INNER JOIN Tb_Empresa e ON p.Id_Pessoas = e.Tb_Pessoas_Id
+        WHERE p.Id_Pessoas = '$idPessoa'";
+
+$result = $_con->query($sql);
+
+if ($result->num_rows > 0) {
+    // Armazenar o CNPJ da empresa na variável $cnpj_empresa
+    $row = $result->fetch_assoc();
+    $cnpj_empresa = $row["CNPJ"];
+}
 ?>
 
 
@@ -126,6 +147,11 @@ if ($stmt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 
 <body>
@@ -157,8 +183,10 @@ if ($stmt) {
             </div>
         </div>
     </div>
+    <div id="infoTema"></div>
     <div class="divCarrossel">
         <div class="divTituloComBtn">
+
             <h2>Meus anúncios</h2>
             <button class="btnAdicionar" onclick="window.location.href='../criarVaga/criarVaga.php'">
                 <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"
@@ -167,84 +195,84 @@ if ($stmt) {
             </button>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftAnuncios">                
+            <a class="btnLeftSlider" id="leftAnuncios">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
             <a class="btnRightSlider" id="rightAnuncios">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                    <div class="carrosselBox" id="carrosselAnuncios">
-                    <?php
-                        // Loop para exibir as vagas restantes no carrossel
-                        while ($row = $result->fetch_assoc()) {
-                            // Consulta para contar o número de inscritos para esta vaga
-                            $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
-                            $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
-                            $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
-                            $stmt_inscricoes->execute();
-                            $result_inscricoes = $stmt_inscricoes->get_result();
+            <div class="carrosselBox" id="carrosselAnuncios">
+                <?php
+                // Loop para exibir as vagas restantes no carrossel
+                while ($row = $result->fetch_assoc()) {
+                    // Consulta para contar o número de inscritos para esta vaga
+                    $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
+                    $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
+                    $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
+                    $stmt_inscricoes->execute();
+                    $result_inscricoes = $stmt_inscricoes->get_result();
 
-                            // Verificar se a consulta teve sucesso
-                            if ($result_inscricoes === false) {
-                                // Tratar o erro, se necessário
-                                echo "Erro na consulta de contagem de inscrições: " . $_con->error;
-                                exit;
-                            }
+                    // Verificar se a consulta teve sucesso
+                    if ($result_inscricoes === false) {
+                        // Tratar o erro, se necessário
+                        echo "Erro na consulta de contagem de inscrições: " . $_con->error;
+                        exit;
+                    }
 
-                            // Obter o resultado da contagem de inscrições
-                            $row_inscricoes = $result_inscricoes->fetch_assoc();
-                            $total_inscricoes = $row_inscricoes['total_inscricoes'];
+                    // Obter o resultado da contagem de inscrições
+                    $row_inscricoes = $result_inscricoes->fetch_assoc();
+                    $total_inscricoes = $row_inscricoes['total_inscricoes'];
 
-                            // Exibir a vaga e o número de inscritos
-                            echo '<a class="postLink" href="../MinhaVaga/Minhavaga.php?id=' . $row["Id_Anuncios"] . '">';
-                            echo '<article class="post">';
-                            echo '<div class="divAcessos">';
-                            echo '<img src="../../../imagens/people.svg"></img>';
-                            echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
-                            echo '</div>';
+                    // Exibir a vaga e o número de inscritos
+                    echo '<a class="postLink" href="../MinhaVaga/Minhavaga.php?id=' . $row["Id_Anuncios"] . '">';
+                    echo '<article class="post">';
+                    echo '<div class="divAcessos">';
+                    echo '<img src="../../../imagens/people.svg"></img>';
+                    echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
+                    echo '</div>';
 
-                            echo '<header>';
-                            switch ($row["Categoria"]) {
-                                case "CLT":
-                                    echo '<img src="../../../imagens/clt.svg">';
-                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                    break;
-                                case "Estágio":
-                                case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
-                                    echo '<img src="../../../imagens/estagio.svg">';
-                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                    break;
-                                case "PJ":
-                                    echo '<img src="../../../imagens/pj.svg">';
-                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                                    break;
-                                default:
-                                    echo '<label class="tipoVaga">Categoria não definida</label>';
-                                    break;
-                            }
-                            echo '</header>';
-                            echo '<section>';
-                            echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                            echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? (strlen($row["Descricao"]) > 55 ? substr($row["Descricao"], 0, 55) . '...' : $row["Descricao"]) : "Descrição não definida") . '</p>';
+                    echo '<header>';
+                    switch ($row["Categoria"]) {
+                        case "CLT":
+                            echo '<img src="../../../imagens/clt.svg">';
+                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                            break;
+                        case "Estágio":
+                        case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
+                            echo '<img src="../../../imagens/estagio.svg">';
+                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                            break;
+                        case "PJ":
+                            echo '<img src="../../../imagens/pj.svg">';
+                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                            break;
+                        default:
+                            echo '<label class="tipoVaga">Categoria não definida</label>';
+                            break;
+                    }
+                    echo '</header>';
+                    echo '<section>';
+                    echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
+                    echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? (strlen($row["Descricao"]) > 55 ? substr($row["Descricao"], 0, 55) . '...' : $row["Descricao"]) : "Descrição não definida") . '</p>';
 
 
-                            // Exibir o status da vaga e a data de criação
-                            $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                            $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
-                            if ($row['Status'] == 'Aberto') {
-                                echo '<p style="color: green;">' . $row['Status'] . '</p>';
-                                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-                            } else {
-                                echo '<p style="color: red;">' . $row['Status'] . '</p>';
-                                echo '<p class="dataVaga">' . $datadeTermino . '</p>';
-                            }
+                    // Exibir o status da vaga e a data de criação
+                    $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
+                    $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+                    if ($row['Status'] == 'Aberto') {
+                        echo '<p style="color: green;">' . $row['Status'] . '</p>';
+                        echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                    } else {
+                        echo '<p style="color: red;">' . $row['Status'] . '</p>';
+                        echo '<p class="dataVaga">' . $datadeTermino . '</p>';
+                    }
 
-                            echo '</section>';
-                            echo '</article>';
-                            echo '</a>';
-                        }
-                        ?>
-                    </div>
+                    echo '</section>';
+                    echo '</article>';
+                    echo '</a>';
+                }
+                ?>
+            </div>
         </div>
     </div>
     <div class="divCarrossel">
@@ -260,71 +288,71 @@ if ($stmt) {
             <a class="btnLeftSlider" id="leftTestes">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
-            <a class="btnRightSlider" id="rightTestes">                
+            <a class="btnRightSlider" id="rightTestes">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                    <div class="carrosselBox" id="carrosselTestes">
-                        <a class="testeCarrosselLink">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/excel.svg"></img>
-                                <div class="divDetalhesTeste">
-                                    <div>
-                                        <p class="nomeTeste">Excel Básico</p>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeCarrosselLink">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/figma.svg"></img>
-                                <div class="divDetalhesTeste">
-                                    <div>
-                                        <p class="nomeTeste">Figma Intermediário</p>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeCarrosselLink">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/word.svg"></img>
-                                <div class="divDetalhesTeste">
-                                    <div>
-                                        <p class="nomeTeste">Word Avançado</p>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                        <a class="testeCarrosselLink">
-                            <article class="testeCarrossel">
-                                <div class="divAcessos">
-                                    <img src="../../../imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
-                                </div>
-                                <img src="../../../imagens/python.svg"></img>
-                                <div class="testeDetalhes">
-                                    <div>
-                                        <p class="nomeTeste">Python Básico</p>
-                                        <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                                    </div>
-                                </div>
-                            </article>
-                        </a>
-                    </div>
+            <div class="carrosselBox" id="carrosselTestes">
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/excel.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Excel Básico</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/figma.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Figma Intermediário</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/word.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Word Avançado</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/python.svg"></img>
+                        <div class="testeDetalhes">
+                            <div>
+                                <p class="nomeTeste">Python Básico</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            </div>
         </div>
     </div>
     <div class="divCarrossel">
@@ -332,86 +360,63 @@ if ($stmt) {
             <h2>Perfis de usuários</h2>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftPerfis">                
+            <a class="btnLeftSlider" id="leftPerfis">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
             <a class="btnRightSlider" id="rightPerfis">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                    <div class="carrosselBox" id="carrosselPerfis">
-                        <a class="perfilLink">
+            <div class="carrosselBox" id="carrosselPerfis">
+                <?php
+                $sqlCandidatos = "SELECT p.Id_Pessoas AS Pessoa_Id, p.Nome AS Nome, c.Autodefinicao AS Autodefinicao, c.Img_Perfil AS Img_Perfil
+                FROM Tb_Inscricoes i
+                INNER JOIN Tb_Candidato c ON i.Tb_Candidato_CPF = c.CPF
+                INNER JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+                WHERE i.Tb_Vagas_Tb_Empresa_CNPJ = '$cnpj_empresa'";
+
+                $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
+
+                // Verificar se a consulta retornou resultados
+                if ($resultCandidatos && mysqli_num_rows($resultCandidatos) > 0) {
+                    // Loop sobre as informações das candidaturas
+                    while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
+                        ?>
+                        <a class="perfilLink"
+                            href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Pessoa_Id']; ?>">
                             <article class="perfil">
-                                <div class="divImg"></div>
+                                <div class="divImg">
+                                    <!-- Mostrar a imagem de perfil -->
+                                    <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt=""
+                                        style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
+                                </div>
+
                                 <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
+                                    <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
                                 </section>
                                 <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
+                                    <?php
+                                    $limite_caracteres = 55; 
+                                    $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
+                            
+                                    if (strlen($autodefinicao) > $limite_caracteres) {
+                                        $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
+                                    }
+                                    ?>
+                                    <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
                                 </section>
                             </article>
                         </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                        <a class="perfilLink">
-                            <article class="perfil">
-                                <div class="divImg"></div>
-                                <section>
-                                    <p class="nomePessoa">Clarice Josefina</p>
-                                </section>
-                                <section>
-                                    <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados
-                                        | Azure</small>
-                                </section>
-                            </article>
-                        </a>
-                    </div>
+                        <?php
+                    }
+
+                } else {
+                    // Caso não haja candidatos inscritos
+                    echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para esta vaga.</p>";
+
+                }
+                ?>
+
+            </div>
         </div>
     </div>
     <div class="divCommon">
@@ -422,48 +427,48 @@ if ($stmt) {
             <div class="carrosselInfinito">
                 <div class="trilhaCarrossel">
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/mysql.svg">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/php.svg">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/firebase.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
-                    </div>
-                    <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/javascript.svg">
-                    </div>
-                    <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/html.svg">
-                    </div>
-                    <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/css.svg">
-                    </div>
-                    
-        
-                    <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/mysql.svg">
-                    </div>
-                    <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/php.svg">
-                    </div>
-                    <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/firebase.svg">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
                     </div>
                     <div class="slide">
                         <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/javascript.svg">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/html.svg">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
                     </div>
                     <div class="slide">
-                        <img src="../../assets/images/logos_parceiros/css.svg">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
+                    </div>
+
+
+                    <div class="slide">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
+                    </div>
+                    <div class="slide">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
                     </div>
                 </div>
             </div>
@@ -478,9 +483,16 @@ if ($stmt) {
 
 
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="carrosselAnuncios.js"></script>
     <script src="carrosselTestes.js"></script>
-    <script src="carrosselPerfis.js"></script>    
+    <script src="carrosselPerfis.js"></script>
+    <script>
+        // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
+
+
     <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
@@ -525,6 +537,39 @@ if ($stmt) {
             console.log("Nome do usuário está vazio!");
         }
     </script>
+
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            }
+
+        });
+    </script>
+
+
 </body>
 
 </html>

@@ -89,14 +89,35 @@ function Claro(){
     }
 }
 
-function AlternarModo(){
-    if(modo=="claro"){
+// Passamos o tema Salvo no banco de dados, não mexam nisso 
+if (typeof temaDoBancoDeDados !== 'undefined') {
+    if (temaDoBancoDeDados === "noturno") {
+        Noturno(); 
+    } else {
+        Claro(); 
+    }
+} else {
+    Claro(); // Ou Noturno, conforme necessário
+}
+
+function AlternarModo() {
+    if (modo === "claro") {
         Noturno();
-    }else if(modo=="noturno"){
+        salvarTemaNoBancoDeDados("noturno", function() {
+            // Callback chamado após o tema ser salvo com sucesso
+            // Atualizar o modo após o tema ser salvo
+            modo = "noturno";
+        });
+    } else if (modo === "noturno") {
         Claro();
+        salvarTemaNoBancoDeDados("claro", function() {
+            // Callback chamado após o tema ser salvo com sucesso
+            // Atualizar o modo após o tema ser salvo
+            modo = "claro";
+        });
     }
 }
 
+
+
 document.querySelector(".btnModo").addEventListener("click", AlternarModo);
-
-
