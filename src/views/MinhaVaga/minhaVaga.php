@@ -321,13 +321,14 @@ if ($stmt) {
         <ul>
             <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
-            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li> <!--Arrumar esse link  -->
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
+            <li><a href="../../../index.php">Deslogar</a></li>
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
         <?php
-        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=' . $idAnuncio . '">';
+        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id='. $idAnuncio . '">';
         ?>
         <div style="padding: 6px 12px;
                 box-shadow: 0px 0px 6px silver;

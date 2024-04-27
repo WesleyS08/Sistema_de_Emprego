@@ -205,9 +205,10 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+        <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
-            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li> <!--Arrumar esse link  -->
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
+            <li><a href="../../../index.php">Deslogar</a></li>
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
@@ -313,8 +314,16 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     }
                     echo '</header>';
                     echo '<section>';
-                    echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                    echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida") . '</p>';
+                    echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
+                    $Descricao = $row["Descricao"] ?? "Descrição não definida";
+
+                    $shortDescription = strlen($Descricao) > 55 ? substr($Descricao, 0, 55) . '...' : $Descricao;
+
+                    $wrappedText = wordwrap($shortDescription, 30, "<br>\n", true);
+
+
+                    echo '<p class="empresaVaga">' . $wrappedText . '</p>';
+
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                     $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";

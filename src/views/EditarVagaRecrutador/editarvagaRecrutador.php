@@ -202,9 +202,10 @@ if (isset($_GET['id'])) {
                 src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+        <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
-            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li> <!--Arrumar esse link  -->
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
+            <li><a href="../../../index.php">Deslogar</a></li>
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
