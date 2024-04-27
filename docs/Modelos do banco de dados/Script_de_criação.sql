@@ -74,7 +74,6 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Empresa` (
   `CNPJ` VARCHAR(14) NOT NULL,
   `Tb_Pessoas_Id` INT NOT NULL,
   `Img_Banner` VARCHAR(255) NULL,
-  `Area_de_Atuacao` VARCHAR(45) NULL,
   `Facebook` VARCHAR(45) NULL,
   `Github` VARCHAR(45) NULL,
   `Linkedin` VARCHAR(45) NULL,
