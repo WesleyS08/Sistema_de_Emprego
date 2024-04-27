@@ -8,7 +8,7 @@ session_start();
 if (!isset($_SESSION['email_session']) && !isset($_SESSION['google_session'])) {
     // Redirecionar o usuário para a página anterior
     header('Location: ' . $_SERVER['HTTP_REFERER']);
-    exit(); // Terminar o script após o redirecionamento
+    exit();
 }
 
 // Recuperar o ID do questionário da URL
@@ -47,85 +47,90 @@ if ($result) {
         <div style="display: flex;">
             <h2 id="minutos">30</h2>
             <h2>:</h2>
-            <h2 id="segundos">00</h2>
+            <h2 id="segundos">00</h2> 
         </div>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
     </nav>
-    <div class="containerTeste">
-        <div class="contentTeste">
-            <div class="divTitulo">                
-                <h2><?php echo $nomeQuestionario ?></h2>
-                <div class="divSubtitulo">
-                    <p>Por:&nbsp;</p>
-                    <p id="autorTeste">Microsoft</p>
+    <form id="respostas" method="post" action="../../../src/services/Testes/processarTeste.php?id=<?php echo $id_questionario; ?>">
+        <div class="containerTeste">
+            <div class="contentTeste">
+                <div class="divTitulo">                
+                    <h2><?php echo $nomeQuestionario ?></h2>
+                    <div class="divSubtitulo">
+                        <p>Por:&nbsp;</p>
+                        <p id="autorTeste">Microsoft</p>
+                    </div>
+                    <div class="divSubtitulo">
+                        <p>Nível:&nbsp;</p>
+                        <p id="nivelTeste"><?php echo $nivelQuestionario ?></p>
+                    </div>
                 </div>
-                <div class="divSubtitulo">
-                    <p>Nível:&nbsp;</p>
-                    <p id="nivelTeste"><?php echo $nivelQuestionario ?></p>
-                </div>
-            </div>
-            <div class="divQuestoes">
-                <?php                    
-                    // Verifica se o parâmetro 'id' foi passado na URL
-                    if(isset($_GET['id'])) {
-                        $id_questionario = $_GET['id'];
+                <div class="divQuestoes">
+                    <?php                    
+                        // Verifica se o parâmetro 'id' foi passado na URL
+                        if(isset($_GET['id'])) {
+                            $id_questionario = $_GET['id'];
 
-                        // Select no SQL para puxar as questões com base no id do questionário
-                        $sql = "SELECT q.Id_Questao, q.Enunciado, a.Id_Alternativa, a.Texto
-                        FROM Tb_Questoes q
-                        INNER JOIN Tb_Alternativas a ON q.Id_Questao = a.Tb_Questoes_Id_Questao
-                        WHERE q.Id_Questionario = $id_questionario
-                        ORDER BY RAND(), q.Id_Questao, a.Id_Alternativa";
+                            // Select no SQL para puxar as questões com base no id do questionário
+                            $sql = "SELECT q.Id_Questao, q.Enunciado, a.Id_Alternativa, a.Texto
+                            FROM Tb_Questoes q
+                            INNER JOIN Tb_Alternativas a ON q.Id_Questao = a.Tb_Questoes_Id_Questao
+                            WHERE q.Id_Questionario = $id_questionario
+                            ORDER BY RAND(), q.Id_Questao, a.Id_Alternativa";
 
-                        $result = $_con->query($sql);
+                            $result = $_con->query($sql);
 
-                        $questoes = array();
+                            $questoes = array();
 
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {   
-                                // Se a questão ainda não existe no array, uma nova entrada vai ser criada para ela
-                                if (!isset($questoes[$row["Id_Questao"]])) {
-                                    $questoes[$row["Id_Questao"]] = array(
-                                        "Enunciado" => $row["Enunciado"],
-                                        "Alternativas" => array()
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {   
+                                    // Se a questão ainda não existe no array, uma nova entrada vai ser criada para ela
+                                    if (!isset($questoes[$row["Id_Questao"]])) {
+                                        $questoes[$row["Id_Questao"]] = array(
+                                            "Enunciado" => $row["Enunciado"],
+                                            "Alternativas" => array()
+                                        );
+                                    }
+                                    
+                                    // Adiciona a alternativa ao array de alternativas da questão
+                                    $questoes[$row["Id_Questao"]]["Alternativas"][] = array(
+                                        "Id_Alternativa" => $row["Id_Alternativa"],
+                                        "Texto" => $row["Texto"]
                                     );
                                 }
-                                
-                                // Adiciona a alternativa ao array de alternativas da questão
-                                $questoes[$row["Id_Questao"]]["Alternativas"][] = array(
-                                    "Id_Alternativa" => $row["Id_Alternativa"],
-                                    "Texto" => $row["Texto"]
-                                );
-                            }
 
-                            // Aqui as questões deverão ser exibidas
-                            foreach ($questoes as $idQuestao => $questao) {
-                                echo "<article class='articleQuestao'>";
-                                echo "<div class='divPergunta'>";
-                                echo "<p name='numQuestao' class='numQuestao'>" . $idQuestao . "</p>";
-                                echo "<p>.</p>";
-                                echo "<p name='pergunta' class='pergunta'>" . $questao["Enunciado"] . "</p>";
-                                echo "</div>";
-                                echo "<div class='divAlternativas'>";
-                                foreach ($questao["Alternativas"] as $alternativa) {
-                                    echo "<div><input type='radio' name='questao_" . $idQuestao . "' value='" . $alternativa["Id_Alternativa"] . "'><label for=''>" . $alternativa["Texto"] . "</label></div>";
+                                $contador = 0;
+
+                                // Aqui as questões deverão ser exibidas
+                                foreach ($questoes as $idQuestao => $questao) {
+                                    echo "<article class='articleQuestao'>";
+                                    echo "<div class='divPergunta'>";
+                                    echo "<p name='numQuestao' class='numQuestao'>" . $idQuestao . "</p>";
+                                    echo "<p>.</p>";
+                                    echo "<p name='pergunta' class='pergunta'>" . $questao["Enunciado"] . "</p>";
+                                    echo "</div>";
+                                    echo "<div class='divAlternativas'>";
+                                    // Nomeie todos os inputs com o mesmo nome, indicando a questão
+                                    foreach ($questao["Alternativas"] as $alternativa) {
+                                        echo "<div><input type='radio' name='respostas[$idQuestao]' value='" . $alternativa["Id_Alternativa"] . "'><label for=''>" . $alternativa["Texto"] . "</label></div>";
+                                    }
+                                    echo "</div>";
+                                    echo "</article>";
                                 }
-                                echo "</div>";
-                                echo "</article>";
+                            } else { // Caso não encontre nada, não irá retornar obviamente nada, e irá exibir a mensagem de erro.
+                                echo "Nenhuma questão encontrada.";
                             }
-                        } else { // Caso não encontre nada, não irá retornar obviamente nada, e irá exibir a mensagem de erro.
-                            echo "Nenhuma questão encontrada.";
+                        } else {
+                            echo "ID do questionário não especificado na URL.";
                         }
-                    } else {
-                        echo "ID do questionário não especificado na URL.";
-                    }
-                ?>
-                <div class="divButton">
-                    <button id="finalizar">Finalizar teste</button>
-                </div> 
-            </div>          
+                    ?>
+                    <div class="divButton">
+                        <button id="finalizar">Finalizar teste</button>
+                    </div> 
+                </div>          
+            </div>
         </div>
-    </div>
+    </form>
     <script src="cronometro.js"></script>     
     <script src="tituloDigitavel.js"></script>
     <script src="contagemQuestoes.js"></script>

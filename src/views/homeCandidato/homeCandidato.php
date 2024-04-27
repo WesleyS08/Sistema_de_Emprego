@@ -274,7 +274,7 @@ function determinarImagemCategoria($categoria)
                 <div class="carrosselBox" id="carrosselTestes">                       
                     <a class="testeCarrosselLink">
                     <?php
-                        if ($result->num_rows > 0) {
+                        if ($result_questionarios->num_rows > 0) {
                             // Loop através dos resultados da consulta
                             while ($row = $result_questionarios->fetch_assoc()) {
                                 // Extrai os dados do questionário
@@ -338,8 +338,6 @@ function determinarImagemCategoria($categoria)
                     <div class="slide">
                         <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
                     </div>
-                    
-        
                     <div class="slide">
                         <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>

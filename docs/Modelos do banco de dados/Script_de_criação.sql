@@ -115,25 +115,27 @@ ENGINE = InnoDB;
 -- Table `SIAS`.`Tb_Resultados`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Resultados` (
+  `Id_Resultado` INT NOT NULL AUTO_INCREMENT,
   `Tb_Questionarios_ID` INT NOT NULL,
-  `Tb_Candidato_CPF` VARCHAR(12) NOT NULL,
-  `Nota` INT NULL,
+  `Tb_Candidato_CPF` VARCHAR(11) NOT NULL,
+  `Pontuacao` INT NULL,
   `Quantidade_de_Acertos` INT NULL,
-  `Data_do_Questionarios` DATETIME NULL,
+  `Data_do_Questionario` DATETIME NULL,
   `Numero_de_Tentativas` INT NULL,
-  PRIMARY KEY (`Tb_Questionarios_ID`, `Tb_Candidato_CPF`),
-  INDEX `fk_Tb_Questionarios_has_Tb_Candidato_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC) ,
-  INDEX `fk_Tb_Questionarios_has_Tb_Candidato_Tb_Questionarios1_idx` (`Tb_Questionarios_ID` ASC) ,
-  CONSTRAINT `fk_Tb_Questionarios_has_Tb_Candidato_Tb_Questionarios1`
-    FOREIGN KEY (`Tb_Questionarios_ID`)
-    REFERENCES `SIAS`.`Tb_Questionarios` (`Id_Questionario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Tb_Questionarios_has_Tb_Candidato_Tb_Candidato1`
+  PRIMARY KEY (`Id_Resultado`),
+  INDEX `fk_Tb_Resultados_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC),
+  INDEX `fk_Tb_Resultados_Tb_Questionarios1_idx` (`Tb_Questionarios_ID` ASC),
+  CONSTRAINT `fk_Tb_Resultados_Tb_Candidato1`
     FOREIGN KEY (`Tb_Candidato_CPF`)
     REFERENCES `SIAS`.`Tb_Candidato` (`CPF`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Tb_Resultados_Tb_Questionarios1`
+    FOREIGN KEY (`Tb_Questionarios_ID`)
+    REFERENCES `SIAS`.`Tb_Questionarios` (`Id_Questionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
 
 
@@ -248,27 +250,6 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Recomendacoes` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `SIAS`.`Tb_Respostas` - Esta tabela pode não ser mais necessária.
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Respostas` (
-  `Id_Respostas` INT NOT NULL AUTO_INCREMENT,
-  `Errada` VARCHAR(255) NULL,
-  `Errada2` VARCHAR(255) NULL,
-  `Errada3` VARCHAR(255) NULL,
-  `Errada4` VARCHAR(255) NULL,
-  `Certa` VARCHAR(255) NULL,
-  `Tb_Questionarios_Id_Questionario` INT NOT NULL,
-  PRIMARY KEY (`Id_Respostas`, `Tb_Questionarios_Id_Questionario`),
-  INDEX `fk_Tb_Respostas_Tb_Questionarios1_idx` (`Tb_Questionarios_Id_Questionario` ASC) ,
-  CONSTRAINT `fk_Tb_Respostas_Tb_Questionarios1`
-    FOREIGN KEY (`Tb_Questionarios_Id_Questionario`)
-    REFERENCES `SIAS`.`Tb_Questionarios` (`Id_Questionario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Questoes`
 -- -----------------------------------------------------
@@ -305,6 +286,21 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionario_Questoes` (
     PRIMARY KEY (`Id_Questionario_Questoes`),
     FOREIGN KEY (`Id_Questionario`) REFERENCES `Tb_Questionarios` (`Id_Questionario`) ON DELETE CASCADE,
     FOREIGN KEY (`Tb_Questoes_Id_Questao`) REFERENCES `Tb_Questoes` (`Id_Questao`) ON DELETE CASCADE
+)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `SIAS`.`Tb_Respostas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Respostas` (
+  `Id_Resposta` INT NOT NULL AUTO_INCREMENT,
+  `Tb_Questoes_Id_Questao` INT NOT NULL,
+  `Tb_Candidato_CPF` VARCHAR(11) NOT NULL,
+  `Tb_Alternativas_Id_Alternativa` INT NOT NULL,
+  PRIMARY KEY (`Id_Resposta`),
+  FOREIGN KEY (`Tb_Questoes_Id_Questao`) REFERENCES `Tb_Questoes` (`Id_Questao`) ON DELETE CASCADE,
+  FOREIGN KEY (`Tb_Candidato_CPF`) REFERENCES `Tb_Candidato` (`CPF`) ON DELETE CASCADE,
+  FOREIGN KEY (`Tb_Alternativas_Id_Alternativa`) REFERENCES `Tb_Alternativas` (`Id_Alternativa`) ON DELETE CASCADE
 )
 ENGINE = InnoDB;
 

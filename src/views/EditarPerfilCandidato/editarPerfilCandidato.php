@@ -25,7 +25,7 @@ if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato'
 }
 
 // Recuperar informações do candidato do banco de dados com base no e-mail do usuário
-$query = "SELECT p.Nome, p.Sobrenome, p.Email, c.Descricao, c.Area_de_Interesse, c.Motivacoes, c.Experiencia, c.Cursos, c.Escolaridade, c.Cidade, c.Telefone, c.PCD, c.Idade, c.Data_Nascimento, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
+$query = "SELECT p.Nome, p.Email, c.Descricao, c.Area_de_Interesse, c.Motivacoes, c.Experiencia, c.Cursos, c.Escolaridade, c.Cidade, c.Telefone, c.PCD, c.Idade, c.Data_Nascimento, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
           INNER JOIN Tb_Candidato AS c ON p.Id_Pessoas = c.Tb_Pessoas_Id 
           WHERE p.Email = '$emailUsuario'";

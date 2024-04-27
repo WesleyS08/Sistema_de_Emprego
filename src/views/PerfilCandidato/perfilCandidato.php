@@ -21,7 +21,7 @@ if (isset($_SESSION['email_session'])) {
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
 // Recuperar informações do candidato do banco de dados com base no ID fornecido na URL
-$query = "SELECT p.Nome, p.Email, c.Area_de_Interesse, c.Descricao, c.Experiencia, c.Cursos, c.Experiencia, c.Escolaridade, c.Idade, c.Cidade, c.Telefone, c.PCD, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
+$query = "SELECT p.Nome, p.Email, c.Area_de_Interesse, c.CPF, c.Descricao, c.Experiencia, c.Cursos, c.Experiencia, c.Escolaridade, c.Idade, c.Cidade, c.Telefone, c.PCD, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
           INNER JOIN Tb_Candidato AS c ON p.Id_Pessoas = c.Tb_Pessoas_Id 
           WHERE p.Id_Pessoas = '$idPessoa'";
@@ -45,6 +45,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     $cursoUsuario = $dadosCandidato['Cursos'];
     $escolaridadeUsuario = $dadosCandidato['Escolaridade'];
     $pcdUsuario = $dadosCandidato['PCD'];
+    $cpfCandidato = $dadosCandidato['CPF'];
 
     // Verificar se o perfil tem o mesmo email da sessão que está ativada
     if ($emailUsuario == $dadosCandidato['Email']) {
@@ -54,6 +55,50 @@ if ($result && mysqli_num_rows($result) > 0) {
         // O perfil não tem o mesmo email da sessão
         $podeEditar = false;
     }
+
+    // Lógica da pontuação dos questionários
+
+    // Recuperar o CPF do candidato da consulta resultante
+    if ($result && mysqli_num_rows($result) > 0) {
+        $dadosCandidato = mysqli_fetch_assoc($result);
+        //$cpfCandidato = $dadosCandidato['CPF'];
+
+        // Consultar todas as áreas únicas dos questionários respondidos pelo candidato
+        $queryAreas = "SELECT DISTINCT q.Area 
+                    FROM Tb_Resultados r
+                    INNER JOIN Tb_Questionarios q ON r.Tb_Questionarios_ID = q.Id_Questionario
+                    WHERE r.Tb_Candidato_CPF = '$cpfCandidato'";
+
+        // Array para armazenar a pontuação total de cada área
+        $pontuacaoPorArea = array();
+
+        // Executar a consulta para obter todas as áreas únicas dos questionários respondidos pelo candidato
+        $resultAreas = mysqli_query($_con, $queryAreas);
+
+        // Verificar se a consulta retornou resultados
+        if ($resultAreas && mysqli_num_rows($resultAreas) > 0) {
+            // Loop através de todas as áreas recuperadas
+            while ($row = mysqli_fetch_assoc($resultAreas)) {
+                $area = $row['Area'];
+
+                // Consultar a pontuação total do candidato na área atual
+                $queryPontuacaoArea = "SELECT SUM(Pontuacao) AS PontuacaoTotal FROM Tb_Resultados WHERE Tb_Candidato_CPF = '$cpfCandidato' AND Tb_Questionarios_ID IN (SELECT Id_Questionario FROM Tb_Questionarios WHERE Area = '$area')";
+                $resultPontuacaoArea = mysqli_query($_con, $queryPontuacaoArea);
+
+                // Verificar se a consulta retornou resultados
+                if ($resultPontuacaoArea && mysqli_num_rows($resultPontuacaoArea) > 0) {
+                    $rowPontuacao = mysqli_fetch_assoc($resultPontuacaoArea);
+                    $pontuacaoTotal = $rowPontuacao['PontuacaoTotal'];
+                    // Armazenar a pontuação total da área atual no array
+                    $pontuacaoPorArea[$area] = $pontuacaoTotal;
+                } else {
+                    // Se não houver pontuação registrada para a área atual, definir a pontuação como 0
+                    $pontuacaoPorArea[$area] = 0;
+                }
+            }
+        }
+    }
+
 } else {
 
     echo "Candidato não encontrado.";
@@ -287,28 +332,21 @@ if ($result && mysqli_num_rows($result) > 0) {
                 </lord-icon>
                 </div>
                 <div class="divPontuacao">
-                    <div class="divPontuacaoArea">                        
-                        <label class="nomeArea">Tecnologia:</label>
-                        <div class="divProgresso"> 
-                            <div class="progresso" name="progressoPontos"></div>
-                            <label id="pontosTi" name="numPontos">100</label>
-                        </div>
-                    </div>
-                    <div class="divPontuacaoArea">                        
-                        <label class="nomeArea">Direito:&nbsp</label>
-                        <div class="divProgresso"> 
-                            <div class="progresso" name="progressoPontos"></div>
-                            <label id="pontosDireito" name="numPontos">100</label>
-                        </div>
-                    </div>
-                    <div class="divPontuacaoArea">                        
-                        <label class="nomeArea">Medicina:&nbsp</label>
-                        <div class="divProgresso"> 
-                            <div class="progresso" name="progressoPontos"></div>
-                            <label id="pontosMedicina" name="numPontos">300</label>
-                        </div>
-                    </div>
-                </div>
+                    <?php
+
+                    arsort($pontuacaoPorArea);
+                    
+                    foreach ($pontuacaoPorArea as $area => $pontuacao) {
+                        echo "<div class='divPontuacaoArea'>";
+                        echo "<label class='nomeArea'>$area:</label>";
+                        echo "<div class='divProgresso'>";
+                        echo "<div class='progresso'></div>"; // Adicione a classe 'progresso' aqui
+                        echo "<label class='numPontos'>$pontuacao</label>"; // Adicione a classe 'numPontos' aqui
+                        echo "</div>";
+                        echo "</div>";
+                    }
+                    ?>
+            </div>
             </div>           
             <div class="contentPerfil">
                 <h3>Contato</h3>
