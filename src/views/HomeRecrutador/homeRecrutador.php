@@ -41,15 +41,54 @@ if ($stmt) {
     $stmt->close();
 }
 
-// Segunda consulta para obter os Anuncios 
+// Quartar consulta para selecionar o tema que  a pessoa selecionou 
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    // Execute a query com o parâmetro
+    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->execute();
+
+    // Obter resultado usando o método correto
+    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
+    if ($result) {
+        $row = $result->fetch_assoc(); // Obter a linha como array associativo
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // No caso de não haver resultado
+        }
+    } else {
+        $tema = null; // Se o resultado for nulo
+    }
+} else {
+    die("Erro ao preparar a query.");
+}
+
+$sql = "SELECT e.CNPJ
+        FROM Tb_Pessoas p
+        INNER JOIN Tb_Empresa e ON p.Id_Pessoas = e.Tb_Pessoas_Id
+        WHERE p.Id_Pessoas = '$idPessoa'";
+
+$result = $_con->query($sql);
+
+if ($result->num_rows > 0) {
+    // Armazenar o CNPJ da empresa na variável $cnpj_empresa
+    $row = $result->fetch_assoc();
+    $cnpj_empresa = $row["CNPJ"];
+}
+
+// Nova consulta para obter os Anuncios por Id_Pessoas
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
     JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
     JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
     JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-    WHERE Tb_Pessoas.Email = ?";
+    WHERE Tb_Pessoas.Id_Pessoas = ?";
 
 $stmt = $_con->prepare($sql_verificar_empresa);
-$stmt->bind_param("s", $emailUsuario);
+$stmt->bind_param("i", $idPessoa); // 'i' indica que o parâmetro é um número inteiro
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -98,43 +137,7 @@ if ($stmt) {
     echo "Erro na preparação da declaração: " . mysqli_error($_con);
 }
 
-// Quartar consulta para selecionar o tema que  a pessoa selecionou 
-$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
-$stmt = $_con->prepare($query);
 
-// Verifique se a preparação foi bem-sucedida
-if ($stmt) {
-    // Execute a query com o parâmetro
-    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
-    $stmt->execute();
-
-    // Obter resultado usando o método correto
-    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
-    if ($result) {
-        $row = $result->fetch_assoc(); // Obter a linha como array associativo
-        if ($row && isset($row['Tema'])) {
-            $tema = $row['Tema'];
-        } else {
-            $tema = null; // No caso de não haver resultado
-        }
-    } else {
-        $tema = null; // Se o resultado for nulo
-    }
-} else {
-    die("Erro ao preparar a query.");
-}
-$sql = "SELECT e.CNPJ
-        FROM Tb_Pessoas p
-        INNER JOIN Tb_Empresa e ON p.Id_Pessoas = e.Tb_Pessoas_Id
-        WHERE p.Id_Pessoas = '$idPessoa'";
-
-$result = $_con->query($sql);
-
-if ($result->num_rows > 0) {
-    // Armazenar o CNPJ da empresa na variável $cnpj_empresa
-    $row = $result->fetch_assoc();
-    $cnpj_empresa = $row["CNPJ"];
-}
 ?>
 
 
@@ -147,11 +150,6 @@ if ($result->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    <style>
-        body {
-            overflow-x: hidden;
-        }
-    </style>
 </head>
 
 <body>
@@ -165,7 +163,7 @@ if ($result->num_rows > 0) {
         <ul>
             <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagass</a></li>
-            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
@@ -195,84 +193,84 @@ if ($result->num_rows > 0) {
             </button>
         </div>
         <div class="container">
-            <a class="btnLeftSlider" id="leftAnuncios">
+            <a class="btnLeftSlider" id="leftAnuncios">                
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
             <a class="btnRightSlider" id="rightAnuncios">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-            <div class="carrosselBox" id="carrosselAnuncios">
+                <div class="carrosselBox" id="carrosselAnuncios">
                 <?php
-                // Loop para exibir as vagas restantes no carrossel
-                while ($row = $result->fetch_assoc()) {
-                    // Consulta para contar o número de inscritos para esta vaga
-                    $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
-                    $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
-                    $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
-                    $stmt_inscricoes->execute();
-                    $result_inscricoes = $stmt_inscricoes->get_result();
+                        // Loop para exibir as vagas restantes no carrossel
+                        while ($row = $result->fetch_assoc()) {
+                            // Consulta para contar o número de inscritos para esta vaga
+                            $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
+                            $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
+                            $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
+                            $stmt_inscricoes->execute();
+                            $result_inscricoes = $stmt_inscricoes->get_result();
 
-                    // Verificar se a consulta teve sucesso
-                    if ($result_inscricoes === false) {
-                        // Tratar o erro, se necessário
-                        echo "Erro na consulta de contagem de inscrições: " . $_con->error;
-                        exit;
-                    }
+                            // Verificar se a consulta teve sucesso
+                            if ($result_inscricoes === false) {
+                                // Tratar o erro, se necessário
+                                echo "Erro na consulta de contagem de inscrições: " . $_con->error;
+                                exit;
+                            }
 
-                    // Obter o resultado da contagem de inscrições
-                    $row_inscricoes = $result_inscricoes->fetch_assoc();
-                    $total_inscricoes = $row_inscricoes['total_inscricoes'];
+                            // Obter o resultado da contagem de inscrições
+                            $row_inscricoes = $result_inscricoes->fetch_assoc();
+                            $total_inscricoes = $row_inscricoes['total_inscricoes'];
 
-                    // Exibir a vaga e o número de inscritos
-                    echo '<a class="postLink" href="../MinhaVaga/Minhavaga.php?id=' . $row["Id_Anuncios"] . '">';
-                    echo '<article class="post">';
-                    echo '<div class="divAcessos">';
-                    echo '<img src="../../../imagens/people.svg"></img>';
-                    echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
-                    echo '</div>';
+                            // Exibir a vaga e o número de inscritos
+                            echo '<a class="postLink" href="../MinhaVaga/Minhavaga.php?id=' . $row["Id_Anuncios"] . '">';
+                            echo '<article class="post">';
+                            echo '<div class="divAcessos">';
+                            echo '<img src="../../../imagens/people.svg"></img>';
+                            echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
+                            echo '</div>';
 
-                    echo '<header>';
-                    switch ($row["Categoria"]) {
-                        case "CLT":
-                            echo '<img src="../../../imagens/clt.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        case "Estágio":
-                        case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
-                            echo '<img src="../../../imagens/estagio.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        case "PJ":
-                            echo '<img src="../../../imagens/pj.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        default:
-                            echo '<label class="tipoVaga">Categoria não definida</label>';
-                            break;
-                    }
-                    echo '</header>';
-                    echo '<section>';
-                    echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                    echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? (strlen($row["Descricao"]) > 55 ? substr($row["Descricao"], 0, 55) . '...' : $row["Descricao"]) : "Descrição não definida") . '</p>';
+                            echo '<header>';
+                            switch ($row["Categoria"]) {
+                                case "CLT":
+                                    echo '<img src="../../../imagens/clt.svg">';
+                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                    break;
+                                case "Estágio":
+                                case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
+                                    echo '<img src="../../../imagens/estagio.svg">';
+                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                    break;
+                                case "PJ":
+                                    echo '<img src="../../../imagens/pj.svg">';
+                                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                                    break;
+                                default:
+                                    echo '<label class="tipoVaga">Categoria não definida</label>';
+                                    break;
+                            }
+                            echo '</header>';
+                            echo '<section>';
+                            echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
+                            echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? (strlen($row["Descricao"]) > 55 ? substr($row["Descricao"], 0, 55) . '...' : $row["Descricao"]) : "Descrição não definida") . '</p>';
 
 
-                    // Exibir o status da vaga e a data de criação
-                    $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                    $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
-                    if ($row['Status'] == 'Aberto') {
-                        echo '<p style="color: green;">' . $row['Status'] . '</p>';
-                        echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-                    } else {
-                        echo '<p style="color: red;">' . $row['Status'] . '</p>';
-                        echo '<p class="dataVaga">' . $datadeTermino . '</p>';
-                    }
+                            // Exibir o status da vaga e a data de criação
+                            $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
+                            $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+                            if ($row['Status'] == 'Aberto') {
+                                echo '<p style="color: green;">' . $row['Status'] . '</p>';
+                                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                            } else {
+                                echo '<p style="color: red;">' . $row['Status'] . '</p>';
+                                echo '<p class="dataVaga">' . $datadeTermino . '</p>';
+                            }
 
-                    echo '</section>';
-                    echo '</article>';
-                    echo '</a>';
-                }
-                ?>
-            </div>
+                            echo '</section>';
+                            echo '</article>';
+                            echo '</a>';
+                        }
+                        ?>
+                </div>
         </div>
     </div>
     <div class="divCarrossel">
@@ -395,7 +393,7 @@ if ($result->num_rows > 0) {
                                 </section>
                                 <section>
                                     <?php
-                                    $limite_caracteres = 55; 
+                                    $limite_caracteres = 55;
                                     $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
                             
                                     if (strlen($autodefinicao) > $limite_caracteres) {
@@ -411,7 +409,7 @@ if ($result->num_rows > 0) {
 
                 } else {
                     // Caso não haja candidatos inscritos
-                    echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para esta vaga.</p>";
+                    echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para suas vagas.</p>";
 
                 }
                 ?>
@@ -491,8 +489,6 @@ if ($result->num_rows > 0) {
         // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
-
-
     <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
@@ -537,7 +533,6 @@ if ($result->num_rows > 0) {
             console.log("Nome do usuário está vazio!");
         }
     </script>
-
     <script>
         var idPessoa = <?php echo $idPessoa; ?>;
 
