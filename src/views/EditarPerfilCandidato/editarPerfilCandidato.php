@@ -97,8 +97,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeCandidato/homeCandidato.php"><img id="logo"
-                src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
@@ -109,37 +108,30 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <button class="btnVoltar"
-                onclick="window.location.href='../perfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'">
+            <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'">
                 << /button>
                     <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>"
-                autocomplete="off" enctype="multipart/form-data">
+            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
                 <div class="divBackgroundImg">
                     <div class="btnEditarFundo">
-                        <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
-                            colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:34px;height:34px">
+                        <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:34px;height:34px">
                         </lord-icon>
                     </div>
-                    <input type="file" id="fundo_upload" name="fundo_upload" style="display: none;"
-                        accept="image/jpeg, image/png">
+                    <input type="file" id="fundo_upload" name="fundo_upload" style="display: none;" accept="image/jpeg, image/png">
 
                     <!-- Adicione um campo de entrada de arquivo -->
-                    <input type="file" id="foto_perfil_upload" name="foto_perfil_upload" style="display: none;"
-                        accept="image/jpeg, image/png">
+                    <input type="file" id="foto_perfil_upload" name="foto_perfil_upload" style="display: none;" accept="image/jpeg, image/png">
 
                     <!-- Div de Foto de Perfil -->
                     <div class="divFotoDePerfil" id="divFotoDePerfil" style="position: relative;">
                         <!-- Div para exibir a imagem de perfil -->
-                        <div id="preview_container"
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;border-radius: 50%">
+                        <div id="preview_container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;border-radius: 50%">
                         </div>
                         <!-- Div para o ícone de edição -->
                         <div class="divIconeEditar">
-                            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
-                                colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:110px;height:110px">
+                            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:110px;height:110px">
                             </lord-icon>
                         </div>
                     </div>
@@ -152,16 +144,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="nome" name="nome" type="text" required
-                                    value="<?php echo $nomeUsuario ?>">
+                                <input class="inputAnimado" id="nome" name="nome" type="text" required value="<?php echo $nomeUsuario ?>">
                                 <div class="labelLine">Nome</div>
                             </div>
                             <small name="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required
-                                    value="<?php echo $areaUsuario ?>">
+                                <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required value="<?php echo $areaUsuario ?>">
                                 <div class="labelLine">Área de Atuação</div>
                                 <datalist id="areaList">
                                     <?php
@@ -177,9 +167,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     <div class="inputUnico">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="breveDescricao" name="breveDescricao" type="text"
-                                    placeholder="Ex: Desenvolvedor Fullstack | Certificação AWS | Administrador de Rede |"
-                                    value="<?php echo $autoDefinicaoUsuario ?>" required>
+                                <input class="inputAnimado" id="breveDescricao" name="breveDescricao" type="text" placeholder="Ex: Desenvolvedor Fullstack | Certificação AWS | Administrador de Rede |" value="<?php echo $autoDefinicaoUsuario ?>" required>
                                 <div class="labelLine">Breve descrição</div>
                             </div>
                             <small name="aviso"></small>
@@ -188,8 +176,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="email" name="email" type="text"
-                                    value="<?php echo $emailUsuario ?>" required>
+                                <input class="inputAnimado" id="email" name="email" type="text" value="<?php echo $emailUsuario ?>" required>
                                 <div class="labelLine">Email</div>
                             </div>
                             <small id="aviso" name="aviso" style="display: none;">Caso altere o email é necessário
@@ -197,8 +184,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text"
-                                    value="<?php echo $telefoneUsuario ?>" required>
+                                <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" value="<?php echo $telefoneUsuario ?>" required>
                                 <div class="labelLine">Telefone</div>
                             </div>
                             <small name="aviso"></small>
@@ -212,8 +198,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
 
                             <div class="contentInput">
                                 <!-- Preenche o campo de data com a data de nascimento do usuário -->
-                                <input class="inputAnimado" maxlength="10" id="data" name="data" type="text"
-                                    value="<?php echo htmlspecialchars($dataNascimentoUsuario_formatada); ?>" required>
+                                <input class="inputAnimado" maxlength="10" id="data" name="data" type="text" value="<?php echo htmlspecialchars($dataNascimentoUsuario_formatada); ?>" required>
                                 <div class="labelLine">Data de Nascimento</div>
                             </div>
 
@@ -221,8 +206,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="genero" name="genero" type="text" list="generoList"
-                                    value="<?php echo $generoUsuario ?>" required>
+                                <input class="inputAnimado" id="genero" name="genero" type="text" list="generoList" value="<?php echo $generoUsuario ?>" required>
                                 <div class="labelLine">Gênero</div>
                                 <datalist id="generoList">
                                     <option>Homem Cisgênero</option>
@@ -255,8 +239,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
 
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="cidade" name="cidade" type="text"
-                                    value="<?php echo $cidadeUsuario ?>" required>
+                                <input class="inputAnimado" id="cidade" name="cidade" type="text" value="<?php echo $cidadeUsuario ?>" required>
                                 <div class="labelLine">Cidade</div>
                             </div>
                             <small name="aviso"></small>
@@ -269,8 +252,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     <div class="divTextArea" id="divTextAreaCandidato">
                         <div class="containerTextArea">
                             <div class="contentInputTextArea">
-                                <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text"
-                                    required><?php echo $sobreUsuario ?></textarea>
+                                <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text" required><?php echo $sobreUsuario ?></textarea>
                                 <div class="textArealabelLine">Sobre Mim</div>
                             </div>
                             <small name="aviso"></small>
@@ -283,8 +265,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             <div class="divTextArea">
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="habilidades" id="habilidades"
-                                            type="text" required><?php echo $cursoUsuario ?></textarea>
+                                        <textarea class="textAreaAnimada" name="habilidades" id="habilidades" type="text" required><?php echo $cursoUsuario ?></textarea>
                                         <div class="textArealabelLine">Adicione cursos e tecnologias que você domina
                                         </div>
                                     </div>
@@ -297,8 +278,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             <div class="divTextArea">
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="cursos" id="cursos" type="text"
-                                            required><?php echo $escolaridadeUsuario ?></textarea>
+                                        <textarea class="textAreaAnimada" name="cursos" id="cursos" type="text" required><?php echo $escolaridadeUsuario ?></textarea>
                                         <div class="textArealabelLine">Adicione suas formações</div>
                                     </div>
                                     <small name="aviso"></small>
@@ -310,8 +290,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             <div class="divTextArea">
                                 <div class="containerTextArea">
                                     <div class="contentInputTextArea">
-                                        <textarea class="textAreaAnimada" name="experiencias" id="experiencias"
-                                            type="text" required><?php echo $experienciaUsuario ?></textarea>
+                                        <textarea class="textAreaAnimada" name="experiencias" id="experiencias" type="text" required><?php echo $experienciaUsuario ?></textarea>
                                         <div class="textArealabelLine">Adicione suas experiências profissionais</div>
                                     </div>
                                     <small name="aviso"></small>
@@ -385,6 +364,36 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     <div class="divBtnAtualizar">
                         <input type="submit" value="Atualizar">
                     </div>
+
+
+                    <form method="post" action="../../../src/services/ExcluirConta/excluirContaCandidato.php">
+                        <div style="    text-align: center;
+    margin-top: 20px;
+    cursor: pointer;
+    border: 1px solid #c90000;
+    font-size: 16pt;
+    width: 200px;
+    height: 50px;
+    background-color: #ef0505;
+    color: whitesmoke;
+    border-radius: 14px;
+    transition: 0.2s ease;
+    box-shadow: 0px 0px 8px silver;
+    align-content: center;
+    margin-left: 35%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                            <a href="../../../src/services/ExcluirConta/excluirContaCandidato.php?id=<?php echo $idPessoa; ?>">Excluir
+                                Conta</a>
+                        </div>
+                    </form>
+
+
+
+
+
+
+
+
+
                     <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
                 </div>
             </form>
@@ -418,19 +427,19 @@ if ($result_areas && $result_areas->num_rows > 0) {
     ?>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Adiciona um evento de clique ao botão de edição de foto de perfil
-            $('#divFotoDePerfil').click(function () {
+            $('#divFotoDePerfil').click(function() {
                 $('#foto_perfil_upload').click(); // Simula o clique no campo de upload de foto de perfil
             });
 
             // Evento disparado quando um arquivo é selecionado para a foto de perfil
-            $('#foto_perfil_upload').change(function () {
+            $('#foto_perfil_upload').change(function() {
                 var file = this.files[0];
                 var reader = new FileReader();
 
                 // Define o que fazer quando o arquivo é lido
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     $('#preview_container').css('background-image', 'url(' + e.target.result + ')'); // Define a imagem de fundo com a imagem carregada
                     $('#preview_container').show(); // Exibe o contêiner de pré-visualização
                 };
@@ -448,7 +457,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     $urlImagemFundo = $dadosCandidato['Banner'];
     ?>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Função para carregar a imagem de fundo com base na URL fornecida
             function carregarImagemDeFundo(url) {
                 $('.divBackgroundImg').css('background-image', 'url(' + url + ')');
@@ -458,19 +467,19 @@ if ($result_areas && $result_areas->num_rows > 0) {
             carregarImagemDeFundo('<?php echo $urlImagemFundo; ?>');
 
             // Adiciona um evento de clique ao botão de edição do fundo
-            $('.btnEditarFundo').click(function () {
+            $('.btnEditarFundo').click(function() {
                 // Simula o clique no campo de upload de fundo
                 $('#fundo_upload').click();
             });
 
             // Evento disparado quando um arquivo é selecionado
-            $('#fundo_upload').change(function () {
+            $('#fundo_upload').change(function() {
                 // Lê o arquivo selecionado
                 var file = this.files[0];
                 var reader = new FileReader();
 
                 // Define o que fazer quando o arquivo é lido
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     // Aplica a imagem de fundo à div
                     carregarImagemDeFundo(e.target.result);
                 };
