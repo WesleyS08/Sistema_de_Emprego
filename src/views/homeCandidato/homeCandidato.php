@@ -52,6 +52,30 @@ if ($stmt) {
     // Feche a declaração
     $stmt->close();
 }
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    // Execute a query com o parâmetro
+    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->execute();
+
+    // Obter resultado usando o método correto
+    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
+    if ($result) {
+        $row = $result->fetch_assoc(); // Obter a linha como array associativo
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // No caso de não haver resultado
+        }
+    } else {
+        $tema = null; // Se o resultado for nulo
+    }
+} else {
+    die("Erro ao preparar a query.");
+}
 
 // Consulta SQL para verificar dados do candidato
 $sql_verificar_candidato = "SELECT * FROM Tb_Candidato
@@ -370,8 +394,13 @@ function determinarImagemCategoria($categoria)
         <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="carrosselUltimosAnuncios.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="carrosselMinhasVagas.js"></script>
     <script src="carrosselTestes.js"></script>    
+    <script>
+        // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
     <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
@@ -415,6 +444,36 @@ function determinarImagemCategoria($categoria)
         } else {
             console.log("Nome do usuário está vazio!");
         }
+    </script>
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            }
+
+        });
     </script>
 </body>
 
