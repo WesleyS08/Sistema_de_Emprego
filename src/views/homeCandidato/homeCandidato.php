@@ -153,7 +153,7 @@ function determinarImagemCategoria($categoria)
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <img id="logo" src="../../assets/images/logos_empresa/logo_sias.png">
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>

@@ -125,12 +125,13 @@ if ($result && mysqli_num_rows($result) > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <a href="../homeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
         <ul>            
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../../../index.php">Deslogar</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
