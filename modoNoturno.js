@@ -12,7 +12,7 @@ let titulos2 = document.querySelectorAll("h2");
 let titulos3 = document.querySelectorAll("h3");
 let articles = document.querySelectorAll("article");
 let perfis = document.querySelectorAll(".perfil");
-let verMais = document.querySelector(".verMais");
+let verMaisBtns = document.querySelectorAll(".verMais");
 
 let slidesMysql = document.querySelectorAll(".slideMysql");
 let slidesPhp = document.querySelectorAll(".slidePhp");
@@ -50,9 +50,10 @@ function Noturno(){
         slidesHtml.forEach((slideHtml) => slideHtml.src = "../../assets/images/logos_parceiros/htmlWhite.svg");
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/cssWhite.svg");
         
-        verMais.style.color = "black";
-        verMais.style.backgroundColor = "whitesmoke";    
-        verMais.style.border = "1px solid whitesmoke ";
+
+        verMaisBtns.forEach((verMais) => verMais.style.color="black");
+        verMaisBtns.forEach((verMais) => verMais.style.border="none");        
+        verMaisBtns.forEach((verMais) => verMais.style.backgroundColor="white");
     }
     finally{       
         modo="noturno";
@@ -82,7 +83,7 @@ function Claro(){
         slidesHtml.forEach((slideHtml) => slideHtml.src = "../../assets/images/logos_parceiros/html.svg");
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/css.svg");
     
-        verMais.style = "initial";
+        verMaisBtns.forEach((verMais) => verMais.style="initial");
     }
     finally{
         modo="claro";

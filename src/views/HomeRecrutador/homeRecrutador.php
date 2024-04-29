@@ -263,14 +263,15 @@ if ($stmt) {
 
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                    $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+                    $datadeTermino  = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
                     if ($row['Status'] == 'Aberto') {
-                        echo '<p style="color: green;">' . $row['Status'] . '</p>';
+                        echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
                         echo '<p class="dataVaga">' . $dataCriacao . '</p>';
                     } else {
-                        echo '<p style="color: red;">' . $row['Status'] . '</p>';
+                        echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
                         echo '<p class="dataVaga">' . $datadeTermino . '</p>';
                     }
+                    
 
                     echo '</section>';
                     echo '</article>';
