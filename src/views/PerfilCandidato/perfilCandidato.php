@@ -82,7 +82,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                 $area = $row['Area'];
 
                 // Consultar a pontuação total do candidato na área atual
-                $queryPontuacaoArea = "SELECT SUM(Pontuacao) AS PontuacaoTotal FROM Tb_Resultados WHERE Tb_Candidato_CPF = '$cpfCandidato' AND Tb_Questionarios_ID IN (SELECT Id_Questionario FROM Tb_Questionarios WHERE Area = '$area')";
+                $queryPontuacaoArea = "SELECT SUM(Nota) AS PontuacaoTotal FROM Tb_Resultados WHERE Tb_Candidato_CPF = '$cpfCandidato' AND Tb_Questionarios_ID IN (SELECT Id_Questionario FROM Tb_Questionarios WHERE Area = '$area')";
                 $resultPontuacaoArea = mysqli_query($_con, $queryPontuacaoArea);
 
                 // Verificar se a consulta retornou resultados
