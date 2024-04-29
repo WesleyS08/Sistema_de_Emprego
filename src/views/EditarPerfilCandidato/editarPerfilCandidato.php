@@ -109,7 +109,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
             <button class="btnVoltar" onclick="window.location.href='../perfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'">
-                << /button>
+                <</button>
                     <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
