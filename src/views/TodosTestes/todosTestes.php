@@ -103,13 +103,8 @@ $_con->close();
                         $area = $row['Area'];
                 
                         // Saída HTML para cada questionário
-                        if ($contador % 3 == 0) {
-                            echo '<div class="linhaGridTestes">';
-                        }
-                        echo '<div class="gridTeste">';
-                        //echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php">';
                         echo "<a class='testeCarrosselLink' href='../PreparaTeste/preparaTeste.php?id=$idQuestionario'>";
-                        echo '<article class="testeCarrossel testeCarrosselCustom">';
+                        echo '<article class="testeCarrossel">';
                         echo '<div class="divAcessos">';
                         echo '<img src="../../../imagens/people.svg"></img>';
                         echo '<small class="qntdAcessos">800</small>';
@@ -124,15 +119,6 @@ $_con->close();
                         echo '</div>';
                         echo '</article>';
                         echo '</a>';
-                        echo '</div>'; // Fechar div .gridTeste
-                        $contador++;
-                        if ($contador % 3 == 0) {
-                            echo '</div>'; // Fechar div .linhaGridTestes
-                        }
-                    }
-                    // Verificar se a última linha não foi fechada corretamente
-                    if ($contador % 3 != 0) {
-                        echo '</div>'; // Fechar div .linhaGridTestes
                     }
                 } else {
                     echo "Nenhum questionário encontrado.";

@@ -153,7 +153,7 @@ function determinarImagemCategoria($categoria)
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <img id="logo" src="../../assets/images/logos_empresa/logo_sias.png">
+        <a href="homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
@@ -244,10 +244,10 @@ function determinarImagemCategoria($categoria)
                             $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                             $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
                             if ($row['Status'] == 'Aberto') {
-                                echo '<p style="color: green;">' . $row['Status'] . '</p>';
+                                echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
                                 echo '<p class="dataVaga">' . $dataCriacao . '</p>';
                             } else {
-                                echo '<p style="color: red;">' . $row['Status'] . '</p>';
+                                echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
                                 echo '<p class="dataVaga">' . $datadeTermino . '</p>';
                             }
 

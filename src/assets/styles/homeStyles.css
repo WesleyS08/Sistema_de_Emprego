@@ -731,7 +731,8 @@ nav ul li a:hover{
 footer{    
     margin-top: 120px;
     background-color: var(--laranja);
-    padding: 40px;
+    padding: 30px;
+    width: 100%;
 }
 
 footer a{
