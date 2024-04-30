@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Executar a consulta SQL de atualização para Tb_Vagas
             if (mysqli_query($_con, $sqlUpdateVagas)) {
                 // Redirecionar o usuário para a página da vaga após o sucesso da atualização
-                header("Location: ../../views/Vaga/vaga.php?id=$idAnuncio");
+                header("Location: ../../views/MinhaVaga/Minhavaga.php?id=$idAnuncio");
                 exit(); // Encerrar o script após o redirecionamento
             } else {
                 // Se houver um erro na execução da consulta SQL para Tb_Vagas, exibir uma mensagem de erro

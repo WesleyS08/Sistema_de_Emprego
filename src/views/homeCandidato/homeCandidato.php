@@ -385,7 +385,6 @@ function determinarImagemCategoria($categoria)
                             echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
                             echo ' </section>';
                             echo ' <label class="statusVaga" style="color: green;">' . $row['Status'] . '</label>';
-                            echo ' <label class="dataVaga">' . $row['Data_Termino'] . '</label>';
                             echo ' <label class="dataVaga">' . $row['Data_Inscricao'] . '</label>';
                             echo ' </article>';
                             echo '</a>';
