@@ -1,15 +1,10 @@
 <?php
+include "src/services/conexão_com_banco.php";
+
 session_start();
 
-// Verificar se a variável de sessão 'email_session' ou 'google_session' está definida
-if (isset($_SESSION['email_session']) || isset($_SESSION['google_session'])) {
-    // Destruir a sessão atual
-    session_destroy();
-    // Encerrar o script após destruir a sessão
-    exit;
-}
-
-include "src/services/conexão_com_banco.php";
+session_unset();
+session_destroy();
 
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
 JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
@@ -149,8 +144,8 @@ function determinarImagemCategoria($categoria)
             </div>
         </div>
     </div>
-    
-    <?php    
+
+    <?php
     $sql = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios LIMIT 4"; // Limitar a 4 questionários para não ficar muitos questionários poluindo a tela    
     $result = $_con->query($sql);
     ?>
@@ -158,23 +153,23 @@ function determinarImagemCategoria($categoria)
         <div class="divTitulo">
             <h2>Testes de Habilidades</h2>
             <p>Avalie seu conhecimento e ganhe destaque nos processos seletivos!</p>
-        </div>   
-        <div class="container">         
+        </div>
+        <div class="container">
             <div class="flexTestes">
                 <?php
                 $counter = 0; // Inicializa um contador para controlar os questionários por linha
                 if ($result->num_rows > 0) {
                     // Loop através dos resultados da consulta
-                    while ($row = $result->fetch_assoc()) { 
-                        $idQuestionario = $row['Id_Questionario'];                       
+                    while ($row = $result->fetch_assoc()) {
+                        $idQuestionario = $row['Id_Questionario'];
                         $nome = $row['Nome'];
                         $area = $row['Area'];
                         // Verifica se é hora de começar uma nova linha
                         if ($counter % 2 == 0) {
                             echo '<div class="gridTestes" style="margin-right: 12px;">';
                         }
-                ?>
-                        <a class="testeLink" href="src/views/PreparaTeste/preparaTeste.php?id=<?php echo $idQuestionario?>">
+                        ?>
+                        <a class="testeLink" href="src/views/PreparaTeste/preparaTeste.php?id=<?php echo $idQuestionario ?>">
                             <article class="teste">
                                 <div class="divAcessos">
                                     <img src="imagens/people.svg"></img>
@@ -182,7 +177,7 @@ function determinarImagemCategoria($categoria)
                                 </div>
                                 <img src="imagens/excel.svg"></img>
                                 <div class="divDetalhesTeste">
-                                    <div>                                    
+                                    <div>
                                         <p class="nomeTeste"><?php echo $nome; ?></p>
                                         <small class="autorTeste">Por Jefferson Evangelista</small>
                                         <div class="divCompetencias">
@@ -193,7 +188,7 @@ function determinarImagemCategoria($categoria)
                                 </div>
                             </article>
                         </a>
-                <?php
+                        <?php
                         // Verifica se é hora de fechar a linha
                         if ($counter % 2 == 1) {
                             echo '</div>'; // Fecha a div "gridTestes"
@@ -384,7 +379,33 @@ function determinarImagemCategoria($categoria)
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="tituloDigitavel.js"></script>
     <script src="carrossel.js"></script>
-    <script src="trocaImagem.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOM carregado, verificando elementos..."); // Confirma se o evento foi acionado
+
+            setTimeout(function () {
+                console.log("Verificando elementos após 3 segundos..."); // Confirma se o código está sendo executado
+
+                var elementosEssenciais = [
+                    document.querySelector(".divCarrossel"), // Exemplos de elementos essenciais
+                    document.querySelector("nav"),
+                ];
+
+                var elementosAusentes = elementosEssenciais.some(function (elemento) {
+                    return !elemento; // Verifica se algum elemento está ausente
+                });
+
+                if (elementosAusentes) {
+                    console.warn("Elementos essenciais não encontrados, recarregando...");
+                    window.location.reload(); // Recarrega a página
+                } else {
+                    console.log("Todos os elementos carregados.");
+                }
+            }, 3000); // Aguarde 3 segundos
+        });
+
+
+    </script>
 </body>
 
 </html>
