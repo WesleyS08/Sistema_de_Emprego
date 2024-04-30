@@ -82,61 +82,72 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Checar se senhas inseridas são iguais, maiores que 6 caracteres e se possuem caracteres especiais para torná-la complexa
-
-// Variável global para rastrear se as senhas são iguais
-let senhasIguaisCandidato = true;
-
-function senhasSaoIguais(senha, contrasenha) {
-    // Verificar se as senhas são diferentes
-    senhasIguaisCandidato = contrasenha === senha;
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('formCandidato');
     const inputSenha = form.querySelector('input[name="senha"]');
     const inputConfirmarSenha = form.querySelector('input[name="confirmaSenha"]');
     const avisoSenha = form.querySelector('small[name="aviso-senha"]');
 
-    inputConfirmarSenha.addEventListener('input', function(event) { 
+    // Função para validar se as senhas são iguais
+    function senhasSaoIguais(senha, confirmaSenha) {
+        return senha === confirmaSenha;
+    }
+
+    // Função para validar a complexidade da senha
+    function verificaSenhaComplexa(senha) {
+        // Verificar se a senha tem pelo menos 6 caracteres
+        if (senha.length < 6) {
+            return false;
+        }
+
+        // Verificar se a senha contém pelo menos uma letra minúscula, uma letra maiúscula, um número e um caractere especial
+        const regexComplexa = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+        return regexComplexa.test(senha);
+    }
+
+    // Adicionar evento de input para verificar se as senhas são iguais
+    inputConfirmarSenha.addEventListener('input', function(event) {
         const senha = inputSenha.value.trim();
         const confirmaSenha = inputConfirmarSenha.value.trim();
-       
-        senhasSaoIguais(senha, confirmaSenha);
 
-        if (!senhasIguaisCandidato) { 
+        if (!senhasSaoIguais(senha, confirmaSenha)) {
             avisoSenha.textContent = 'As senhas não são iguais';
         } else {
             avisoSenha.textContent = ''; // Limpar aviso se as senhas forem iguais
         }
     });
 
-    form.addEventListener('submit', function(event) {
-        if (!senhasIguaisCandidato) {
-            event.preventDefault(); // Impedir o envio do formulário se as senhas não forem iguais
+    // Adicionar evento de input para validar a complexidade da senha
+    inputSenha.addEventListener('input', function(event) {
+        const senha = inputSenha.value.trim();
+
+        if (!verificaSenhaComplexa(senha)) {
+            avisoSenha.textContent = 'A senha deve ter pelo menos 6 caracteres, uma letra minúscula, uma letra maiúscula, um número e um caractere especial';
+        } else {
+            avisoSenha.textContent = ''; // Limpar aviso se a senha for complexa
         }
     });
 
-    inputSenha.addEventListener('input', function(event) {
+    // Adicionar evento de submit para validar as senhas antes do envio do formulário
+    form.addEventListener('submit', function(event) {
         const senha = inputSenha.value.trim();
-        const senhaLength = senha.length;
+        const confirmaSenha = inputConfirmarSenha.value.trim();
 
-        // console.log("Senha Length: ", senhaLength);
-
-        // Verificar se a senha tem pelo menos 6 caracteres
-        if (senhaLength < 6) {
-            avisoSenha.textContent = 'A senha deve ter pelo menos 6 caracteres';
+        // Validar se as senhas são iguais
+        if (!senhasSaoIguais(senha, confirmaSenha)) {
+            avisoSenha.textContent = 'As senhas não são iguais';
+            event.preventDefault(); // Impedir o envio do formulário se as senhas não forem iguais
             return;
         }
 
-        // Verificar se a senha é complexa usando regex
-        const regexComplexa = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
-        if (!regexComplexa.test(senha)) {
-            avisoSenha.textContent = 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial';
+        // Validar se a senha é complexa
+        if (!verificaSenhaComplexa(senha)) {
+            avisoSenha.textContent = 'A senha deve ter pelo menos 6 caracteres, uma letra minúscula, uma letra maiúscula, um número e um caractere especial';
+            event.preventDefault(); // Impedir o envio do formulário se a senha não for complexa
             return;
         }
 
-        // Limpar aviso se a senha atender aos critérios
-        avisoSenha.textContent = '';
+        // Se todas as validações passarem, permitir o envio do formulário
     });
 });
 
@@ -255,24 +266,36 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Variável global para rastrear se as senhas são iguais, se possuem mais de 6 caracteres e se possuem caracteres especiais
-let senhasIguaisRecrutador = true;
-
-function senhasSaoIguaisRecrutador(senha, contrasenha) {
-    // Verificar se as senhas são diferentes
-    senhasIguaisRecrutador = contrasenha === senha;
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('formRecrutador');
     const inputSenha = form.querySelector('input[name="senha"]');
     const inputConfirmarSenha = form.querySelector('input[name="confirmaSenha"]');
     const avisoSenha = form.querySelector('small[name="aviso-senha"]');
+    let senhasIguaisRecrutador = true;
 
-    inputConfirmarSenha.addEventListener('input', function(event) { 
+    // Função para validar se as senhas são iguais
+    function senhasSaoIguais(senha, confirmaSenha) {
+        return senha === confirmaSenha;
+    }
+
+    // Função para validar a complexidade da senha
+    function verificaSenhaComplexa(senha) {
+        // Verificar se a senha tem pelo menos 6 caracteres
+        if (senha.length < 6) {
+            return false;
+        }
+
+        // Verificar se a senha contém pelo menos uma letra minúscula, uma letra maiúscula, um número e um caractere especial
+        const regexComplexa = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+        return regexComplexa.test(senha);
+    }
+
+    // Adicionar evento de input para verificar se as senhas são iguais
+    inputConfirmarSenha.addEventListener('input', function(event) {
         const senha = inputSenha.value.trim();
         const confirmaSenha = inputConfirmarSenha.value.trim();
        
-        senhasSaoIguaisRecrutador(senha, confirmaSenha);
+        senhasIguaisRecrutador = senhasSaoIguais(senha, confirmaSenha);
 
         if (!senhasIguaisRecrutador) { 
             avisoSenha.textContent = 'As senhas não são iguais';
@@ -281,32 +304,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Adicionar evento de input para validar a complexidade da senha
     inputSenha.addEventListener('input', function(event) {
         const senha = inputSenha.value.trim();
-        const senhaLength = senha.length;
 
-        // console.log("Senha Length: ", senhaLength);
-
-        // Verificar se a senha tem pelo menos 6 caracteres
-        if (senhaLength < 6) {
-            avisoSenha.textContent = 'A senha deve ter pelo menos 6 caracteres';
-            return;
+        // Verificar se a senha atende aos critérios de complexidade
+        if (!verificaSenhaComplexa(senha)) {
+            avisoSenha.textContent = 'A senha deve ter pelo menos 6 caracteres, uma letra minúscula, uma letra maiúscula, um número e um caractere especial';
+        } else {
+            avisoSenha.textContent = ''; // Limpar aviso se a senha atender aos critérios
         }
-
-        // Verificar se a senha é complexa usando regex
-        const regexComplexa = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
-        if (!regexComplexa.test(senha)) {
-            avisoSenha.textContent = 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial';
-            return;
-        }
-
-        // Limpar aviso se a senha atender aos critérios
-        avisoSenha.textContent = '';
     });
 
+    // Adicionar evento de submit para validar as senhas antes do envio do formulário
     form.addEventListener('submit', function(event) {
+        const senha = inputSenha.value.trim();
+        const confirmaSenha = inputConfirmarSenha.value.trim();
+
+        // Validar se as senhas são iguais
         if (!senhasIguaisRecrutador) {
+            avisoSenha.textContent = 'As senhas não são iguais';
             event.preventDefault(); // Impedir o envio do formulário se as senhas não forem iguais
+            return;
         }
+
+        // Validar se a senha é complexa
+        if (!verificaSenhaComplexa(senha)) {
+            avisoSenha.textContent = 'A senha deve ter pelo menos 6 caracteres, uma letra minúscula, uma letra maiúscula, um número e um caractere especial';
+            event.preventDefault(); // Impedir o envio do formulário se a senha não for complexa
+            return;
+        }
+
+        // Se todas as validações passarem, permitir o envio do formulário
     });
 });
