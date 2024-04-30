@@ -211,34 +211,29 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 </head>
 
 <body>
-    <nav>
-        <input type="checkbox" id="check">
-        <label for="check" class="menuBtn">
-            <img src="../../../imagens/menu.svg">
-        </label>
-        <?php
-        if ($autenticadoComoCandidato) {
-            echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>';
-            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
-        } else {
-            echo '<a href="../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>';
-            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
-        }
-        ?>
-        <ul>
-            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
-            <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <?php
-            if ($autenticadoComoCandidato) {
-                echo '<li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoaUsuario . '">Perfil</a></li>';
-            } else {
-                echo '<li><a href="../Login/login.html? ">Perfil</a></li>';
-            }
-            ?>
+<?php 
+ if ($autenticadoComoCandidato){
+echo '<nav>' ;
+echo '        <input type="checkbox" id="check"> ';
+echo '        <label for="check" class="menuBtn">';
+echo '        <img src="../../../imagens/menu.svg">';
+echo '        </label> ' ;  
+       
 
-        </ul>
-    </nav>
+        
+        echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
+        echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button> ';
+        echo '<ul> ';            
+         echo  ' <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+        echo '    <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>' ;
+        echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
+        echo '      <li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoaUsuario . '">Perfil</a></li>';
+        echo '</ul>'; 
+        
+        
+   echo ' </nav> ';
+        }
+    ?>
     <div class="divCommon">
         <div class="divTitulo" id="divTituloVaga">
             <h2 id="tituloVaga">
