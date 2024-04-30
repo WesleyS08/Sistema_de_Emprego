@@ -79,6 +79,26 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $cnpj_empresa = $row["CNPJ"];
 }
+// Preparar a consulta para obter o nome da empresa
+$sql_nome_empresa = "SELECT Nome_da_Empresa FROM Tb_Empresa WHERE CNPJ = ?";
+$stmt = $_con->prepare($sql_nome_empresa);
+
+// Bind the parameter
+$stmt->bind_param("s", $cnpj_empresa);
+
+// Execute
+$stmt->execute();
+
+// Fetch result
+$result = $stmt->get_result();
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $nome_empresa = $row['Nome_da_Empresa'];
+} else {
+    // Handle no results case
+    $nome_empresa = 'Empresa não encontrada';
+}
+
 
 // Nova consulta para obter os Anuncios por Id_Pessoas
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
@@ -175,7 +195,8 @@ if ($stmt) {
                     <h1 id="tituloAutomatico">B</h1>
                     <i></i>
                 </div>
-                <p>Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique
+                <p class="sinopse">Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e
+                    conveniente - clique
                     agora
                     mesmo!</p>
                 <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="btnInicial">Anunciar</button>
@@ -252,18 +273,19 @@ if ($stmt) {
                     echo '</header>';
                     echo '<section>';
                     echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
-                    $Descricao = $row["Descricao"] ?? "Descrição não definida";
 
-                    $shortDescription = strlen($Descricao) > 55 ? substr($Descricao, 0, 55) . '...' : $Descricao;
+                    // Se não houver empresa, definir um valor padrão
+                    if (empty($nome_empresa)) {
+                        $nome_empresa = 'Confidencial';
+                    }
 
-                    $wrappedText = wordwrap($shortDescription, 30, "<br>\n", true);
+                    // Agora pode imprimir
+                    echo '<p class="empresaVaga"> Por:' . $nome_empresa . '</p>';
 
-
-                    echo '<p class="empresaVaga">' . $wrappedText . '</p>';
 
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                    $datadeTermino  = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+                    $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
                     if ($row['Status'] == 'Aberto') {
                         echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
                         echo '<p class="dataVaga">' . $dataCriacao . '</p>';
@@ -271,7 +293,7 @@ if ($stmt) {
                         echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
                         echo '<p class="dataVaga">' . $datadeTermino . '</p>';
                     }
-                    
+
 
                     echo '</section>';
                     echo '</article>';

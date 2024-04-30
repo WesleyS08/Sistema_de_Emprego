@@ -21,7 +21,7 @@ $stmt = $_con->prepare($query);
 if ($stmt) {
     $stmt->bind_param('i', $idPessoa);
     $stmt->execute();
-    
+
     // Verificar resultado
     $result = $stmt->get_result();
     $tema = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['Tema'] : null;
@@ -43,7 +43,7 @@ if ($stmt) {
     $result = $stmt->get_result();
     if ($result && $result->num_rows > 0) {
         $empresa = $result->fetch_assoc();
-        
+
         // Extrair valores da empresa
         $CNPJ = isset($empresa['CNPJ']) ? $empresa['CNPJ'] : '';
         $nomeEmpresa = isset($empresa['Nome_da_Empresa']) ? $empresa['Nome_da_Empresa'] : '';
@@ -69,12 +69,12 @@ $stmt = $_con->prepare($query);
 if ($stmt) {
     $stmt->bind_param('i', $idPessoa);
     $stmt->execute();
-    
+
     $result = $stmt->get_result();
-    
+
     if ($result && $result->num_rows > 0) {
         $emailUsuarioBanco = $result->fetch_assoc()['Email'];
-        
+
         $podeEditar = ($emailUsuario == $emailUsuarioBanco);
     }
 
@@ -164,7 +164,7 @@ if ($stmt) {
                         style="width:30px;height:30px">
                     </lord-icon>
                     <?php
-                    if ($emailUsuario) { 
+                    if ($emailUsuario) {
                         echo '<a id="email">' . $emailUsuario . '</a>'; // Não abra um bloco PHP dentro de um echo
                     } else {
                         echo '<span>Sem email salvo</span>'; // Feche o bloco PHP corretamente
@@ -178,15 +178,15 @@ if ($stmt) {
 
                     <?php
                     if ($telefoneEmpresa) {
-                        echo '<a id="telefone">' . $telefoneEmpresa . '</a>'; 
+                        echo '<a id="telefone">' . $telefoneEmpresa . '</a>';
                     } else {
                         echo '<span>Sem número salvo</span>';
                     }
                     ?>
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover" colors="primary:#000000"
-                        style="width:30px;height:30px">
+                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover"
+                        colors="primary:#000,secondary:#ec6809" style="width:30px;height:30px">
                     </lord-icon>
 
                     <?php
@@ -199,8 +199,8 @@ if ($stmt) {
 
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover" colors="primary:#000000"
-                        style="width:30px;height:30px">
+                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover"
+                        colors="primary:#000,secondary:#ec6809" style="width:30px;height:30px">
                     </lord-icon>
 
                     <?php
@@ -212,8 +212,8 @@ if ($stmt) {
                     ?>
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover" colors="primary:#000000"
-                        style="width:30px;height:30px">
+                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover"
+                        colors="primary:#000,secondary:#ec6809" style="width:30px;height:30px">
                     </lord-icon>
                     <?php
                     if ($facebookEmpresa) { // Certifique-se de que a condição está correta
