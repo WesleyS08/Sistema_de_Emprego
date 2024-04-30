@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Verificar se a senha contém pelo menos uma letra minúscula, uma letra maiúscula, um número e um caractere especial
-        const regexComplexa = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+        const regexComplexa = /(?=^.{8,}$)((?=.*\d)(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
         return regexComplexa.test(senha);
     }
 
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Verificar se a senha contém pelo menos uma letra minúscula, uma letra maiúscula, um número e um caractere especial
-        const regexComplexa = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+        const regexComplexa = /(?=^.{8,}$)((?=.*\d)(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
         return regexComplexa.test(senha);
     }
 
