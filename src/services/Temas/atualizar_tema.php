@@ -3,13 +3,6 @@ include "../../services/conexão_com_banco.php";
 
 session_start();
 
-// Verifica se o usuário está autenticado
-if (!isset($_SESSION['email_session'])) {
-    http_response_code(401); // Resposta de erro se não autenticado
-    echo json_encode(array('success' => false, 'message' => 'Usuário não autenticado'));
-    exit;
-}
-
 $idPessoa = isset($_POST['idPessoa']) ? intval($_POST['idPessoa']) : 0; // Obter o ID da pessoa do POST
 $novoTema = isset($_POST['tema']) ? $_POST['tema'] : ''; // Obter o novo tema do POST
 
