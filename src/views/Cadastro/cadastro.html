@@ -31,7 +31,7 @@
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" name="email" type="text" required>
+                            <input class="inputAnimado" name="emailCandidato" type="text" required>
                             <div class="labelLine">Email</div>
                         </div>
                         <small name="aviso"></small>
@@ -45,14 +45,17 @@
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" name="senha" type="password" required>
+                            <input class="inputAnimado" id="senhaCandidato" name="senha" type="password" required>
                             <div class="labelLine">Senha</div>
+                            <div class="labelLine" id="mostrarSenhaCandidato">
+                                <img id="olhoCandidato" src="../../assets/images/icones_diversos/closeEye.svg">
+                            </div>
                         </div>
                         <small name="aviso-senha"></small>
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" name="confirmaSenha" type="password" required>
+                            <input class="inputAnimado" id="confirmaSenha" name="confirmaSenha" type="password" required>
                             <div class="labelLine">Confirmar senha</div>
                         </div>
                         <small name="aviso-senha"></small>
@@ -70,7 +73,7 @@
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" name="email" type="text" required>
+                            <input class="inputAnimado" id="emailRecrutador" name="email" type="text" required>
                             <div class="labelLine">Email</div>
                         </div>
                         <small name="aviso"></small>
@@ -84,8 +87,11 @@
                     </div>
                     <div class="containerInput">
                         <div class="contentInput">
-                            <input class="inputAnimado" name="senha" type="password" required>
+                            <input class="inputAnimado" id="senhaRecrutador" name="senha" type="password" required>
                             <div class="labelLine">Senha</div>
+                            <div class="labelLine" id="mostrarSenhaRecrutador">
+                                <img id="olhoRecrutador" src="../../assets/images/icones_diversos/closeEye.svg">
+                            </div>
                         </div>
                         <small name="aviso-senha"></small>
                     </div>
@@ -104,7 +110,7 @@
         </div>            
     </article>
 <script src="trocaDeForms.js"></script>
-<script src="avisos.js"></script>
 <script src="validacoes.js"></script>
+<script src="mostrarSenha.js"></script>
 </body>
 </html>

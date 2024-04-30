@@ -107,6 +107,19 @@ article{
     font-size: 14pt;
 }
 
+#mostrarSenha{
+    z-index: 1111;
+    background-color: whitesmoke;
+    right: 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#loginForm #mostrarSenha{
+    background-color: white;
+}
+
 .inputAnimado:focus,
 .inputAnimado:valid{
     border: 1px solid var(--laranja);
@@ -114,7 +127,7 @@ article{
 
 .inputAnimado:focus +.labelLine,
 .inputAnimado:valid +.labelLine{
-    transform: translate(10px,-18px) scale(0.86);
+    transform: translate(4px,-19px) scale(0.86) !important;
     padding: 0 6px;
     color: var(--laranja);
     z-index: 1111;
@@ -149,6 +162,7 @@ small{
     background: none;
     transition: 0.2s;
     color:var(--laranja);
+    transform: scale(1.0    );
 }
 
 .sectionLogin a{
@@ -212,4 +226,8 @@ small{
     100%{
         transform: scale(1.2);
     }
+}
+
+a{
+    color: initial;
 }

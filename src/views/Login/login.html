@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="login.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/login.css"/>
   </head>
   <body>
     <?php include '../src/services/google_credentials.php'; ?>
@@ -50,13 +50,18 @@
                 required
               />
               <div class="labelLine">Senha</div>
+              <div class="labelLine" id="mostrarSenha">
+                <img id="olho" src="../../assets/images/icones_diversos/closeEye.svg">
+              </div>
             </div>
             <small name="aviso"></small>
           </div>
-          <input type="submit" value="Login" class="btnLogin" />
+          <input type="submit" value="Login" class="btnLogin">
         </form>
 
-        <a href="../Cadastro/cadastro.html">Não tem conta? Registre-se!</a>
+        <a href="../Cadastro/cadastro.html">Não tem conta? Registre-se!</a><br><br>
+        
+        <a href="../RecuperarSenha/recuperarSenha.html">Esqueci minha senha</a>
 
         <!-- Avisos de errro por falta de cadastro no banco-->
         <div
@@ -84,6 +89,7 @@
       </section>
     </article>
     <script src="avisos.js"></script>
+    <script src="mostrarSenha.js"></script>
     <script src="https://accounts.google.com/gsi/client" async></script>
     <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 

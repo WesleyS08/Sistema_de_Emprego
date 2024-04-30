@@ -1,0 +1,42 @@
+.container{
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content{
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+h1{
+    font-size: 50pt;    
+    margin-bottom: 6px;
+}
+
+p{
+    font-size: 18pt;
+}
+
+a{
+    margin-top: 20px;
+}
+
+.formVerificacao .containerInput{
+    margin: 30px;
+}
+
+.formVerificacao .labelLine{
+    background-color: whitesmoke;
+    color: gray;
+}
+
+.formVerificacao .inputAnimado{
+    border-color: gray;
+}
+
+#btnLaranja{
+    width: 180px;
+}

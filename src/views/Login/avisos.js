@@ -3,7 +3,6 @@ let senha = document.querySelector("#senha");
 let mensagemEmail = "O email deve ser inserido!";
 let mensagemSenha = "A senha deve ser inserida!";
 
-
 function ExibirAviso(){
     if(email.value==""){
         document.getElementsByName("aviso")[0].innerText = mensagemEmail;
@@ -22,5 +21,5 @@ function LimparAvisoSenha(){
 }
 
 document.querySelector(".btnLogin").addEventListener("click", ExibirAviso);
-document.querySelector("#email").addEventListener("click", LimparAvisoEmail)
-document.querySelector("#senha").addEventListener("click", LimparAvisoSenha);
+email.addEventListener("click", LimparAvisoEmail)
+senha.addEventListener("click", LimparAvisoSenha);

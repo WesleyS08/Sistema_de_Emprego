@@ -26,7 +26,8 @@ mysqli_close($_con);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificação</title>
-    <link rel="stylesheet" type="text/css" href="../../assets/styles/verificacaoEmailStyle.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/verificacoes.css">       
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/login.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
 </head>
 <body>
@@ -44,7 +45,7 @@ mysqli_close($_con);
                 colors="primary:#000000"
                 style="width:200px;height:200px">
             </lord-icon>            
-            <a href="../Login/login.html"><button>Ir para login</button></a>
+            <a href="../Login/login.html"><button class="btnLogin" id="btnLaranja">Ir para login</button></a>
         </div>
     </div>    
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
