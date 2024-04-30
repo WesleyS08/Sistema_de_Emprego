@@ -4,20 +4,16 @@ include "../../services/conexão_com_banco.php";
 // Iniciar a sessão
 session_start();
 
-// Verificar se o usuário está autenticado como candidato
-if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
-    // Se estiver autenticado como candidato
-    $autenticadoComoCandidato = true;
-    $emailUsuario = '';
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$emailUsuario = '';
 
-    // Definir o e-mail do usuário com base no tipo de sessão
-    if (isset($_SESSION['email_session'])) {
-        $emailUsuario = $_SESSION['email_session'];
-    } elseif (isset($_SESSION['google_session'])) {
-        $emailUsuario = $_SESSION['google_session'];
-    }
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'candidato') {
+    $emailUsuario = $_SESSION['google_session'];
 } else {
-    // Se não estiver autenticado como candidato, redirecione para a página de login
+
     header("Location: ../Login/login.html");
     exit;
 }
@@ -53,6 +49,32 @@ if ($stmt) {
     $stmt->close();
 }
 
+
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    // Execute a query com o parâmetro
+    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->execute();
+
+    // Obter resultado usando o método correto
+    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
+    if ($result) {
+        $row = $result->fetch_assoc(); // Obter a linha como array associativo
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // No caso de não haver resultado
+        }
+    } else {
+        $tema = null; // Se o resultado for nulo
+    }
+} else {
+    die("Erro ao preparar a query.");
+}
+
 // Consulta SQL para verificar dados do candidato
 $sql_verificar_candidato = "SELECT * FROM Tb_Candidato
     JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
@@ -81,7 +103,22 @@ if ($result_questionarios === false) {
     echo "Erro na consulta" . $_con->error;
     exit;
 }
+$query = "SELECT CPF FROM Tb_Candidato WHERE Tb_Pessoas_Id = ?";
 
+$stmt = $_con->prepare($query);
+$stmt->bind_param('i', $idPessoa);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+$cpf = null;
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $cpf = $row['CPF'];
+} else {
+    echo 'CPF não encontrado para o ID especificado.';
+}
 
 // Obter dados do candidato
 $candidato = $result_verificar_candidato->fetch_assoc();
@@ -171,7 +208,8 @@ function determinarImagemCategoria($categoria)
                     <i></i>
                 </div>
                 <p class="sinopse">Encontre vagas que combinam com você!<br>Clique e explore as oportunidades.</p>
-                <button onclick="location.href='../TodasVagas/todasVagas.php'" class="btnInicial">Ver todas as vagas</button>
+                <button onclick="location.href='../TodasVagas/todasVagas.php'" class="btnInicial">Ver todas as
+                    vagas</button>
             </div>
         </div>
     </div>
@@ -181,42 +219,142 @@ function determinarImagemCategoria($categoria)
             <h2>Últimas vagas</h2>
         </div>
         <div class="container">
-        <a class="btnLeftSlider" id="leftMinhasVagas">
+            <a class="btnLeftSlider" id="leftMinhasVagas">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
             <a class="btnRightSlider" id="rightMinhasVagas">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                    <div class="carrosselBox" id="minhasVagas">
-                        <?php
-                        // Loop para exibir as vagas restantes no carrossel
+            <div class="carrosselBox" id="minhasVagas">
+                <?php
+                // Loop para exibir as vagas restantes no carrossel
+                while ($row = $result->fetch_assoc()) {
+                    // Consulta para contar o número de inscritos para esta vaga
+                    $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
+                    $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
+                    $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
+                    $stmt_inscricoes->execute();
+                    $result_inscricoes = $stmt_inscricoes->get_result();
+
+                    // Verificar se a consulta teve sucesso
+                    if ($result_inscricoes === false) {
+                        // Tratar o erro, se necessário
+                        echo "Erro na consulta de contagem de inscrições: " . $_con->error;
+                        exit;
+                    }
+
+                    // Obter o resultado da contagem de inscrições
+                    $row_inscricoes = $result_inscricoes->fetch_assoc();
+                    $total_inscricoes = $row_inscricoes['total_inscricoes'];
+
+                    // Exibir a vaga e o número de inscritos
+                    echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
+                    echo '<article class="post">';
+                    echo '<div class="divAcessos">';
+                    echo '<img src="../../../imagens/people.svg"></img>';
+                    echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
+                    echo '</div>';
+
+                    echo '<header>';
+                    switch ($row["Categoria"]) {
+                        case "CLT":
+                            echo '<img src="../../../imagens/clt.svg">';
+                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                            break;
+                        case "Estágio":
+                        case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
+                            echo '<img src="../../../imagens/estagio.svg">';
+                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                            break;
+                        case "PJ":
+                            echo '<img src="../../../imagens/pj.svg">';
+                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                            break;
+                        default:
+                            echo '<label class="tipoVaga">Categoria não definida</label>';
+                            break;
+                    }
+                    echo '</header>';
+                    echo '<section>';
+                    echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
+
+                    // Se não houver empresa, definir um valor padrão
+                    if (empty($nome_empresa)) {
+                        $nome_empresa = 'Confidencial';
+                    }
+
+                    // Agora pode imprimir
+                    echo '<p class="empresaVaga"> Empresa:' . $nome_empresa . '</p>';
+
+
+                    // Exibir o status da vaga e a data de criação
+                    $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
+                    $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+                    if ($row['Status'] == 'Aberto') {
+                        echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
+                        echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                    } else {
+                        echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
+                        echo '<p class="dataVaga">' . $datadeTermino . '</p>';
+                    }
+
+
+                    echo '</section>';
+                    echo '</article>';
+                    echo '</a>';
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTitulo">
+            <h2>Últimas Inscrições</h2>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftUltimosAnuncios">
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightUltimosAnuncios">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
+            <div class="carrosselBox" id="ultimosAnuncios">
+                <?php
+                if ($cpf) {
+                    $horaAtual = date('d/m/Y H:i');
+                    $query = "
+                    SELECT
+                        va.Tb_Anuncios_Id,
+                        an.Id_Anuncios,
+                        va.Tb_Empresa_CNPJ,
+                        an.Titulo,
+                        an.Categoria,  
+                        em.Nome_da_Empresa,
+                        va.Status,
+                        DATE_FORMAT(va.Data_de_Termino, '%d/%m/%Y') AS Data_Termino,
+                        DATE_FORMAT(ins.Data_de_Inscricao, '%d/%m/%Y %H:%i') AS Data_Inscricao,
+                        NOW() AS Hora_Atual
+                    FROM
+                        Tb_Inscricoes ins
+                    JOIN
+                        Tb_Vagas va ON ins.Tb_Vagas_Tb_Anuncios_Id = va.Tb_Anuncios_Id
+                    JOIN
+                        Tb_Anuncios an ON va.Tb_Anuncios_Id = an.Id_Anuncios
+                    JOIN
+                        Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
+                    WHERE
+                        ins.Tb_Candidato_CPF = ?
+";
+
+                    $stmt = $_con->prepare($query);
+                    $stmt->bind_param('s', $cpf);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+
+                    if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            // Consulta para contar o número de inscritos para esta vaga
-                            $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
-                            $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
-                            $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
-                            $stmt_inscricoes->execute();
-                            $result_inscricoes = $stmt_inscricoes->get_result();
-
-                            // Verificar se a consulta teve sucesso
-                            if ($result_inscricoes === false) {
-                                // Tratar o erro, se necessário
-                                echo "Erro na consulta de contagem de inscrições: " . $_con->error;
-                                exit;
-                            }
-
-                            // Obter o resultado da contagem de inscrições
-                            $row_inscricoes = $result_inscricoes->fetch_assoc();
-                            $total_inscricoes = $row_inscricoes['total_inscricoes'];
-
-                            // Exibir a vaga e o número de inscritos
                             echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
-                            echo '<article class="post">';
-                            echo '<div class="divAcessos">';
-                            echo '<img src="../../../imagens/people.svg"></img>';
-                            echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
-                            echo '</div>';
-
+                            echo ' <article class="post">';
                             echo '<header>';
                             switch ($row["Categoria"]) {
                                 case "CLT":
@@ -237,28 +375,32 @@ function determinarImagemCategoria($categoria)
                                     break;
                             }
                             echo '</header>';
-                            echo '<section>';
-                            echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-                            echo '<p class="empresaVaga">' . (isset($row["Descricao"]) ? (strlen($row["Descricao"]) > 55 ? substr($row["Descricao"], 0, 55) . '...' : $row["Descricao"]) : "Descrição não definida") . '</p>';
-                            // Exibir o status da vaga e a data de criação
-                            $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                            $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
-                            if ($row['Status'] == 'Aberto') {
-                                echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
-                                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-                            } else {
-                                echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
-                                echo '<p class="dataVaga">' . $datadeTermino . '</p>';
-                            }
+                            echo ' <section>';
+                            echo ' <h3 class="nomeVaga">' . $row['Titulo'] . '</h3>';
+                            $nomeEmpresa = isset($row['Nome_da_Empresa']) && $row['Nome_da_Empresa'] !== null
+                                ? $row['Nome_da_Empresa']
+                                : 'Confidencial';
 
-                            echo '</section>';
-                            echo '</article>';
+                            // Exibir o nome da empresa ou "Confidencial"
+                            echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
+                            echo ' </section>';
+                            echo ' <label class="statusVaga" style="color: green;">' . $row['Status'] . '</label>';
+                            echo ' <label class="dataVaga">' . $row['Data_Termino'] . '</label>';
+                            echo ' <label class="dataVaga">' . $row['Data_Inscricao'] . '</label>';
+                            echo ' </article>';
                             echo '</a>';
                         }
-                        ?>
-                    </div>
+                    } else {
+                        echo '<div style="margin-left: 5%; margin-top: 20px;">Nenhuma inscrição encontrada para este candidato.</div>';
+                    }
+
+                    $stmt->close();
+                }
+
+                $_con->close();
+                ?>
+            </div>
         </div>
-    </div>
     </div>
     <div class="divCarrossel">
         <div class="divTitulo">
@@ -269,46 +411,47 @@ function determinarImagemCategoria($categoria)
             <a class="btnLeftSlider" id="leftTestes">
                 <img src="../../assets/images/icones_diversos/leftSlider.svg">
             </a>
-            <a class="btnRightSlider" id="rightTestes">                
+            <a class="btnRightSlider" id="rightTestes">
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
-                <div class="carrosselBox" id="carrosselTestes">                       
-                    <a class="testeCarrosselLink">
+            <div class="carrosselBox" id="carrosselTestes">
+                <a class="testeCarrosselLink">
                     <?php
-                        if ($result_questionarios->num_rows > 0) {
-                            // Loop através dos resultados da consulta
-                            while ($row = $result_questionarios->fetch_assoc()) {
-                                // Extrai os dados do questionário
-                                $idQuestionario = $row['Id_Questionario'];
-                                $nome = $row['Nome'];
-                                $area = $row['Area'];
-                                // Saída HTML para cada questionário no carrossel
-                                echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
-                                echo '<article class="testeCarrossel">';
-                                echo '<div class="divAcessos">';
-                                echo '<img src="../../../imagens/people.svg"></img>';
-                                echo '<small class="qntdAcessos">800</small>';
-                                echo '</div>';
-                                echo '<img src="../../../imagens/excel.svg"></img>';
-                                echo '<div class="divDetalhesTeste">';
-                                echo '<div>';
-                                echo '<p class="nomeTeste">' . $nome . '</p>';
-                                echo '<small class="autorTeste">Por Jefferson Evangelista</small><br>';
-                                echo '<small class="competenciasTeste">' . $area . '</small>';
-                                echo '</div>';
-                                echo '</div>';
-                                echo '</article>';
-                                echo '</a>';
-                            }
-                        } else {
-                            echo "Nenhum questionário encontrado.";
+                    if ($result_questionarios->num_rows > 0) {
+                        // Loop através dos resultados da consulta
+                        while ($row = $result_questionarios->fetch_assoc()) {
+                            // Extrai os dados do questionário
+                            $idQuestionario = $row['Id_Questionario'];
+                            $nome = $row['Nome'];
+                            $area = $row['Area'];
+                            // Saída HTML para cada questionário no carrossel
+                            echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
+                            echo '<article class="testeCarrossel">';
+                            echo '<div class="divAcessos">';
+                            echo '<img src="../../../imagens/people.svg"></img>';
+                            echo '<small class="qntdAcessos">800</small>';
+                            echo '</div>';
+                            echo '<img src="../../../imagens/excel.svg"></img>';
+                            echo '<div class="divDetalhesTeste">';
+                            echo '<div>';
+                            echo '<p class="nomeTeste">' . $nome . '</p>';
+                            echo '<small class="autorTeste">Por Jefferson Evangelista</small><br>';
+                            echo '<small class="competenciasTeste">' . $area . '</small>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</article>';
+                            echo '</a>';
                         }
+                    } else {
+                        echo "Nenhum questionário encontrado.";
+                    }
                     ?>
-                    </a>
-                </div>
-                <div class="divBtnVerMais">
-                    <a href="../todosTestes/todosTestes.php" class="btnVerMais"><button class="verMais">Ver mais</button></a>
-                </div>
+                </a>
+            </div>
+            <div class="divBtnVerMais">
+                <a href="../todosTestes/todosTestes.php" class="btnVerMais"><button class="verMais">Ver
+                        mais</button></a>
+            </div>
         </div>
     </div>
     <div class="divCommon">
@@ -318,7 +461,7 @@ function determinarImagemCategoria($categoria)
         <div class="container">
             <div class="carrosselInfinito">
                 <div class="trilhaCarrossel">
-                <div class="slide">
+                    <div class="slide">
                         <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
                     <div class="slide">
@@ -371,8 +514,13 @@ function determinarImagemCategoria($categoria)
         <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="carrosselUltimosAnuncios.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="carrosselMinhasVagas.js"></script>
-    <script src="carrosselTestes.js"></script>    
+    <script src="carrosselTestes.js"></script>
+    <script>
+        // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
     <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
@@ -417,6 +565,37 @@ function determinarImagemCategoria($categoria)
             console.log("Nome do usuário está vazio!");
         }
     </script>
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            }
+
+        });
+    </script>
+
 </body>
 
 </html>

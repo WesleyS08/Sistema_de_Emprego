@@ -127,14 +127,37 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
         // Verifica se o usuário já se inscreveu para a vaga (apenas se for um candidato)
 
-        if (isset($cpfCandidato) && !$autenticadoComoPublicador) {
-            $sqlVerificaInscricao = "SELECT * FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = $idAnuncio AND Tb_Candidato_CPF = '$cpfCandidato'";
-            $resultVerificaInscricao = mysqli_query($_con, $sqlVerificaInscricao);
-            if ($resultVerificaInscricao && mysqli_num_rows($resultVerificaInscricao) > 0) {
-                $candidatoInscrito = true;
-            }
-        }
+    }
+    $sqlVerificaInscricao = "
+    SELECT 1  -- O número '1' é suficiente para verificar a existência
+    FROM Tb_Inscricoes 
+    WHERE Tb_Vagas_Tb_Anuncios_Id = ?
+      AND Tb_Candidato_CPF = ?
+    LIMIT 1  -- Limita a uma linha, pois só queremos saber se há inscrição
+";
 
+    // Preparar a consulta para prevenir injeção de SQL
+    $stmt = $_con->prepare($sqlVerificaInscricao);
+
+    // Vincular parâmetros para segurança
+    $stmt->bind_param('is', $idAnuncio, $cpfCandidato);
+
+    // Executar a consulta
+    $stmt->execute();
+
+    // Obter o resultado
+    $result = $stmt->get_result();
+
+    // Verificar se há alguma linha
+    $candidatoInscrito = ($result->num_rows > 0);
+
+    // Se o candidato já está inscrito, resultado será true
+    if ($candidatoInscrito) {
+
+        $candidatoInscrito = false;
+    } else {
+        // Se o resultado for falso, significa que o candidato não está inscrito
+        $candidatoInscrito = true;
     }
 
 
@@ -335,10 +358,13 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                             </p>
                         </div>
                     </div>
-                    <?php if ($autenticadoComoPublicador == false) { ?>
-                    <?php }
-                    if ($autenticadoComoCandidato == false) { ?>
-                    <?php } elseif ($Status == 'Aberto' && !$candidatoInscrito) { ?>
+                    <?php
+                    if ($autenticadoComoCandidato == false) {
+                        // Se o usuário não for candidato, o bloco está vazio, isso pode ser intencional
+                    }
+                    if ($Status == 'Aberto' && $candidatoInscrito) {
+                        // Se a vaga estiver aberta e o candidato ainda não estiver inscrito
+                        ?>
                         <form method="POST"
                             action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
                             <div class="divSendButton">
@@ -350,18 +376,26 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                                 </button>
                             </div>
                         </form>
-                    <?php } elseif ($candidatoInscrito) { ?>
+                        <?php
+                    } elseif ($candidatoInscrito == false) {
+                        // Se o candidato já estiver inscrito na vaga
+                        ?>
                         <div class="divSendButton">
-                            <button disabled style="cursor: default; background-color:  #723911">
+                            <button disabled style="cursor: default; background-color: #723911;">
                                 <h4>Já inscrito</h4>
                                 <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"
                                     colors="primary:#f5f5f5" style="width:80px;height:80px">
                                 </lord-icon>
                             </button>
                         </div>
-                    <?php } elseif ($Status != 'Aberto') { ?>
+                        <?php
+                    } elseif ($Status != 'Aberto') {
+                        // Se a vaga não estiver aberta
+                        ?>
                         <p>Status: Encerrado</p>
-                    <?php } ?>
+                        <?php
+                    }
+                    ?>
 
 
 
