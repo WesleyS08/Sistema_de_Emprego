@@ -1,3 +1,57 @@
+<?php
+include "../../services/conexão_com_banco.php";
+
+// Iniciar a sessão
+session_start();
+
+
+
+$emailUsuario = '';
+
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'candidato') {
+    $emailUsuario = $_SESSION['google_session'];
+} else {
+
+    header("Location: ../Login/login.html");
+    exit;
+}
+
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+// Consulta para obter o ID da pessoa logada
+$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+$stmt = $_con->prepare($sql);
+
+// Verifique se a preparação da declaração foi bem-sucedida
+if ($stmt) {
+    // Vincule o parâmetro ao placeholder na consulta
+    $stmt->bind_param("s", $emailUsuario);
+
+    // Execute a declaração
+    $stmt->execute();
+
+    // Obtenha o resultado da consulta
+    $result = $stmt->get_result();
+
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o ID da pessoa
+        $row = $result->fetch_assoc();
+        $idPessoa = $row['Id_Pessoas'];
+
+        // Use o ID da pessoa como necessário no restante do seu código
+    } else {
+        // Se não houver resultados, lide com isso de acordo com sua lógica de aplicativo
+    }
+
+    // Feche a declaração
+    $stmt->close();
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -20,7 +74,7 @@
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
             <li><a href="../../../index.php">Deslogar</a></li>
-            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
@@ -293,4 +347,4 @@
     <script src="tituloDigitavel.js"></script>
     <script src="../../../modoNoturno.js"></script>
 </body>
-</html>
+</html> 
