@@ -205,7 +205,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-        <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
             <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
             <li><a href="../../../index.php">Deslogar</a></li>
@@ -315,23 +315,21 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     echo '</header>';
                     echo '<section>';
                     echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
-                    $Descricao = $row["Descricao"] ?? "Descrição não definida";
+                    $nomeEmpresa = isset($row['Nome_da_Empresa']) && $row['Nome_da_Empresa'] !== null
+                        ? $row['Nome_da_Empresa']
+                        : 'Confidencial';
 
-                    $shortDescription = strlen($Descricao) > 55 ? substr($Descricao, 0, 55) . '...' : $Descricao;
-
-                    $wrappedText = wordwrap($shortDescription, 30, "<br>\n", true);
-
-
-                    echo '<p class="empresaVaga">' . $wrappedText . '</p>';
+                    // Exibir o nome da empresa ou "Confidencial"
+                    echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
 
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                     $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
                     if ($row['Status'] == 'Aberto') {
-                        echo '<p style="color: green;">' . $row['Status'] . '</p>';
+                        echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
                         echo '<p class="dataVaga">' . $dataCriacao . '</p>';
                     } else {
-                        echo '<p style="color: red;">' . $row['Status'] . '</p>';
+                        echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
                         echo '<p class="dataVaga">' . $datadeTermino . '</p>';
                     }
 

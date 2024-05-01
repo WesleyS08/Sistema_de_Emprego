@@ -20,6 +20,22 @@ if (isset($_SESSION['email_session'])) {
 
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+
+    // Verificar resultado
+    $result = $stmt->get_result();
+    $tema = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['Tema'] : null;
+
+    $stmt->close();
+} else {
+    die("Erro ao preparar a consulta para obter o tema.");
+}
+
 // Recuperar informações do candidato do banco de dados com base no ID fornecido na URL
 $query = "SELECT p.Nome, p.Email, c.Area_de_Interesse, c.CPF, c.Descricao, c.Experiencia, c.Cursos, c.Experiencia, c.Escolaridade, c.Idade, c.Cidade, c.Telefone, c.PCD, c.Genero, c.Estado_Civil, c.Autodefinicao, c.Img_Perfil, c.Banner
           FROM Tb_Pessoas AS p 
@@ -380,6 +396,40 @@ if ($result && mysqli_num_rows($result) > 0) {
     </footer>    
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="acumuloDePontos.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
     <script src="../../../modoNoturno.js"></script>
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            }
+
+        });
+    </script>
 </body>
 </html>

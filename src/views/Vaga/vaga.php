@@ -1,32 +1,29 @@
 <?php
-include "../../services/conexão_com_banco.php";
-
-session_start();
-
-// Verificar o nome do usario
-
-$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+include "../../services/conexão_com_banco.php"; // Verifique se o caminho está correto
+session_start(); // Sempre inicie a sessão no início do arquivo
 
 
-// Verificar se o usuário está autenticado como empresa
-$autenticadoComoEmpresa = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
+
+// Definição de variáveis com valores padrão
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : 'Anônimo';
+$emailUsuario = '';
+$candidatoInscrito = false;
+
+// Verificar se há um e-mail na sessão
+if (isset($_SESSION['email_session'])) {
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session'])) {
+    $emailUsuario = $_SESSION['google_session'];
+}
 
 // Verificar se o usuário está autenticado como candidato
 $autenticadoComoCandidato = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato';
 
-// Definição de variáveis
-$emailUsuario = '';
-$candidatoInscrito = false;
-$autenticadoComoPublicador = false;
+// Definir se a sessão tem um e-mail
+$autenticadoComEmail = !empty($emailUsuario);
 
-// Verificar se o usuário está autenticado e definir o e-mail do usuário
-if (isset($_SESSION['email_session'])) {
-    // Se estiver autenticado com e-mail/senha
-    $emailUsuario = $_SESSION['email_session'];
-} elseif (isset($_SESSION['google_session'])) {
-    // Se estiver autenticado com o Google
-    $emailUsuario = $_SESSION['google_session'];
-}
+// Verificar se é uma sessão de candidato com e-mail
+$autenticadoCandidatoComEmail = $autenticadoComEmail && $autenticadoComoCandidato;
 
 $sql = "SELECT Tb_Pessoas.Id_Pessoas
 FROM Tb_Pessoas
@@ -36,8 +33,33 @@ $result = mysqli_query($_con, $sql); // Executar a consulta
 
 if ($result && mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result); // Obtém o resultado da consulta
-    $idPessoaUsuario = $row['Id_Pessoas']; // Armazena o ID da pessoa do usuário
+    $idPessoa = $row['Id_Pessoas']; // Armazena o ID da pessoa do usuário
 }
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    // Execute a query com o parâmetro
+    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->execute();
+
+    // Obter resultado usando o método correto
+    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
+    if ($result) {
+        $row = $result->fetch_assoc(); // Obter a linha como array associativo
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // No caso de não haver resultado
+        }
+    } else {
+        $tema = null; // Se o resultado for nulo
+    }
+} else {
+    die("Erro ao preparar a query.");
+}
+
 
 
 // verifica se o id da vaga doi mandando pela url 
@@ -173,26 +195,6 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         $Status = '';
     }
 
-
-    // Quarta consulta para verificar se a sessão é a mesma que postou a vaga
-    $sql = "SELECT Tb_Pessoas.Email
-        FROM Tb_Pessoas
-        JOIN Tb_Empresa ON Tb_Pessoas.Id_Pessoas = Tb_Empresa.Tb_Pessoas_Id
-        JOIN Tb_Vagas ON Tb_Empresa.CNPJ = Tb_Vagas.Tb_Empresa_CNPJ
-        WHERE Tb_Vagas.Tb_Anuncios_Id = $idAnuncio";
-
-    $result = mysqli_query($_con, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        // A consulta foi bem-sucedida e retornou pelo menos uma linha
-        $row = mysqli_fetch_assoc($result);
-        $emailCriadorVaga = $row['Email'];
-
-        if ($emailCriadorVaga == $emailUsuario) {
-            // Se o usuário atual é o mesmo que criou a vaga, definir $autenticadoComopublicador como true
-            $autenticadoComoPublicador = true; // Corrigido o nome da variável
-        }
-    }
 }
 ?>
 
@@ -211,28 +213,39 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 </head>
 
 <body>
-<?php 
- if ($autenticadoComoCandidato){
-echo '<nav>' ;
-echo '        <input type="checkbox" id="check"> ';
-echo '        <label for="check" class="menuBtn">';
-echo '        <img src="../../../imagens/menu.svg">';
-echo '        </label> ' ;  
-       
-
-        
+    <?php
+    if ($idPessoa) {
+        echo '<nav>';
+        echo '    <input type="checkbox" id="check"> ';
+        echo '    <label for="check" class="menuBtn">';
+        echo '        <img src="../../../imagens/menu.svg">';
+        echo '    </label> ';
         echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
-        echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button> ';
-        echo '<ul> ';            
-         echo  ' <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
-        echo '    <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>' ;
+        echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
+        echo '<ul>';
+        echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+        echo '    <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>';
         echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
-        echo '      <li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoaUsuario . '">Perfil</a></li>';
-        echo '</ul>'; 
-        
-        
-   echo ' </nav> ';
-        }
+        echo '  <li><a href="../../../index.php">Deslogar</a></li>';
+        echo '    <li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoa . '">Perfil</a></li>';
+        echo '</ul>';
+        echo '</nav>';
+    } else {
+        // Se não for autenticado como candidato, mostrar menu padrão ou genérico
+        echo '<nav>';
+        echo '    <input type="checkbox" id="check"> ';
+        echo '    <label for="check" class="menuBtn">';
+        echo '        <img src="../../../imagens/menu.svg">';
+        echo '    </label> ';
+        echo '<a href="../../../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
+        echo '<ul>';
+        echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+        echo '    <li><a href="./Login/login.html">Testes</a></li>';
+        echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
+        echo '    <li><a href="./Login/login.html">Perfil</a></li>'; // Se não autenticado, redireciona para login
+        echo '</ul>';
+        echo '</nav>';
+    }
     ?>
     <div class="divCommon">
         <div class="divTitulo" id="divTituloVaga">
@@ -258,7 +271,6 @@ echo '        </label> ' ;
 
                 // Exibe a data no formato desejado (dia/mês/ano)
                 echo "$dia/$mes/$ano";
-
                 // Se o status for 'Encerrado', exibe a data de encerramento das inscrições
                 if ($Status == 'Encerrado') {
                     // Verifica se a data de término está definida
@@ -281,8 +293,6 @@ echo '        </label> ' ;
                     <?php echo $Status; ?>
                 </label>
             <?php } ?>
-
-
         </div>
         <div class="container">
             <div class="divInformacoesIniciais">
@@ -326,7 +336,6 @@ echo '        </label> ' ;
                                     <?php echo $Categoria; ?>
                                 </label>
                             </div>
-
                             <div class="divIconeENome">
                                 <img id="imgModalidade" src="" class="icone">
                                 <label id="modalidade">
@@ -357,7 +366,7 @@ echo '        </label> ' ;
                     if ($autenticadoComoCandidato == false) {
                         // Se o usuário não for candidato, o bloco está vazio, isso pode ser intencional
                     }
-                    if ($Status == 'Aberto' && $candidatoInscrito) {
+                    if ($Status == 'Aberto' && $candidatoInscrito && $autenticadoComoCandidato) {
                         // Se a vaga estiver aberta e o candidato ainda não estiver inscrito
                         ?>
                         <form method="POST"
@@ -391,16 +400,12 @@ echo '        </label> ' ;
                         <?php
                     }
                     ?>
-
-
-
                 </div>
                 <?php
                 // Divida os requisitos e benefícios por vírgula e remova espaços em branco desnecessários
                 $arrayRequisitos = array_filter(array_map('trim', explode(',', $dadosAnuncio['Requisitos'])));
                 $arrayBeneficios = array_filter(array_map('trim', explode(',', $dadosAnuncio['Beneficios'])));
                 ?>
-
                 <div class="divFlex" id="divBoxes">
                     <div class="divBox">
                         <h3>Requisitos</h3>
@@ -419,8 +424,6 @@ echo '        </label> ' ;
                         </ul>
                     </div>
                 </div>
-
-
                 <div id="map" style="height: 400px; margin-top:5%"></div>
             </div>
         </div>
@@ -429,11 +432,6 @@ echo '        </label> ' ;
         data-bairro="<?php echo $bairro; ?>" data-cidade="<?php echo $Cidade; ?>" data-estado="<?php echo $Estado; ?>"
         data-cep="<?php echo $CEP; ?>">
     </div>
-
-
-
-
-
     <footer>
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
@@ -442,7 +440,6 @@ echo '        </label> ' ;
     </footer>
     <script src="trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <script src="../../../modoNoturno.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
@@ -495,6 +492,44 @@ echo '        </label> ' ;
         } else {
             console.error("Alguma das variáveis de endereço não está definida ou está vazia.");
         }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
+    <script src="../../../modoNoturno.js"></script>
+    <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
+    <script>
+        <script>
+            var idPessoa = <?php echo $idPessoa; ?>;
+
+            $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+            method: "POST",
+            data: {tema: novoTema, idPessoa: idPessoa },
+            success: function () {
+                console.log("Tema atualizado com sucesso");
+                },
+            error: function (error) {
+                console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+            Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+            Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            }
+
+        });
     </script>
 </body>
 
