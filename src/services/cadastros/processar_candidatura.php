@@ -48,6 +48,8 @@ if (!empty($emailUsuario)) {
         exit("ID do anúncio não foi fornecido na URL.");
     }
 
+
+    date_default_timezone_set('America/Sao_Paulo');
     // Inserir a candidatura no banco de dados
     $dataAtual = date('Y-m-d H:i:s');
     $queryInserir = "INSERT INTO Tb_Inscricoes (Tb_Vagas_Tb_Anuncios_Id, Tb_Vagas_Tb_Empresa_CNPJ, Tb_Candidato_CPF, Data_de_Inscricao) 
