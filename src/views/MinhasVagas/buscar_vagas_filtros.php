@@ -157,13 +157,13 @@ if ($stmt) {
             echo '<p class="empresaVaga">' . $nome_empresa . '</p>';
 
             $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
-            if ($row['Status'] == 'Aberto') {
-                echo '<p style="color: green;">' . $row['Status'] . '</p>';
-                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-            } else {
-                echo '<p style="color: red;">' . $row['Status'] . '</p>';
-                echo '<p class="dataVaga">' . $datadeTermino . '</p>';
-            }
+                 if ($row['Status'] == 'Aberto') {
+                    echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
+                    echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+                } else {
+                    echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
+                    echo '<p class="dataVaga">' . $datadeTermino . '</p>';
+                }
             echo '</section>';
 
             echo '</article>';

@@ -85,11 +85,11 @@ if ($result->num_rows > 0) {
         $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
         if (isset($row['Status'])) {
             if ($row['Status'] == 'Aberto') {
-                $htmlVagas .= '<p style="color: green;">' . $row['Status'] . '</p>';
-                $htmlVagas .= '<p class="dataVaga">' . $dataCriacao . '</p>';
+                echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
+                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
             } else {
-                $htmlVagas .= '<p style="color: red;">' . $row['Status'] . '</p>';
-                $htmlVagas .= '<p class="dataVaga">' . $datadeTermino . '</p>';
+                echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
+                echo '<p class="dataVaga">' . $datadeTermino . '</p>';
             }
         } else {
             $htmlVagas .= '<p>Status não definido</p>';
