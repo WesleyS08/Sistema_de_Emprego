@@ -226,9 +226,9 @@ if ($result === false) {
         echo '<a href="../../../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
         echo '<ul>';
         echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
-        echo '    <li><a href="./Login/login.html">Testes</a></li>';
+        echo '    <li><a href="../Login/login.html">Testes</a></li>';
         echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
-        echo '    <li><a href="./Login/login.html">Perfil</a></li>'; // Se não autenticado, redireciona para login
+        echo '    <li><a href="../Login/login.html">Perfil</a></li>'; // Se não autenticado, redireciona para login
         echo '</ul>';
         echo '</nav>';
     }
