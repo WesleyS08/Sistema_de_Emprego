@@ -23,12 +23,14 @@ USE `SIAS` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Pessoas` (
   `Id_Pessoas` INT NOT NULL AUTO_INCREMENT,
-  `Email` VARCHAR(45) NULL,
-  `Senha` VARCHAR(255) NULL,
-  `Nome` VARCHAR(45) NULL,
-  `Token` TEXT NULL,
-  `Tema` VARCHAR(45) NULL,
-  `Verificado` BLOB NULL,
+  `Email` VARCHAR(45),
+  `Senha` VARCHAR(255),
+  `Nome` VARCHAR(45),
+  `Token` TEXT,
+  `Note` TEXT,
+  `Codigo_Created_At` TIMESTAMP NULL,
+  `Tema` VARCHAR(45),
+  `Verificado` BOOLEAN,
   PRIMARY KEY (`Id_Pessoas`)
 )
 ENGINE = InnoDB;
