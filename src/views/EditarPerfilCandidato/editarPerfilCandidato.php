@@ -290,7 +290,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     </div>
                     <div class="divCheckBox">
                         <input type="checkbox" id="pcd" name="pcd" <?php echo $pcdUsuario == 1 ? 'checked' : ''; ?>>
-                        <label for="pcd">Pessoa com Deficiência</label>
+                        <label for="pcd">PCD</label>
                     </div>
                     <div class="divTextArea" id="divTextAreaCandidato">
                         <div class="containerTextArea">

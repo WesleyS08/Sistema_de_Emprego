@@ -44,7 +44,7 @@ if ($result->num_rows > 0) {
     $id_questionario = $_GET['id']; // Obtém o ID do questionário da URL
     $data_do_questionario = date('Y-m-d H:i:s'); // Obtém a data e hora atual
 
-    $sql = "INSERT INTO Tb_Resultados (Tb_Questionarios_ID, Tb_Candidato_CPF, Pontuacao, Quantidade_de_Acertos, Data_do_Questionario) 
+    $sql = "INSERT INTO Tb_Resultados (Tb_Questionarios_ID, Tb_Candidato_CPF, Nota, Quantidade_de_Acertos, Data_do_Questionarios) 
             VALUES ('$id_questionario', '$cpf_candidato', '$pontuacaoTotal', '$pontuacaoTotal', '$data_do_questionario')";
 
     if ($_con->query($sql) === TRUE) {
