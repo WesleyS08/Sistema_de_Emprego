@@ -93,7 +93,7 @@ if ($result_verificar_candidato === false) {
 }
 
 // Consulta para puxar os questionários
-$sql_puxarQuestionarios = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios ORDER BY RAND() LIMIT 7";
+$sql_puxarQuestionarios = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios ORDER BY RAND() LIMIT 5";
 $stmt_questionarios = $_con->prepare($sql_puxarQuestionarios);
 $stmt_questionarios->execute();
 $result_questionarios = $stmt_questionarios->get_result();
@@ -328,7 +328,7 @@ function determinarImagemCategoria($categoria)
                         an.Id_Anuncios,
                         va.Tb_Empresa_CNPJ,
                         an.Titulo,
-                        an.Categoria,  
+                        an.Categoria,
                         em.Nome_da_Empresa,
                         va.Status,
                         DATE_FORMAT(va.Data_de_Termino, '%d/%m/%Y') AS Data_Termino,
@@ -344,7 +344,10 @@ function determinarImagemCategoria($categoria)
                         Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
                     WHERE
                         ins.Tb_Candidato_CPF = ?
-";
+                    ORDER BY
+                        (va.Status = 'Encerrado'),
+                        va.Data_de_Termino ASC";
+
 
                     $stmt = $_con->prepare($query);
                     $stmt->bind_param('s', $cpf);
@@ -362,7 +365,7 @@ function determinarImagemCategoria($categoria)
                                     echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                     break;
                                 case "Estágio":
-                                case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
+                                case "Jovem Aprendiz":
                                     echo '<img src="../../../imagens/estagio.svg">';
                                     echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                                     break;
@@ -433,7 +436,17 @@ function determinarImagemCategoria($categoria)
                             echo '<img src="../../../imagens/excel.svg"></img>';
                             echo '<div class="divDetalhesTeste">';
                             echo '<div>';
-                            echo '<p class="nomeTeste">' . $nome . '</p>';
+                            $limite = 21;
+
+                            // Obtenha o nome e limite-o se necessário
+                            if (strlen($nome) > $limite) {
+                                $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
+                            } else {
+                                $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                            }
+
+                            // Exibir o nome limitado
+                            echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
                             echo '<small class="autorTeste">Por Jefferson Evangelista</small><br>';
                             echo '<small class="competenciasTeste">' . $area . '</small>';
                             echo '</div>';
@@ -441,15 +454,17 @@ function determinarImagemCategoria($categoria)
                             echo '</article>';
                             echo '</a>';
                         }
+                        echo '<div class="divBtnVerMais">';
+                        echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';
+                        echo '<button class="verMais">Ver mais</button>';
+                        echo '</a>';
+                        echo '</div>';
+
                     } else {
-                        echo "Nenhum questionário encontrado.";
+                        echo "<p>Nenhum questionário encontrado.</p>";
                     }
                     ?>
                 </a>
-            </div>
-            <div class="divBtnVerMais">
-                <a href="../todosTestes/todosTestes.php" class="btnVerMais"><button class="verMais">Ver
-                        mais</button></a>
             </div>
         </div>
     </div>
@@ -569,8 +584,6 @@ function determinarImagemCategoria($categoria)
 
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-
-
             // Salva o novo tema no banco de dados via AJAX
             $.ajax({
                 url: "../../services/Temas/atualizar_tema.php",
