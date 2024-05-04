@@ -44,6 +44,24 @@ function determinarImagemCategoria($categoria)
 <html lang="pt-br">
 
 <head>
+<script>
+        function limparLocalStorageComExcecao() {
+            const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa'];
+
+            chavesParaLimpar.forEach(function (chave) {
+                localStorage.removeItem(chave);
+            });
+
+            const areaPadrao = 'Todas'; // Valor padrão para "area"
+            if (!localStorage.getItem('area')) {
+                localStorage.setItem('area', areaPadrao);
+            }
+
+            console.log("LocalStorage após limpeza:", localStorage);
+        }
+
+        window.addEventListener('load', limparLocalStorageComExcecao);
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
@@ -412,6 +430,7 @@ function determinarImagemCategoria($categoria)
 
 
     </script>
+    
 </body>
 
 </html>

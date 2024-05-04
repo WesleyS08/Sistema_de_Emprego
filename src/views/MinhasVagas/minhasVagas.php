@@ -3,36 +3,27 @@ include "../../services/conexão_com_banco.php";
 
 session_start();
 
-// Verificar se o usuário está autenticado como empresa
-$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+// ?  Inicia a variável do email vazia
 $emailUsuario = '';
 
-// Verificar se o usuário está autenticado e definir o e-mail do usuário
+// * Verificar se o usuário está autenticado e definir o e-mail do usuário
 if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
-    // Se estiver autenticado com e-mail/senha e for do tipo empresa
     $emailUsuario = $_SESSION['email_session'];
 } elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
-    // Se estiver autenticado com o Google e for do tipo empresa
     $emailUsuario = $_SESSION['google_session'];
 } else {
-    // Se não estiver autenticado como empresa, redirecione para a página de login
     header("Location: ../Login/login.html");
     exit;
 }
-$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-// Consulta para obter o ID da pessoa logada
+
+// Primeira Consulta para obter o ID da pessoa caso esteja logado 
 $sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
 
 // Verifique se a preparação da declaração foi bem-sucedida
 if ($stmt) {
-    // Vincule o parâmetro ao placeholder na consulta
     $stmt->bind_param("s", $emailUsuario);
-
-    // Execute a declaração
     $stmt->execute();
-
-    // Obtenha o resultado da consulta
     $result = $stmt->get_result();
 
     // Verifique se a consulta retornou resultados
@@ -40,43 +31,37 @@ if ($stmt) {
         // Obtenha o ID da pessoa
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
-
-        // Use o ID da pessoa como necessário no restante do seu código
-    } else {
-        // Se não houver resultados, lide com isso de acordo com sua lógica de aplicativo
     }
-
-    // Feche a declaração
+    //! Feche a declaração
     $stmt->close();
 }
 
-// Quartar consulta para selecionar o tema que  a pessoa selecionou 
+// Segunda Consulta para selecionar o tema que salvo no banco de dados
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
 
 // Verifique se a preparação foi bem-sucedida
 if ($stmt) {
-    // Execute a query com o parâmetro
-    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
+    $stmt->bind_param('i', $idPessoa);
     $stmt->execute();
+    $result = $stmt->get_result();
 
-    // Obter resultado usando o método correto
-    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
     if ($result) {
-        $row = $result->fetch_assoc(); // Obter a linha como array associativo
+        $row = $result->fetch_assoc();
         if ($row && isset($row['Tema'])) {
             $tema = $row['Tema'];
         } else {
-            $tema = null; // No caso de não haver resultado
+            $tema = null;
         }
     } else {
-        $tema = null; // Se o resultado for nulo
+        $tema = null;
     }
 } else {
+    // ! Arrumar questão de tratamento de Erros !! 
     die("Erro ao preparar a query.");
 }
 
-
+// Terceira Consulta para obter os anúncios 
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
 JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
 JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
@@ -90,7 +75,7 @@ $result = $stmt->get_result();
 
 // Verificar se a consulta teve sucesso
 if ($result === false) {
-    // Tratar o erro, se necessário
+    // ! Arrumar questão de tratamento de Erros !! 
     echo "Erro na consulta: " . $_con->error;
     exit;
 }
@@ -99,7 +84,7 @@ if ($result === false) {
 $emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
 $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
 
-// Segunda consulta para obter o status da vaga
+// Quarta Consulta para obter o status da vaga
 $sql2 = "SELECT V.* 
 FROM Tb_Vagas V
 JOIN Tb_Empresa E ON V.Tb_Empresa_CNPJ = E.CNPJ
@@ -108,47 +93,37 @@ WHERE P.Email = ?";
 
 // Prepare a declaração
 $stmt = mysqli_prepare($_con, $sql2);
-
-// Verifique se a preparação da declaração foi bem-sucedida
 if ($stmt) {
-    // Vincule o parâmetro ao placeholder na consulta
     mysqli_stmt_bind_param($stmt, "s", $email);
-
-    // Substitua $email pelo valor real do email
     $email = $emailUsuario;
-
-    // Execute a declaração
     mysqli_stmt_execute($stmt);
-
-    // Obtenha o resultado da consulta
     $resultVagas = mysqli_stmt_get_result($stmt);
 
     if ($resultVagas && mysqli_num_rows($resultVagas) > 0) {
         $row = mysqli_fetch_assoc($resultVagas);
         $Status = $row['Status'];
     } else {
-        // Defina um valor padrão para $Status se a consulta não retornar resultados
         $Status = '';
     }
-
-    // Feche a declaração
+    //!  Feche a declaração
     mysqli_stmt_close($stmt);
 } else {
-    // Se a preparação da declaração falhar, lide com o erro aqui
+    // ! Arrumar questão de tratamento de Erros !! 
     echo "Erro na preparação da declaração: " . mysqli_error($_con);
 }
+
+// * Atribuições caso algo da vaga não esteja definido no banco de dados 
 $categoria = isset($row["Categoria"]) ? $row["Categoria"] : "Categoria não definida";
 $titulo = isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido";
 $descricao = isset($row["Descricao"]) ? $row["Descricao"] : "Descrição não definida";
 $status = isset($row["Status"]) ? $row["Status"] : "Status não definido";
 
+// Quinta Consulta para obter areas do banco de dados 
 $sql_areas = "
     SELECT DISTINCT Area 
     FROM Tb_Anuncios 
     ORDER BY Area ASC
 ";
-
-// Preparar e executar a consulta para obter as áreas únicas
 $stmt_areas = $_con->prepare($sql_areas);
 $stmt_areas->execute();
 $result_areas = $stmt_areas->get_result();
@@ -157,11 +132,9 @@ $areas = ["Todas"]; // Adicionar a opção "Todas" ao início do array
 
 if ($result_areas && $result_areas->num_rows > 0) {
     while ($row = $result_areas->fetch_assoc()) {
-        $areas[] = $row['Area']; // Adicionar áreas ao array
+        $areas[] = $row['Area'];
     }
 }
-
-
 ?>
 
 
@@ -176,21 +149,21 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <link rel="stylesheet" type="text/css" href="../../assets/styles/todosStyle.css">
     <style>
         .sugestoes {
-            position: absolute; // Para garantir que as sugestões fiquem abaixo do campo de pesquisa
+            position: absolute;
             border: 1px solid #ccc;
             background-color: #cecece;
-            max-height: 150px; // Limitar a altura para evitar que seja muito alto
-            overflow-y: auto; // Permitir rolagem se houver muitas sugestões
-            z-index: 1000; // Para que fique por cima de outros elementos
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
         }
 
         .sugestao-item {
             padding: 8px;
-            cursor: pointer; // Indicar que é clicável
+            cursor: pointer;
         }
 
         .sugestao-item:hover {
-            background-color: #fff; // Destacar ao passar o mouse
+            background-color: #fff;
         }
     </style>
 </head>
@@ -222,12 +195,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 <div class="divFlexInput">
                     <input class="inputPesquisa" placeholder="Pesquisa por Título">
                 </div>
-
                 <div id="sugestoes" class="sugestoes" style="display: none;">
-
                 </div>
-
-
                 <div id="mostraFiltros">
                     <h3>Filtros</h3>
                     <img id="iconeFiltro" src="../../assets/images/icones_diversos/showHidden.svg">
@@ -259,10 +228,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <label class="nomeFiltro" for="apenasVagasAbertas">Apenas vagas abertas:</label>
                         <input type="checkbox" id="apenasVagasAbertas">
                     </div>
-
                 </div>
             </div>
-
             <div class="divGridVagas">
                 <?php
                 // Loop para exibir as vagas restantes no carrossel
@@ -273,14 +240,12 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
                     $stmt_inscricoes->execute();
                     $result_inscricoes = $stmt_inscricoes->get_result();
-
                     // Verificar se a consulta teve sucesso
                     if ($result_inscricoes === false) {
-                        // Tratar o erro, se necessário
+                        // ! Arrumar questão de tratamento de Erros !! 
                         echo "Erro na consulta de contagem de inscrições: " . $_con->error;
                         exit;
                     }
-
                     // Obter o resultado da contagem de inscrições
                     $row_inscricoes = $result_inscricoes->fetch_assoc();
                     $total_inscricoes = $row_inscricoes['total_inscricoes'];
@@ -300,7 +265,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                             break;
                         case "Estágio":
-                        case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
+                        case "Jovem Aprendiz": 
                             echo '<img src="../../../imagens/estagio.svg">';
                             echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                             break;
@@ -318,10 +283,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     $nomeEmpresa = isset($row['Nome_da_Empresa']) && $row['Nome_da_Empresa'] !== null
                         ? $row['Nome_da_Empresa']
                         : 'Confidencial';
-
                     // Exibir o nome da empresa ou "Confidencial"
                     echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
-
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                     $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
@@ -332,7 +295,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
                         echo '<p class="dataVaga">' . $datadeTermino . '</p>';
                     }
-
                     echo '</section>';
                     echo '</article>';
                     echo '</a>';
@@ -353,6 +315,9 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="tituloDigitavel.js"></script>
+    <!--================================ Parte do tema noturno ======================================= -->
+
+    <!-- Atribui o tema salvo no banco de dados a essa variável e passa ela pro modo noturno  -->
     <script>
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
@@ -362,7 +327,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
 
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-
 
             // Salva o novo tema no banco de dados via AJAX
             $.ajax({
@@ -379,67 +343,44 @@ if ($result_areas && $result_areas->num_rows > 0) {
             // Atualiza a classe do body para mudar o tema
             if (novoTema === "noturno") {
                 $("body").addClass("noturno");
-                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+                Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+                Claro(); /
             }
-
         });
     </script>
-    <!--================================ Buscar Vagas por filtros ======================================= -->
+
+
+    <!--================================ Obter sugestão dos títulos ======================================= -->
     <script>
         $(document).ready(function () {
-            // Quando houver uma mudança em qualquer filtro
-            $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
-                aplicarFiltros(); // Chama a função para aplicar filtros
+            var areaAtual = $('.selectArea').val();
+            var idPessoa = <?php echo json_encode($idPessoa); ?>;
+
+            // Atualiza a área sempre que o usuário muda a seleção
+            $('.selectArea').on('change', function () {
+                areaAtual = $(this).val();
             });
+            var termoAnterior = localStorage.getItem('termoPesquisa');
 
-            function aplicarFiltros() {
-                // Obter valores dos filtros
-                var area = $('.selectArea').val(); // Valor do filtro de área
-                var tipos = []; // Armazena valores das checkboxes selecionadas
-                $('.checkBoxTipo:checked').each(function () {
-                    tipos.push($(this).val()); // Adiciona valores ao array
-                });
-
-                var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked'); // Status do checkbox
-                var termoPesquisa = $('.inputPesquisa').val(); // Termo de pesquisa por título
-
-                // Fazer chamada AJAX para buscar vagas com base nos filtros
-                $.ajax({
-                    url: 'buscar_vagas_filtros.php', // Endereço do endpoint PHP
-                    method: 'POST',
-                    data: {
-                        area: area,
-                        tipos: tipos,
-                        vagasAbertas: apenasVagasAbertas,
-                        termo: termoPesquisa // Enviar o termo de pesquisa por título
-                    },
-                    success: function (response) {
-                        // Atualiza o conteúdo com vagas filtradas
-                        $('.divGridVagas').html(response);
-                    },
-                    error: function () {
-                        console.error("Erro ao buscar vagas com filtros.");
-                    }
-                });
+            if (termoAnterior) {
+                $('.inputPesquisa').val(termoAnterior);
+                buscarVagasPorTitulo(termoAnterior, areaAtual); // Passa a área correta
             }
-        });
-
-    </script>
-
-    <!--================================ Obter sugestão dos titulos ======================================= -->
-    <script>
-        $(document).ready(function () {
             $('.inputPesquisa').on('input', function () {
                 var searchTerm = $(this).val();
+                localStorage.setItem('termoPesquisa', searchTerm);
 
                 if (searchTerm.length >= 2) {
                     $.ajax({
                         url: 'obter_sugestoes.php',
                         method: 'POST',
-                        data: { termo: searchTerm },
+                        data: {
+                            termo: searchTerm,
+                            area: areaAtual,
+                            idPessoa: idPessoa
+                        },
                         success: function (response) {
                             $('#sugestoes').html(response).show();
                         },
@@ -452,47 +393,136 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 }
             });
 
-            // Adicione um evento de clique para as sugestões
             $(document).on('click', '.sugestao-item', function () {
-                var textoSelecionado = $(this).text(); // Texto da sugestão clicada
-                $('.inputPesquisa').val(textoSelecionado); // Preenche o campo de pesquisa
-                $('#sugestoes').hide(); // Esconder a lista de sugestões
+                var textoSelecionado = $(this).text();
+                $('.inputPesquisa').val(textoSelecionado);
+                $('#sugestoes').hide();
+                localStorage.setItem('termoPesquisa', textoSelecionado);
+                buscarVagasPorTitulo(textoSelecionado, areaAtual);
             });
-        });
 
+            function buscarVagasPorTitulo(termoPesquisa, area) {
+                $.ajax({
+                    url: 'buscar_vaga_por_titulo.php',
+                    method: 'POST',
+                    data: {
+                        termo: termoPesquisa,
+                        area: area,
+                        idPessoa: idPessoa
+                    },
+                    success: function (response) {
+                        $('.divGridVagas').html(response);
+                    },
+                    error: function () {
+                        console.error("Erro ao buscar vagas por título.");
+                    }
+                });
+            }
+        });
     </script>
 
+    <!--================================ Buscar Vagas por filtros ======================================= -->
     <script>
         $(document).ready(function () {
-            // Evento para capturar quando o usuário clica no botão de pesquisa
-            $('.searchButton').on('click', function () {
-                // Obtém o termo de pesquisa digitado pelo usuário
+            var idPessoa = <?php echo json_encode($idPessoa); ?>;
+
+            // Quando houver uma mudança em qualquer filtro, salvar no localStorage
+            $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
+                salvarFiltros();
+                aplicarFiltros();
+            });
+            function salvarFiltros() {
+                // Obter valores dos filtros
+                var area = $('.selectArea').val();
+                var tipos = [];
+                $('.checkBoxTipo:checked').each(function () {
+                    tipos.push($(this).val());
+                });
+                var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked');
                 var termoPesquisa = $('.inputPesquisa').val();
+                // Salvar no localStorage
+                localStorage.setItem('area', area);
+                localStorage.setItem('tipos', JSON.stringify(tipos));
+                localStorage.setItem('apenasVagasAbertas', apenasVagasAbertas);
+                localStorage.setItem('termoPesquisa', termoPesquisa);
+            }
+            function aplicarFiltros() {
+                // Obter valores dos filtros
+                var area = localStorage.getItem('area');
+                var tipos = JSON.parse(localStorage.getItem('tipos')) || [];
+                var apenasVagasAbertas = JSON.parse(localStorage.getItem('apenasVagasAbertas'));
+                var termoPesquisa = localStorage.getItem('termoPesquisa') || "";
+                // Aplicar os valores do localStorage aos elementos da página
+                $('.selectArea').val(area);
+                $('.checkBoxTipo').each(function () {
+                    $(this).prop('checked', tipos.includes($(this).val()));
+                });
+                $('#apenasVagasAbertas').prop('checked', apenasVagasAbertas);
+                $('.inputPesquisa').val(termoPesquisa);
 
-                // Chama a função para buscar vagas por título, passando o termo de pesquisa como parâmetro
-                buscarVagasPorTitulo(termoPesquisa);
-            });
+                // Chamada AJAX para buscar vagas com base nos filtros
+                $.ajax({
+                    url: 'buscar_vagas_filtros.php',
+                    method: 'POST',
+                    data: {
+                        idPessoa: idPessoa,
+                        area: area,
+                        tipos: tipos,
+                        vagasAbertas: apenasVagasAbertas,
+                        termo: termoPesquisa
+                    },
+                    success: function (response) {
+                        $('.divGridVagas').html(response);
+                    },
+                    error: function () {
+                        console.error("Erro ao buscar vagas com filtros.");
+                    }
+                });
+            }
+            aplicarFiltros();
         });
-
-        // Função para buscar vagas por título
-        function buscarVagasPorTitulo(termoPesquisa) {
-            // Faz a chamada AJAX para buscar vagas por título
-            $.ajax({
-                url: 'buscar_vaga_por_titulo.php', // Endereço do arquivo PHP para buscar vagas por título
-                method: 'POST',
-                data: {
-                    termo: termoPesquisa // Passa o termo como parâmetro
-                },
-                success: function (response) {
-                    // Atualiza o conteúdo com as vagas encontradas por título
-                    $('.divGridVagas').html(response);
-                },
-                error: function () {
-                    console.error("Erro ao buscar vagas por título.");
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Função para alternar o estado do botão e salvar no localStorage
+            function toggleButtonState(buttonId) {
+                const button = document.querySelector(`#${buttonId}`);
+                let isActive = localStorage.getItem(`${buttonId}State`) === 'true';
+                // Alternar o estado do botão
+                isActive = !isActive;
+                localStorage.setItem(`${buttonId}State`, isActive); // Salvar no localStorage
+                if (isActive) {
+                    button.style.backgroundColor = "var(--laranja)";
+                    button.style.border = "1px solid var(--laranja)";
+                    button.style.color = "whitesmoke";
+                } else {
+                    button.style = "initial";
                 }
-            });
-        }
-
+            }
+            // Função para restaurar os estados dos botões ao carregar a página
+            function restaurarEstadosDosBotoes() {
+                const buttonIds = ["btnJovemAprendiz", "btnEstagio", "btnClt", "btnPj"];
+                buttonIds.forEach(buttonId => {
+                    const button = document.querySelector(`#${buttonId}`);
+                    if (button) {
+                        const isActive = localStorage.getItem(`${buttonId}State`) === 'true';
+                        if (isActive) {
+                            button.style.backgroundColor = "var(--laranja)";
+                            button.style.border = "1px solid var(--laranja)";
+                            button.style.color = "whitesmoke";
+                        } else {
+                            button.style = "initial";
+                        }
+                    }
+                });
+            }
+            restaurarEstadosDosBotoes();
+            // Configurar eventos de clique para alternar estados e salvar no localStorage
+            document.querySelector("#btnJovemAprendiz").addEventListener("click", () => toggleButtonState("btnJovemAprendiz"));
+            document.querySelector("#btnEstagio").addEventListener("click", () => toggleButtonState("btnEstagio"));
+            document.querySelector("#btnClt").addEventListener("click", () => toggleButtonState("btnClt"));
+            document.querySelector("#btnPj").addEventListener("click", () => toggleButtonState("btnPj"));
+        });
     </script>
 
 </body>
