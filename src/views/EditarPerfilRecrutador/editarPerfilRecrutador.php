@@ -285,9 +285,36 @@ if ($result_areas && $result_areas->num_rows > 0) {
     box-shadow: 0px 0px 8px silver;
     align-content: center;
     margin-left: 35%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                                <a
-                                    href="../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>">Excluir
-                                    Conta</a>
+                        
+                              <a class="acessarEditarPerfil" href="#" onclick="openModal('../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>')">Excluir Conta</a>
+
+                                    <div style="padding: 6px 12px;
+                    box-shadow: 0px 0px 6px silver;
+                    display: flex;
+                    align-items: center;
+                    background-color: #830404; /* Corrigido o duplo # */
+                    color: whitesmoke;
+                    border-radius: 10px;
+                    width: 9%;
+                    margin-top: -3%;
+                    margin-left: 89%;">
+                <lord-icon src="https://cdn.lordicon.com/wpyrrmcq.json" trigger="hover" colors="primary:#ffffff"
+                    style="width:30px;height:30px">
+                </lord-icon>
+                <label>Deletar</label>
+            </div>
+        </a>
+
+
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Confirmação de Deleção</h2>
+            <p>Você tem certeza de que deseja deletar esta vaga?</p>
+            <button class="cancel-button" onclick="closeModal()">Cancelar</button>
+            <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
+        </div>
+    </div>
                             </div>
                         </form>
 
