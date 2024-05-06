@@ -349,7 +349,7 @@ if ($stmt) {
     <?php } ?>
     <?php if ($autenticadoComoPublicador == true): ?>
         <a class="acessarEditarPerfil" href="#"
-            onclick="openModal('../../services/deletar/DeletarVaga.php?id=<?php echo $idAnuncio; ?>&idPessoa=<?php echo $idPessoaUsuario; ?>&action=delete')">
+            onclick="openModal('../../services/deletar/DeletarVaga.php?id=<?php echo $idAnuncio; ?>&idPessoa=<?php echo $idPessoaEmpresa; ?>&action=delete')">
 
             <div style="padding: 6px 12px;
                     box-shadow: 0px 0px 6px silver;
