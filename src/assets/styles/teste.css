@@ -1,4 +1,4 @@
-nav{
+#navFixa{
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -66,6 +66,7 @@ nav{
 
 .divPergunta{
     display: flex;
+    align-items: center;
     font-size: 16pt;
 }
 
@@ -87,7 +88,7 @@ nav{
     line-height: 1.5em;
 }
 
-.divAlternativas input{
+.divAlternativas input[type="radio"]{
     min-width: 20px;
     min-height: 20px;
     cursor: pointer;

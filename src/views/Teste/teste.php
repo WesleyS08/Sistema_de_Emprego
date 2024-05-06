@@ -39,10 +39,10 @@ if ($result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teste</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    <link rel="stylesheet" type="text/css" href="teste.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/teste.css">
 </head>
 <body>
-    <nav>          
+    <nav id="navFixa">          
         <a class="btnVoltar" href="../PreparaTeste/preparaTeste.php">
             <img src="../../assets/images/icones_diversos/backWhite.svg">                 
             <h2>Sair</h2>

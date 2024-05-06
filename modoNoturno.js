@@ -13,6 +13,7 @@ let titulos3 = document.querySelectorAll("h3");
 let articles = document.querySelectorAll("article");
 let perfis = document.querySelectorAll(".perfil");
 let verMaisBtns = document.querySelectorAll(".verMais");
+let labellines = document.querySelectorAll(".labelLine");
 
 let slidesMysql = document.querySelectorAll(".slideMysql");
 let slidesPhp = document.querySelectorAll(".slidePhp");
@@ -21,6 +22,8 @@ let logosFatec = document.querySelectorAll(".logoFatec");
 let slidesJs = document.querySelectorAll(".slideJs");
 let slidesHtml = document.querySelectorAll(".slideHtml");
 let slidesCss = document.querySelectorAll(".slideCss");
+
+//let lordicons = document.querySelectorAll("lord-icon");
 
 var styleElem = document.head.appendChild(document.createElement("style"));
 
@@ -39,7 +42,8 @@ function Noturno(){
         perfis.forEach((perfil) => perfil.style.background="none");    
         sinopses.forEach((sinopse) => sinopse.style.color="whitesmoke");   
         dataVagas.forEach((dataVaga) => dataVaga.style.color="silver");    
-        tipoVagas.forEach((tipoVaga) => tipoVaga.style.color="silver");    
+        tipoVagas.forEach((tipoVaga) => tipoVaga.style.color="silver");            
+        labellines.forEach((labelLine) => labelLine.style.backgroundColor="#1C1C1C");    
 
         styleElem.innerHTML = ".carrosselInfinito:before, .carrosselInfinito:after{background: linear-gradient(to right, rgba(28,28,28,1) 0%, rgba(28,28,28,0) 100%);}";    
         slidesMysql.forEach((slideMysql) => slideMysql.src = "../../assets/images/logos_parceiros/mysqlWhite.svg");
@@ -50,6 +54,7 @@ function Noturno(){
         slidesHtml.forEach((slideHtml) => slideHtml.src = "../../assets/images/logos_parceiros/htmlWhite.svg");
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/cssWhite.svg");
         
+        //lordicons.forEach((icon) => icon.colors="primary:#f5f5f5,secondary:#c74b16");
 
         verMaisBtns.forEach((verMais) => verMais.style.color="black");
         verMaisBtns.forEach((verMais) => verMais.style.border="none");        
@@ -73,6 +78,8 @@ function Claro(){
         dataVagas.forEach((dataVaga) => dataVaga.style.color="black");    
         tipoVagas.forEach((tipoVaga) => tipoVaga.style.color="black");
         sinopses.forEach((sinopse) => sinopse.style.color="whitesmoke");
+        
+        labellines.forEach((labelLine) => labelLine.style.backgroundColor="#f5f5f5");  
 
         styleElem.innerHTML = ".carrosselInfinito:before, .carrosselInfinito:after{background: linear-gradient(to right, rgba(245,245,245,1) 0%, rgba(245,245,245,0) 100%);}";    
         slidesMysql.forEach((slideMysql) => slideMysql.src = "../../assets/images/logos_parceiros/mysql.svg");
@@ -82,7 +89,10 @@ function Claro(){
         slidesJs.forEach((slideJs) => slideJs.src = "../../assets/images/logos_parceiros/javascript.svg");
         slidesHtml.forEach((slideHtml) => slideHtml.src = "../../assets/images/logos_parceiros/html.svg");
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/css.svg");
-    
+        
+        
+        //lordicons.forEach((icon) => icon.colors="primary:#242424,secondary:#c74b16");
+
         verMaisBtns.forEach((verMais) => verMais.style="initial");
     }
     finally{

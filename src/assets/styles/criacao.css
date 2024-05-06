@@ -4,7 +4,11 @@
 }
 
 .containerSuperior{
-    width: 800px;  
+    width: 900px;
+}
+
+.divFlexSuperior{
+    display: flex;
 }
 
 .containerInferior{
@@ -52,7 +56,23 @@ small{
     z-index: 1111;
 }
 
-#horario{
+#nivel{
+    border-color: gray;
+}
+
+#nivel:focus, #nivel:valid{
+    border-color: var(--laranja);
+}
+
+#nivel:invalid{
+    color: gray;
+}
+
+#nivel option{
+    color: black;
+}
+
+#horario, #competencias{
     width: 100%;
 }
 
@@ -156,7 +176,7 @@ small{
     margin-bottom: 20px;
 }
 
-input[type="radio"]{
+.radioBtn{
     display: none;
 }
 
@@ -196,3 +216,65 @@ input[type="radio"]{
 .btnSalvar:hover{
     transform: scale(1.1);
 }
+
+/* ------------------------- Imagem do teste -------------------------*/
+
+.divImgTeste{
+    cursor: pointer;
+    background-image: url("../../assets/images/figuras/imgTeste.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 50px 30px 0px 0px
+}
+
+.divImgTeste p{
+    position: absolute;
+    bottom: -26px;
+}
+
+.divImgTeste:hover{    
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url("../../assets/images/figuras/imgTeste.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.divIconeEditar{
+    display: none;
+    height: 110px;
+    width: 110px;
+}
+
+/* ------------------------- Testes -------------------------*/
+
+#divQuestoesCriacao{
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.inputSimples{
+    background: none;
+    border: none;
+    border-bottom: 1px solid gray;
+    font-size: 12pt;
+    outline: none;
+    margin-left: 10px;
+    height: 24px;
+    width: 100%;
+}
+
+.divAlternativas div{
+    margin: 20px 0px;
+}
+
+.divAlternativas .inputSimples{
+    width: 400px;
+}
+
