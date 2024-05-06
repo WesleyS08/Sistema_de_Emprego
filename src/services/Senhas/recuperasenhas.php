@@ -39,8 +39,31 @@ if ($result->num_rows > 0) {
     $stmt->bind_param("si", $token, $idPessoa);
     $stmt->execute();
 
-    // Criar o link de redefinição de senha
-    $resetLink = 'http://localhost/Sistema_de_Emprego/src/views/RedefinirSenha/redefinirSenha.php?token=' . $token;
+    // Obter o host do servidor
+    $host = $_SERVER['HTTP_HOST'];
+
+    // Obter o diretório do arquivo atual (normalizando as barras)
+    $currentPath = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
+
+    // Obter o caminho para voltar duas pastas
+    $twoDirsUp = dirname(dirname($currentPath));
+
+    // Calcular o caminho relativo ao documento raiz
+    $relativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $twoDirsUp);
+
+    // Construir a URL base
+    $baseURL = "http://$host$relativePath";
+
+    // Função para gerar URLs a partir do baseURL
+    function generateUrl($relativePathPart)
+    {
+        global $baseURL;
+        return rtrim($baseURL, '/') . '/' . ltrim($relativePathPart, '/');
+    }
+
+    // Gerar a URL para o arquivo específico após sair duas pastas
+    $resetLink = generateUrl('views/RedefinirSenha/redefinirSenha.php?token=' . $token);
+
 
     // Configurar o PHPMailer para enviar o email
     $mail = new PHPMailer();
