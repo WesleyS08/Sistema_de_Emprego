@@ -52,7 +52,7 @@ if ($result) {
             <h2>:</h2>
             <h2 id="segundos">00</h2> 
         </div>
-        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
+        <button class="btnModo" id="btnModoTeste"><img src="../../../imagens/moon.svg"></button> 
     </nav>
     <form id="respostas" method="post" action="../../../src/services/Testes/processarTeste.php?id=<?php echo $id_questionario; ?>">
         <div class="containerTeste">
