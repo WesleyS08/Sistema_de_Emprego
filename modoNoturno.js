@@ -24,6 +24,8 @@ let slidesHtml = document.querySelectorAll(".slideHtml");
 let slidesCss = document.querySelectorAll(".slideCss");
 
 let infos = document.querySelectorAll(".infos");
+let divIconeENomes = document.querySelectorAll(".divIconeENome");
+let iconesVaga = document.querySelectorAll(".iconeVaga");
 
 //let lordicons = document.querySelectorAll("lord-icon");
 
@@ -56,9 +58,9 @@ function Noturno(){
         slidesHtml.forEach((slideHtml) => slideHtml.src = "../../assets/images/logos_parceiros/htmlWhite.svg");
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/cssWhite.svg");
         
-        infos.forEach((info) => info.style.color="whitesmoke");
-
-        //lordicons.forEach((icon) => icon.colors="primary:#f5f5f5,secondary:#c74b16");
+        infos.forEach((info) => info.style.color="whitesmoke");        
+        divIconeENomes.forEach((divIconeENome) => divIconeENome.style.color="whitesmoke");        
+        iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#f5f5f5,secondary:#c76f16");
 
         verMaisBtns.forEach((verMais) => verMais.style.color="black");
         verMaisBtns.forEach((verMais) => verMais.style.border="none");        
@@ -95,8 +97,8 @@ function Claro(){
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/css.svg");
         
         infos.forEach((info) => info.style.color="black");
-        
-        //lordicons.forEach((icon) => icon.colors="primary:#242424,secondary:#c74b16");
+        divIconeENomes.forEach((divIconeENome) => divIconeENome.style.color="black");
+        iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#242424,secondary:#c74b16");
 
         verMaisBtns.forEach((verMais) => verMais.style="initial");
     }

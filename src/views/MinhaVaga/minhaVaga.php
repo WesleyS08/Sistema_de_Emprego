@@ -436,7 +436,7 @@ if ($stmt) {
         <div class="container">
             <div class="divInformacoesIniciais">
                 <div class="divIconeENome">
-                    <lord-icon src="https://cdn.lordicon.com/pbbsmkso.json" trigger="loop" state="loop-rotate"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/pbbsmkso.json" trigger="loop" state="loop-rotate"
                         colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
                     </lord-icon>
                     <label id="nomeArea">
@@ -444,7 +444,7 @@ if ($stmt) {
                     </label>
                 </div>
                 <div class="divIconeENome">
-                    <lord-icon src="https://cdn.lordicon.com/surcxhka.json" trigger="loop" stroke="bold"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/surcxhka.json" trigger="loop" stroke="bold"
                         state="loop-roll" colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
                     </lord-icon>
                     <label id="cidade">
@@ -456,7 +456,7 @@ if ($stmt) {
                     </label>
                 </div>
                 <div class="divIconeENome">
-                    <lord-icon src="https://cdn.lordicon.com/qvyppzqz.json" trigger="loop" stroke="bold"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/qvyppzqz.json" trigger="loop" stroke="bold"
                         state="loop-oscillate" colors="primary:#242424,secondary:#c74b16"
                         style="width:34px;height:34px">
                     </lord-icon>
