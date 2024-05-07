@@ -4,8 +4,6 @@ session_start();
 // Inclua o arquivo de conexão com o banco de dados
 include "../../../src/services/conexão_com_banco.php";
 
-
-
 // Verificar se o usuário está autenticado como empresa
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 $emailUsuario = '';
@@ -107,6 +105,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <title>Anunciar</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/criacao.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <style>
+        .texto-vermelho {
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
@@ -115,10 +118,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+                src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-        <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
             <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
             <li><a href="../../../index.php">Deslogar</a></li>
@@ -127,7 +131,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn">
-            <a class="btnVoltar"  href="../HomeRecrutador/homeRecrutador.php"><img src="../../assets/images/icones_diversos/back.svg"></a>
+            <a class="btnVoltar" href="../HomeRecrutador/homeRecrutador.php"><img
+                    src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Criação de Vaga</h2>
         </div>
         <form id="formvaga" method="POST" action="../../../src/services/cadastros/vaga.php" autocomplete="off">
@@ -211,10 +216,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="containerInput">
                             <div class="contentInput">
                                 <input class="inputAnimado" name="horario" id="horario" type="text"
-                                    placeholder="De segunda a sexta, das 9:00 às 16:00" required>
+                                    placeholder="seg a sáb, das 9:00 às 16:00" required>
                                 <div class="labelLine">Carga horária</div>
+
                             </div>
-                            <small name="aviso"></small>
+                            <small name="aviso" id="avisoHorario"></small>
                         </div>
                     </div>
                     <div class="divTextArea">
@@ -224,7 +230,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     required></textarea>
                                 <div class="textArealabelLine">Descrição da Vaga</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small name="aviso" id="aviso-descricao"></small>
                         </div>
                         <div class="divFlex" id="divFlexTextArea">
                             <div class="containerTextArea">
@@ -233,15 +239,16 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                         required></textarea>
                                     <div class="textArealabelLine">Requisitos</div>
                                 </div>
-                                <small name="aviso">Separe os elementos por vírgula</small>
+                                <small name="aviso" id="aviso-requisitos"></small>
                             </div>
                             <div class="containerTextArea">
                                 <div class="contentInputTextArea">
-                                    <textarea class="textAreaAnimada" name="beneficios" id="beneficios" type="text"
+                                    <textarea class="textAreaAnimada" name="beneficios" id="beneficios"
                                         required></textarea>
                                     <div class="textArealabelLine">Benefícios</div>
                                 </div>
-                                <small name="aviso">Separe os elementos por vírgula</small>
+                                <small name="aviso" id="aviso-beneficios"></small>
+
                             </div>
                         </div>
                     </div>
@@ -251,7 +258,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div>
                             <div class="divRadioContent">
                                 <h3>Tipo de profissional:</h3>
-                                <input type="radio" name="tipo" id="jovemAprendiz" value="Jovem Aprendiz" class="radioBtn" required>
+                                <input type="radio" name="tipo" id="jovemAprendiz" value="Jovem Aprendiz"
+                                    class="radioBtn" required>
                                 <input type="radio" name="tipo" id="estagio" value="Estágio" class="radioBtn" required>
                                 <input type="radio" name="tipo" id="clt" value="CLT" class="radioBtn" required>
                                 <input type="radio" name="tipo" id="pj" value="PJ" class="radioBtn" required>
@@ -262,9 +270,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             </div>
                             <div class="divRadioContent">
                                 <h3>Nível de aprendizado:</h3>
-                                <input type="radio" name="nivel" id="medio" value="Ensino Médio" class="radioBtn" required>
+                                <input type="radio" name="nivel" id="medio" value="Ensino Médio" class="radioBtn"
+                                    required>
                                 <input type="radio" name="nivel" id="tecnico" value="Técnico" class="radioBtn" required>
-                                <input type="radio" name="nivel" id="superior" value="Superior" class="radioBtn" required>
+                                <input type="radio" name="nivel" id="superior" value="Superior" class="radioBtn"
+                                    required>
                                 <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
                                 <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label>
                                 <label for="superior" class="btnRadio" id="btnSuperior">Ensino Superior</label>
@@ -273,15 +283,19 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div>
                             <div class="divRadioContent">
                                 <h3>Modalidade:</h3>
-                                <input type="radio" name="modalidade" id="remoto" value="Remoto" class="radioBtn" required>
-                                <input type="radio" name="modalidade" id="presencial" value="Presencial" class="radioBtn" required>
+                                <input type="radio" name="modalidade" id="remoto" value="Remoto" class="radioBtn"
+                                    required>
+                                <input type="radio" name="modalidade" id="presencial" value="Presencial"
+                                    class="radioBtn" required>
                                 <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>
                                 <label for="presencial" class="btnRadio" id="btnPresencial">Presencial</label>
                             </div>
                             <div class="divRadioContent">
                                 <h3>Jornada:</h3>
-                                <input type="radio" name="jornada" id="meioPeriodo" value="Meio período" class="radioBtn" required>
-                                <input type="radio" name="jornada" id="integral" value="Tempo integral" class="radioBtn" required>
+                                <input type="radio" name="jornada" id="meioPeriodo" value="Meio período"
+                                    class="radioBtn" required>
+                                <input type="radio" name="jornada" id="integral" value="Tempo integral" class="radioBtn"
+                                    required>
                                 <label for="meioPeriodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>
                                 <label for="integral" class="btnRadio" id="btnIntegral">Tempo integral</label>
                             </div>
@@ -302,55 +316,80 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--
+    <script>
+        $(document).ready(function () {
+            // Novo regex para validar dias da semana e horários dentro de 24 horas
+            const regexDiasHorarios = /^((seg|ter|qua|qui|sex|sáb|dom)( a (seg|ter|qua|qui|sex|sáb|dom))? (das \d{1,2}:\d{2} (às|as) \d{1,2}:\d{2})|(\d{1,2}:\d{2} \- \d{1,2}:\d{2})|(\d{1,2}:\d{2}))$/i
+
+
+            function validarHorario() {
+                const horario = $("#horario").val();
+                const aviso = $("#avisoHorario");
+
+                if (horario === "") {
+                    aviso.text(""); // Limpar o aviso se o campo estiver vazio
+                    return;
+                }
+
+                if (!regexDiasHorarios.test(horario)) {
+                    console.log("Formato inválido Use esse exemplo: 'seg a sáb, das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
+                    aviso.text("Formato inválido Use esse exemplo: 'seg a sáb, das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
+                } else {
+                    console.log("Formato válido.");
+                    aviso.text("");
+                }
+            }
+
+            $("#horario").on("blur", function () {
+                validarHorario(); // Validar quando o campo perde o foco
+            });
+
+            $("#horario").on("input", function () {
+                const aviso = $("#avisoHorario");
+                const horario = $(this).val();
+
+                if (horario === "") {
+                    aviso.text(""); // Limpar o aviso se o campo estiver vazio
+                }
+            });
+
+            $("#formvaga").on("submit", function (e) {
+                validarHorario(); // Validar quando o formulário é enviado
+                if ($("#avisoHorario").text() !== "") {
+                    e.preventDefault(); // Impedir o envio se houver um aviso de erro
+                }
+            });
+        });
+
+    </script>
+    -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Função para definir o comportamento do placeholder
+            function configurarPlaceholder(elementId, focusText) {
+                var textArea = document.getElementById(elementId);
+
+                textArea.addEventListener("focus", function () {
+                    textArea.setAttribute("placeholder", focusText);
+                });
+
+                textArea.addEventListener("blur", function () {
+                    textArea.removeAttribute("placeholder");
+                });
+            }
+
+            // Configurar placeholders para diferentes campos
+            configurarPlaceholder("beneficios", "Separe os benefícios por vírgula: Benefícios 1, Benefícios 2 ...");
+            configurarPlaceholder("requisitos", "Separe os Requisitos por vírgula: Requisitos 1, Requisitos 2 ...");
+        });
+    </script>
     <script>
         // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
     <script src="../../../modoNoturno.js"></script>
-    <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
-    <script>
-        var nomeUsuario = "<?php echo $nomeUsuario; ?>";
-
-        if (nomeUsuario.trim() !== '') {
-            // O nome do usuário não está vazio, execute o código de animação
-            setTimeout(() => {
-                const titulo = document.querySelector("#tituloAutomatico");
-                const interval = 150; // variável do tempo de digitação
-
-                function DeterminaHorario() {
-                    let hora = new Date().getHours().toString().padStart(2, '0');
-                    if (hora < 12) {
-                        return "om dia";
-                    } else if (hora < 18) {
-                        return "oa tarde";
-                    } else {
-                        return "oa noite";
-                    }
-                }
-
-                let text1 = `${DeterminaHorario()}, ${nomeUsuario}!`;
-
-                function showText(titulo, text1, interval) {
-                    let char = text1.split("").reverse();
-
-                    let typer = setInterval(() => {
-                        if (!char.length) {
-                            return clearInterval(typer);
-                        }
-
-                        let next = char.pop();
-                        titulo.innerHTML += next;
-
-                    }, interval);
-                }
-
-                showText(titulo, text1, interval);
-            },);
-        } else {
-            console.log("Nome do usuário está vazio!");
-        }
-    </script>
-
     <script>
         var idPessoa = <?php echo $idPessoa; ?>;
 
@@ -382,76 +421,190 @@ if ($result_areas && $result_areas->num_rows > 0) {
         });
     </script>
     <script src="radioButtons.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            let tituloValido = false; // Variável para rastrear se o título é válido
+            let tituloValido = false;
+            let clearAvisoTimeout = null; // Variável para armazenar o timeout
+
+            function limparAviso() {
+                $("#aviso").text(""); // Limpa a mensagem
+                clearAvisoTimeout = null; // Limpa o timeout
+            }
 
             function verificarTitulo(palavra, callback) {
-                if (palavra) {
+                const letrasRegex = /[a-zA-Z]/g; // Expressão regular para contar letras
+                const numLetras = (palavra.match(letrasRegex) || []).length; // Contar as letras
+
+                if (numLetras >= 2) { // Verifica se há pelo menos duas letras
                     $.ajax({
-                        url: "verificar-palavra.php", // Endpoint para verificar a palavra
+                        url: "verificar-palavra.php",
                         type: "POST",
                         data: { palavra: palavra },
                         success: function (response) {
-                            console.log("Resposta recebida:", response); // Log para depuração
                             try {
-                                const resultado = JSON.parse(response); // Converte para objeto
-                                if (resultado.proibido) { // Se contiver palavra proibida
-                                    $("#aviso").text("O título contém palavras proibidas. Por favor, escolha outro título.");
+                                const resultado = JSON.parse(response);
+                                if (resultado.proibido) {
+                                    $("#aviso").text("O título contém palavras proibidas.");
                                     tituloValido = false;
-                                } else if (!resultado.existe) { // Se a palavra não existe
+                                } else if (!resultado.existe) {
                                     $("#aviso").text("Palavra não existe, por favor digite outra palavra.");
                                     tituloValido = false;
                                 } else {
-                                    $("#aviso").text(""); // Limpa a mensagem se a palavra existir
+                                    $("#aviso").text(""); // Limpa mensagem de erro
                                     tituloValido = true;
                                 }
                             } catch (e) {
-                                console.error("Erro ao processar resposta do servidor:", e);
                                 $("#aviso").text("Erro ao processar resposta do servidor.");
                                 tituloValido = false;
                             }
                             callback(); // Notifica que a verificação terminou
                         },
-                        error: function (xhr, status, error) {
-                            console.error("Erro na requisição AJAX:", error);
+                        error: function () {
                             $("#aviso").text("Erro ao verificar palavra. Tente novamente.");
                             tituloValido = false;
                             callback(); // Notifica que houve erro
                         },
-                        timeout: 10000 // Aumenta o tempo limite para 10 segundos
+                        timeout: 10000
                     });
                 } else {
-                    $("#aviso").text("Por favor, insira uma palavra antes de sair."); // Se estiver vazio
+                    $("#aviso").text("O título deve conter pelo menos duas letras.");
                     tituloValido = false;
                     callback(); // Notifica que a verificação terminou
                 }
             }
 
-            // Verificar o título ao sair do campo
             $("#titulo").on("blur", function () {
                 const palavra = $(this).val();
-                verificarTitulo(palavra, function () {
-                    console.log("Verificação do título concluída."); // Log para depuração
-                });
+                if (palavra.trim() === "") { // Verifica se está vazio
+                    if (clearAvisoTimeout) {
+                        clearTimeout(clearAvisoTimeout); // Cancela o timeout anterior
+                    }
+                    clearAvisoTimeout = setTimeout(limparAviso, 3000); // Limpa aviso após 3 segundos
+                } else {
+                    verificarTitulo(palavra, function () {
+                        console.log("Verificação do título concluída.");
+                    });
+                }
             });
 
-            // Impede o envio do formulário se o título não for válido
             $("#formvaga").on("submit", function (e) {
                 const palavra = $("#titulo").val();
 
-                // Use uma função de retorno de chamada para aguardar a resposta do AJAX
                 verificarTitulo(palavra, function () {
-                    if (!tituloValido) { // Se título é inválido
-                        e.preventDefault(); // Impede o envio
-                        alert("O formulário não pode ser enviado, o título é inválido."); // Mostra mensagem
+                    if (!tituloValido) {
+                        e.preventDefault();
+                        alert("O formulário não pode ser enviado, o título é inválido.");
                     }
                 });
 
-                // Bloqueia o envio do formulário para aguardar a resposta do AJAX
-                if (!tituloValido) {
-                    e.preventDefault(); // Impede o envio até que o AJAX confirme que o título é válido
+                if (palavra.trim() === "") { 
+                    e.preventDefault();
+                    $("#aviso").text("O campo título não pode estar vazio.");
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Mapa para rastrear se os campos são válidos
+            let camposValidos = {
+                descricao: false,
+                requisitos: false,
+                beneficios: false,
+            };
+
+            // Função para verificar palavras localmente e no servidor
+            function verificarPalavras(campo, palavras, callback) {
+                const letrasRegex = /[a-zA-Z]/g;
+                const palavrasInvalidas = [];
+
+                // Verificar localmente se as palavras têm pelo menos 2 letras
+                palavras.forEach((palavra) => {
+                    const numLetras = (palavra.match(letrasRegex) || []).length;
+                    if (numLetras < 4) {
+                        palavrasInvalidas.push(palavra);
+                    }
+                });
+
+                if (palavrasInvalidas.length > 0) {
+                    $("#aviso-" + campo).text(`Palavras inválidas: ${palavrasInvalidas.join(", ")}`);
+                    camposValidos[campo] = false;
+                    callback(); // Notifica que a verificação terminou
+                } else {
+                    $("#aviso-" + campo).text("Verificando palavras...");
+
+                    // Fazer chamada AJAX para verificar palavras no servidor
+                    $.ajax({
+                        url: "verificar-palavras.php",
+                        type: "POST",
+                        data: { palavras: palavras },
+                        success: function (response) {
+                            try {
+                                const resultado = JSON.parse(response);
+
+                                const palavrasInvalidasDoServidor = resultado.invalidas || [];
+                                const palavrasNaoExistem = resultado.nao_existem || [];
+
+                                let mensagemErro = "";
+
+                                if (palavrasInvalidasDoServidor.length > 0) {
+                                    mensagemErro += `Há palavras inválidas: ${palavrasInvalidasDoServidor.join(", ")}. `;
+                                }
+
+                                if (palavrasNaoExistem.length > 0) {
+                                    mensagemErro += `Há palavras que não existem: ${palavrasNaoExistem.join(", ")}. `;
+                                }
+
+                                if (mensagemErro) {
+                                    $("#aviso-" + campo).text(mensagemErro);
+                                    camposValidos[campo] = false;
+                                } else {
+                                    $("#aviso-" + campo).text("Tudo certo!");
+                                    camposValidos[campo] = true;
+                                }
+                            } catch (e) {
+                                $("#aviso-" + campo).text("Erro ao processar resposta do servidor.");
+                                camposValidos[campo] = false;
+                            }
+                            callback(); // Notifica que a verificação terminou
+                        },
+                        error: function () {
+                            $("#aviso-" + campo).text("Erro ao verificar palavras. Tente novamente.");
+                            camposValidos[campo] = false;
+                            callback();
+                        },
+                        timeout: 3000
+                    });
+                }
+            }
+
+            function verificarCampo(campoId) {
+                const campo = $("#" + campoId);
+                const valor = campo.val().trim();
+                const palavras = valor.split(/\s+/);
+
+                verificarPalavras(campoId, palavras, function () {
+                    console.log(`Verificação do campo ${campoId} concluída.`);
+                });
+            }
+
+            $("#descricao, #requisitos, #beneficios").on("blur", function () {
+                const campoId = $(this).attr("id");
+                verificarCampo(campoId);
+            });
+
+            $("#formvaga").on("submit", function (e) {
+                // Verificar todos os campos ao enviar o formulário
+                ["descricao", "requisitos", "beneficios"].forEach((campoId) => {
+                    verificarCampo(campoId);
+                });
+
+                // Verifique se todos os campos são válidos antes de permitir o envio
+                const todosValidos = Object.values(camposValidos).every((valido) => valido);
+
+                if (!todosValidos) {
+                    e.preventDefault();
+                    alert("O formulário não pode ser enviado. Por favor, corrija os erros.");
                 }
             });
         });

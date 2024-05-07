@@ -267,12 +267,14 @@ function determinarImagemCategoria($categoria)
                     if ($counter % 2 != 0) {
                         echo '</div>'; // Fecha a div "gridTestes"
                     }
-                } else {
+                    ?>
+                </div>
+                <a href="src/views/Login/login.html"><button>Ver mais</button></a>
+                <?php
+                } else { // Se não houver resultados, exibe uma mensagem
                     echo "Nenhum questionário encontrado.";
                 }
                 ?>
-            </div>
-            <a href="src/views/Login/login.html"><button>Ver mais</button></a>
         </div>
     </div>
     <div class="divCommon">
