@@ -105,11 +105,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <title>Anunciar</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/criacao.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    <style>
-        .texto-vermelho {
-            color: red;
-        }
-    </style>
 </head>
 
 <body>
@@ -160,7 +155,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                         ?>
                                     </datalist>
                                 </div>
-                                <small name="aviso"></small>
+                                <small name="aviso" id="aviso-Area"></small>
                             </div>
                         </div>
                         <div class="divFlex">
@@ -317,7 +312,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!--
+
     <script>
         $(document).ready(function () {
             // Novo regex para validar dias da semana e horários dentro de 24 horas
@@ -364,7 +359,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         });
 
     </script>
-    -->
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Função para definir o comportamento do placeholder
@@ -444,13 +439,13 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             try {
                                 const resultado = JSON.parse(response);
                                 if (resultado.proibido) {
-                                    $("#aviso").text("O título contém palavras proibidas.");
+                                    $("#aviso").text("O título não pode ter '" + palavra + "' ela é uma palavra proibidas.").css("color", "red");
                                     tituloValido = false;
                                 } else if (!resultado.existe) {
-                                    $("#aviso").text("Palavra não existe, por favor digite outra palavra.");
+                                    $("#aviso").text("Palavra '" + palavra + "' não existe, por favor digite outra palavra.").css("color", "red");
                                     tituloValido = false;
                                 } else {
-                                    $("#aviso").text(""); // Limpa mensagem de erro
+                                    $("#aviso").text("Tudo Certo!").css("color", "#086507");
                                     tituloValido = true;
                                 }
                             } catch (e) {
@@ -464,7 +459,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             tituloValido = false;
                             callback(); // Notifica que houve erro
                         },
-                        timeout: 10000
+                        timeout: 3000
                     });
                 } else {
                     $("#aviso").text("O título deve conter pelo menos duas letras.");
@@ -497,9 +492,92 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     }
                 });
 
-                if (palavra.trim() === "") { 
+                if (palavra.trim() === "") {
                     e.preventDefault();
                     $("#aviso").text("O campo título não pode estar vazio.");
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            let tituloValido = false;
+            let clearAvisoTimeout = null; // Variável para armazenar o timeout
+
+            function limparAviso() {
+                $("#aviso-Area").text(""); // Limpa a mensagem
+                clearAvisoTimeout = null; // Limpa o timeout
+            }
+
+            function verificarTitulo(palavra, callback) {
+                const letrasRegex = /[a-zA-Z]/g; 
+                const numLetras = (palavra.match(letrasRegex) || []).length; // Contar as letras
+
+                if (numLetras >= 2) { // Verifica se há pelo menos duas letras
+                    $.ajax({
+                        url: "verificar-palavra.php",
+                        type: "POST",
+                        data: { palavra: palavra },
+                        success: function (response) {
+                            try {
+                                const resultado = JSON.parse(response);
+                                if (resultado.proibido) {
+                                    $("#aviso").text("A área não pode ter '" + palavra + "' ela é uma palavra proibidas.").css("color", "red");
+                                    tituloValido = false;
+                                } else if (!resultado.existe) {
+                                    $("#aviso").text("Palavra '" + palavra + "' não existe, por favor digite outra palavra.").css("color", "red");
+                                    tituloValido = false;
+                                } else {
+                                    $("#aviso").text("Tudo Certo!").css("color", "#086507");
+                                    tituloValido = true;
+                                }
+                            } catch (e) {
+                                $("#aviso").text("Erro ao processar resposta do servidor.");
+                                tituloValido = false;
+                            }
+                            callback(); // Notifica que a verificação terminou
+                        },
+                        error: function () {
+                            $("#aviso").text("Erro ao verificar palavra. Tente novamente.");
+                            tituloValido = false;
+                            callback(); // Notifica que houve erro
+                        },
+                        timeout: 3000
+                    });
+                } else {
+                    $("#aviso").text("O Área deve conter pelo menos duas letras.");
+                    tituloValido = false;
+                    callback(); // Notifica que a verificação terminou
+                }
+            }
+
+            $("#titulo").on("blur", function () {
+                const palavra = $(this).val();
+                if (palavra.trim() === "") { // Verifica se está vazio
+                    if (clearAvisoTimeout) {
+                        clearTimeout(clearAvisoTimeout); // Cancela o timeout anterior
+                    }
+                    clearAvisoTimeout = setTimeout(limparAviso, 3000); // Limpa aviso após 3 segundos
+                } else {
+                    verificarTitulo(palavra, function () {
+                        console.log("Verificação do título concluída.");
+                    });
+                }
+            });
+
+            $("#formvaga").on("submit", function (e) {
+                const palavra = $("#titulo").val();
+
+                verificarTitulo(palavra, function () {
+                    if (!tituloValido) {
+                        e.preventDefault();
+                        alert("O  formulário não pode ser enviado, o Área é inválido.");
+                    }
+                });
+
+                if (palavra.trim() === "") {
+                    e.preventDefault();
+                    $("#aviso").text("O campo área não pode estar vazio.");
                 }
             });
         });
@@ -521,7 +599,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 // Verificar localmente se as palavras têm pelo menos 2 letras
                 palavras.forEach((palavra) => {
                     const numLetras = (palavra.match(letrasRegex) || []).length;
-                    if (numLetras < 4) {
+                    if (numLetras < 2) {
                         palavrasInvalidas.push(palavra);
                     }
                 });
@@ -548,20 +626,22 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 let mensagemErro = "";
 
                                 if (palavrasInvalidasDoServidor.length > 0) {
-                                    mensagemErro += `Há palavras inválidas: ${palavrasInvalidasDoServidor.join(", ")}. `;
+                                    mensagemErro += `Há palavras inválidas: <span style="color: red;">${palavrasInvalidasDoServidor.join(", ")}</span>. `;
                                 }
 
                                 if (palavrasNaoExistem.length > 0) {
-                                    mensagemErro += `Há palavras que não existem: ${palavrasNaoExistem.join(", ")}. `;
+                                    mensagemErro += `Há palavras que não existem: <span style="color: red;">${palavrasNaoExistem.join(", ")}</span>. `;
                                 }
 
+
                                 if (mensagemErro) {
-                                    $("#aviso-" + campo).text(mensagemErro);
+                                    $("#aviso-" + campo).html(mensagemErro).css("color", "red");
                                     camposValidos[campo] = false;
                                 } else {
-                                    $("#aviso-" + campo).text("Tudo certo!");
+                                    $("#aviso-" + campo).text("Tudo certo!").css("color", "#086507");
                                     camposValidos[campo] = true;
                                 }
+
                             } catch (e) {
                                 $("#aviso-" + campo).text("Erro ao processar resposta do servidor.");
                                 camposValidos[campo] = false;
