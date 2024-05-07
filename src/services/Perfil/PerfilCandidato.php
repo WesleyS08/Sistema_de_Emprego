@@ -235,7 +235,26 @@ if ($email != $emailUsuario) {
         exit;
     }
     // Atualizar os dados do candidato no banco de dados
-    $query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$email')";
+    $query = "UPDATE Tb_Candidato AS c
+    JOIN Tb_Pessoas AS p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+    SET 
+        c.Area_de_Interesse = '$areaUsuario',
+        c.Idade = '$idade',
+        c.Telefone = '$telefoneUsuario',
+        c.Experiencia = '$experienciaUsuario',
+        c.Escolaridade = '$escolaridadeUsuario',
+        c.Cursos = '$cursoUsuario',
+        c.Cidade = '$cidadeUsuario',
+        c.Autodefinicao = '$autoDefinicaoUsuario',
+        c.Genero = '$generoUsuario',
+        c.Estado_Civil = '$estadoUsuario',
+        c.Data_Nascimento = '$dataNascimentoMySQL',
+        c.PCD = $pcdUsuario,
+        c.Descricao = '$sobreUsuario',
+        c.Img_Perfil = '$imagemPerfil',
+        c.Banner = '$banner',
+        p.Nome = '$nomeUsuario'
+    WHERE p.Email = '$email';";
     if (mysqli_query($_con, $query)) {
         header("Location: ../../views/Login/login.html?");
     } else {
@@ -246,7 +265,26 @@ if ($email != $emailUsuario) {
 }
 
 // Atualizar os dados do candidato no banco de dados
-$query = "UPDATE Tb_Candidato SET Area_de_Interesse = '$areaUsuario', Idade = '$idade', Telefone = '$telefoneUsuario', Experiencia = '$experienciaUsuario', Escolaridade = '$escolaridadeUsuario', Cursos = '$cursoUsuario', Cidade = '$cidadeUsuario', Autodefinicao = '$autoDefinicaoUsuario', Genero = '$generoUsuario', Estado_Civil = '$estadoUsuario', Data_Nascimento = '$dataNascimentoMySQL', PCD = $pcdUsuario, Descricao = '$sobreUsuario', Img_Perfil = '$imagemPerfil', Banner = '$banner'  WHERE Tb_Pessoas_Id = (SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = '$emailUsuario')";
+$query = "UPDATE Tb_Candidato AS c
+    JOIN Tb_Pessoas AS p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+    SET 
+        c.Area_de_Interesse = '$areaUsuario',
+        c.Idade = '$idade',
+        c.Telefone = '$telefoneUsuario',
+        c.Experiencia = '$experienciaUsuario',
+        c.Escolaridade = '$escolaridadeUsuario',
+        c.Cursos = '$cursoUsuario',
+        c.Cidade = '$cidadeUsuario',
+        c.Autodefinicao = '$autoDefinicaoUsuario',
+        c.Genero = '$generoUsuario',
+        c.Estado_Civil = '$estadoUsuario',
+        c.Data_Nascimento = '$dataNascimentoMySQL',
+        c.PCD = $pcdUsuario,
+        c.Descricao = '$sobreUsuario',
+        c.Img_Perfil = '$imagemPerfil',
+        c.Banner = '$banner',
+        p.Nome = '$nomeUsuario'
+    WHERE p.Email = '$email';";
 
 if (mysqli_query($_con, $query)) {
     header("Location: ../../views/PerfilCandidato/perfilCandidato.php?id=" . $idPessoa);

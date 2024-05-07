@@ -39,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $emailExists = $checkEmail->get_result()->fetch_assoc()['total'];
 
     if ($cpfExists > 0) {
-        echo "Erro ao inserir registro: CPF já existe.";        
+        echo "Erro ao inserir registro: CPF já existe.";
     } else {
-        if($emailExists > 0) {
+        if ($emailExists > 0) {
             echo "Erro ao inserir registro: Email já cadastrado.";
         } else {
 
@@ -51,13 +51,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Prevenir SQL Injection usando prepared statements
             $stmt1 = $_con->prepare("INSERT INTO tb_pessoas (Nome, Email, Senha) VALUES (?, ?, ?)");
             $stmt1->bind_param("sss", $nomeUsuario, $emailUsuario, $senhaCriptografada);
-            
+
             // Executar as instruções SQL dentro da transação
             $stmt1->execute();
 
             // Obtenção do Id do usuário inserido na última tabela (tb_pessoas)
             $userId = $_con->query("SELECT LAST_INSERT_ID()")->fetch_row()[0];
-            
+
             $stmt2 = $_con->prepare("INSERT INTO tb_candidato (CPF, Tb_Pessoas_Id) VALUES (?, ?)");
             $stmt2->bind_param("si", $cpfUsuario, $userId);
 
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($stmt1->affected_rows > 0 && $stmt2->affected_rows > 0) {
                 // Confirmar a transação
                 $_con->commit();
-                echo "Registro inserido com sucesso!";            
+                echo "Registro inserido com sucesso!";
             } else {
                 // Desfazer a transação em caso de erro
                 $_con->rollback();
@@ -90,10 +90,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail->Username = 'sias99029@gmail.com';
                 $mail->Password = 'xamb nshs dbkq phui';
                 $mail->Port = 587;
-            
+
                 $mail->setFrom('sias99029@gmail.com');
                 $mail->addAddress($emailUsuario); // Jamais colocar o $emailUsuario entre aspas
-                $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $userId;
+
+
+                // Obter o host do servidor
+                $host = $_SERVER['HTTP_HOST'];
+
+                // Obter o diretório do arquivo atual (normalizando as barras)
+                $currentPath = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
+
+                // Obter o caminho para voltar duas pastas
+                $twoDirsUp = dirname(dirname($currentPath));
+
+                // Calcular o caminho relativo ao documento raiz
+                $relativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $twoDirsUp);
+
+                // Construir a URL base
+                $baseURL = "http://$host$relativePath";
+
+                // Função para gerar URLs a partir do baseURL
+                function generateUrl($relativePathPart)
+                {
+                    global $baseURL;
+                    return rtrim($baseURL, '/') . '/' . ltrim($relativePathPart, '/');
+                }
+
+                // Gerar a URL para o arquivo específico após sair duas pastas
+                $link = generateUrl('views/EmailVerificado/emailVerificado.php?id=' . $userId);
+
+                // Exibir a URL gerada para verificar se está correta
+                echo $link;
 
 
                 $mail->isHTML(true);

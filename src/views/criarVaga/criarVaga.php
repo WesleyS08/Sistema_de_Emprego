@@ -254,7 +254,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 <input type="radio" name="tipo" id="jovemAprendiz" value="Jovem Aprendiz" class="radioBtn" required>
                                 <input type="radio" name="tipo" id="estagio" value="Estágio" class="radioBtn" required>
                                 <input type="radio" name="tipo" id="clt" value="CLT" class="radioBtn" required>
-                                <input type="radio" name="tipo" id="pj" value="PJ" required>
+                                <input type="radio" name="tipo" id="pj" value="PJ" class="radioBtn" required>
                                 <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem Aprendiz</label>
                                 <label for="estagio" class="btnRadio" id="btnEstagio">Estágio</label>
                                 <label for="clt" class="btnRadio" id="btnClt">CLT</label>

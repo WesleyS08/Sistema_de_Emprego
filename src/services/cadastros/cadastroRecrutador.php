@@ -40,9 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($cnpjExists > 0) {
         echo "Erro ao inserir registro: CNPJ já existe.";
     } else {
-        if ($emailExists > 0){
+        if ($emailExists > 0) {
             echo "Erro ao inserir registro: Email já cadastrado.";
-        } else {           
+        } else {
             // Iniciar transação para inserir dados no banco
             $_con->begin_transaction();
 
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Confirma a transação
                 $_con->commit();
                 echo "Registro inserido com sucesso!";
-                
+
                 // Envio de e-mail de confirmação
                 try {
                     // Configurações do PHPMailer
@@ -78,7 +78,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Configurações do e-mail
                     $mail->setFrom('sias99029@gmail.com');
                     $mail->addAddress($emailRecrutador);
-                    $link = 'http://localhost/Sistema_de_Emprego/src/views/EmailVerificado/emailVerificado.php?id=' . $userId;
+
+
+
+                    // Obter o host do servidor
+                    $host = $_SERVER['HTTP_HOST'];
+
+                    // Obter o diretório do arquivo atual (normalizando as barras)
+                    $currentPath = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
+
+                    // Obter o caminho para voltar duas pastas
+                    $twoDirsUp = dirname(dirname($currentPath));
+
+                    // Calcular o caminho relativo ao documento raiz
+                    $relativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $twoDirsUp);
+
+                    // Construir a URL base
+                    $baseURL = "http://$host$relativePath";
+
+                    // Função para gerar URLs a partir do baseURL
+                    function generateUrl($relativePathPart)
+                    {
+                        global $baseURL;
+                        return rtrim($baseURL, '/') . '/' . ltrim($relativePathPart, '/');
+                    }
+
+                    // Gerar a URL para o arquivo específico após sair duas pastas
+                    $link = generateUrl('views/EmailVerificado/emailVerificado.php?id=' . $userId);
+
+                    // Exibir a URL gerada para verificar se está correta
+                    echo $link;
+
 
                     // Conteúdo do e-mail
                     $mail->isHTML(true);
@@ -148,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     } else {
                         echo 'Erro ao enviar e-mail.';
                     }*/
-                    
+
                 } catch (Exception $e) {
                     echo "Erro grave ao enviar e-mail: {$mail->ErrorInfo}";
                 }
@@ -163,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt1->close();
             $stmt2->close();
         }
-    }        
+    }
 } else {
     echo "Ocorreu um erro ao processar o formulário.";
 }
