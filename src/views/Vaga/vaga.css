@@ -108,3 +108,8 @@ lord-icon{
 .divSendButton h4{
     margin: 10px 0px 6px 0px;
 }
+
+.infos{
+    margin: 2px 0px;    
+    display:inline-block;
+}

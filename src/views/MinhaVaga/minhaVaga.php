@@ -388,7 +388,7 @@ if ($stmt) {
 
                 echo $wrappedText; ?>
             </h2>
-            <label>Empresa: </label>
+            <label class="infos">Empresa: </label>
             <?php
             if (!empty($NomeEmpresa)) {
                 echo '<a href="../PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaEmpresa . '">' . $NomeEmpresa . '</a><br>';
@@ -397,8 +397,8 @@ if ($stmt) {
                 echo '<a id="empresa">Confidencial</a><br>';
             }
             ?>
-            <label>Data de anúncio: </label>
-            <label>
+            <label class="infos">Data de anúncio: </label>
+            <label class="infos">
                 <?php
                 // Extrai o dia, mês e ano da variável $Data_de_Criacao
                 $dia = date('d', strtotime($Data_de_Criacao));
@@ -420,7 +420,7 @@ if ($stmt) {
                 }
                 ?>
             </label><br>
-            <label>Status:</label>
+            <label class="infos">Status:</label>
             <?php if ($Status == 'Aberto') { ?>
                 <label style="color: green;">
                     <?php echo $Status; ?>

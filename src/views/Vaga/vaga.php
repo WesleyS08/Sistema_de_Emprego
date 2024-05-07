@@ -252,7 +252,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
             <h2 id="tituloVaga">
                 <?php echo $Titulo; ?>
             </h2>
-            <label>Empresa: </label>
+            <label class="infos">Empresa: </label>
             <?php
             if (!empty($NomeEmpresa)) {
                 echo '<a href="../PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaEmpresa . '">' . $NomeEmpresa . '</a><br>';
@@ -261,8 +261,8 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                 echo '<a id="empresa">Confidencial</a><br>';
             }
             ?>
-            <label>Data de anúncio: </label>
-            <label>
+            <label class="infos">Data de anúncio: </label>
+            <label class="infos">
                 <?php
                 // Extrai o dia, mês e ano da variável $Data_de_Criacao
                 $dia = date('d', strtotime($Data_de_Criacao));
@@ -283,7 +283,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                 }
                 ?>
             </label><br>
-            <label>Status:</label>
+            <label class="infos">Status:</label>
             <?php if ($Status == 'Aberto') { ?>
                 <label style="color: green;">
                     <?php echo $Status; ?>

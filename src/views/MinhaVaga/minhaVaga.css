@@ -17,7 +17,6 @@ h3{
 
 #divTituloVaga{
     margin-bottom: 30px;
-    width: 850px;
 }
 
 #divTituloVaga a{
@@ -36,7 +35,7 @@ h3{
 }
 
 .divInformacoesIniciais{
-    justify-content: center;
+    justify-content: left;
     display: flex;
     color: #1C1C1C;
 }
@@ -57,13 +56,11 @@ lord-icon{
 }
 
 .divFlexWithButton{
-    justify-content: center;
     display: flex;
 }
 
 .divFlex{
-    justify-content: center;
-    display: flex;    
+    display: flex;  
     width: 850px;
 }
 
@@ -83,15 +80,15 @@ lord-icon{
 }
 
 #divBoxes{
-    width: 100%;
+    justify-content: space-between;
 }
 
 .divBox{
-    margin: 54px 20px 0px 20px;
     width: 406px;
     padding: 20px;
     border-radius: 20px;    
     box-shadow: 0px 0px 8px silver;
+    margin-top: 54px;
     transition: 0.5s ease;
 }
 
@@ -105,4 +102,9 @@ lord-icon{
 
 .divCarrossel h2{    
     text-align: center;
+}
+
+.infos{
+    margin: 2px 0px;    
+    display:inline-block;
 }
