@@ -196,9 +196,9 @@ if ($result === false) {
         echo '    </label> ';
         echo '<a href="../../../../index.php"><img id="logo" src="../../../assets/images/logos_empresa/logo_sias.png"></a> ';
         echo '<ul>';
-        echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+        echo '    <li><a href="#">Vagas</a></li>';
         echo '    <li><a href="../Login/login.html">Testes</a></li>';
-        echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
+        echo '    <li><a href="#">Cursos</a></li>';
         echo '    <li><a href="../Login/login.html">Perfil</a></li>';
         echo '</ul>';
         echo '</nav>';
@@ -270,7 +270,7 @@ if ($result === false) {
                     $row_inscricoes = $result_inscricoes->fetch_assoc();
                     $total_inscricoes = $row_inscricoes['total_inscricoes'];
 
-                    echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
+                    echo '<a class="postLink" href="../InformaçõesdoAnuncio/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                     echo '<article class="post">';
                     echo '<div class="divAcessos">';
                     echo '<img src="../../../../imagens/people.svg"></img>';

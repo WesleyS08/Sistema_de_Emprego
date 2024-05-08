@@ -167,7 +167,7 @@ function determinarImagemCategoria($categoria)
                     $row_nome_empresa = $result_nome_empresa->fetch_assoc();
                     $nome_empresa = isset($row_nome_empresa['Nome_da_Empresa']) ? $row_nome_empresa['Nome_da_Empresa'] : 'Confidencial';
 
-                    echo '<a class="postLink" href="src/views/Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
+                    echo '<a class="postLink" href="src/views/User/InformaçõesdoAnuncio/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                     echo '<article class="post">';
                     echo '<div class="divAcessos">';
                     echo '<img src="imagens/people.svg"></img>';

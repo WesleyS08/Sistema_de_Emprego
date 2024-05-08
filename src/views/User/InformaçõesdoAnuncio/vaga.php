@@ -1,5 +1,5 @@
 <?php
-include "../../services/conexão_com_banco.php"; // Verifique se o caminho está correto
+include '../../../services/conexão_com_banco.php';
 session_start(); // Sempre inicie a sessão no início do arquivo
 
 
@@ -205,7 +205,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaga</title>
-    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <link rel="stylesheet" type="text/css" href="../../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="vaga.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -220,10 +220,10 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         echo '    <label for="check" class="menuBtn">';
         echo '        <img src="../../../imagens/menu.svg">';
         echo '    </label> ';
-        echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
+        echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../../assets/images/logos_empresa/logo_sias.png"></a> ';
         echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
         echo '<ul>';
-        echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+        echo '   <li><a href="../TodososAnuncios/todasvagas.php">Vagas</a></li>';
         echo '    <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>';
         echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
         echo '  <li><a href="../../../index.php">Deslogar</a></li>';
@@ -237,12 +237,12 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         echo '    <label for="check" class="menuBtn">';
         echo '        <img src="../../../imagens/menu.svg">';
         echo '    </label> ';
-        echo '<a href="../../../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
+        echo '<a href="../../../index.php"><img id="logo" src="../../../assets/images/logos_empresa/logo_sias.png"></a> ';
         echo '<ul>';
-        echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+        echo '    <li><a href="../TodososAnuncios/todasvagas.php">Vagas</a></li>';
         echo '    <li><a href="../Login/login.html">Testes</a></li>';
-        echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
-        echo '    <li><a href="../Login/login.html">Perfil</a></li>'; // Se não autenticado, redireciona para login
+        echo '    <li><a href="#">Cursos</a></li>';
+        echo '    <li><a href="../Login/login.html">Perfil</a></li>';
         echo '</ul>';
         echo '</nav>';
     }
@@ -255,7 +255,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
             <label class="infos">Empresa: </label>
             <?php
             if (!empty($NomeEmpresa)) {
-                echo '<a href="../PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaEmpresa . '">' . $NomeEmpresa . '</a><br>';
+                echo '<a href="../../Empresa/PerfilRecrutador/perfilRecrutador.php?id=' . $idPessoaEmpresa . '">' . $NomeEmpresa . '</a><br>';
 
             } else {
                 echo '<a id="empresa">Confidencial</a><br>';

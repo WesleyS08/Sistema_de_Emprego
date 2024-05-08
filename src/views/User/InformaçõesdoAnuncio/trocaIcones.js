@@ -12,43 +12,43 @@ let imgNivel = document.querySelector("#imgNivel");
 
 function trocaProfissional(){
     if (tipoProfissional.textContent.includes("Estágio") || tipoProfissional.textContent.includes("Jovem Aprendiz")) {
-        imgTipoProfissional.src = "../../assets/images/icones_vaga/estudanteSemFundo.svg";
+        imgTipoProfissional.src = "../../../assets/images/icones_vaga/estudanteSemFundo.svg";
     }
     if(tipoProfissional.textContent.includes("CLT")){
-        imgTipoProfissional.src="../../assets/images/icones_vaga/cltSemFundo.svg";
+        imgTipoProfissional.src="../../../assets/images/icones_vaga/cltSemFundo.svg";
     }
     if(tipoProfissional.textContent.includes("PJ")){
-        imgTipoProfissional.src="../../assets/images/icones_vaga/pjSemFundo.svg";
+        imgTipoProfissional.src="../../../assets/images/icones_vaga/pjSemFundo.svg";
     }
 }
 
 function trocaModalidade(){
     if(modalidade.textContent.includes("Presencial")){
-        imgModalidade.src="../../assets/images/icones_vaga/iconePresencial.svg";
+        imgModalidade.src="../../../assets/images/icones_vaga/iconePresencial.svg";
     }
     if(modalidade.textContent.includes("Remoto")){
-        imgModalidade.src="../../assets/images/icones_vaga/iconeRemoto.svg";
+        imgModalidade.src="../../../assets/images/icones_vaga/iconeRemoto.svg";
     }
 }
 
 function trocaJornada(){
     if(jornada.textContent.includes("Tempo integral")){
-        imgJornada.src="../../assets/images/icones_vaga/iconeTempoIntegral.svg";
+        imgJornada.src="../../../assets/images/icones_vaga/iconeTempoIntegral.svg";
     }
     if(jornada.textContent.includes("Meio período")){
-        imgJornada.src="../../assets/images/icones_vaga/iconeMeioPeriodo.svg";
+        imgJornada.src="../../../assets/images/icones_vaga/iconeMeioPeriodo.svg";
     }
 }
 
 function trocaNivel(){
     if(nivel.textContent.includes("Médio")){
-        imgNivel.src="../../assets/images/icones_vaga/iconeNivelMedio.svg";
+        imgNivel.src="../../../assets/images/icones_vaga/iconeNivelMedio.svg";
     }
     if(nivel.textContent.includes("Técnico")){
-        imgNivel.src="../../assets/images/icones_vaga/iconeNivelTecnico.svg";
+        imgNivel.src="../../../assets/images/icones_vaga/iconeNivelTecnico.svg";
     }
     if(nivel.textContent.includes("Superior")){
-        imgNivel.src="../../assets/images/icones_vaga/iconeNivelSuperior.svg";
+        imgNivel.src="../../../assets/images/icones_vaga/iconeNivelSuperior.svg";
     }
 }
 

@@ -3,7 +3,7 @@ let visivel = false;
 function MostraFiltros(){
     if(visivel==false){
         visivel = true;
-        document.querySelector("#iconeFiltro").src= "../../../assets/images/cones_diversos/showVisible.svg";
+        document.querySelector("#iconeFiltro").src= "../../../assets/images/icones_diversos/showVisible.svg";
         document.querySelector(".containerFiltros").style.display = "inline";
     }
     else{        

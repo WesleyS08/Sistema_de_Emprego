@@ -9,11 +9,11 @@ let senhaVisivelRecrutador = false;
 
 function MostrarSenhaCandidato(){
     if(senhaVisivelCandidato==false){
-        olhoCandidato.src="../../assets/images/icones_diversos/closeEye.svg";
+        olhoCandidato.src="../../../assets/images/icones_diversos/closeEye.svg";
         senhaCandidato.type="text";
         senhaVisivelCandidato = true;
     }else{
-        olhoCandidato.src="../../assets/images/icones_diversos/openEye.svg";
+        olhoCandidato.src="../../../assets/images/icones_diversos/openEye.svg";
         senhaCandidato.type="password";
         senhaVisivelCandidato = false;
     }
@@ -21,11 +21,11 @@ function MostrarSenhaCandidato(){
 
 function MostrarSenhaRecrutador(){
     if(senhaVisivelRecrutador==false){
-        senhaRecrutador.src="../../assets/images/icones_diversos/closeEye.svg";
+        senhaRecrutador.src="../../../assets/images/icones_diversos/closeEye.svg";
         senhaRecrutador.type="text";
         senhaVisivelRecrutador = true;
     }else{
-        senhaRecrutador.src="../../assets/images/icones_diversos/openEye.svg";
+        senhaRecrutador.src="../../../assets/images/icones_diversos/openEye.svg";
         senhaRecrutador.type="password";
         senhaVisivelRecrutador = false;
     }
