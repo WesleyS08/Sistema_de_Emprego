@@ -115,7 +115,7 @@ if ($result) {
                                     echo "<div class='divAlternativas'>";
                                     // Nomeie todos os inputs com o mesmo nome, indicando a questão
                                     foreach ($questao["Alternativas"] as $alternativa) {
-                                        echo "<div><input type='radio' name='respostas[$idQuestao]' value='" . $alternativa["Id_Alternativa"] . "'><label for=''>" . $alternativa["Texto"] . "</label></div>";
+                                        echo "<div><input type='radio' name='respostas[$idQuestao]' value='" . $alternativa["Id_Alternativa"] . "'><label for=''  class='alternativa'>" . $alternativa["Texto"] . "</label></div>";
                                     }
                                     echo "</div>";
                                     echo "</div>";

@@ -23,16 +23,19 @@ let slidesJs = document.querySelectorAll(".slideJs");
 let slidesHtml = document.querySelectorAll(".slideHtml");
 let slidesCss = document.querySelectorAll(".slideCss");
 
+let inputs = document.querySelectorAll("input[type='text']");
+let inputsNumber = document.querySelectorAll("input[type='number']");
+let selects = document.querySelectorAll("select");
+
+let perguntas = document.querySelectorAll(".pergunta");
+let alternativas = document.querySelectorAll(".alternativa");
+let numQuestoes = document.querySelectorAll(".numQuestao");
+
 let infos = document.querySelectorAll(".infos");
 let divIconeENomes = document.querySelectorAll(".divIconeENome");
 let iconesVaga = document.querySelectorAll(".iconeVaga");
 
-let numQuestoes = document.querySelectorAll(".numQuestao")
-
-//let lordicons = document.querySelectorAll("lord-icon");
-
 var styleElem = document.head.appendChild(document.createElement("style"));
-
 
 function Noturno(){
     
@@ -60,15 +63,26 @@ function Noturno(){
         slidesHtml.forEach((slideHtml) => slideHtml.src = "../../assets/images/logos_parceiros/htmlWhite.svg");
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/cssWhite.svg");
         
+        inputs.forEach((input) => input.style.color="white");        
+        inputsNumber.forEach((inputNumber) => inputNumber.style.color="white");        
+        selects.forEach((select) => select.style.color="white");
+        
+        perguntas.forEach((pergunta) => pergunta.style.color="whitesmoke");            
+        alternativas.forEach((alternativa) => alternativa.style.color="whitesmoke");        
+        numQuestoes.forEach((numQuestao) => numQuestao.style.color="whitesmoke");           
+
         infos.forEach((info) => info.style.color="whitesmoke");        
         divIconeENomes.forEach((divIconeENome) => divIconeENome.style.color="whitesmoke");        
-        iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#f5f5f5,secondary:#c76f16");
-
-        numQuestoes.forEach((numQuestao) => numQuestao.style.color="whitesmoke");      
+        iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#f5f5f5,secondary:#c76f16");   
 
         verMaisBtns.forEach((verMais) => verMais.style.color="black");
         verMaisBtns.forEach((verMais) => verMais.style.border="none");        
         verMaisBtns.forEach((verMais) => verMais.style.backgroundColor="white");
+
+        const elementosNoturnos = document.querySelectorAll('.noturno');
+        elementosNoturnos.forEach(element => {
+            element.style.color = 'whitesmoke';
+        });
     }
     finally{       
         modo="noturno";
@@ -100,11 +114,24 @@ function Claro(){
         slidesHtml.forEach((slideHtml) => slideHtml.src = "../../assets/images/logos_parceiros/html.svg");
         slidesCss.forEach((slideCss) => slideCss.src = "../../assets/images/logos_parceiros/css.svg");
         
+        inputs.forEach((input) => input.style.color="black");   
+        inputsNumber.forEach((inputNumber) => inputNumber.style.color="black");        
+        selects.forEach((select) => select.style.color="black");
+        
+        perguntas.forEach((pergunta) => pergunta.style.color="black");            
+        alternativas.forEach((alternativa) => alternativa.style.color="black");          
+        numQuestoes.forEach((numQuestao) => numQuestao.style.color="black");    
+        
         infos.forEach((info) => info.style.color="black");
         divIconeENomes.forEach((divIconeENome) => divIconeENome.style.color="black");
         iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#242424,secondary:#c74b16");
 
         verMaisBtns.forEach((verMais) => verMais.style="initial");
+
+        const elementosNoturnos = document.querySelectorAll('.noturno');
+        elementosNoturnos.forEach(element => {
+            element.style.color = 'black';
+        });
     }
     finally{
         modo="claro";
@@ -125,13 +152,16 @@ if (typeof temaDoBancoDeDados !== 'undefined') {
 function AlternarModo() {
     if (modo === "claro") {
         Noturno();
+        //localStorage.setItem('modoNoturnoAtivo', true);
+
         salvarTemaNoBancoDeDados("noturno", function() {
             // Callback chamado após o tema ser salvo com sucesso
             // Atualizar o modo após o tema ser salvo
             modo = "noturno";
         });
     } else if (modo === "noturno") {
-        Claro();
+        Claro();        
+        //localStorage.setItem('modoNoturnoAtivo', false);
         salvarTemaNoBancoDeDados("claro", function() {
             // Callback chamado após o tema ser salvo com sucesso
             // Atualizar o modo após o tema ser salvo
@@ -140,6 +170,12 @@ function AlternarModo() {
     }
 }
 
+//function carregarPreferenciaModoNoturno() {
+//    const modoNoturnoAtivo = localStorage.getItem('modoNoturnoAtivo') === 'true';
+//    if (modoNoturnoAtivo) {
+//      Noturno(); // Função para ativar o modo noturno
+//    }
+//  }
 
-
+//carregarPreferenciaModoNoturno()
 document.querySelector(".btnModo").addEventListener("click", AlternarModo);
