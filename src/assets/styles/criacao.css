@@ -278,3 +278,21 @@ small{
     width: 400px;
 }
 
+#btnAdicionar{
+    cursor: pointer;
+    width: 120px;
+    background-color: black;
+    color: whitesmoke;
+    box-shadow: 0px 0px 6px silver;
+    font-size: 12pt;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    transition: 0.2s ease;
+    font-weight: bold;
+}
+
+#btnAdicionar:hover{
+    transform: scale(1.1);
+}

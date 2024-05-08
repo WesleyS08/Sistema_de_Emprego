@@ -27,6 +27,8 @@ let infos = document.querySelectorAll(".infos");
 let divIconeENomes = document.querySelectorAll(".divIconeENome");
 let iconesVaga = document.querySelectorAll(".iconeVaga");
 
+let numQuestoes = document.querySelectorAll(".numQuestao")
+
 //let lordicons = document.querySelectorAll("lord-icon");
 
 var styleElem = document.head.appendChild(document.createElement("style"));
@@ -61,6 +63,8 @@ function Noturno(){
         infos.forEach((info) => info.style.color="whitesmoke");        
         divIconeENomes.forEach((divIconeENome) => divIconeENome.style.color="whitesmoke");        
         iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#f5f5f5,secondary:#c76f16");
+
+        numQuestoes.forEach((numQuestao) => numQuestao.style.color="whitesmoke");      
 
         verMaisBtns.forEach((verMais) => verMais.style.color="black");
         verMaisBtns.forEach((verMais) => verMais.style.border="none");        
