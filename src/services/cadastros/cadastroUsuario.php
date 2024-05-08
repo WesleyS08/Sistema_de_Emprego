@@ -65,138 +65,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             //////////////////////
 
-            // Verificar se ambas as inserções foram bem-sucedidas
             if ($stmt1->affected_rows > 0 && $stmt2->affected_rows > 0) {
-                // Confirmar a transação
+                // Confirma a transação
                 $_con->commit();
-                echo "Registro inserido com sucesso!";
+ 
+                // Redirecionar para o script de envio de e-mail
+                header("Location: envio_Usuario.php?userId=$userId&emailUsuario=$emailUsuario");
+                exit();
             } else {
-                // Desfazer a transação em caso de erro
+                // Se a transação falhar, rollback
                 $_con->rollback();
                 echo "Erro ao inserir registro. Por favor, tente novamente.";
             }
-
+ 
             // Fechar as declarações preparadas
             $stmt1->close();
             $stmt2->close();
-
-            // Envio do email de confirmação        
-
-            try {
-                // $mail->SMTPDebug = SMTP::DEBUG_SERVER; Não é necessário, apenas para testes
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'sias99029@gmail.com';
-                $mail->Password = 'xamb nshs dbkq phui';
-                $mail->Port = 587;
-
-                $mail->setFrom('sias99029@gmail.com');
-                $mail->addAddress($emailUsuario); // Jamais colocar o $emailUsuario entre aspas
-
-
-                // Obter o host do servidor
-                $host = $_SERVER['HTTP_HOST'];
-
-                // Obter o diretório do arquivo atual (normalizando as barras)
-                $currentPath = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
-
-                // Obter o caminho para voltar duas pastas
-                $twoDirsUp = dirname(dirname($currentPath));
-
-                // Calcular o caminho relativo ao documento raiz
-                $relativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $twoDirsUp);
-
-                // Construir a URL base
-                $baseURL = "http://$host$relativePath";
-
-                // Função para gerar URLs a partir do baseURL
-                function generateUrl($relativePathPart)
-                {
-                    global $baseURL;
-                    return rtrim($baseURL, '/') . '/' . ltrim($relativePathPart, '/');
-                }
-
-                // Gerar a URL para o arquivo específico após sair duas pastas
-                $link = generateUrl('views/EmailVerificado/emailVerificado.php?id=' . $userId);
-
-                // Exibir a URL gerada para verificar se está correta
-                echo $link;
-
-
-                $mail->isHTML(true);
-                $mail->Subject = 'SIAS - Email de autenticação';
-                $mail->CharSet = 'UTF-8';
-
-                $styles = "
-                    <style>
-                        body { font-family: Arial, sans-serif; }
-                        .header { background-color: #f2f2f2; padding: 10px; text-align: center; }
-                        .header h1 { margin: 0; }
-                        .content { padding: 20px; }
-                        .button { 
-                            background-color: #ec6809;
-                            color: #ffffff;
-                            padding: 10px 20px;
-                            text-align: center;
-                            text-decoration: none;
-                            font-size: 16px;
-                            border-radius: 5px;
-                            margin: 20px auto;
-                            display: block;
-                            width: 155px;
-                        }
-                        .footer { background-color: #f2f2f2; text-align: center; padding: 10px; }
-                        .content a {  color: #ffffff;}
-                    </style>
-                ";
-
-                $mail->Body = "
-                    <html>
-                    <head>
-                        $styles
-                    </head>
-                    <body>
-                        <div class='header'>
-                            <h1>Bem-vindo ao SIAS!</h1>
-                        </div>
-                        <div class='content'>
-                            <p'>Olá, Candidato, $nomeUsuario!</p>
-                            <p>Obrigado por se inscrever em nosso sistema!</p>
-                            <p>Para ativar seu cadastro, clique no botão abaixo:</p>
-                            <a href='$link' class='button'>Ativar Cadastro</a>
-                        </div>
-                        <div class='footer'>
-                            <p>Se você não se inscreveu, ignore este e-mail.</p>
-                            <p>© 2024 SIAS - Todos os direitos reservados</p>
-                        </div>
-                    </body>
-                    </html>
-                ";
-
-                $mail->AltBody = "Olá, Candidato!\n\nPara ativar seu cadastro, clique no seguinte link:\n$link";
-
-                // Enviar e-mail
-                if ($mail->send()) {
-                    header("Location: ../../views/AvisoVerificaEmail/avisoVerificaEmail.html");
-                    exit();
-                } else {
-                    echo 'Erro ao enviar e-mail.';
-                }
-
-                /*// Enviar e-mail
-                if ($mail->send()) {
-                    header("Location: ../../views/Login/login.html?cadastro=sucesso");
-                    exit();
-                } else {
-                    echo 'Erro ao enviar e-mail.';
-                }*/
-
-            } catch (Exception $e) {
-                echo "Erro grave ao enviar e-mail: {$mail->ErrorInfo}";
-            }
-        }
-    }
+        }}
 } else {
     $aviso = "Ocorreu um erro ao processar o formulário.";
 }
