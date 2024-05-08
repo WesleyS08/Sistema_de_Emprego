@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">    
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/perfilStyle.css">
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="menuBtn">
+            <img src="../../../imagens/menu.svg">
+        </label>
+        <a href="../HomeCandidato/homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
+        <ul>            
+            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
+            <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
+        </ul>
+    </nav>
+    <div class="divBackgroundImg" id="divBackgroundImgDefinida">
+        <div class="divFotoDePerfil" id="divFotoDePerfilDefinida"></div>
+        <a class="acessarEditarPerfil" href="../EditarPerfilCandidato/editarPerfilCandidato.html">
+            <div>
+                <lord-icon
+                    src="https://cdn.lordicon.com/wuvorxbv.json"
+                    trigger="hover"
+                    stroke="bold"
+                    state="hover-line"
+                    colors="primary:#ffffff,secondary:#ffffff"
+                    style="width:30px;height:30px">
+                </lord-icon>
+                <label>Editar</label>
+            </div>
+        </a>
+    </div>
+    <div class="divCommon">        
+        <div class="containerPerfil">
+            <div class="divTitulo">
+                <h2 id="nomeUsuario">Jéssica da Silva Pereira</h2>
+                <p id="breveDescricao">Front-end Developer da IBM | Azure Certified | UX Designer Freelancer</p>
+            </div>
+            <div class="contentPerfil" id="informacoesIniciais">
+                <div class="divFlex">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/lenjvibx.json"
+                        trigger="loop"
+                        stroke="bold"
+                        state="loop-flutter"
+                        colors="primary:#000000,secondary:#e88c30"
+                        style="width:30px;height:30px">
+                    </lord-icon>
+                    <label id="idadeUsuario">21 anos</label>
+                </div>
+                <div class="divFlex">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/bgebyztw.json"
+                        trigger="morph"
+                        stroke="bold"
+                        state="hover-jumping"
+                        colors="primary:#000000,secondary:#e88c30"
+                        style="width:30px;height:30px">
+                    </lord-icon>
+                    <label id="generoUsuario">Mulher Cis</label>
+                </div>
+                <div class="divFlex">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/surcxhka.json"
+                        trigger="loop"
+                        stroke="bold"
+                        state="loop-roll"
+                        colors="primary:#000000,secondary:#e88c30"
+                        style="width:30px;height:30px">
+                    </lord-icon>
+                    <label id="localUsuario">São Paulo, SP</label>
+                </div>
+                <div class="divFlex">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/lqcyrjta.json"
+                        trigger="hover"
+                        stroke="bold"
+                        colors="primary:#000000,secondary:#e88c30"
+                        style="width:30px;height:30px">
+                    </lord-icon>                    
+                    <label id="pcdUsuario">PCD: Não</label>
+                </div>
+            </div>
+            <div class="contentPerfil">                
+                <h3>Área</h3>
+                <p id="areaUsuario">Tecnologia</p>
+            </div>
+            <div class="contentPerfil" id="contentSobre">
+                <fieldset>
+                    <legend><h3>Sobre</h3></legend>
+                    <p id="sobre">Desde sempre fui muito ligado a tecnologia. O meu vínculo neste meio me despertou a vontade de buscar a resolução de diversos problemas, tanto em hardwares quanto em softwares. A minha maior motivação nisso é entregar bons resultados tanto para mim quanto para o próximo, mostrando que para qualquer complicação existe uma solução. Sempre explorei fortalecer minha aptidão em aprender, seja sozinho ou através de cursos, especializações, fóruns, documentações e networking. A persistência é um grande pilar nisso tudo, por isso meu foco é aprimorar minhas habilidades e obter grandes experiências para minha carreira.
+
+                        Conheço de: C#, JavaScript, Python, MySQL, HTML, CSS, Power BI, GNU/Linux e Windows Server.</p>
+                </fieldset>
+            </div>
+            <div class="divGridElementos">
+                <div class="contentPerfil">                
+                    <h3>Habilidades e Tecnologias</h3>
+                    <p id="habilidades">Python, Azure, Cisco Packet Tracer, Formatação de Windows</p>
+
+                    <!--
+                    <ul class="elementosAdicionados" id="habilidadesAdicionadas">
+                        <li>Python</li>
+                        <li>Azure</li>
+                        <li>Cisco Packet Tracer</li>
+                        <li>Formatação de Windows</li>
+                    </ul>
+                    -->                    
+                    
+                </div>
+                <div class="contentPerfil">                
+                    <h3>Cursos e Formações</h3>
+                    <p id="cursos">Desenvolvimento de Software Muliplataforma, Redes de Computadores</p>
+                    
+                    <!--
+                    <ul class="elementosAdicionados" id="cursosAdicionados">
+                        <li>Desenvolvimento de Software Muliplataforma</li>
+                        <li>Redes de Computadores</li>
+                    </ul>
+                    -->
+                    
+                </div>
+                <div class="contentPerfil">                
+                    <h3>Experiências de Trabalho</h3>
+                    <p id="experiencias">Atendente de Telemarketing, Lixeiro, Desenvolvimento de Bomba Atômica</p>
+                    <!--
+                    <ul class="elementosAdicionados" id="experienciasAdicionadas">
+                        <li>Atendente de Telemarketing</li>
+                        <li>Lixeiro</li>
+                        <li>Desenvolvimento de Bomba Atômica</li>
+                    </ul>
+                    -->                    
+                </div>
+            </div> 
+            <div class="contentPerfil" id="contentPerfilPontuacao">
+                <div class="divTituloDigitavel">
+                    <lord-icon
+                    src="https://cdn.lordicon.com/iawrhwdo.json"
+                    trigger="loop"
+                    stroke="bold"
+                    state="loop-cycle"
+                    colors="primary:#000000,secondary:#c76f16"
+                    style="width:40px;height:40px">
+                </lord-icon>
+                    <h3>Pontos acumulados</h3>
+                    <lord-icon
+                    src="https://cdn.lordicon.com/iawrhwdo.json"
+                    trigger="loop"
+                    stroke="bold"
+                    state="loop-cycle"
+                    colors="primary:#000000,secondary:#c76f16"
+                    style="width:40px;height:40px">
+                </lord-icon>
+                </div>
+                <div class="divPontuacao">
+                    <div class="divPontuacaoArea">                        
+                        <label class="nomeArea">Tecnologia:</label>
+                        <div class="divProgresso"> 
+                            <div class="progresso" name="progressoPontos"></div>
+                            <label id="pontosTi" name="numPontos">100</label>
+                        </div>
+                    </div>
+                    <div class="divPontuacaoArea">                        
+                        <label class="nomeArea">Direito:&nbsp</label>
+                        <div class="divProgresso"> 
+                            <div class="progresso" name="progressoPontos"></div>
+                            <label id="pontosDireito" name="numPontos">100</label>
+                        </div>
+                    </div>
+                    <div class="divPontuacaoArea">                        
+                        <label class="nomeArea">Medicina:&nbsp</label>
+                        <div class="divProgresso"> 
+                            <div class="progresso" name="progressoPontos"></div>
+                            <label id="pontosMedicina" name="numPontos">300</label>
+                        </div>
+                    </div>
+                </div>
+            </div>           
+            <div class="contentPerfil">
+                <h3>Contato</h3>
+                <div class="divFlexContato">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/nzixoeyk.json"
+                        trigger="hover"
+                        colors="primary:#000000"
+                        style="width:30px;height:30px">
+                    </lord-icon>
+                    <a id="email">pedro.usuario@gmail.com</a>
+                </div>           
+                <div class="divFlexContato">
+                    <lord-icon
+                        src="https://cdn.lordicon.com/rsvfayfn.json"
+                        trigger="hover"
+                        colors="primary:#000000"
+                        style="width:30px;height:30px">
+                    </lord-icon>
+                    <a id="telefone">(11) 98744-2324</a>
+                </div>     
+            </div>
+        </div>
+    </div>
+    <footer>
+        <a>Política de Privacidade</a>
+        <a>Nosso contato</a>
+        <a>Avalie-nos</a>
+        <p class="sinopse">SIAS 2024</p>
+    </footer>    
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="acumuloDePontos.js"></script>
+    <script src="../../../modoNoturno.js"></script>
+    <script src="../../../modoNoturno.js"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="menuBtn">
+            <img src="../../../imagens/menu.svg">
+        </label>
+        <a href="homeRecrutador.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>   
+        <ul>        
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
+        </ul>
+    </nav>
+    <div class="divTitle">
+        <div class="divCentraliza">
+            <div>
+                <div class="divTituloDigitavel">
+                    <h1 id="tituloAutomatico">B</h1>
+                    <i></i>
+                </div>
+                <p class="sinopse">Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e conveniente - clique agora
+                    mesmo!</p>  
+                <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="btnInicial">Anunciar</button>
+            </div>
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTituloComBtn">
+            <h2>Meus anúncios</h2>
+            <button class="btnAdicionar">
+                <lord-icon
+                    src="https://cdn.lordicon.com/zrkkrrpl.json"
+                    trigger="hover"
+                    stroke="bold"
+                    state="hover-rotation"
+                    colors="primary:#000000,secondary:#ffffff"
+                    style="width:40px;height:40px">
+                </lord-icon>
+            </button>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftAnuncios">
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightAnuncios">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a> 
+            <div class="carrosselBox" id="carrosselAnuncios">
+                <a class="postLink">
+                    <article class="post">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">28</small>
+                        </div>
+                        <header>
+                            <img src="../../../imagens/estagio.svg">
+                            <label class="tipoVaga">Estágio</label>
+                        </header>
+                        <section>
+                            <h3 class="nomeVaga">Analista de Suporte</h3>
+                            <p class="empresaVaga">Microsoft</p>
+                        </section>
+                        <p class="statusVaga" style="color: green;">Aberta</p>
+                        <p class="dataVaga">10/03/2024</p>
+                    </article>
+                </a>
+            </div>                
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTituloComBtn">
+            <h2>Minhas avaliações</h2>
+            <button class="btnAdicionar">
+                <lord-icon
+                    src="https://cdn.lordicon.com/zrkkrrpl.json"
+                    trigger="hover"
+                    stroke="bold"
+                    state="hover-rotation"
+                    colors="primary:#000000,secondary:#ffffff"
+                    style="width:40px;height:40px">
+                </lord-icon>
+            </button>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftTestes">                
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightTestes">                
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a> 
+            <div class="carrosselBox" id="carrosselTestes">
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/excel.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Excel Básico</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small></div>
+                            </div>
+                    </article>
+                </a>
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/figma.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Figma Intermediário</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/word.svg"></img>
+                        <div class="divDetalhesTeste">
+                            <div>
+                                <p class="nomeTeste">Word Avançado</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+                <a class="testeCarrosselLink">
+                    <article class="testeCarrossel">
+                        <div class="divAcessos">
+                            <img src="../../../imagens/people.svg"></img>
+                            <small class="qntdAcessos">800</small>
+                        </div>
+                        <img src="../../../imagens/python.svg"></img>
+                        <div class="testeDetalhes">
+                            <div>
+                                <p class="nomeTeste">Python Básico</p>
+                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
+                            </div>
+                        </div>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTitulo">
+            <h2>Perfis de usuários</h2>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftPerfis">                
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightPerfis">                
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
+            <div class="carrosselBox" id="carrosselPerfis">
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="divCommon">
+        <div class="divTitulo">
+            <h2>Nossos Parceiros</h2>
+        </div>
+        <div class="container">
+            <div class="carrosselInfinito">
+                <div class="trilhaCarrossel">
+                    <div class="slide">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
+                    </div>
+                    <div class="slide">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
+                    </div>
+                    
+        
+                    <div class="slide">
+                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
+                    </div>
+                    <div class="slide">
+                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
+                    </div>
+                    <div class="slide">
+                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
+                    </div>
+                </div>    
+            </div>                    
+        </div>
+    </div>
+    <footer>
+        <a>Política de Privacidade</a>
+        <a>Nosso contato</a>
+        <a>Avalie-nos</a>
+        <p class="sinopse">SIAS 2024</p>
+    </footer>
+
+<script src="https://cdn.lordicon.com/lordicon.js"></script>
+<script src="tituloDigitavel.js"></script>
+<script src="carrosselAnuncios.js"></script>
+<script src="carrosselTestes.js"></script>
+<script src="carrosselPerfis.js"></script>
+<script src="../../../modoNoturno.js"></script>
+</body>
+</html>

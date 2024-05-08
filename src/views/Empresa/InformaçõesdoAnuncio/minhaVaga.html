@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaga</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <link rel="stylesheet" type="text/css" href="minhaVaga.css">
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="menuBtn">
+            <img src="../../../imagens/menu.svg">
+        </label>
+        <a href="../HomeCandidato/homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
+        <ul>            
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li>
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php">Perfil</a></li>
+        </ul>
+    </nav>
+    <div class="divCommon" id="divCommonMinhaVaga">
+        <div class="divTitulo" id="divTituloVaga">
+            <h2 id="tituloVaga">Desenvolvedor Back-end Junior</h2>
+            <label class="infos">Empresa: </label>
+            <a id="empresa">Microsoft</a><br>
+            <label class="infos">Data de anúncio: </label>
+            <label class="infos">20/03/2024</label><br>
+            <label class="infos">Status:</label>
+            <label style="color: green;">Aberto</label>
+        </div>
+        <div class="container">
+            <div class="divInformacoesIniciais">
+                <div class="divIconeENome">
+                    <lord-icon class="iconeVaga"
+                        src="https://cdn.lordicon.com/pbbsmkso.json"
+                        trigger="loop"
+                        state="loop-rotate"
+                        colors="primary:#242424,secondary:#c74b16"
+                        style="width:34px;height:34px">
+                    </lord-icon>
+                    <label id="nomeArea">Tecnologia da Informação</label>
+                </div>
+                <div class="divIconeENome">
+                    <lord-icon class="iconeVaga"
+                        src="https://cdn.lordicon.com/surcxhka.json"
+                        trigger="loop"
+                        stroke="bold"
+                        state="loop-roll"
+                        colors="primary:#242424,secondary:#c74b16"
+                        style="width:34px;height:34px">
+                    </lord-icon>
+                    <label id="cidade">São Paulo</label>
+                    <label>,&nbsp;</label>
+                    <label id="estado">SP</label>
+                </div>
+                <div class="divIconeENome">
+                    <lord-icon class="iconeVaga"
+                        src="https://cdn.lordicon.com/qvyppzqz.json"
+                        trigger="loop"
+                        stroke="bold"
+                        state="loop-oscillate"
+                        colors="primary:#242424,secondary:#c74b16"
+                        style="width:34px;height:34px">
+                    </lord-icon>
+                    <label id="cargaHoraria">De segunda à sexta, das 09:00 às 16:00</label>
+                </div>
+            </div>
+            <div class="divInformacoesPrincipais">
+                <div class="divFlexWithButton">                    
+                    <div class="divFlex">
+                        <div class="divDetalhesCurtos">
+                            <div class="divIconeENome">
+                                <img id="imgTipoProfissional" src="" class="icone">
+                                <label id="tipoProfissional">CLT</label>
+                            </div>
+                            <div class="divIconeENome">
+                                <img id="imgModalidade" src="" class="icone">
+                                <label id="modalidade">Remoto</label>
+                            </div>
+                            <div class="divIconeENome">
+                                <img id="imgJornada" src="" class="icone">
+                                <label id="jornada">Tempo integral</label>
+                            </div>
+                            <div class="divIconeENome">
+                                <img id="imgNivel" src="" class="icone">
+                                <label id="nivel">Ensino Superior</label>
+                            </div>
+                        </div>
+                        <div class="divDescricao">
+                            <h3>Descrição da vaga</h3>
+                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus, officia, molestiae culpa provident accusantium accusamus aut eveniet nulla cum modi expedita omnis quo recusandae suscipit minus optio explicabo! Quasi, consequatur.</p>
+                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Necessitatibus, officia, molestiae culpa provident accusantium accusamus aut eveniet nulla cum modi expedita omnis quo recusandae suscipit minus optio explicabo! Quasi, consequatur.</p>
+                        </div>
+                    </div>        
+                </div>
+                <div class="divFlex" id="divBoxes">
+                    <div class="divBox">
+                        <h3>Requisitos</h3>
+                        <p>- Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum</p>
+                    </div>
+                    <div class="divBox">
+                        <h3>Benefícios</h3>
+                        <p>- Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum<br> - Lorem ipsum</p>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTitulo">
+            <h2>Candidaturas</h2>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftPerfis">                
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightPerfis">                
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
+            <div class="carrosselBox" id="carrosselPerfis">
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+                <a class="perfilLink">
+                    <article class="perfil">
+                            <div class="divImg"></div>
+                            <section>
+                                <p class="nomePessoa">Clarice Josefina</p>
+                            </section>
+                            <section>
+                                <small class="descricaoPessoa">Dev Front-End | Designer Digital | Ciências de dados | Azure</small>
+                            </section>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <a>Política de Privacidade</a>
+        <a>Nosso contato</a>
+        <a>Avalie-nos</a>
+        <p class="sinopse">SIAS 2024</p>
+    </footer>
+    <script src="trocaIcones.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>    
+    <script src="carrosselPerfis.js"></script>    
+    <script src="../../../modoNoturno.js"></script>
+</body>
+</html>

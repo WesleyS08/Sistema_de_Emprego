@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursos</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">    
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/todosStyle.css">
+    <link rel="stylesheet" type="text/css" href="cursos.css">    
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="menuBtn">
+            <img src="../../../imagens/menu.svg">
+        </label>
+        <a href="homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
+        <ul>            
+            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
+            <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
+        </ul>
+    </nav>
+    <div class="divTituloDigitavel" id="divTituloDigitavelCursos">
+        <h1 id="tituloAutomatico">C</h1>
+        <i></i>
+    </div>
+    <div class="divCommon">
+        <div class="container">
+            <div class="divPesquisa">
+                <div class="divFlexInput">
+                    <input class="inputPesquisa" placeholder="Pesquisar">
+                    <button class="searchButton">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/kkvxgpti.json"
+                            trigger="hover"
+                            colors="primary:#f5f5f5"
+                            style="width:36px;height:36px">
+                        </lord-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="divGridCursos">
+                <!--Aqui vai os cursos da pesquisa-->
+            </div>
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTitulo">
+            <h2>Cursos gratuitos</h2>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftCursosGratuitos">
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightCursosGratuitos">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
+            <div class="carrosselBox" id="cursosGratuitos">
+                <a class="cursoLink" href="https://www.ev.org.br/cursos/analise-de-dados-no-power-bi">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/apsPjAUqePmVxYzNU-x2khsTAtfopPD1wY3aj_ZF_lOqmh0DhYN9Mm69aM11OX6LJMy7jwSGf-0=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Fundação Bradesco</p>
+                            <h3>Power BI</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Avançado</p>
+                                <p>4 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.ev.org.br/cursos/desenvolvendo-aplicacoes-mobile-com-android-studio">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/apsPjAUqePmVxYzNU-x2khsTAtfopPD1wY3aj_ZF_lOqmh0DhYN9Mm69aM11OX6LJMy7jwSGf-0=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Fundação Bradesco</p>
+                            <h3>Android Studio</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>15 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.ev.org.br/cursos/excel-na-pratica">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/apsPjAUqePmVxYzNU-x2khsTAtfopPD1wY3aj_ZF_lOqmh0DhYN9Mm69aM11OX6LJMy7jwSGf-0=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Fundação Bradesco</p>
+                            <h3>Excel na Prática</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Iniciante</p>
+                                <p>16 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.ev.org.br/cursos/introducao-a-programacao-orientada-a-objetos-poo">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/apsPjAUqePmVxYzNU-x2khsTAtfopPD1wY3aj_ZF_lOqmh0DhYN9Mm69aM11OX6LJMy7jwSGf-0=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Fundação Bradesco</p>
+                            <h3>POO</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>5 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.ev.org.br/cursos/word-na-pratica">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/apsPjAUqePmVxYzNU-x2khsTAtfopPD1wY3aj_ZF_lOqmh0DhYN9Mm69aM11OX6LJMy7jwSGf-0=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Fundação Bradesco</p>
+                            <h3>Word na prática</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Iniciante</p>
+                                <p>16 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.ev.org.br/cursos/matematica-financeira-com-o-uso-da-hp-12c">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/apsPjAUqePmVxYzNU-x2khsTAtfopPD1wY3aj_ZF_lOqmh0DhYN9Mm69aM11OX6LJMy7jwSGf-0=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Fundação Bradesco</p>
+                            <h3>Matemática Financeira</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Iniciante</p>
+                                <p>20 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTitulo">
+            <h2>Cursos Pagos</h2>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftCursosPagos">
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightCursosPagos">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
+            <div class="carrosselBox" id="cursosPagos">
+                <a class="cursoLink" href="https://www.alura.com.br/cursos-online-mobile/flutter-mobile">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/W7GokEE6ydjZFa_Tpz6yvSsDlVPTe7d4yTsJqKXy1Gbhu1BGXCfKJ_I-_TzOq37m8R9S97kQ=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Alura</p>
+                            <h3>Flutter</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>60 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.alura.com.br/cursos-online-front-end/html-css">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/W7GokEE6ydjZFa_Tpz6yvSsDlVPTe7d4yTsJqKXy1Gbhu1BGXCfKJ_I-_TzOq37m8R9S97kQ=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Alura</p>
+                            <h3>HTML e CSS</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>60 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.alura.com.br/cursos-online-front-end/javascript">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/W7GokEE6ydjZFa_Tpz6yvSsDlVPTe7d4yTsJqKXy1Gbhu1BGXCfKJ_I-_TzOq37m8R9S97kQ=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Alura</p>
+                            <h3>Javascript</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>60 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.alura.com.br/cursos-online-front-end/python">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/W7GokEE6ydjZFa_Tpz6yvSsDlVPTe7d4yTsJqKXy1Gbhu1BGXCfKJ_I-_TzOq37m8R9S97kQ=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Alura</p>
+                            <h3>Python</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>60 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.alura.com.br/cursos-online-programacao/node-js">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/W7GokEE6ydjZFa_Tpz6yvSsDlVPTe7d4yTsJqKXy1Gbhu1BGXCfKJ_I-_TzOq37m8R9S97kQ=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Alura</p>
+                            <h3>Node.JS</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>60 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.alura.com.br/cursos-online-programacao/linguagem-c">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/W7GokEE6ydjZFa_Tpz6yvSsDlVPTe7d4yTsJqKXy1Gbhu1BGXCfKJ_I-_TzOq37m8R9S97kQ=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Alura</p>
+                            <h3>C e C++</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>60 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="divCarrossel">
+        <div class="divTitulo">
+            <h2>Certificações</h2>
+        </div>
+        <div class="container">
+            <a class="btnLeftSlider" id="leftCertificacoes">
+                <img src="../../assets/images/icones_diversos/leftSlider.svg">
+            </a>
+            <a class="btnRightSlider" id="rightCertificacoes">
+                <img src="../../assets/images/icones_diversos/rightSlider.svg">
+            </a>
+            <div class="carrosselBox" id="certificacoes">
+                <a class="cursoLink" href="https://www.netacad.com/pt-br/courses/networking/ccna-introduction-networks">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/ytc/AIdro_lLPafA1cB-pjvUX_Mq3Axx4bNAg6FC5LljYy-qdeqvVtA=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Cisco</p>
+                            <h3>CCNA 1</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Iniciante</p>
+                                <p>70 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.netacad.com/pt-br/courses/networking/ccna-switching-routing-wireless-essentials">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/ytc/AIdro_lLPafA1cB-pjvUX_Mq3Axx4bNAg6FC5LljYy-qdeqvVtA=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Cisco</p>
+                            <h3>CCNA 2</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Intermediário</p>
+                                <p>70 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://www.netacad.com/pt-br/courses/networking/ccna-enterprise-networking-security-automation">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/ytc/AIdro_lLPafA1cB-pjvUX_Mq3Axx4bNAg6FC5LljYy-qdeqvVtA=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Cisco</p>
+                            <h3>CCNA 3</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Avançado</p>
+                                <p>70 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://learn.microsoft.com/pt-br/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/DP2DnSf8hIhdjThIsFyCqktfSgvrLeXfWA0xbPOo8I3n-P2_7c4otmLi6SwbUp1tXcWodn10=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Microsoft</p>
+                            <h3>AZ-900</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Básico</p>
+                                <p>40 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://learn.microsoft.com/pt-br/credentials/certifications/azure-ai-fundamentals/?practice-assessment-type=certification">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/DP2DnSf8hIhdjThIsFyCqktfSgvrLeXfWA0xbPOo8I3n-P2_7c4otmLi6SwbUp1tXcWodn10=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Microsoft</p>
+                            <h3>AI-900</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Básico</p>
+                                <p>40 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+                <a class="cursoLink" href="https://learn.microsoft.com/pt-br/credentials/certifications/security-compliance-and-identity-fundamentals/">
+                    <article class="curso">
+                        <div class="divLogoCurso">
+                            <img src="https://yt3.googleusercontent.com/DP2DnSf8hIhdjThIsFyCqktfSgvrLeXfWA0xbPOo8I3n-P2_7c4otmLi6SwbUp1tXcWodn10=s176-c-k-c0x00ffffff-no-rj">
+                        </div>
+                        <section>
+                            <p id="empresaCurso">Microsoft</p>
+                            <h3>SC-900</h3>
+                            <div class="divFlexSpace">
+                                <p>Nível Básico</p>
+                                <p>40 horas</p>
+                            </div>
+                        </section>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="divCommon">
+        <div class="divAviso">
+            <div class="divFlex">
+                <lord-icon
+                    src="https://cdn.lordicon.com/usownftb.json"
+                    trigger="hover"
+                    stroke="bold"
+                    state="hover-oscillate"
+                    colors="primary:#000000,secondary:#e88c30"
+                    style="width:40px;height:40px">
+                </lord-icon>
+                <h2>Aviso</h2>
+                <lord-icon
+                    src="https://cdn.lordicon.com/usownftb.json"
+                    trigger="hover"
+                    stroke="bold"
+                    state="hover-oscillate"
+                    colors="primary:#000000,secondary:#e88c30"
+                    style="width:40px;height:40px">
+                </lord-icon>
+            </div>
+            <div class="divTextoAviso">
+                <p>
+                    Este site indica cursos e certificações profissionalizantes a fim de enriquecer e aprimorar o conhecimento do usuário. Não recebemos pagamento ao divulgar as empresas acima.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <a>Política de Privacidade</a>
+        <a>Nosso contato</a>
+        <a>Avalie-nos</a>
+        <p class="sinopse">SIAS 2024</p>
+    </footer>    
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="carrosselCursosGratuitos.js"></script>
+    <script src="carrosselCursosPagos.js"></script>
+    <script src="carrosselCertificacoes.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="tituloDigitavel.js"></script>
+    <script src="../../../modoNoturno.js"></script>
+</body>
+</html>

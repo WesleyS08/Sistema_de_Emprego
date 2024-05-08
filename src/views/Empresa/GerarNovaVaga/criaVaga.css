@@ -1,0 +1,198 @@
+.containerForm{
+    display: grid;
+    place-items: center;
+}
+
+.containerSuperior{
+    width: 800px;  
+}
+
+.containerInferior{
+    width: 1200px;  
+}
+
+small{
+    display: flex;
+    margin-left: 11px;
+    color: red;
+}
+
+/* ------------------------- INPUTS ANIMADOS -------------------------*/
+
+.divInputs{
+    width: 650px;
+    margin: 0 auto;
+    padding: 20px 0px 8px 0px;
+}
+
+.divFlex{
+    display: flex;
+    justify-content: space-between;
+}
+
+.containerInput{
+    margin-bottom: 30px;
+}
+
+.contentInput{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.inputAnimado{
+    width: 300px;
+    border: 1px solid grey;
+    padding: 10px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 12pt;
+    transition: 0.2s ease;
+    background: transparent;    
+    z-index: 1111;
+}
+
+#horario{
+    width: 100%;
+}
+
+.inputAnimado::placeholder{
+    opacity: 0;
+}
+
+.inputAnimado:focus::placeholder{
+    opacity: 1;
+}
+
+.labelLine{
+    position: absolute;
+    transition: 0.2s ease;
+    margin: 0px 11px;
+    color: grey;
+    background-color: whitesmoke;
+    font-size: 12pt;
+}
+
+.inputAnimado:focus,
+.inputAnimado:valid{
+    border: 1px solid var(--laranja);
+}
+
+.inputAnimado:focus +.labelLine,
+.inputAnimado:valid +.labelLine{
+    transform: translate(-4px,-20px) scale(0.84) !important;
+    padding: 0 6px;
+    color: var(--laranja);
+    z-index: 1111;
+}
+
+/* ------------------------- TEXTAREA ANIMADA -------------------------*/
+
+.contentInputTextArea{
+    display: flex;
+    position: relative;
+}
+
+.textAreaAnimada{    
+    height: 200px;
+    width: 100%;
+    border: 1px solid grey;
+    padding: 10px 14px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 12pt;
+    transition: 0.2s ease;
+    background: transparent;    
+    z-index: 1111;
+    resize: none;
+}
+
+.textArealabelLine{                                                     
+    position: absolute;
+    transition: 0.2s ease;
+    margin: 8px 11px;
+    color: grey;
+    background-color: whitesmoke;
+    font-size: 12pt;
+}
+
+.textAreaAnimada:focus,
+.textAreaAnimada:valid{
+    border: 1px solid var(--laranja);
+}
+
+.textAreaAnimada:focus +.textArealabelLine,
+.textAreaAnimada:valid +.textArealabelLine{
+    transform: translate(-6px,-17px) scale(0.84) !important;
+    padding: 0 6px;
+    color: var(--laranja);
+    z-index: 1111;
+}
+
+
+/* ------------------------- DIV FLEX TEXTAREA ANIMADA -------------------------*/
+
+#divFlexTextArea{
+    margin-top: 40px;
+}
+
+#divFlexTextArea .textAreaAnimada{    
+    height: 300px;
+    width: 380px;
+}
+
+/* ------------------------- RADIOS -------------------------*/
+
+.divFlexRadios{
+    display: flex;
+    justify-content: center;
+}
+
+.divRadioContent{
+    margin: 50px
+}
+
+.divFlexRadios h3{
+    margin-bottom: 20px;
+}
+
+input[type="radio"]{
+    display: none;
+}
+
+.btnRadio{
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 18px;
+    box-shadow: 0px 0px 8px silver;
+    transition: 0.4s ease;
+}
+
+.btnRadio:hover{
+    box-shadow: 0px 0px 6px gray;
+}
+
+/* ------------------------- Button Salvar -------------------------*/
+
+.divSalvar{
+    margin: 20px 0px;
+    text-align: center;
+}
+
+.btnSalvar{
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 16pt;
+    width: 200px;
+    height: 50px;
+    background-color: black;
+    color: whitesmoke;
+    border-radius: 14px;
+    transition: 0.2s ease;    
+    box-shadow: 0px 0px 8px silver;
+}
+
+.btnSalvar:hover{
+    transform: scale(1.1);
+}

@@ -76,7 +76,7 @@ function determinarImagemCategoria($categoria)
         </label>
         <a href="index.html"><img id="logo" src="src/assets/images/logos_empresa/logo_sias.png"></a>
         <ul>
-            <li><a href="src/views/TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="src/views/User/TodososAnuncios/todasVagas.php">Vagas</a></li>
             <!--Colocar  link depois   -->
             <li><a href="#">Testes</a></li>
             <li><a href="#">Cursos</a></li>

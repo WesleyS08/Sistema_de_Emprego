@@ -10,7 +10,7 @@ def listar_estrutura_pasta(caminho):
     return estrutura
 
 def main():
-    caminho_repositorio = r"C:\Users\Aluno\Downloads\Sistema_de_Emprego-main"
+    caminho_repositorio = r"C:\xampp\htdocs\Sistema_de_Emprego"
     estrutura = listar_estrutura_pasta(caminho_repositorio)
     with open("estrutura_pastas.txt", "w") as arquivo_saida:
         arquivo_saida.write(estrutura)
