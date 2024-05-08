@@ -35,6 +35,13 @@ function AdicionarQuestao(){
 
     inputSimples.classList.add("inputSimples");    
     inputSimples.classList.add("noturno");
+    if(modo==="noturno"){
+        inputSimples.style.color="whitesmoke";
+    }
+    else if(modo==="claro"){
+        inputSimples.style.color="black";
+    }
+
     inputSimples.placeholder = "Pergunta";    
     inputSimples.type = "text";
 
