@@ -47,6 +47,22 @@ if (!empty($filtros)) {
 // Preparar a consulta com parâmetros vinculados
 $stmt = $_con->prepare($sql);
 
+
+function determinarImagemCategoria($categoria)
+{
+    switch ($categoria) {
+        case 'Estágio':
+            return 'estagio';
+        case 'CLT':
+            return 'clt';
+        case 'PJ':
+            return 'pj';
+        case 'Jovem Aprendiz':
+            return 'estagio';
+        default:
+            return 'default'; 
+    }
+}
 if ($stmt) {
     // Vincular parâmetros, se necessário
     if (!empty($parametros)) {
@@ -83,24 +99,8 @@ if ($stmt) {
             echo '</div>';
 
             echo '<header>';
-            switch ($row["Categoria"]) {
-                case "CLT":
-                    echo '<img src="../../../../imagens/clt.svg">';
-                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                    break;
-                case "Estágio":
-                case "Jovem Aprendiz":
-                    echo '<img src="../../../../imagens/estagio.svg">';
-                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                    break;
-                case "PJ":
-                    echo '<img src "../../../../imagens/pj.svg">';
-                    echo '<label a classe "tipoVaga">' . $row["Categoria"] . '</label>';
-                    break;
-                default:
-                    echo '<label a classe "tipoVaga">Categoria não definida</label>';
-                    break;
-            }
+            echo '<img src="../../../../imagens/' . determinarImagemCategoria($row["Categoria"]) . '.svg">';
+            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
             echo '</header>';
 
             echo '<section>';

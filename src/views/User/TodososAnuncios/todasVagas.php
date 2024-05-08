@@ -140,6 +140,22 @@ if ($result === false) {
     echo "Erro ao executar a consulta: " . $_con->error;
     exit;
 }
+
+function determinarImagemCategoria($categoria)
+{
+    switch ($categoria) {
+        case 'Estágio':
+            return 'estagio';
+        case 'CLT':
+            return 'clt';
+        case 'PJ':
+            return 'pj';
+        case 'Jovem Aprendiz':
+            return 'estagio';
+        default:
+            return 'default'; 
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -277,24 +293,8 @@ if ($result === false) {
                     echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
                     echo '</div>';
                     echo '<header>';
-                    switch ($row["Categoria"]) {
-                        case "CLT":
-                            echo '<img src="../../../../imagens/clt.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        case "Estágio":
-                        case "Jovem Aprendiz":
-                            echo '<img src="../../../../imagens/estagio.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        case "PJ":
-                            echo '<img src="../../../../imagens/pj.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        default:
-                            echo '<label class="tipoVaga">Categoria não definida</label>';
-                            break;
-                    }
+                    echo '<img src="../../../../imagens/' . determinarImagemCategoria($row["Categoria"]) . '.svg">';
+                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                     echo '</header>';
                     echo '<section>';
                     echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';

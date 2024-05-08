@@ -32,9 +32,8 @@ function determinarImagemCategoria($categoria)
             return 'pj';
         case 'Jovem Aprendiz':
             return 'estagio';
-        // Adicione mais casos conforme necessário
         default:
-            return 'default'; // Retorna uma imagem padrão caso não haja correspondência
+            return 'default';
     }
 }
 
@@ -44,9 +43,9 @@ function determinarImagemCategoria($categoria)
 <html lang="pt-br">
 
 <head>
-    <script>
+<script>
         function limparLocalStorageComExcecao() {
-            const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa'];
+            const chavesParaLimpar = ['area', 'tipos', 'apenasVagasAbertas', 'termoPesquisa'];
 
             chavesParaLimpar.forEach(function (chave) {
                 localStorage.removeItem(chave);
@@ -60,7 +59,8 @@ function determinarImagemCategoria($categoria)
             console.log("LocalStorage após limpeza:", localStorage);
         }
 
-        window.addEventListener('load', limparLocalStorageComExcecao);
+        
+        limparLocalStorageComExcecao();
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,7 +80,7 @@ function determinarImagemCategoria($categoria)
             <!--Colocar  link depois   -->
             <li><a href="#">Testes</a></li>
             <li><a href="#">Cursos</a></li>
-            <li><a href="src/views/Login/login.html">Perfil</a></li>
+            <li><a href="src/views/User/Login/login.html">Perfil</a></li>
         </ul>
     </nav>
     <div class="divTitle">
@@ -225,7 +225,7 @@ function determinarImagemCategoria($categoria)
                             echo '<div class="gridTestes" style="margin-right: 12px;">';
                         }
                         ?>
-                        <a class="testeLink" href="src/views/PreparaTeste/preparaTeste.php?id=<?php echo $idQuestionario ?>">
+                        <a class="testeLink" href="src/views/Candidato/SelecionarQuestionário/preparaTeste.php?id=<?php echo $idQuestionario ?>">
                             <article class="teste">
                                 <div class="divAcessos">
                                     <img src="imagens/people.svg"></img>
@@ -250,7 +250,9 @@ function determinarImagemCategoria($categoria)
                                         <small class="autorTeste">Por Jefferson Evangelista</small>
                                         <div class="divCompetencias">
                                             <small>Competências: </small>
-                                            <small class="competenciasTeste"><?php echo $area; ?></small>
+                                            <small class="competenciasTeste">
+                                                <?php echo $area; ?>
+                                            </small>
                                         </div>
                                     </div>
                                 </div>

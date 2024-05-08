@@ -237,7 +237,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         echo '    <label for="check" class="menuBtn">';
         echo '        <img src="../../../imagens/menu.svg">';
         echo '    </label> ';
-        echo '<a href="../../../index.php"><img id="logo" src="../../../assets/images/logos_empresa/logo_sias.png"></a> ';
+        echo '<a href="../../../../index.php"><img id="logo" src="../../../assets/images/logos_empresa/logo_sias.png"></a> ';
         echo '<ul>';
         echo '    <li><a href="../TodososAnuncios/todasvagas.php">Vagas</a></li>';
         echo '    <li><a href="../Login/login.html">Testes</a></li>';
