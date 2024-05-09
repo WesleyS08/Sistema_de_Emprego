@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Autenticação do usuário candidato
 
     $nomeUsuario = $_POST['nome'];
-    $emailUsuario = $_POST['emailCandidato'];
+    $emailUsuario = $_POST['email'];
     $cpfUsuario = $_POST['cpf'];
     $senhaUsuario = $_POST['senha'];
 
