@@ -185,12 +185,15 @@ small{
     margin-right: 10px;
     cursor: pointer;
     border-radius: 18px;
-    box-shadow: 0px 0px 8px silver;
+    box-shadow: 0px 0px 4px gray;
     transition: 0.4s ease;
+    color: gray;
+    font-weight: bold;
 }
 
 .btnRadio:hover{
-    box-shadow: 0px 0px 6px gray;
+    box-shadow: 0px 0px 10px var(--laranja);
+    color: var(--laranja);
 }
 
 /* ------------------------- Button Salvar -------------------------*/

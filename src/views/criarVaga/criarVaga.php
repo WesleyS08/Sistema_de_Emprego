@@ -168,7 +168,7 @@ $totaldisponivel = 4 - $total_anuncios;
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn">
-            <a class="btnVoltar" href="../HomeRecrutador/homeRecrutador.php"><img
+            <a class="btnVoltar" href="../HomeRecrutador/homeRecrutador.php"><img class="backImg"
                     src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Criação de Vaga</h2>
         </div>

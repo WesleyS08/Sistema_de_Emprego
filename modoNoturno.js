@@ -14,6 +14,7 @@ let articles = document.querySelectorAll("article");
 let perfis = document.querySelectorAll(".perfil");
 let verMaisBtns = document.querySelectorAll(".verMais");
 let labellines = document.querySelectorAll(".labelLine");
+let textAreaLabellines = document.querySelectorAll(".textArealabelLine");
 
 let slidesMysql = document.querySelectorAll(".slideMysql");
 let slidesPhp = document.querySelectorAll(".slidePhp");
@@ -26,14 +27,21 @@ let slidesCss = document.querySelectorAll(".slideCss");
 let inputs = document.querySelectorAll("input[type='text']");
 let inputsNumber = document.querySelectorAll("input[type='number']");
 let selects = document.querySelectorAll("select");
+let texteareas = document.querySelectorAll("textarea");
 
 let perguntas = document.querySelectorAll(".pergunta");
 let alternativas = document.querySelectorAll(".alternativa");
 let numQuestoes = document.querySelectorAll(".numQuestao");
 
+let divTituloDigitaveis = document.querySelectorAll("#divTituloDigitavelTodos");
+let piscas = document.querySelectorAll(".pisca");
+
 let infos = document.querySelectorAll(".infos");
 let divIconeENomes = document.querySelectorAll(".divIconeENome");
 let iconesVaga = document.querySelectorAll(".iconeVaga");
+
+let backImgs = document.querySelectorAll(".backImg");
+let nomeFiltros = document.querySelectorAll(".nomeFiltro");
 
 var styleElem = document.head.appendChild(document.createElement("style"));
 
@@ -52,7 +60,8 @@ function Noturno(){
         sinopses.forEach((sinopse) => sinopse.style.color="whitesmoke");   
         dataVagas.forEach((dataVaga) => dataVaga.style.color="silver");    
         tipoVagas.forEach((tipoVaga) => tipoVaga.style.color="silver");            
-        labellines.forEach((labelLine) => labelLine.style.backgroundColor="#1C1C1C");    
+        labellines.forEach((labelLine) => labelLine.style.backgroundColor="#1C1C1C");            
+        textAreaLabellines.forEach((textAreaLabelline) => textAreaLabelline.style.backgroundColor="#1C1C1C");  
 
         styleElem.innerHTML = ".carrosselInfinito:before, .carrosselInfinito:after{background: linear-gradient(to right, rgba(28,28,28,1) 0%, rgba(28,28,28,0) 100%);}";    
         slidesMysql.forEach((slideMysql) => slideMysql.src = "../../assets/images/logos_parceiros/mysqlWhite.svg");
@@ -65,7 +74,8 @@ function Noturno(){
         
         inputs.forEach((input) => input.style.color="white");        
         inputsNumber.forEach((inputNumber) => inputNumber.style.color="white");        
-        selects.forEach((select) => select.style.color="white");
+        selects.forEach((select) => select.style.color="whitesmoke");       
+        texteareas.forEach((textarea) => textarea.style.color="whitesmoke");
         
         perguntas.forEach((pergunta) => pergunta.style.color="whitesmoke");            
         alternativas.forEach((alternativa) => alternativa.style.color="whitesmoke");        
@@ -77,7 +87,13 @@ function Noturno(){
 
         verMaisBtns.forEach((verMais) => verMais.style.color="black");
         verMaisBtns.forEach((verMais) => verMais.style.border="none");        
-        verMaisBtns.forEach((verMais) => verMais.style.backgroundColor="white");
+        verMaisBtns.forEach((verMais) => verMais.style.backgroundColor="whitesmoke");
+
+        backImgs.forEach((backImg) => backImg.src="../../assets/images/icones_diversos/backWhite.svg");        
+        nomeFiltros.forEach((nomeFiltro) => nomeFiltro.style.color="whitesmoke");        
+        
+        divTituloDigitaveis.forEach((divTituloDigitavelTodos) => divTituloDigitavelTodos.style.color="whitesmoke");
+        piscas.forEach((pisca) => pisca.style.backgroundColor="whitesmoke");
 
         const elementosNoturnos = document.querySelectorAll('.noturno');
         elementosNoturnos.forEach(element => {
@@ -104,6 +120,7 @@ function Claro(){
         sinopses.forEach((sinopse) => sinopse.style.color="whitesmoke");
         
         labellines.forEach((labelLine) => labelLine.style.backgroundColor="#f5f5f5");  
+        textAreaLabellines.forEach((textAreaLabelline) => textAreaLabelline.style.backgroundColor="#f5f5f5");  
 
         styleElem.innerHTML = ".carrosselInfinito:before, .carrosselInfinito:after{background: linear-gradient(to right, rgba(245,245,245,1) 0%, rgba(245,245,245,0) 100%);}";    
         slidesMysql.forEach((slideMysql) => slideMysql.src = "../../assets/images/logos_parceiros/mysql.svg");
@@ -117,6 +134,7 @@ function Claro(){
         inputs.forEach((input) => input.style.color="black");   
         inputsNumber.forEach((inputNumber) => inputNumber.style.color="black");        
         selects.forEach((select) => select.style.color="black");
+        texteareas.forEach((textarea) => textarea.style.color="black");
         
         perguntas.forEach((pergunta) => pergunta.style.color="black");            
         alternativas.forEach((alternativa) => alternativa.style.color="black");          
@@ -127,6 +145,12 @@ function Claro(){
         iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#242424,secondary:#c74b16");
 
         verMaisBtns.forEach((verMais) => verMais.style="initial");
+        
+        backImgs.forEach((backImg) => backImg.src="../../assets/images/icones_diversos/back.svg");        
+        nomeFiltros.forEach((nomeFiltro) => nomeFiltro.style.color="black");
+
+        divTituloDigitaveis.forEach((divTituloDigitavelTodos) => divTituloDigitavelTodos.style.color="black");
+        piscas.forEach((pisca) => pisca.style.backgroundColor="black");
 
         const elementosNoturnos = document.querySelectorAll('.noturno');
         elementosNoturnos.forEach(element => {

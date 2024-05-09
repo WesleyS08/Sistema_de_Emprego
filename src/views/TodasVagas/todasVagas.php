@@ -205,13 +205,13 @@ if ($result === false) {
     ?>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
         <h1 id="tituloAutomatico">V</h1>
-        <i></i>
+        <i class="pisca"></i>
     </div>
     <div class="divCommon">
         <div class="container">
             <div class="divPesquisa">
                 <div class="divFlexInput">
-                    <input class="inputPesquisa" placeholder="Pesquisa por Título">
+                    <input class="inputPesquisa" type="text" placeholder="Pesquisa por Título">
                 </div>
                 <div id="sugestoes" class="sugestoes" style="display: none;">
                 </div>

@@ -34,13 +34,13 @@ $_con->close();
     </nav>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
         <h1 id="tituloAutomatico">T</h1>
-        <i></i>
+        <i class="pisca"></i>
     </div>
     <div class="divCommon">
         <div class="container">
             <div class="divPesquisa">
                 <div class="divFlexInput">
-                    <input class="inputPesquisa" placeholder="Pesquisar">
+                    <input class="inputPesquisa" type="text" placeholder="Pesquisar">
                     <button class="searchButton">
                         <lord-icon
                             src="https://cdn.lordicon.com/kkvxgpti.json"
@@ -72,7 +72,7 @@ $_con->close();
                     </div>
                     <div class="contentFiltro">
                         <label class="nomeFiltro">Criador do teste:</label>
-                        <input class="selectArea" id="criadorFiltro" name="criadorFiltro" placeholder="Cisco, Microsoft, etc">
+                        <input class="selectArea" type="text" id="criadorFiltro" name="criadorFiltro" placeholder="Cisco, Microsoft, etc">
                     </div>
                     <div class="contentFiltro">
                         <label class="nomeFiltro">Nível:</label>
