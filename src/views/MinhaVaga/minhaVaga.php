@@ -328,7 +328,7 @@ if ($stmt) {
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
         <?php
-        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id='. $idAnuncio . '">';
+        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=' . $idAnuncio . '">';
         ?>
         <div style="padding: 6px 12px;
                 box-shadow: 0px 0px 6px silver;
@@ -436,16 +436,17 @@ if ($stmt) {
         <div class="container">
             <div class="divInformacoesIniciais">
                 <div class="divIconeENome">
-                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/pbbsmkso.json" trigger="loop" state="loop-rotate"
-                        colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/pbbsmkso.json" trigger="loop"
+                        state="loop-rotate" colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
                     </lord-icon>
                     <label id="nomeArea">
                         <?php echo $Area; ?>
                     </label>
                 </div>
                 <div class="divIconeENome">
-                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/surcxhka.json" trigger="loop" stroke="bold"
-                        state="loop-roll" colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/surcxhka.json" trigger="loop"
+                        stroke="bold" state="loop-roll" colors="primary:#242424,secondary:#c74b16"
+                        style="width:34px;height:34px">
                     </lord-icon>
                     <label id="cidade">
                         <?php echo $Cidade; ?>
@@ -456,8 +457,8 @@ if ($stmt) {
                     </label>
                 </div>
                 <div class="divIconeENome">
-                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/qvyppzqz.json" trigger="loop" stroke="bold"
-                        state="loop-oscillate" colors="primary:#242424,secondary:#c74b16"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/qvyppzqz.json" trigger="loop"
+                        stroke="bold" state="loop-oscillate" colors="primary:#242424,secondary:#c74b16"
                         style="width:34px;height:34px">
                     </lord-icon>
                     <label id="cargaHoraria">
@@ -593,9 +594,11 @@ if ($stmt) {
                             href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>">
                             <article class="perfil">
                                 <div class="divImg">
-                                    <!-- Mostrar a imagem de perfil -->
-                                    <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt="Foto de Perfil"
-                                        style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
+                                    <?php
+                                    if (!empty($Img_Perfil)) {
+                                        echo '<img src="' . $candidatura[$Img_Perfil] . '" alt="" style="width: 100%; height: 99%; display: block; border-radius: 50%; object-fit: cover;">';
+                                    }
+                                    ?>
                                 </div>
 
                                 <section>
@@ -635,10 +638,6 @@ if ($stmt) {
         data-bairro="<?php echo $bairro; ?>" data-cidade="<?php echo $Cidade; ?>" data-estado="<?php echo $Estado; ?>"
         data-cep="<?php echo $CEP; ?>">
     </div>
-
-
-
-
 
     <footer>
         <a>Política de Privacidade</a>

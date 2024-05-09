@@ -20,7 +20,7 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 
 // Primeira consulta para obter o ID da pessoa logada
-$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+$sql = "SELECT Id_Pessoas, Verificado FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
 
 // Verifique se a preparação da declaração foi bem-sucedida
@@ -33,10 +33,12 @@ if ($stmt) {
     $result = $stmt->get_result();
     // Verifique se a consulta retornou resultados
     if ($result->num_rows > 0) {
-        // Obtenha o ID da pessoa
+        // Obtenha o ID da pessoa e se ela está verificada
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
+        $verificado = $row['Verificado'];
     } else {
+        // Trate o caso em que nenhum resultado é retornado
     }
     $stmt->close();
 }
@@ -98,6 +100,32 @@ if ($result->num_rows > 0) {
     // Handle no results case
     $nome_empresa = 'Empresa não encontrada';
 }
+// Consulta para contar os anúncios por Id_Pessoas
+$sql_contar_anuncios = "SELECT COUNT(*) AS total_anuncios FROM Tb_Anuncios 
+    JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+    JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+    JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+    WHERE Tb_Pessoas.Id_Pessoas = ?";
+$stmt = $_con->prepare($sql_contar_anuncios);
+
+if ($stmt) {
+    // Vincule o parâmetro
+    $stmt->bind_param("i", $idPessoa);
+
+    // Execute a consulta
+    $stmt->execute();
+
+    // Obtenha o resultado
+    $result = $stmt->get_result();
+
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o total de anúncios
+        $row = $result->fetch_assoc();
+        $total_anuncios = $row['total_anuncios'];
+        
+    } 
+}
 
 
 // Nova consulta para obter os Anuncios por Id_Pessoas
@@ -118,6 +146,7 @@ if ($result === false) {
     echo "Erro na consulta: " . $_con->error;
     exit;
 }
+
 
 // Atribuindo os valores das variáveis de sessão
 $emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
@@ -157,7 +186,7 @@ if ($stmt) {
     echo "Erro na preparação da declaração: " . mysqli_error($_con);
 }
 
-
+$totaldisponivel = 4 - $total_anuncios;
 ?>
 
 
@@ -170,6 +199,27 @@ if ($stmt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <style>
+        .aviso-verificado {
+            text-align: center;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .aviso-nao-verificado {
+            text-align: center;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -203,10 +253,17 @@ if ($stmt) {
             </div>
         </div>
     </div>
+    <?php
+    if ($verificado == 1) {
+    } else {
+        echo "<div class='aviso-nao-verificado'>Sua conta ainda não foi verificada. Por favor, verifique sua conta para desfrutar do máximo possível.</div>";
+        $totaldisponivel = 4 - $total_anuncios;
+        echo "<div class='aviso-nao-verificado'>Você tem mais " . $totaldisponivel . " anúncios disponíveis.</div>";
+    }
+    ?>
     <div id="infoTema"></div>
     <div class="divCarrossel">
         <div class="divTituloComBtn">
-
             <h2>Meus anúncios</h2>
             <button class="btnAdicionar" onclick="window.location.href='../criarVaga/criarVaga.php'">
                 <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"

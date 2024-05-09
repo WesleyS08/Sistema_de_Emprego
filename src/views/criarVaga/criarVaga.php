@@ -29,7 +29,7 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
 
 
 // Primeira consulta para obter o ID da pessoa logada
-$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+$sql = "SELECT Id_Pessoas, Verificado FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
 
 // Verifique se a preparação da declaração foi bem-sucedida
@@ -42,13 +42,44 @@ if ($stmt) {
     $result = $stmt->get_result();
     // Verifique se a consulta retornou resultados
     if ($result->num_rows > 0) {
-        // Obtenha o ID da pessoa
+        // Obtenha o ID da pessoa e se ela está verificada
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
+        $verificado = $row['Verificado'];
     } else {
+        // Trate o caso em que nenhum resultado é retornado
     }
     $stmt->close();
 }
+
+
+// Consulta para contar os anúncios por Id_Pessoas
+$sql_contar_anuncios = "SELECT COUNT(*) AS total_anuncios FROM Tb_Anuncios 
+    JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+    JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+    JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+    WHERE Tb_Pessoas.Id_Pessoas = ?";
+$stmt = $_con->prepare($sql_contar_anuncios);
+
+if ($stmt) {
+    // Vincule o parâmetro
+    $stmt->bind_param("i", $idPessoa);
+
+    // Execute a consulta
+    $stmt->execute();
+
+    // Obtenha o resultado
+    $result = $stmt->get_result();
+
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o total de anúncios
+        $row = $result->fetch_assoc();
+        $total_anuncios = $row['total_anuncios'];
+
+    }
+}
+
 // Quartar consulta para selecionar o tema que  a pessoa selecionou 
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
@@ -93,7 +124,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         $areas[] = $row['Area']; // Adicionar áreas ao array
     }
 }
-
+$totaldisponivel = 4 - $total_anuncios;
 ?>
 
 <!DOCTYPE html>
@@ -105,6 +136,17 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <title>Anunciar</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/criacao.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <style>
+        .mensagem {
+            text-align: center;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -297,9 +339,21 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         </div>
                     </div>
                     <input type="hidden" name="emailSession" value="<?php echo $emailUsuario; ?>">
-                    <div class="divSalvar">
-                        <input type="submit" value="Salvar" class="btnSalvar">
-                    </div>
+                    <?php if ($verificado == 1): ?>
+                        <div class="divSalvar">
+                            <input type="submit" value="Salvar" class="btnSalvar">
+                        </div>
+                    <?php elseif ($totaldisponivel != 0): ?>
+                        <div class="divSalvar">
+                            <input type="submit" value="Salvar" class="btnSalvar">
+                        </div>
+                    <?php else: ?>
+                        <div class="mensagem">
+                            Você não tem anúncios disponíveis para salvar.
+                        </div>
+                    <?php endif; ?>
+
+
                 </div>
             </div>
         </form>
@@ -312,7 +366,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <!-- 
     <script>
         $(document).ready(function () {
             // Novo regex para validar dias da semana e horários dentro de 24 horas
@@ -329,8 +383,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 }
 
                 if (!regexDiasHorarios.test(horario)) {
-                    console.log("Formato inválido Use esse exemplo: 'seg a sáb, das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
-                    aviso.text("Formato inválido Use esse exemplo: 'seg a sáb, das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
+                    console.log("Formato inválido Use esse exemplo: 'seg a sáb das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
+                    aviso.text("Formato inválido Use esse exemplo: 'seg a sáb das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
                 } else {
                     console.log("Formato válido.");
                     aviso.text("");
@@ -359,7 +413,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         });
 
     </script>
-
+    -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Função para definir o comportamento do placeholder
@@ -510,7 +564,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
             }
 
             function verificarTitulo(palavra, callback) {
-                const letrasRegex = /[a-zA-Z]/g; 
+                const letrasRegex = /[a-zA-Z]/g;
                 const numLetras = (palavra.match(letrasRegex) || []).length; // Contar as letras
 
                 if (numLetras >= 2) { // Verifica se há pelo menos duas letras

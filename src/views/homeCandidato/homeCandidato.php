@@ -19,35 +19,31 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
 }
 
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-// Consulta para obter o ID da pessoa logada
-$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+
+// Primeira consulta para obter o ID da pessoa logada
+$sql = "SELECT Id_Pessoas, Verificado FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
 
 // Verifique se a preparação da declaração foi bem-sucedida
 if ($stmt) {
     // Vincule o parâmetro ao placeholder na consulta
     $stmt->bind_param("s", $emailUsuario);
-
     // Execute a declaração
     $stmt->execute();
-
     // Obtenha o resultado da consulta
     $result = $stmt->get_result();
-
     // Verifique se a consulta retornou resultados
     if ($result->num_rows > 0) {
-        // Obtenha o ID da pessoa
+        // Obtenha o ID da pessoa e se ela está verificada
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
-
-        // Use o ID da pessoa como necessário no restante do seu código
+        $verificado = $row['Verificado'];
     } else {
-        // Se não houver resultados, lide com isso de acordo com sua lógica de aplicativo
+        // Trate o caso em que nenhum resultado é retornado
     }
-
-    // Feche a declaração
     $stmt->close();
 }
+
 
 
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
@@ -120,6 +116,37 @@ if ($result->num_rows > 0) {
     echo 'CPF não encontrado para o ID especificado.';
 }
 
+$query = "
+    SELECT
+        COUNT(*) AS total_inscricoes
+    FROM
+        Tb_Inscricoes ins
+    JOIN
+        Tb_Vagas va ON ins.Tb_Vagas_Tb_Anuncios_Id = va.Tb_Anuncios_Id
+    JOIN
+        Tb_Anuncios an ON va.Tb_Anuncios_Id = an.Id_Anuncios
+    JOIN
+        Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
+    WHERE
+        ins.Tb_Candidato_CPF = ?
+    ORDER BY
+        (va.Status = 'Encerrado'),
+        va.Data_de_Termino ASC
+";
+
+$stmt = $_con->prepare($query);
+$stmt->bind_param('s', $cpf);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Verifique se a consulta retornou resultados
+if ($result->num_rows > 0) {
+    // Obtenha o total de inscrições
+    $row = $result->fetch_assoc();
+    $total_inscricoes = $row['total_inscricoes'];
+   
+}
+
 // Obter dados do candidato
 $candidato = $result_verificar_candidato->fetch_assoc();
 
@@ -182,6 +209,27 @@ function determinarImagemCategoria($categoria)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <style>
+        .aviso-verificado {
+            text-align: center;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .aviso-nao-verificado {
+            text-align: center;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -213,6 +261,14 @@ function determinarImagemCategoria($categoria)
             </div>
         </div>
     </div>
+    <?php
+    if ($verificado == 1) {
+    } else {
+        echo "<div class='aviso-nao-verificado'>Sua conta ainda não foi verificada. Por favor, verifique sua conta para desfrutar do máximo possível.</div>";
+        $totaldisponivel = 4 - $total_inscricoes;
+        echo "<div class='aviso-nao-verificado'>Você tem mais " . $totaldisponivel . " anúncios disponíveis.</div>";
+    }
+    ?>
     <div class="divCarrossel">
         <div class="divTitulo">
             <?php $emailUsuario ?>

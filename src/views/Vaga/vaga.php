@@ -25,16 +25,33 @@ $autenticadoComEmail = !empty($emailUsuario);
 // Verificar se é uma sessão de candidato com e-mail
 $autenticadoCandidatoComEmail = $autenticadoComEmail && $autenticadoComoCandidato;
 
-$sql = "SELECT Tb_Pessoas.Id_Pessoas
-FROM Tb_Pessoas
-WHERE Tb_Pessoas.Email = '$emailUsuario'";
+// Primeira consulta para obter o ID da pessoa logada
+$sql = "SELECT Id_Pessoas, Verificado FROM Tb_Pessoas WHERE Email = ?";
+$stmt = $_con->prepare($sql);
 
-$result = mysqli_query($_con, $sql); // Executar a consulta
-
-if ($result && mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result); // Obtém o resultado da consulta
-    $idPessoa = $row['Id_Pessoas']; // Armazena o ID da pessoa do usuário
+// Verifique se a preparação da declaração foi bem-sucedida
+if ($stmt) {
+    // Vincule o parâmetro ao placeholder na consulta
+    $stmt->bind_param("s", $emailUsuario);
+    // Execute a declaração
+    $stmt->execute();
+    // Obtenha o resultado da consulta
+    $result = $stmt->get_result();
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o ID da pessoa e se ela está verificada
+        $row = $result->fetch_assoc();
+        $idPessoa = $row['Id_Pessoas'];
+        $verificado = $row['Verificado'] ?? 0;
+    } else {
+        // Registre um erro no arquivo de log do servidor
+        error_log("Nenhuma linha retornada pela consulta SQL: " . $stmt->error);
+        // Ou você pode imprimir uma mensagem de erro na tela para fins de depuração
+        echo "Nenhuma linha retornada pela consulta SQL: " . $stmt->error;
+    }
+    $stmt->close();
 }
+
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
 
@@ -60,6 +77,36 @@ if ($stmt) {
     die("Erro ao preparar a query.");
 }
 
+$query = "
+    SELECT
+        COUNT(*) AS total_inscricoes
+    FROM
+        Tb_Inscricoes ins
+    JOIN
+        Tb_Vagas va ON ins.Tb_Vagas_Tb_Anuncios_Id = va.Tb_Anuncios_Id
+    JOIN
+        Tb_Anuncios an ON va.Tb_Anuncios_Id = an.Id_Anuncios
+    JOIN
+        Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
+    WHERE
+        ins.Tb_Candidato_CPF = ?
+    ORDER BY
+        (va.Status = 'Encerrado'),
+        va.Data_de_Termino ASC
+";
+
+$stmt = $_con->prepare($query);
+$stmt->bind_param('s', $cpf);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Verifique se a consulta retornou resultados
+if ($result->num_rows > 0) {
+    // Obtenha o total de inscrições
+    $row = $result->fetch_assoc();
+    $total_inscricoes = $row['total_inscricoes'];
+
+}
 
 
 // verifica se o id da vaga doi mandando pela url 
@@ -196,6 +243,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     }
 
 }
+$totaldisponivel = 4 - $total_inscricoes;
 ?>
 
 <!DOCTYPE html>
@@ -210,6 +258,17 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
+    <style>
+        .mensagem {
+            text-align: center;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -297,16 +356,17 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         <div class="container">
             <div class="divInformacoesIniciais">
                 <div class="divIconeENome">
-                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/pbbsmkso.json" trigger="loop" state="loop-rotate"
-                        colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/pbbsmkso.json" trigger="loop"
+                        state="loop-rotate" colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
                     </lord-icon>
                     <label id="nomeArea">
                         <?php echo $Area; ?>
                     </label>
                 </div>
                 <div class="divIconeENome">
-                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/surcxhka.json" trigger="loop" stroke="bold"
-                        state="loop-roll" colors="primary:#242424,secondary:#c74b16" style="width:34px;height:34px">
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/surcxhka.json" trigger="loop"
+                        stroke="bold" state="loop-roll" colors="primary:#242424,secondary:#c74b16"
+                        style="width:34px;height:34px">
                     </lord-icon>
                     <label id="cidade">
                         <?php echo $Cidade; ?>
@@ -317,8 +377,8 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                     </label>
                 </div>
                 <div class="divIconeENome">
-                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/qvyppzqz.json" trigger="loop" stroke="bold"
-                        state="loop-oscillate" colors="primary:#242424,secondary:#c74b16"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/qvyppzqz.json" trigger="loop"
+                        stroke="bold" state="loop-oscillate" colors="primary:#242424,secondary:#c74b16"
                         style="width:34px;height:34px">
                     </lord-icon>
                     <label id="cargaHoraria">
@@ -358,48 +418,71 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
                         <div class="divDescricao">
                             <h3>Descrição da vaga</h3>
                             <p>
-                                <?php echo $Descricao; ?>
+                                <?php echo $Descricao; 
+                                echo $emailUsuario;?>
                             </p>
                         </div>
                     </div>
-                    <?php
-                    if ($autenticadoComoCandidato == false) {
-                        // Se o usuário não for candidato, o bloco está vazio, isso pode ser intencional
-                    }
-                    if ($Status == 'Aberto' && $candidatoInscrito && $autenticadoComoCandidato) {
-                        // Se a vaga estiver aberta e o candidato ainda não estiver inscrito
-                        ?>
+                    <?php if (!$autenticadoComoCandidato): ?>
+                        <!-- Se o usuário não estiver autenticado como candidato -->
+                    <?php endif; ?>
+
+                    <?php if ($Status == 'Aberto' && $candidatoInscrito && $autenticadoComoCandidato): ?>
                         <form method="POST"
                             action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
-                            <div class="divSendButton">
-                                <button>
-                                    <h4>Candidatar-se</h4>
-                                    <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                        colors="primary:#f5f5f5" style="width:80px;height:80px">
-                                    </lord-icon>
-                                </button>
-                            </div>
+                            <?php if ($verificado == 1): 
+                               echo ' <div class="divSendButton">';
+                               echo '     <button>';
+                               echo '         <h4>Candidatar-se</h4>';
+                               echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
+                                          colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                               echo '     </button>';
+                               echo ' </div>';
+                                ?>
+                            <?php elseif ($candidatoInscrito == false): ?>
+                                <div class="divSendButton">
+                                    <button disabled style="cursor: default; background-color: #723911;">
+                                        <h4>Já inscrito</h4>
+                                        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"
+                                            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>
+                                    </button>
+                                </div>
+                            <?php elseif ($Status != 'Aberto'): ?>
+                                <p>Status: Encerrado</p>
+                            <?php endif; ?>
                         </form>
-                        <?php
-                    } elseif ($candidatoInscrito == false) {
-                        // Se o candidato já estiver inscrito na vaga
-                        ?>
-                        <div class="divSendButton">
-                            <button disabled style="cursor: default; background-color: #723911;">
-                                <h4>Já inscrito</h4>
-                                <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"
-                                    colors="primary:#f5f5f5" style="width:80px;height:80px">
-                                </lord-icon>
-                            </button>
-                        </div>
-                        <?php
-                    } elseif ($Status != 'Aberto') {
-                        // Se a vaga não estiver aberta
-                        ?>
-                        <p>Status: Encerrado</p>
-                        <?php
-                    }
-                    ?>
+                    <?php else: ?>
+                        <form method="POST"
+                            action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
+                            <?php if ($verificado == 0 || $total_inscricoes <= 4): 
+                                echo ' <div class="divSendButton">';
+                               echo '     <button>';
+                               echo '         <h4>Candidatar-se</h4>';
+                               echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
+                                          colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                               echo '     </button>';
+                               echo ' </div>';
+                               ?>
+                            <?php elseif ($candidatoInscrito == false): ?>
+                                <div class="divSendButton">
+                                    <button disabled style="cursor: default; background-color: #723911;">
+                                        <h4>Já inscrito</h4>
+                                        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"
+                                            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>
+                                    </button>
+                                </div>
+                            <?php elseif ($Status != 'Aberto'): ?>
+                                <p>Status: Encerrado</p>
+                            <?php endif; ?>
+                            <!-- Mostrar a mensagem apenas quando a condição for falsa -->
+                            <?php if (!($verificado == 0 || $total_inscricoes <= 4)): ?>
+                                <div class="mensagem">
+                                    Você não tem anúncios disponíveis para salvar.
+                                </div>
+                            <?php endif; ?>
+                        </form>
+                    <?php endif; ?>
+
                 </div>
                 <?php
                 // Divida os requisitos e benefícios por vírgula e remova espaços em branco desnecessários
@@ -458,8 +541,6 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
 
         }
-
-
         // Obtenha as informações de endereço do HTML
         var enderecoDiv = document.getElementById('endereco');
         var rua = enderecoDiv.getAttribute('data-rua');
