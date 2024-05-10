@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionarios` (
   `Data` DATE NOT NULL,
   `Nivel` VARCHAR(55) NOT NULL,
   `Descricao` VARCHAR(255) NULL,
+  `ImagemQuestionario` VARCHAR(255) NULL,
   PRIMARY KEY (`Id_Questionario`)
 )
 ENGINE = InnoDB;
@@ -310,6 +311,17 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionario_Questoes` (
 )
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `SIAS`.`Tb_Empresa_Questionario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Empresa_Questionario` (
+    `Id_Empresa` VARCHAR(14) NOT NULL,
+    `Id_Questionario` INT NOT NULL,
+    PRIMARY KEY (`Id_Empresa`, `Id_Questionario`),
+    FOREIGN KEY (`Id_Empresa`) REFERENCES `Tb_Empresa` (`CNPJ`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`Id_Questionario`) REFERENCES `Tb_Questionarios` (`Id_Questionario`) ON DELETE CASCADE ON UPDATE CASCADE
+)
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
