@@ -111,6 +111,85 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <title>Editar Perfil</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
+    <style>
+        .modal {
+            display: none;
+            /* Esconde o modal por padrão */
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            /* Permite rolar se necessário */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Fundo translúcido para o overlay */
+        }
+
+        .modal-content {
+
+            background-color: white;
+            margin: 15% auto;
+            /* Centraliza o modal na tela */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            /* Tamanho do modal */
+            text-align: center;
+            /* Centraliza o texto */
+            border-radius: 10px;
+        }
+
+        .modal-content p {
+            text-align: center;
+            padding: 10px 20px;
+
+        }
+
+        .modal-content .let {
+            text-align: center;
+            padding: 10px 20px;
+
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .delete-button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            background-color: gray;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover,
+        .cancel-button:hover {
+            opacity: 0.8;
+        }
+    </style>
 </head>
 
 <body>
@@ -119,11 +198,10 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
-                src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-        <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
             <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
             <li><a href="../../../index.php">Deslogar</a></li>
@@ -132,39 +210,32 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>" class="btnVoltar"><img
-                    src="../../assets/images/icones_diversos/back.svg"></a>
+            <a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>" class="btnVoltar"><img src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php?id=<?php echo $idPessoa; ?>"
-                autocomplete="off" enctype="multipart/form-data">
+            <form method="post" action="../../../src/services/Perfil/PerfilEmpresa.php?id=<?php echo $idPessoa; ?>" autocomplete="off" enctype="multipart/form-data">
 
 
 
                 <div class="divBackgroundImg">
                     <div class="btnEditarFundo">
-                        <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
-                            colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:34px;height:34px">
+                        <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:34px;height:34px">
                         </lord-icon>
                     </div>
-                    <input type="file" id="fundo_upload" name="fundo_upload" style="display: none;"
-                        accept="image/jpeg, image/png">
+                    <input type="file" id="fundo_upload" name="fundo_upload" style="display: none;" accept="image/jpeg, image/png">
 
                     <!-- Adicione um campo de entrada de arquivo -->
-                    <input type="file" id="foto_perfil_upload" name="foto_perfil_upload" style="display: none;"
-                        accept="image/jpeg, image/png">
+                    <input type="file" id="foto_perfil_upload" name="foto_perfil_upload" style="display: none;" accept="image/jpeg, image/png">
 
                     <!-- Div de Foto de Perfil -->
                     <div class="divFotoDePerfil" id="divFotoDePerfil" style="position: relative;">
                         <!-- Div para exibir a imagem de perfil -->
-                        <div id="preview_container"
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;border-radius: 50%">
+                        <div id="preview_container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center;border-radius: 50%">
                         </div>
                         <!-- Div para o ícone de edição -->
                         <div class="divIconeEditar">
-                            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
-                                colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:110px;height:110px">
+                            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5" style="width:110px;height:110px">
                             </lord-icon>
                         </div>
                     </div>
@@ -179,16 +250,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="nome" name="nome" type="text" required
-                                        value="<?php echo $nomeEmpresa; ?>">
+                                    <input class="inputAnimado" id="nome" name="nome" type="text" required value="<?php echo $nomeEmpresa; ?>">
                                     <div class="labelLine">Nome da Empresa</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="area" name="area" type="text" list="areaList"
-                                        required value="<?php echo $areaEmpresa; ?>">
+                                    <input class="inputAnimado" id="area" name="area" type="text" list="areaList" required value="<?php echo $areaEmpresa; ?>">
                                     <div class="labelLine">Área da Empresa</div>
                                     <datalist id="areaList">
                                         <?php
@@ -204,8 +273,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="email" name="email" type="text" required
-                                        value="<?php echo $emailUsuario; ?>">
+                                    <input class="inputAnimado" id="email" name="email" type="text" required value="<?php echo $emailUsuario; ?>">
                                     <div class="labelLine">Email</div>
                                 </div>
                                 <small id="aviso" name="aviso" style="display: none;">Caso altere o email é necessário
@@ -213,8 +281,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text"
-                                        required value="<?php echo $telefoneEmpresa; ?>">
+                                    <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text" required value="<?php echo $telefoneEmpresa; ?>">
                                     <div class="labelLine">Telefone</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -223,16 +290,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="facebook" name="facebook" type="text"
-                                        value="<?php echo $facebookEmpresa; ?>">
+                                    <input class="inputAnimado" id="facebook" name="facebook" type="text" value="<?php echo $facebookEmpresa; ?>">
                                     <div class="labelLine">Facebook</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="github" name="github" type="text"
-                                        value="<?php echo $githubEmpresa; ?>">
+                                    <input class="inputAnimado" id="github" name="github" type="text" value="<?php echo $githubEmpresa; ?>">
                                     <div class="labelLine">GitHub</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -241,16 +306,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="inputsLadoALado">
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="linkedin" name="linkedin" type="text"
-                                        value="<?php echo $linkedinEmpresa; ?>">
+                                    <input class="inputAnimado" id="linkedin" name="linkedin" type="text" value="<?php echo $linkedinEmpresa; ?>">
                                     <div class="labelLine">LinkedIn</div>
                                 </div>
                                 <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
-                                    <input class="inputAnimado" id="instagram" name="instagram" type="text"
-                                        value="<?php echo $instagramEmpresa; ?>">
+                                    <input class="inputAnimado" id="instagram" name="instagram" type="text" value="<?php echo $instagramEmpresa; ?>">
                                     <div class="labelLine">Instagram</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -259,8 +322,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="divTextArea">
                             <div class="containerTextArea">
                                 <div class="contentInputTextArea">
-                                    <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text"
-                                        required><?php echo $sobreEmpresa; ?></textarea>
+                                    <textarea class="textAreaAnimada" name="sobre" id="sobre" type="text" required><?php echo $sobreEmpresa; ?></textarea>
                                     <div class="textArealabelLine">Sobre a Empresa</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -285,26 +347,34 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 box-shadow: 0px 0px 8px silver;
                                 align-content: center;
                                 margin-left: 35%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                                                    
-                                                    <a href="../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>" onclick="return confirmarExclusao();">Excluir Conta</a>
 
-                               
-                        
+                                <a href="#" onclick="openModal('../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>&action=delete')">Excluir Conta</a>
+                                
                             </div>
-        
 
-
-                            </div>
                         </form>
-                     
-
-
-                        <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
-
+                        
+                        <!-- Modal de Confirmação -->
+                        <div id="confirmDeleteModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>Confirmação de Deleção</h2>
+                                <p>Você tem certeza de que deseja deletar esta vaga?</p>
+                                <button class="cancel-button" onclick="closeModal()">Cancelar</button>
+                                <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
+                            </div>
+                        </div>
                 </div>
 
-            </form>
+
+
+
+                <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
+
         </div>
+
+        </form>
+    </div>
     </div>
     <footer>
         <a>Política de Privacidade</a>
@@ -331,19 +401,19 @@ if ($result_areas && $result_areas->num_rows > 0) {
         $urlImagemPerfil = $dadosEmpresa['Img_Perfil'];
         ?>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 // Adiciona um evento de clique ao botão de edição de foto de perfil
-                $('#divFotoDePerfil').click(function () {
+                $('#divFotoDePerfil').click(function() {
                     $('#foto_perfil_upload').click(); // Simula o clique no campo de upload de foto de perfil
                 });
 
                 // Evento disparado quando um arquivo é selecionado para a foto de perfil
-                $('#foto_perfil_upload').change(function () {
+                $('#foto_perfil_upload').change(function() {
                     var file = this.files[0];
                     var reader = new FileReader();
 
                     // Define o que fazer quando o arquivo é lido
-                    reader.onload = function (e) {
+                    reader.onload = function(e) {
                         $('#preview_container').css('background-image', 'url(' + e.target.result + ')'); // Define a imagem de fundo com a imagem carregada
                         $('#preview_container').show(); // Exibe o contêiner de pré-visualização
                     };
@@ -361,7 +431,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         $urlImagemFundo = $dadosEmpresa['Img_Banner'];
         ?>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 // Função para carregar a imagem de fundo com base na URL fornecida
                 function carregarImagemDeFundo(url) {
                     $('.divBackgroundImg').css('background-image', 'url(' + url + ')');
@@ -371,19 +441,19 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 carregarImagemDeFundo('<?php echo $urlImagemFundo; ?>');
 
                 // Adiciona um evento de clique ao botão de edição do fundo
-                $('.btnEditarFundo').click(function () {
+                $('.btnEditarFundo').click(function() {
                     // Simula o clique no campo de upload de fundo
                     $('#fundo_upload').click();
                 });
 
                 // Evento disparado quando um arquivo é selecionado
-                $('#fundo_upload').change(function () {
+                $('#fundo_upload').change(function() {
                     // Lê o arquivo selecionado
                     var file = this.files[0];
                     var reader = new FileReader();
 
                     // Define o que fazer quando o arquivo é lido
-                    reader.onload = function (e) {
+                    reader.onload = function(e) {
                         // Aplica a imagem de fundo à div
                         carregarImagemDeFundo(e.target.result);
                     };
@@ -401,7 +471,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <script>
             var idPessoa = <?php echo $idPessoa; ?>;
 
-            $(".btnModo").click(function () {
+            $(".btnModo").click(function() {
                 var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
 
 
@@ -409,11 +479,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 $.ajax({
                     url: "../../services/Temas/atualizar_tema.php",
                     method: "POST",
-                    data: { tema: novoTema, idPessoa: idPessoa },
-                    success: function () {
+                    data: {
+                        tema: novoTema,
+                        idPessoa: idPessoa
+                    },
+                    success: function() {
                         console.log("Tema atualizado com sucesso");
                     },
-                    error: function (error) {
+                    error: function(error) {
                         console.error("Erro ao salvar o tema:", error);
                     }
                 });
@@ -429,14 +502,27 @@ if ($result_areas && $result_areas->num_rows > 0) {
             });
         </script>
         <script>
-    function confirmarExclusao() {
-        if (confirm("Tem certeza de que deseja excluir sua conta? Essa ação não pode ser desfeita.")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
+            function openModal(deleteUrl) {
+                // Define o URL de deleção
+                document.getElementById("confirmDeleteButton").setAttribute("href", deleteUrl);
+                // Exibe o modal
+                document.getElementById("confirmDeleteModal").style.display = "block";
+            }
+
+            function closeModal() {
+                // Fecha o modal
+                document.getElementById("confirmDeleteModal").style.display = "none";
+            }
+
+            document.querySelector(".close-button").addEventListener("click", closeModal);
+
+            // Fecha o modal ao clicar fora do modal
+            window.onclick = function(event) {
+                if (event.target == document.getElementById("confirmDeleteModal")) {
+                    closeModal();
+                }
+            };
+        </script>
 
 </body>
 
