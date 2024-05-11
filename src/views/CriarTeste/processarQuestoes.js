@@ -6,7 +6,18 @@ function enviarDados() {
         nivel: document.getElementById('nivel').value,
         duracao: document.getElementById('duracao').value,
         competencias: document.getElementById('competencias').value,
-        questoes: []
+        area: document.getElementById('area').value,
+        data: document.getElementById('data').value,
+        questionario: {
+            titulo: document.getElementById('titulo').value,
+            nivel: document.getElementById('nivel').value,
+            duracao: document.getElementById('duracao').value,
+            competencias: document.getElementById('competencias').value,
+            area: document.getElementById('area').value,
+            data: document.getElementById('data').value,
+            questoes: []
+        },
+        emailUsuario: emailUsuario
     };
 
     // Reunir dados das questões dinâmicas
@@ -20,10 +31,9 @@ function enviarDados() {
             let correta = resposta.querySelector('input[type="radio"]').checked;
             alternativas.push({ resposta: textoResposta, correta: correta });
         });
-        formData.questoes.push({ pergunta: pergunta, alternativas: alternativas });
+        formData.questionario.questoes.push({ pergunta: pergunta, alternativas: alternativas });
     });
 
-    // Exibir os dados no console
     console.log(formData);
 
     // Enviar dados via AJAX

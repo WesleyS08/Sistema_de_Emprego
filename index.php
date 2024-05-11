@@ -202,7 +202,12 @@ function determinarImagemCategoria($categoria)
     </div>
 
     <?php
-    $sql = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios LIMIT 4"; // Limitar a 4 questionários para não ficar muitos questionários poluindo a tela    
+    $sql = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
+    FROM Tb_Questionarios q
+    INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+    INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+    INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas
+    LIMIT 4"; // Limitar a 4 questionários para não ficar muitos questionários poluindo a tela    
     $result = $_con->query($sql);
     ?>
     <div class="divCommon">
@@ -220,6 +225,8 @@ function determinarImagemCategoria($categoria)
                         $idQuestionario = $row['Id_Questionario'];
                         $nome = $row['Nome'];
                         $area = $row['Area'];
+                        $nomeEmpresa = $row['Nome_da_Empresa'];
+
                         // Verifica se é hora de começar uma nova linha
                         if ($counter % 2 == 0) {
                             echo '<div class="gridTestes" style="margin-right: 12px;">';
@@ -247,7 +254,7 @@ function determinarImagemCategoria($categoria)
                                         // Exibir o nome limitado
                                         echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
                                         ?>
-                                        <small class="autorTeste">Por Jefferson Evangelista</small>
+                                        <small class="autorTeste"><?php echo $nomeEmpresa; ?></small>
                                         <div class="divCompetencias">
                                             <small>Competências: </small>
                                             <small class="competenciasTeste"><?php echo $area; ?></small>

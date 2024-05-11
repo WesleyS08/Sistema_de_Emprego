@@ -18,7 +18,11 @@ if(isset($_GET['id'])) {
     }
 
     // Consulta para obter os detalhes do questionário com base no ID
-    $sql = "SELECT Nome, Area, Data, Nivel, Descricao FROM Tb_Questionarios WHERE Id_Questionario = $id_questionario";
+    $sql = "SELECT q.Nome, q.Area, q.DataQuestionario, q.Nivel, q.Descricao, q.Tempo, e.Nome_da_Empresa
+            FROM Tb_Questionarios q
+            JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+            JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+            WHERE q.Id_Questionario = $id_questionario";
     $result = $_con->query($sql);
     
     if ($result->num_rows > 0) {
@@ -27,8 +31,10 @@ if(isset($_GET['id'])) {
         $nomeQuestionario = $row['Nome'];
         $areaQuestionario = $row['Area'];
         $descricaoQuestionario = $row['Descricao'];
-        $dataQuestionario = $row['Data'];
-        $nivelQuestionario = $row['Nivel']        
+        $dataQuestionario = $row['DataQuestionario'];
+        $nivelQuestionario = $row['Nivel'];
+        $duracaoTeste = $row['Tempo'];
+        $nomeEmpresa = $row['Nome_da_Empresa'];
 ?>
 
 <!DOCTYPE html>
@@ -75,9 +81,9 @@ if(isset($_GET['id'])) {
                 </div>
                 <div class="divInformacoes">
                     <div>
-                        <div class="divLabels"><label>Por: </label><label id="autorTeste">Microsoft</label></div>
+                        <div class="divLabels"><label>Por: </label><label id="autorTeste"><?php echo $nomeEmpresa ?></label></div>
                         <div class="divLabels"><label>Nível: </label><label id="nivelTeste"><?php echo $nivelQuestionario ?></label></div>                    
-                        <div class="divLabels"><label>Duração: </label><label id="duracaoTeste">30 minutos</label></div>
+                        <div class="divLabels"><label>Duração: </label><label id="duracaoTeste"><?php echo $duracaoTeste . " minutos"; ?></label></div>
                         <div class="divLabels"><label>Questões: </label><label id="quantidadeQuestoes"><?php echo $totalQuestoes ?></label></div>     
                     </div>
                 </div>

@@ -187,6 +187,90 @@ if ($stmt) {
 }
 
 $totaldisponivel = 4 - $total_anuncios;
+
+// Recupere o CNPJ da empresa associada ao e-mail do usuário
+$sql_empresa = "SELECT e.CNPJ 
+                FROM Tb_Empresa e 
+                INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas 
+                WHERE p.Email = ?";
+$stmt_empresa = $_con->prepare($sql_empresa);
+if ($stmt_empresa) {
+    // Vincule o parâmetro
+    $stmt_empresa->bind_param("s", $emailUsuario);
+    
+    // Execute a consulta
+    $stmt_empresa->execute();
+    
+    // Obtenha o resultado
+    $result_empresa = $stmt_empresa->get_result();
+    
+    // Verifique se a consulta retornou resultados
+    if ($result_empresa->num_rows > 0) {
+        // Obtenha o CNPJ da empresa
+        $row_empresa = $result_empresa->fetch_assoc();
+        $cnpj_empresa = $row_empresa["CNPJ"];
+        
+        // Consulta SQL para selecionar as avaliações apenas da empresa específica
+        $sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
+                           FROM Tb_Questionarios q
+                           INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+                           INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+                           WHERE e.CNPJ = ?";
+        
+        $stmt_avaliacoes = $_con->prepare($sql_avaliacoes);
+        if ($stmt_avaliacoes) {
+            // Vincule o parâmetro
+            $stmt_avaliacoes->bind_param("s", $cnpj_empresa);
+            
+            // Execute a consulta
+            $stmt_avaliacoes->execute();
+            
+            // Obtenha o resultado
+            $result_avaliacoes = $stmt_avaliacoes->get_result();
+        }
+    }
+}
+
+// Recupere o CNPJ da empresa associada ao e-mail do usuário
+$sql_empresa = "SELECT e.CNPJ 
+        FROM Tb_Empresa e 
+        INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas 
+        WHERE p.Email = ?";
+$stmt_empresa = $_con->prepare($sql_empresa);
+if ($stmt_empresa) 
+// Vincule o parâmetro
+$stmt_empresa->bind_param("s", $emailUsuario);
+
+// Execute a consulta
+$stmt_empresa->execute();
+
+// Obtenha o resultado
+$result_empresa = $stmt_empresa->get_result();
+
+// Verifique se a consulta retornou resultados
+if ($result_empresa->num_rows > 0) 
+// Obtenha o CNPJ da empresa
+$row_empresa = $result_empresa->fetch_assoc();
+$cnpj_empresa = $row_empresa["CNPJ"];
+
+// Consulta SQL para selecionar as avaliações apenas da empresa específica
+$sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
+                    FROM Tb_Questionarios q
+                    INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+                    INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+                    WHERE e.CNPJ = ?";
+
+$stmt_avaliacoes = $_con->prepare($sql_avaliacoes);
+if ($stmt_avaliacoes) 
+    // Vincule o parâmetro
+    $stmt_avaliacoes->bind_param("s", $cnpj_empresa);
+    
+    // Execute a consulta
+    $stmt_avaliacoes->execute();
+    
+    // Obtenha o resultado
+    $result_avaliacoes = $stmt_avaliacoes->get_result();
+
 ?>
 
 
@@ -363,7 +447,7 @@ $totaldisponivel = 4 - $total_anuncios;
     <div class="divCarrossel">
         <div class="divTituloComBtn">
             <h2>Minhas avaliações</h2>
-            <button class="btnAdicionar">
+            <button class="btnAdicionar" onclick="window.location.href='../criarTeste/criarTeste.php'">
                 <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"
                     state="hover-rotation" colors="primary:#000000,secondary:#ffffff" style="width:40px;height:40px">
                 </lord-icon>
@@ -377,67 +461,53 @@ $totaldisponivel = 4 - $total_anuncios;
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
             <div class="carrosselBox" id="carrosselTestes">
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/excel.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Excel Básico</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/figma.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Figma Intermediário</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/word.svg"></img>
-                        <div class="divDetalhesTeste">
-                            <div>
-                                <p class="nomeTeste">Word Avançado</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-                <a class="testeCarrosselLink">
-                    <article class="testeCarrossel">
-                        <div class="divAcessos">
-                            <img src="../../../imagens/people.svg"></img>
-                            <small class="qntdAcessos">800</small>
-                        </div>
-                        <img src="../../../imagens/python.svg"></img>
-                        <div class="testeDetalhes">
-                            <div>
-                                <p class="nomeTeste">Python Básico</p>
-                                <small class="competenciasTeste">Estágio, TI, Administração, Negócios</small>
-                            </div>
-                        </div>
-                    </article>
-                </a>
-            </div>
+            <?php
+            if ($result_avaliacoes->num_rows > 0) {
+                // Loop através dos resultados da consulta
+                while ($row_avaliacao = $result_avaliacoes->fetch_assoc()) {
+                    // Extrai os dados do teste
+                    $idQuestionario = $row_avaliacao['Id_Questionario'];
+                    $nome = $row_avaliacao['Nome'];
+                    $area = $row_avaliacao['Area'];
+                    $nomeEmpresa = $row_avaliacao['Nome_da_Empresa'];
+                    // Saída HTML para cada teste no carrossel
+                    echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
+                    echo '<article class="testeCarrossel">';
+                    echo '<div class="divAcessos">';
+                    echo '<img src="../../../imagens/people.svg"></img>';
+                    echo '<small class="qntdAcessos">800</small>';
+                    echo '</div>';
+                    echo '<img src="../../../imagens/python.svg"></img>';
+                    echo '<div class="testeDetalhes">';
+                    echo '<div>';
+                    $limite = 21;
+
+                    // Obtenha o nome e limite-o se necessário
+                    if (strlen($nome) > $limite) {
+                        $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
+                    } else {
+                        $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                    }
+
+                    // Exibir o nome limitado
+                    echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
+                    echo '<small class="competenciasTeste">' . $area . '</small>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</article>';
+                    echo '</a>';
+                }
+                echo '<div class="divBtnVerMais">';
+                echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';
+                echo '<button class="verMais">Ver mais</button>';
+                echo '</a>';
+                echo '</div>';
+
+            } else {
+                echo "<p>Nenhum teste encontrado.</p>";
+            }
+            ?>
+            </div>            
         </div>
     </div>
     <div class="divCarrossel">

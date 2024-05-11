@@ -20,6 +20,9 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
 }
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 
+// Armazenando o email do usuário no JSON
+echo "<script>var emailUsuario = '" . $emailUsuario . "';</script>";
+
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +61,7 @@ $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : ''
                 <div class="containerSuperior">
                     <div class="divFlexSuperior">
                         <div class="divImgTeste">
-                            <div class="divIconeEditar">
+                            <div class="divIconeEditar" id="divIconeEditar">
                                 <lord-icon
                                     src="https://cdn.lordicon.com/wuvorxbv.json"
                                     trigger="hover"
@@ -67,7 +70,7 @@ $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : ''
                                     style="width:110px;height:110px">
                                 </lord-icon>
                             </div>                            
-                            <p>Adicionar Imagem</p>
+                            <p id="textoAdicionarImagem">Adicionar Imagem</p>                            
                         </div>
                         <div class="divInputs">
                             <div class="divFlex">
@@ -98,6 +101,20 @@ $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : ''
                                     </div>
                                     <small name="aviso"></small>
                                 </div>
+                            </div>
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" name="area" id="area" type="text" placeholder="Area do questionário" required>
+                                    <div class="labelLine">Area</div>
+                                </div>
+                                <small name="aviso"></small>
+                            </div>
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" name="data" id="data" type="date" placeholder="Data do questionário" required>
+                                    <div class="labelLine"></div>
+                                </div>
+                                <small name="aviso"></small>
                             </div>
                             <div class="containerInput">
                                 <div class="contentInput">
@@ -139,11 +156,13 @@ $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : ''
         <a>Nosso contato</a>
         <a>Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
-    </footer>     
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>     
     <script src="adicionaQuestao.js"></script>
     <script src="mostraIcone.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>          
     <script src="../../../modoNoturno.js"></script>
     <script src="processarQuestoes.js"></script>
+    <script src="imagemTeste.js"></script>
 </body>
 </html>

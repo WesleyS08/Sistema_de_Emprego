@@ -106,8 +106,9 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Questionarios` (
   `Id_Questionario` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(255) NOT NULL,
   `Area` VARCHAR(255) NULL,
-  `Data` DATE NOT NULL,
+  `DataQuestionario` DATE NOT NULL,
   `Nivel` VARCHAR(55) NOT NULL,
+  `Tempo` VARCHAR(50) NOT NULL,
   `Descricao` VARCHAR(255) NULL,
   `ImagemQuestionario` VARCHAR(255) NULL,
   PRIMARY KEY (`Id_Questionario`)

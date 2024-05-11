@@ -89,7 +89,11 @@ if ($result_verificar_candidato === false) {
 }
 
 // Consulta para puxar os questionários
-$sql_puxarQuestionarios = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios ORDER BY RAND() LIMIT 5";
+$sql_puxarQuestionarios = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
+FROM Tb_Questionarios q
+INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas ORDER BY RAND() LIMIT 5";
 $stmt_questionarios = $_con->prepare($sql_puxarQuestionarios);
 $stmt_questionarios->execute();
 $result_questionarios = $stmt_questionarios->get_result();
@@ -482,6 +486,7 @@ function determinarImagemCategoria($categoria)
                             $idQuestionario = $row['Id_Questionario'];
                             $nome = $row['Nome'];
                             $area = $row['Area'];
+                            $nomeEmpresa = $row['Nome_da_Empresa'];
                             // Saída HTML para cada questionário no carrossel
                             echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
                             echo '<article class="testeCarrossel">';
@@ -503,7 +508,7 @@ function determinarImagemCategoria($categoria)
 
                             // Exibir o nome limitado
                             echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
-                            echo '<small class="autorTeste">Por Jefferson Evangelista</small><br>';
+                            echo '<small class="autorTeste">' . $nomeEmpresa . '</small><br>';
                             echo '<small class="competenciasTeste">' . $area . '</small>';
                             echo '</div>';
                             echo '</div>';

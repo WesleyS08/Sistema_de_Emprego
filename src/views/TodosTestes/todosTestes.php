@@ -1,7 +1,11 @@
 <?php
 include "../../services/conexão_com_banco.php";
 
-$sql = "SELECT Id_Questionario, Nome, Area FROM Tb_Questionarios";
+$sql = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
+FROM Tb_Questionarios q
+INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas";
 $result = $_con->query($sql);
 
 $_con->close();
@@ -101,6 +105,7 @@ $_con->close();
                         $idQuestionario = $row['Id_Questionario'];
                         $nome = $row['Nome'];
                         $area = $row['Area'];
+                        $nomeEmpresa = $row['Nome_da_Empresa'];
                 
                         // Saída HTML para cada questionário
                         echo "<a class='testeCarrosselLink' href='../PreparaTeste/preparaTeste.php?id=$idQuestionario'>";
@@ -113,7 +118,7 @@ $_con->close();
                         echo '<div class="divDetalhesTeste divDetalhesTesteCustom">';
                         echo '<div>';
                         echo '<p class="nomeTeste">' . $nome . '</p>';
-                        echo '<small class="autorTeste">Por Jefferson Evangelista</small><br>';
+                        echo '<small class="autorTeste">' . $nomeEmpresa . '</small><br>';
                         echo '<small class="competenciasTeste">' . $area . '</small>';
                         echo '</div>';
                         echo '</div>';

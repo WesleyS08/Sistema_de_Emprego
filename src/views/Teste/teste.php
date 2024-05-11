@@ -14,13 +14,12 @@ if (!isset($_SESSION['email_session']) && !isset($_SESSION['google_session'])) {
 // Recuperar o ID do questionário da URL
 $id_questionario = $_GET['id'];
 
-// Selecionar as questões do banco de dados com base no ID do questionário
-$sql = "SELECT q.Id_Questao, q.Enunciado, a.Id_Alternativa, a.Texto
-        FROM Tb_Questoes q
-        INNER JOIN Tb_Alternativas a ON q.Id_Questao = a.Tb_Questoes_Id_Questao
-        ORDER BY q.Id_Questao, a.Id_Alternativa";
-
-$sql = "SELECT Nome, Nivel FROM Tb_Questionarios WHERE Id_Questionario = $id_questionario";
+// Selecionar os dados do questionário e o nome da empresa relacionada
+$sql = "SELECT q.Nome, q.Nivel, q.Tempo, e.Nome_da_Empresa 
+        FROM Tb_Questionarios q
+        JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+        JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+        WHERE q.Id_Questionario = $id_questionario";
 
 $result = $_con->query($sql);
 
@@ -28,6 +27,8 @@ if ($result) {
     $row = mysqli_fetch_assoc($result);
     $nomeQuestionario = $row['Nome'];
     $nivelQuestionario = $row['Nivel'];
+    $tempo = $row['Tempo'];
+    $nomeEmpresa = $row['Nome_da_Empresa'];
 }
 
 ?>
@@ -48,7 +49,7 @@ if ($result) {
             <h2>Sair</h2>
         </a>
         <div style="display: flex;">
-            <h2 id="minutos">30</h2>
+            <h2 id="minutos"><?php echo $tempo ?></h2>
             <h2>:</h2>
             <h2 id="segundos">00</h2> 
         </div>
@@ -60,8 +61,8 @@ if ($result) {
                 <div class="divTitulo">                
                     <h2><?php echo $nomeQuestionario ?></h2>
                     <div class="divSubtitulo">
-                        <p>Por:&nbsp;</p>
-                        <p id="autorTeste">Microsoft</p>
+                        <p>Criado por:&nbsp;</p>
+                        <p id="autorTeste"><?php echo $nomeEmpresa ?></p>
                     </div>
                     <div class="divSubtitulo">
                         <p>Nível:&nbsp;</p>
