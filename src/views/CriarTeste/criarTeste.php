@@ -41,7 +41,8 @@ echo "<script>var emailUsuario = '" . $emailUsuario . "';</script>";
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+                src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
