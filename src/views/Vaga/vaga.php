@@ -197,38 +197,27 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         // Verifica se o usuário já se inscreveu para a vaga (apenas se for um candidato)
 
     }
-    $sqlVerificaInscricao = "
-    SELECT 1  -- O número '1' é suficiente para verificar a existência
-    FROM Tb_Inscricoes 
-    WHERE Tb_Vagas_Tb_Anuncios_Id = ?
-      AND Tb_Candidato_CPF = ?
-    LIMIT 1  -- Limita a uma linha, pois só queremos saber se há inscrição
-";
+// SQL para verificar se o candidato já está inscrito
+$sqlVerificaInscricao = "SELECT 1
+                         FROM Tb_Inscricoes 
+                         WHERE Tb_Vagas_Tb_Anuncios_Id = ?
+                         AND Tb_Candidato_CPF = ?
+                         LIMIT 1";
 
-    // Preparar a consulta para prevenir injeção de SQL
-    $stmt = $_con->prepare($sqlVerificaInscricao);
+// Preparar a consulta para prevenir injeção de SQL
+$stmt = $_con->prepare($sqlVerificaInscricao);
 
-    // Vincular parâmetros para segurança
-    $stmt->bind_param('is', $idAnuncio, $cpfCandidato);
+// Vincular parâmetros para segurança
+$stmt->bind_param('is', $idAnuncio, $cpfCandidato);
 
-    // Executar a consulta
-    $stmt->execute();
+// Executar a consulta
+$stmt->execute();
 
-    // Obter o resultado
-    $result = $stmt->get_result();
+// Obter o resultado
+$result = $stmt->get_result();
 
-    // Verificar se há alguma linha
-    $candidatoInscrito = ($result->num_rows > 0);
-
-    // Se o candidato já está inscrito, resultado será true
-    if ($candidatoInscrito) {
-
-        $candidatoInscrito = false;
-    } else {
-        // Se o resultado for falso, significa que o candidato não está inscrito
-        $candidatoInscrito = true;
-    }
-
+// Verificar se o candidato está inscrito
+$candidatoInscrito = ($result->num_rows > 0);
 
     // Terceira consulta para obter o status da vaga
     $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = $idAnuncio";
@@ -418,70 +407,66 @@ $totaldisponivel = 4 - $total_inscricoes;
                         <div class="divDescricao">
                             <h3>Descrição da vaga</h3>
                             <p>
-                                <?php echo $Descricao; 
-                                echo $emailUsuario;?>
+                                <?php echo $Descricao;
+                                echo $total_inscricoes; ?>
                             </p>
                         </div>
                     </div>
-                    <?php if (!$autenticadoComoCandidato): ?>
-                        <!-- Se o usuário não estiver autenticado como candidato -->
-                    <?php endif; ?>
 
-                    <?php if ($Status == 'Aberto' && $candidatoInscrito && $autenticadoComoCandidato): ?>
-                        <form method="POST"
-                            action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
-                            <?php if ($verificado == 1): 
-                               echo ' <div class="divSendButton">';
-                               echo '     <button>';
-                               echo '         <h4>Candidatar-se</h4>';
-                               echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                          colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                               echo '     </button>';
-                               echo ' </div>';
-                                ?>
-                            <?php elseif ($candidatoInscrito == false): ?>
-                                <div class="divSendButton">
-                                    <button disabled style="cursor: default; background-color: #723911;">
-                                        <h4>Já inscrito</h4>
-                                        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"
-                                            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>
-                                    </button>
-                                </div>
-                            <?php elseif ($Status != 'Aberto'): ?>
-                                <p>Status: Encerrado</p>
-                            <?php endif; ?>
-                        </form>
-                    <?php else: ?>
-                        <form method="POST"
-                            action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
-                            <?php if ($verificado == 0 || $total_inscricoes <= 4): 
+                    <?php
+                    switch ($idPessoa) {
+                        case null:
+                            
+                            break;
+                        default:
+                            if ($Status == 'Aberto' && !$candidatoInscrito && $verificado == 1) {
+                                // Carregue o formulário de candidatura
+                                echo '<form method="POST"';
+                                echo 'action="../../services/cadastros/processar_candidatura.php?id_anuncio=' . $idAnuncio . '"> ';
                                 echo ' <div class="divSendButton">';
-                               echo '     <button>';
-                               echo '         <h4>Candidatar-se</h4>';
-                               echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                          colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                               echo '     </button>';
-                               echo ' </div>';
-                               ?>
-                            <?php elseif ($candidatoInscrito == false): ?>
-                                <div class="divSendButton">
-                                    <button disabled style="cursor: default; background-color: #723911;">
-                                        <h4>Já inscrito</h4>
-                                        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"
-                                            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>
-                                    </button>
-                                </div>
-                            <?php elseif ($Status != 'Aberto'): ?>
-                                <p>Status: Encerrado</p>
-                            <?php endif; ?>
-                            <!-- Mostrar a mensagem apenas quando a condição for falsa -->
-                            <?php if (!($verificado == 0 || $total_inscricoes <= 4)): ?>
-                                <div class="mensagem">
+                                echo '     <button>';
+                                echo '         <h4>Candidatar-se</h4>';
+                                echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                                echo '     </button>';
+                                echo ' </div>';
+                            } elseif ($Status == 'Aberto' && $candidatoInscrito == 1  && $verificado == 1) {
+                                // Indique que o candidato já está inscrito
+                                echo '    <div class="divSendButton">';
+                                echo '    <button disabled style="cursor: default; background-color: #723911;">';
+                                echo '        <h4>Já inscrito</h4>';
+                                echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"';
+                                echo '            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                                echo '    </button>';
+                                echo '</div>';
+                            } elseif ($Status != 'Aberto') {
+                                // Indique que a vaga está encerrada
+                                echo '<p>Status: Encerrado</p>';
+                            } elseif ($verificado == 0 && !$candidatoInscrito && $total_inscricoes != 0) {
+                                // Carregue o formulário de candidatura
+                                echo '<form method="POST" action="../../services/cadastros/processar_candidatura.php?id_anuncio=' . $idAnuncio . '"> ';
+                                echo ' <div class="divSendButton">';
+                                echo '     <button>';
+                                echo '         <h4>Candidatar-se</h4>';
+                                echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
+                                            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                                echo '     </button>';
+                                echo ' </div>';
+                            } elseif ($verificado == 0 &&  $candidatoInscrito == 1 && $total_inscricoes != 0) {
+                                echo '    <div class="divSendButton">';
+                                echo '    <button disabled style="cursor: default; background-color: #723911;">';
+                                echo '        <h4>Já inscrito</h4>';
+                                echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"';
+                                echo '            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                                echo '    </button>';
+                                echo '</div>';
+                            } elseif  ($verificado == 0 &&  $total_inscricoes <= 0) {
+                                echo '<div class="mensagem">
                                     Você não tem anúncios disponíveis para salvar.
-                                </div>
-                            <?php endif; ?>
-                        </form>
-                    <?php endif; ?>
+                                </div>';
+                            }
+                    }
+                    ?>
+
 
                 </div>
                 <?php
