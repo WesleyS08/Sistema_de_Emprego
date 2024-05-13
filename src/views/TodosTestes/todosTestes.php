@@ -33,6 +33,7 @@ $_con->close();
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../../../index.php">Deslogar</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
         </ul>
     </nav>
@@ -126,18 +127,13 @@ $_con->close();
                         echo '</a>';
                     }
                 } else {
-                    echo "Nenhum questionário encontrado.";
+                    echo "<p> Nenhum questionário encontrado.</p>";
                 }              
                 ?>
             </div>  
         </div>
     </div>
-    <footer>
-        <a>Política de Privacidade</a>
-        <a>Nosso contato</a>
-        <a>Avalie-nos</a>
-        <p class="sinopse">SIAS 2024</p>
-    </footer>    
+  
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="tituloDigitavel.js"></script>
     <script src="checkButtons.js"></script>
