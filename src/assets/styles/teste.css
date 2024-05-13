@@ -8,14 +8,21 @@
     position: fixed;
 }
 
-.btnVoltar{
+#btnVoltarTeste{
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: whitesmoke;
+    border-radius: 100%;
+    padding-right: 6px;
+    transition: 0.2s ease;
 }
 
-.btnVoltar:hover{
-    transform: scale(1.1);
+#btnVoltarTeste:hover{
+    transform: scale(1.08);
+    box-shadow: 0px 0px 8px var(--laranjaEscuro);
 }
 
 #btnModoTeste{    
@@ -103,4 +110,13 @@
 .divButton button{
     font-size: 16pt;
     width: 250px;
+    box-shadow: 0px 0px 8px silver;
+}
+
+.naoMuda{
+    color: whitesmoke;
+}
+
+h4{
+    font-size: 24pt;
 }

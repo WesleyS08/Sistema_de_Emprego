@@ -210,7 +210,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>" class="btnVoltar"><img src="../../assets/images/icones_diversos/back.svg"></a>
+            <a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>" class="btnVoltar"><img class="backImg" src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">

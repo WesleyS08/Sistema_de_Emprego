@@ -55,6 +55,7 @@ header div{
 .sectionButton button{
     font-size: 14pt;
     width: 200px;
+    box-shadow: 0px 0px 8px silver;
 }
 
 .statusTeste{

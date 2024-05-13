@@ -160,66 +160,66 @@ if ($stmt) {
             <div class="contentPerfil">
                 <h3>Contato</h3>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/nzixoeyk.json" trigger="hover" colors="primary:#000000"
+                    <lord-icon src="https://cdn.lordicon.com/nzixoeyk.json" class="iconeVaga" trigger="hover" colors="primary:#000000"
                         style="width:30px;height:30px">
                     </lord-icon>
                     <?php
                     if ($emailUsuario) {
-                        echo '<a id="email">' . $emailUsuario . '</a>'; // Não abra um bloco PHP dentro de um echo
+                        echo '<a id="email" class="infos">' . $emailUsuario . '</a>'; // Não abra um bloco PHP dentro de um echo
                     } else {
-                        echo '<span>Sem email salvo</span>'; // Feche o bloco PHP corretamente
+                        echo '<span class="infos">Sem email salvo</span>'; // Feche o bloco PHP corretamente
                     }
                     ?>
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/rsvfayfn.json" trigger="hover" colors="primary:#000000"
+                    <lord-icon src="https://cdn.lordicon.com/rsvfayfn.json" class="iconeVaga" trigger="hover" colors="primary:#000000"
                         style="width:30px;height:30px">
                     </lord-icon>
 
                     <?php
                     if ($telefoneEmpresa) {
-                        echo '<a id="telefone">' . $telefoneEmpresa . '</a>';
+                        echo '<a id="telefone" class="infos">' . $telefoneEmpresa . '</a>';
                     } else {
-                        echo '<span>Sem número salvo</span>';
+                        echo '<span class="infos">Sem número salvo</span>';
                     }
                     ?>
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover"
+                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" class="iconeVaga" trigger="hover"
                         colors="primary:#000,secondary:#ec6809" style="width:30px;height:30px">
                     </lord-icon>
 
                     <?php
                     if ($instagramEmpresa) { // Certifique-se de que a condição está correta
-                        echo '<a id="Instagram" href="https://www.instagram.com/' . $instagramEmpresa . '" style="text-decoration: none;">Instagram/' . $instagramEmpresa . '</a>';
+                        echo '<a id="Instagram" class="infos" href="https://www.instagram.com/' . $instagramEmpresa . '" style="text-decoration: none;">Instagram/' . $instagramEmpresa . '</a>';
                     } else {
-                        echo '<span>Sem conta no Instagram</span>';
+                        echo '<span class="infos">Sem conta no Instagram</span>';
                     }
                     ?>
 
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover"
+                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" class="iconeVaga" trigger="hover"
                         colors="primary:#000,secondary:#ec6809" style="width:30px;height:30px">
                     </lord-icon>
 
                     <?php
                     if ($linkedinEmpresa) { // Certifique-se de que a condição está correta
-                        echo '<a id="linkedin" href="https://www.linkedin.com' . $linkedinEmpresa . '" style="text-decoration: none;">linkedin/' . $linkedinEmpresa . '</a>';
+                        echo '<a id="linkedin" class="infos" href="https://www.linkedin.com' . $linkedinEmpresa . '" style="text-decoration: none;">linkedin/' . $linkedinEmpresa . '</a>';
                     } else {
-                        echo '<span>Sem conta no linkedin</span>';
+                        echo '<span class="infos">Sem conta no linkedin</span>';
                     }
                     ?>
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" trigger="hover"
+                    <lord-icon src="https://cdn.lordicon.com/jdsvypqr.json" class="iconeVaga" trigger="hover"
                         colors="primary:#000,secondary:#ec6809" style="width:30px;height:30px">
                     </lord-icon>
                     <?php
                     if ($facebookEmpresa) { // Certifique-se de que a condição está correta
-                        echo '<a id="facebook" href="https://web.facebook.com/' . $facebookEmpresa . '" style="text-decoration: none;">Facebook/' . $facebookEmpresa . '</a>';
+                        echo '<a id="facebook" class="infos" href="https://web.facebook.com/' . $facebookEmpresa . '" style="text-decoration: none;">Facebook/' . $facebookEmpresa . '</a>';
                     } else {
-                        echo '<span >Sem conta no Facebook</span>';
+                        echo '<span class="infos">Sem conta no Facebook</span>';
                     }
                     ?>
                 </div>

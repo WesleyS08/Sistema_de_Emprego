@@ -12,7 +12,6 @@ let titulos2 = document.querySelectorAll("h2");
 let titulos3 = document.querySelectorAll("h3");
 let articles = document.querySelectorAll("article");
 let perfis = document.querySelectorAll(".perfil");
-let verMaisBtns = document.querySelectorAll(".verMais");
 let labellines = document.querySelectorAll(".labelLine");
 let textAreaLabellines = document.querySelectorAll(".textArealabelLine");
 
@@ -91,10 +90,6 @@ function Noturno(){
         nomeAreas.forEach((nomeArea) => nomeArea.style.color="whitesmoke");
         legends.forEach((legend) => legend.style.backgroundColor="#1C1C1C");
 
-        verMaisBtns.forEach((verMais) => verMais.style.color="black");
-        verMaisBtns.forEach((verMais) => verMais.style.border="none");        
-        verMaisBtns.forEach((verMais) => verMais.style.backgroundColor="whitesmoke");
-
         backImgs.forEach((backImg) => backImg.src="../../assets/images/icones_diversos/backWhite.svg");        
         nomeFiltros.forEach((nomeFiltro) => nomeFiltro.style.color="whitesmoke");        
         
@@ -152,8 +147,6 @@ function Claro(){
         divsAcessos.forEach((divAcesso) => divAcesso.children[0].src="../../assets/images/icones_diversos/people.svg")
         nomeAreas.forEach((nomeArea) => nomeArea.style.color="black");
         legends.forEach((legend) => legend.style.backgroundColor="whitesmoke");
-
-        verMaisBtns.forEach((verMais) => verMais.style="initial");
         
         backImgs.forEach((backImg) => backImg.src="../../assets/images/icones_diversos/back.svg");        
         nomeFiltros.forEach((nomeFiltro) => nomeFiltro.style.color="black");

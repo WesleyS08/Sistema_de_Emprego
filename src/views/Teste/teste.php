@@ -44,14 +44,13 @@ if ($result) {
 </head>
 <body>
     <nav id="navFixa">          
-        <a class="btnVoltar" href="../PreparaTeste/preparaTeste.php">
-            <img src="../../assets/images/icones_diversos/backWhite.svg">                 
-            <h2>Sair</h2>
+        <a id="btnVoltarTeste" href="../PreparaTeste/preparaTeste.php">
+            <img src="../../assets/images/icones_diversos/backWhite.svg">
         </a>
         <div style="display: flex;">
-            <h2 id="minutos"><?php echo $tempo ?></h2>
-            <h2>:</h2>
-            <h2 id="segundos">00</h2> 
+            <h4 id="minutos"><?php echo $tempo ?></h4>
+            <h4>:</h4>
+            <h4 id="segundos">00</h4> 
         </div>
         <button class="btnModo" id="btnModoTeste"><img src="../../../imagens/moon.svg"></button> 
     </nav>

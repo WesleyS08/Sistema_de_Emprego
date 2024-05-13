@@ -136,7 +136,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn">
-            <a class="btnVoltar" href='../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'> <img
+            <a class="btnVoltar" href='../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'> <img class="backImg"
                     src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Editar Perfil</h2>
         </div>
@@ -290,7 +290,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     </div>
                     <div class="divCheckBox">
                         <input type="checkbox" id="pcd" name="pcd" <?php echo $pcdUsuario == 1 ? 'checked' : ''; ?>>
-                        <label for="pcd">PCD</label>
+                        <label for="pcd" class="infos">Pessoa com Deficiência</label>
                     </div>
                     <div class="divTextArea" id="divTextAreaCandidato">
                         <div class="containerTextArea">

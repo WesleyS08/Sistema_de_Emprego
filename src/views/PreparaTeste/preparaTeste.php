@@ -81,10 +81,10 @@ if(isset($_GET['id'])) {
                 </div>
                 <div class="divInformacoes">
                     <div>
-                        <div class="divLabels"><label>Por: </label><label id="autorTeste"><?php echo $nomeEmpresa ?></label></div>
-                        <div class="divLabels"><label>Nível: </label><label id="nivelTeste"><?php echo $nivelQuestionario ?></label></div>                    
-                        <div class="divLabels"><label>Duração: </label><label id="duracaoTeste"><?php echo $duracaoTeste . " minutos"; ?></label></div>
-                        <div class="divLabels"><label>Questões: </label><label id="quantidadeQuestoes"><?php echo $totalQuestoes ?></label></div>     
+                        <div class="divLabels"><label class="infos">Por: </label><label class="infos" id="autorTeste"><?php echo $nomeEmpresa ?></label></div>
+                        <div class="divLabels"><label class="infos">Nível: </label><label class="infos" id="nivelTeste"><?php echo $nivelQuestionario ?></label></div>                    
+                        <div class="divLabels"><label class="infos">Duração: </label><label class="infos" id="duracaoTeste"><?php echo $duracaoTeste . " minutos"; ?></label></div>
+                        <div class="divLabels"><label class="infos">Questões: </label><label class="infos" id="quantidadeQuestoes"><?php echo $totalQuestoes ?></label></div>     
                     </div>
                 </div>
             </section>            

@@ -275,13 +275,13 @@ function determinarImagemCategoria($categoria)
                         echo '</div>'; // Fecha a div "gridTestes"
                     }
                     ?>
-                </div>
-                <a href="src/views/Login/login.html"><button>Ver mais</button></a>
-                <?php
-                } else { // Se não houver resultados, exibe uma mensagem
-                    echo "<p style='text-align:center; margin:0 auto;'>Nenhum questionário encontrado.</p>";
-                }
-                ?>
+            </div>
+            <a href="src/views/Login/login.html"><button>Ver mais</button></a>
+            <?php
+            } else { // Se não houver resultados, exibe uma mensagem
+                echo "<p style='text-align:center; margin:0 auto;'>Nenhum questionário encontrado.</p>";
+            }
+            ?>
         </div>
     </div>
     <div class="divCommon">

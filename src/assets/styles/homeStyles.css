@@ -56,6 +56,10 @@ button:hover{
     height: 100px;
 }
 
+.btnVerMais button{
+    box-shadow: 0px 0px 8px silver;
+}
+
 h2{
     font-size: 24pt;
 }
