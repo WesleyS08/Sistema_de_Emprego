@@ -176,7 +176,7 @@ if ($result && mysqli_num_rows($result) > 0) {
             </div>
             <div class="contentPerfil" id="informacoesIniciais">
                 <div class="divFlex">
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                         src="https://cdn.lordicon.com/lenjvibx.json"
                         trigger="loop"
                         stroke="bold"
@@ -184,10 +184,10 @@ if ($result && mysqli_num_rows($result) > 0) {
                         colors="primary:#000000,secondary:#e88c30"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <label id="idadeUsuario"><?php echo $dataNascimentoUsuario, " Anos"?></label>
+                    <label id="idadeUsuario" class="infos"><?php echo $dataNascimentoUsuario, " Anos"?></label>
                 </div>
                 <div class="divFlex">
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                         src="https://cdn.lordicon.com/bgebyztw.json"
                         trigger="morph"
                         stroke="bold"
@@ -195,10 +195,10 @@ if ($result && mysqli_num_rows($result) > 0) {
                         colors="primary:#000000,secondary:#e88c30"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <label id="generoUsuario"><?php echo $generoUsuario?></label>
+                    <label id="generoUsuario" class="infos"><?php echo $generoUsuario?></label>
                 </div>
                 <div class="divFlex">
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                         src="https://cdn.lordicon.com/surcxhka.json"
                         trigger="loop"
                         stroke="bold"
@@ -206,17 +206,17 @@ if ($result && mysqli_num_rows($result) > 0) {
                         colors="primary:#000000,secondary:#e88c30"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <label id="localUsuario"><?php echo $cidadeUsuario?></label>
+                    <label id="localUsuario" class="infos"><?php echo $cidadeUsuario?></label>
                 </div>
                 <div class="divFlex">
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                         src="https://cdn.lordicon.com/lqcyrjta.json"
                         trigger="hover"
                         stroke="bold"
                         colors="primary:#000000,secondary:#e88c30"
                         style="width:30px;height:30px">
                     </lord-icon>                    
-                    <label id="pcdUsuario">
+                    <label id="pcdUsuario" class="infos">
                         <?php echo $pcdUsuario == 1 ? 'PCD: Sim' : 'PCD: Não'; ?>
                     </label>
                 </div>
@@ -330,7 +330,7 @@ if ($result && mysqli_num_rows($result) > 0) {
             </div>  
             <div class="contentPerfil" id="contentPerfilPontuacao">
                 <div class="divTituloDigitavel">
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                     src="https://cdn.lordicon.com/iawrhwdo.json"
                     trigger="loop"
                     stroke="bold"
@@ -339,7 +339,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                     style="width:40px;height:40px">
                 </lord-icon>
                     <h3>Pontos acumulados</h3>
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                     src="https://cdn.lordicon.com/iawrhwdo.json"
                     trigger="loop"
                     stroke="bold"
@@ -368,22 +368,22 @@ if ($result && mysqli_num_rows($result) > 0) {
             <div class="contentPerfil">
                 <h3>Contato</h3>
                 <div class="divFlexContato">
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                         src="https://cdn.lordicon.com/nzixoeyk.json"
                         trigger="hover"
                         colors="primary:#000000"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <a id="email"><?php echo $emailUsuario?></a>
+                    <a id="email" class="infos"><?php echo $emailUsuario?></a>
                 </div>           
                 <div class="divFlexContato">
-                    <lord-icon
+                    <lord-icon class="iconeVaga"
                         src="https://cdn.lordicon.com/rsvfayfn.json"
                         trigger="hover"
                         colors="primary:#000000"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <a id="telefone"><?php echo $telefoneUsuario ?></a>
+                    <a id="telefone" class="infos"><?php echo $telefoneUsuario ?></a>
                 </div>     
             </div>
         </div>

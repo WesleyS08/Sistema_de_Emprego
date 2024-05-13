@@ -39,6 +39,9 @@ let piscas = document.querySelectorAll(".pisca");
 let infos = document.querySelectorAll(".infos");
 let divIconeENomes = document.querySelectorAll(".divIconeENome");
 let iconesVaga = document.querySelectorAll(".iconeVaga");
+let divsAcessos = document.querySelectorAll(".divAcessos");
+let nomeAreas = document.querySelectorAll(".nomeArea");
+let legends = document.querySelectorAll("legend");
 
 let backImgs = document.querySelectorAll(".backImg");
 let nomeFiltros = document.querySelectorAll(".nomeFiltro");
@@ -84,6 +87,9 @@ function Noturno(){
         infos.forEach((info) => info.style.color="whitesmoke");        
         divIconeENomes.forEach((divIconeENome) => divIconeENome.style.color="whitesmoke");        
         iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#f5f5f5,secondary:#c76f16");   
+        divsAcessos.forEach((divAcesso) => divAcesso.children[0].src="../../assets/images/icones_diversos/peopleWhite.svg")
+        nomeAreas.forEach((nomeArea) => nomeArea.style.color="whitesmoke");
+        legends.forEach((legend) => legend.style.backgroundColor="#1C1C1C");
 
         verMaisBtns.forEach((verMais) => verMais.style.color="black");
         verMaisBtns.forEach((verMais) => verMais.style.border="none");        
@@ -143,6 +149,9 @@ function Claro(){
         infos.forEach((info) => info.style.color="black");
         divIconeENomes.forEach((divIconeENome) => divIconeENome.style.color="black");
         iconesVaga.forEach((iconeVaga) => iconeVaga.colors="primary:#242424,secondary:#c74b16");
+        divsAcessos.forEach((divAcesso) => divAcesso.children[0].src="../../assets/images/icones_diversos/people.svg")
+        nomeAreas.forEach((nomeArea) => nomeArea.style.color="black");
+        legends.forEach((legend) => legend.style.backgroundColor="whitesmoke");
 
         verMaisBtns.forEach((verMais) => verMais.style="initial");
         

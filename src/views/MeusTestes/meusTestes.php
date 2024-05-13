@@ -145,13 +145,13 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
         <h1 id="tituloAutomatico">M</h1>
-        <i></i>
+        <i class="pisca"></i>
     </div>
     <div class="divCommon">
         <div class="container">
             <div class="divPesquisa">
                 <div class="divFlexInput">
-                    <input class="inputPesquisa" placeholder="Pesquisar">
+                    <input class="inputPesquisa" type="text" placeholder="Pesquisar">
                 </div>
                 <div id="mostraFiltros">
                     <h3>Filtros</h3>
