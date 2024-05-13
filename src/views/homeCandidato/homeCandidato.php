@@ -344,7 +344,7 @@ function determinarImagemCategoria($categoria)
                     }
 
                     // Agora pode imprimir
-                    echo '<p class="empresaVaga"> Empresa:' . $nome_empresa . '</p>';
+                    echo '<p class="empresaVaga">' . $nome_empresa . '</p>';
 
 
                     // Exibir o status da vaga e a data de criação

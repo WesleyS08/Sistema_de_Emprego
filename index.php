@@ -181,7 +181,7 @@ function determinarImagemCategoria($categoria)
                     echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
 
                     // Exibir o nome da empresa
-                    echo '<p class="empresaVaga">Empresa: ' . $nome_empresa . '</p>'; // Corrigida a atribuição
+                    echo '<p class="empresaVaga">' . $nome_empresa . '</p>'; // Corrigida a atribuição
                 
                     echo '</section>';
 

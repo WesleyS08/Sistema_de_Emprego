@@ -272,7 +272,7 @@ if ($result === false) {
                     echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                     echo '<article class="post">';
                     echo '<div class="divAcessos">';
-                    echo '<img src="../../../imagens/people.svg"></img>';
+                    echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
                     echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
                     echo '</div>';
                     echo '<header>';
@@ -424,7 +424,7 @@ if ($result === false) {
                         area: area
                     },
                     success: function (response) {
-                        $('.divGridVagas').html(response);
+                        $('.divGridVagas').html(response).addClass('noturno');
                     },
                     error: function () {
                         console.error("Erro ao buscar vagas por título.");

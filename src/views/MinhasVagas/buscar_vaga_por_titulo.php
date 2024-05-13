@@ -81,7 +81,7 @@ if ($result->num_rows > 0) {
         $htmlVagas .=  '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . $row["Id_Anuncios"] . '">';
         $htmlVagas .=  '<article class="post">';
         $htmlVagas .=  '<div class="divAcessos">';
-        $htmlVagas .=  '<img src="../../../imagens/people.svg"></img>';
+        $htmlVagas .=  '<img src="../../assets/images/icones_diversos/people.svg></img>';
         $htmlVagas .=  '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
         $htmlVagas .=  '</div>';
         $htmlVagas .=  '<header>';
@@ -106,7 +106,7 @@ if ($result->num_rows > 0) {
         $htmlVagas .=  '</header>';
         $htmlVagas .=  '<section>';
         $htmlVagas .=  '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
-        $htmlVagas .=  '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
+        $htmlVagas .=  '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
         // Exibir o status da vaga e a data de criação
         $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
         $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";

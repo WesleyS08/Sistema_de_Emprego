@@ -51,7 +51,7 @@ if ($result->num_rows > 0) {
         $htmlVagas .= '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . $row["Id_Anuncios"] . '">';
         $htmlVagas .= '<article class="post">';
         $htmlVagas .= '<div class="divAcessos">';
-        $htmlVagas .= '<img src="../../../imagens/people.svg"></img>';
+        $htmlVagas .= '<img src="../../assets/images/icones_diversos/people.svg"></img>';
         $htmlVagas .= '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
         $htmlVagas .= '</div>';
         $htmlVagas .= '<header>';

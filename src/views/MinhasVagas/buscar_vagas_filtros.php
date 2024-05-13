@@ -109,7 +109,7 @@ if ($stmt) {
             echo '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . $row["Id_Anuncios"] . '">';
             echo '<article class="post">';
             echo '<div class="divAcessos">';
-            echo '<img src="../../../imagens/people.svg"></img>';
+            echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
             echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
             echo '</div>';
             echo '<header>';
@@ -138,7 +138,7 @@ if ($stmt) {
                 ? $row['Nome_da_Empresa']
                 : 'Confidencial';
             // Exibir o nome da empresa ou "Confidencial"
-            echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
+            echo '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
             // Exibir o status da vaga e a data de criação
             $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
             $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";

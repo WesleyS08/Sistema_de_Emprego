@@ -254,7 +254,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     echo '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . $row["Id_Anuncios"] . '">';
                     echo '<article class="post">';
                     echo '<div class="divAcessos">';
-                    echo '<img src="../../../imagens/people.svg"></img>';
+                    echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
                     echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
                     echo '</div>';
 
@@ -284,7 +284,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         ? $row['Nome_da_Empresa']
                         : 'Confidencial';
                     // Exibir o nome da empresa ou "Confidencial"
-                    echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
+                    echo '<p class="empresaVaga"> ' . $nomeEmpresa . '</p>';
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                     $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
@@ -423,65 +423,67 @@ if ($result_areas && $result_areas->num_rows > 0) {
 
     <!--================================ Buscar Vagas por filtros ======================================= -->
     <script>
-        $(document).ready(function () {
-            var idPessoa = <?php echo json_encode($idPessoa); ?>;
+    $(document).ready(function () {
+        var idPessoa = <?php echo json_encode($idPessoa); ?>;
 
-            // Quando houver uma mudança em qualquer filtro, salvar no localStorage
-            $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
-                salvarFiltros();
-                aplicarFiltros();
-            });
-            function salvarFiltros() {
-                // Obter valores dos filtros
-                var area = $('.selectArea').val();
-                var tipos = [];
-                $('.checkBoxTipo:checked').each(function () {
-                    tipos.push($(this).val());
-                });
-                var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked');
-                var termoPesquisa = $('.inputPesquisa').val();
-                // Salvar no localStorage
-                localStorage.setItem('area', area);
-                localStorage.setItem('tipos', JSON.stringify(tipos));
-                localStorage.setItem('apenasVagasAbertas', apenasVagasAbertas);
-                localStorage.setItem('termoPesquisa', termoPesquisa);
-            }
-            function aplicarFiltros() {
-                // Obter valores dos filtros
-                var area = localStorage.getItem('area');
-                var tipos = JSON.parse(localStorage.getItem('tipos')) || [];
-                var apenasVagasAbertas = JSON.parse(localStorage.getItem('apenasVagasAbertas'));
-                var termoPesquisa = localStorage.getItem('termoPesquisa') || "";
-                // Aplicar os valores do localStorage aos elementos da página
-                $('.selectArea').val(area);
-                $('.checkBoxTipo').each(function () {
-                    $(this).prop('checked', tipos.includes($(this).val()));
-                });
-                $('#apenasVagasAbertas').prop('checked', apenasVagasAbertas);
-                $('.inputPesquisa').val(termoPesquisa);
-
-                // Chamada AJAX para buscar vagas com base nos filtros
-                $.ajax({
-                    url: 'buscar_vagas_filtros.php',
-                    method: 'POST',
-                    data: {
-                        idPessoa: idPessoa,
-                        area: area,
-                        tipos: tipos,
-                        vagasAbertas: apenasVagasAbertas,
-                        termo: termoPesquisa
-                    },
-                    success: function (response) {
-                        $('.divGridVagas').html(response);
-                    },
-                    error: function () {
-                        console.error("Erro ao buscar vagas com filtros.");
-                    }
-                });
-            }
+        // Quando houver uma mudança em qualquer filtro, salvar no localStorage
+        $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
+            salvarFiltros();
             aplicarFiltros();
         });
-    </script>
+        function salvarFiltros() {
+            // Obter valores dos filtros
+            var area = $('.selectArea').val();
+            var tipos = [];
+            $('.checkBoxTipo:checked').each(function () {
+                tipos.push($(this).val());
+            });
+            var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked');
+            var termoPesquisa = $('.inputPesquisa').val();
+            // Salvar no localStorage
+            localStorage.setItem('area', area);
+            localStorage.setItem('tipos', JSON.stringify(tipos));
+            localStorage.setItem('apenasVagasAbertas', apenasVagasAbertas);
+            localStorage.setItem('termoPesquisa', termoPesquisa);
+        }
+        function aplicarFiltros() {
+            // Obter valores dos filtros
+            var area = localStorage.getItem('area');
+            var tipos = JSON.parse(localStorage.getItem('tipos')) || [];
+            var apenasVagasAbertas = JSON.parse(localStorage.getItem('apenasVagasAbertas'));
+            var termoPesquisa = localStorage.getItem('termoPesquisa') || "";
+            // Aplicar os valores do localStorage aos elementos da página
+            $('.selectArea').val(area);
+            $('.checkBoxTipo').each(function () {
+                $(this).prop('checked', tipos.includes($(this).val()));
+            });
+            $('#apenasVagasAbertas').prop('checked', apenasVagasAbertas);
+            $('.inputPesquisa').val(termoPesquisa);
+
+            // Chamada AJAX para buscar vagas com base nos filtros
+            $.ajax({
+                url: 'buscar_vagas_filtros.php',
+                method: 'POST',
+                data: {
+                    idPessoa: idPessoa,
+                    area: area,
+                    tipos: tipos,
+                    vagasAbertas: apenasVagasAbertas,
+                    termo: termoPesquisa
+                },
+                success: function (response) {
+                    // Adiciona a classe noturna para o elemento principal
+                    $('.divGridVagas').html(response).addClass('noturno');
+                },
+                error: function () {
+                    console.error("Erro ao buscar vagas com filtros.");
+                }
+            });
+        }
+        aplicarFiltros();
+    });
+</script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Função para alternar o estado do botão e salvar no localStorage
