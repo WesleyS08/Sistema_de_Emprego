@@ -181,7 +181,7 @@ function determinarImagemCategoria($categoria)
                     echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
 
                     // Exibir o nome da empresa
-                    echo '<p class="empresaVaga">' . $nome_empresa . '</p>'; // Corrigida a atribuição
+                    echo '<p class="empresaVaga">Empresa: ' . $nome_empresa . '</p>'; // Corrigida a atribuição
                 
                     echo '</section>';
 
@@ -279,7 +279,7 @@ function determinarImagemCategoria($categoria)
                 <a href="src/views/Login/login.html"><button>Ver mais</button></a>
                 <?php
                 } else { // Se não houver resultados, exibe uma mensagem
-                    echo "Nenhum questionário encontrado.";
+                    echo "<p style='text-align:center; margin:0 auto;'>Nenhum questionário encontrado.</p>";
                 }
                 ?>
         </div>
@@ -455,33 +455,6 @@ function determinarImagemCategoria($categoria)
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="tituloDigitavel.js"></script>
     <script src="carrossel.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("DOM carregado, verificando elementos..."); // Confirma se o evento foi acionado
-
-            setTimeout(function () {
-                console.log("Verificando elementos após 3 segundos..."); // Confirma se o código está sendo executado
-
-                var elementosEssenciais = [
-                    document.querySelector(".divCarrossel"), // Exemplos de elementos essenciais
-                    document.querySelector("nav"),
-                ];
-
-                var elementosAusentes = elementosEssenciais.some(function (elemento) {
-                    return !elemento; // Verifica se algum elemento está ausente
-                });
-
-                if (elementosAusentes) {
-                    console.warn("Elementos essenciais não encontrados, recarregando...");
-                    window.location.reload(); // Recarrega a página
-                } else {
-                    console.log("Todos os elementos carregados.");
-                }
-            }, 3000); // Aguarde 3 segundos
-        });
-
-
-    </script>
 
 </body>
 

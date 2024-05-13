@@ -504,7 +504,7 @@ if ($stmt_avaliacoes)
                 echo '</div>';
 
             } else {
-                echo "<p>Nenhum teste encontrado.</p>";
+                echo "<p style='text-align:center; margin:0 auto;'>Nenhum teste encontrado.</p>";
             }
             ?>
             </div>            
@@ -566,7 +566,7 @@ if ($stmt_avaliacoes)
 
                 } else {
                     // Caso não haja candidatos inscritos
-                    echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para suas vagas.</p>";
+                    echo "<p style='text-align:center; margin:0 auto;'>Não há candidatos inscritos para suas vagas.</p>";
 
                 }
                 ?>
