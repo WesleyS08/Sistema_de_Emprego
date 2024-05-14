@@ -1,4 +1,43 @@
+// Função para verificar se a pergunta, as respostas e a imagem estão preenchidas
+function validarFormulario() {
+    let questoes = document.querySelectorAll('.articleQuestao');
+    for (let i = 0; i < questoes.length; i++) {
+        let pergunta = questoes[i].querySelector('.divPergunta input').value.trim();
+        if (pergunta === "") {
+            alert("Por favor, preencha todas as perguntas antes de enviar.");
+            return false;
+        }
+        let respostas = questoes[i].querySelectorAll('.divAlternativas .inputSimples');
+        let todasRespostasVazias = true;
+        for (let j = 0; j < respostas.length; j++) {
+            if (respostas[j].value.trim() !== "") {
+                todasRespostasVazias = false;
+                break;
+            }
+        }
+        if (todasRespostasVazias) {
+            alert("Por favor, preencha todas as respostas antes de enviar.");
+            return false;
+        }
+    }
+
+    // Verificar se a imagem está selecionada
+    let imagem = document.getElementById('inputImagem').files[0];
+    if (!imagem) {
+        alert("Por favor, selecione uma imagem antes de enviar.");
+        return false;
+    }
+
+    return true;
+}
+
+// Função para enviar dados do formulário
 function enviarDados() {
+    // Verificar se o formulário é válido
+    if (!validarFormulario()) {
+        return; // Se o formulário não for válido, não envie os dados
+    }
+
     // Reunir dados do formulário
     let formData = {
         titulo: document.getElementById('titulo').value,
@@ -17,7 +56,7 @@ function enviarDados() {
             questoes: []
         },
         emailUsuario: emailUsuario,
-        idPessoa: document.getElementById('idPessoa').value // Obtém o valor do campo idPessoa
+        idPessoa: document.getElementById('idPessoa').value
     };
 
     // Reunir dados das questões dinâmicas
