@@ -230,7 +230,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     echo '<div class="divDetalhesTeste">';
                                     echo '<div>';
                                     echo '<p class="nomeTeste">' . $row_questionarios['Nome'] . '</p>'; // Exibindo o título do questionário
-                                    echo '<small class="autorTeste">Por ' . $row_questionarios["Nome_Empresa"] . '</small><br>'; // Exibindo o nome da empresa como autor
+                                    echo '<small class="autorTeste">' . $row_questionarios["Nome_Empresa"] . '</small><br>'; // Exibindo o nome da empresa como autor
                                     echo '<small class="competenciasTeste">' . $row_questionarios['Descricao'] . '</small>';
                                     echo '</div>';
                                     echo '</div>';

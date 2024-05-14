@@ -1,7 +1,8 @@
 <?php
-include "../../services/conexão_com_banco.php";
-
 session_start();
+
+// Inclua o arquivo de conexão com o banco de dados
+include "../../../src/services/conexão_com_banco.php";
 
 // Verificar se o usuário está autenticado como empresa
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
@@ -9,8 +10,11 @@ $emailUsuario = '';
 
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
 if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa') {
+    // Se estiver autenticado com e-mail/senha e for do tipo empresa
     $emailUsuario = $_SESSION['email_session'];
+
 } elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'empresa') {
+    // Se estiver autenticado com o Google e for do tipo empresa
     $emailUsuario = $_SESSION['google_session'];
 } else {
     // Se não estiver autenticado como empresa, redirecione para a página de login
@@ -18,6 +22,11 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_S
     exit;
 }
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+
+// Atribuindo os valores das variáveis de sessão
+$emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
+$tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
+
 
 // Primeira consulta para obter o ID da pessoa logada
 $sql = "SELECT Id_Pessoas, Verificado FROM Tb_Pessoas WHERE Email = ?";
@@ -41,6 +50,34 @@ if ($stmt) {
         // Trate o caso em que nenhum resultado é retornado
     }
     $stmt->close();
+}
+
+
+// Consulta para contar os anúncios por Id_Pessoas
+$sql_contar_anuncios = "SELECT COUNT(*) AS total_anuncios FROM Tb_Anuncios 
+    JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+    JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+    JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+    WHERE Tb_Pessoas.Id_Pessoas = ?";
+$stmt = $_con->prepare($sql_contar_anuncios);
+
+if ($stmt) {
+    // Vincule o parâmetro
+    $stmt->bind_param("i", $idPessoa);
+
+    // Execute a consulta
+    $stmt->execute();
+
+    // Obtenha o resultado
+    $result = $stmt->get_result();
+
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o total de anúncios
+        $row = $result->fetch_assoc();
+        $total_anuncios = $row['total_anuncios'];
+
+    }
 }
 
 // Quartar consulta para selecionar o tema que  a pessoa selecionou 
@@ -69,211 +106,26 @@ if ($stmt) {
     die("Erro ao preparar a query.");
 }
 
-$sql = "SELECT e.CNPJ
-        FROM Tb_Pessoas p
-        INNER JOIN Tb_Empresa e ON p.Id_Pessoas = e.Tb_Pessoas_Id
-        WHERE p.Id_Pessoas = '$idPessoa'";
+$sql_areas = "
+    SELECT DISTINCT Area 
+    FROM Tb_Anuncios 
+    ORDER BY Area ASC
+";
 
-$result = $_con->query($sql);
-
-if ($result->num_rows > 0) {
-    // Armazenar o CNPJ da empresa na variável $cnpj_empresa
-    $row = $result->fetch_assoc();
-    $cnpj_empresa = $row["CNPJ"];
-}
-// Preparar a consulta para obter o nome da empresa
-$sql_nome_empresa = "SELECT Nome_da_Empresa FROM Tb_Empresa WHERE CNPJ = ?";
-$stmt = $_con->prepare($sql_nome_empresa);
-
-// Bind the parameter
-$stmt->bind_param("s", $cnpj_empresa);
-
-// Execute
-$stmt->execute();
-
-// Fetch result
-$result = $stmt->get_result();
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $nome_empresa = $row['Nome_da_Empresa'];
-} else {
-    // Handle no results case
-    $nome_empresa = 'Empresa não encontrada';
-}
-// Consulta para contar os anúncios por Id_Pessoas
-$sql_contar_anuncios = "SELECT COUNT(*) AS total_anuncios FROM Tb_Anuncios 
-    JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-    JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-    JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-    WHERE Tb_Pessoas.Id_Pessoas = ?";
-$stmt = $_con->prepare($sql_contar_anuncios);
-
-if ($stmt) {
-    // Vincule o parâmetro
-    $stmt->bind_param("i", $idPessoa);
-
-    // Execute a consulta
-    $stmt->execute();
-
-    // Obtenha o resultado
-    $result = $stmt->get_result();
-
-    // Verifique se a consulta retornou resultados
-    if ($result->num_rows > 0) {
-        // Obtenha o total de anúncios
-        $row = $result->fetch_assoc();
-        $total_anuncios = $row['total_anuncios'];
-        
-    } 
-}
+// Preparar e executar a consulta para obter as áreas únicas
+$stmt_areas = $_con->prepare($sql_areas);
+$stmt_areas->execute();
+$result_areas = $stmt_areas->get_result();
 
 
-// Nova consulta para obter os Anuncios por Id_Pessoas
-$sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
-    JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-    JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-    JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-    WHERE Tb_Pessoas.Id_Pessoas = ?";
 
-$stmt = $_con->prepare($sql_verificar_empresa);
-$stmt->bind_param("i", $idPessoa); // 'i' indica que o parâmetro é um número inteiro
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Verificar se a consulta teve sucesso
-if ($result === false) {
-    // Tratar o erro, se necessário
-    echo "Erro na consulta: " . $_con->error;
-    exit;
-}
-
-
-// Atribuindo os valores das variáveis de sessão
-$emailSession = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : '';
-$tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] : '';
-
-// Terceira consulta para obter o status da vaga
-$sql2 = "SELECT V.* 
-    FROM Tb_Vagas V
-    JOIN Tb_Empresa E ON V.Tb_Empresa_CNPJ = E.CNPJ
-    JOIN Tb_Pessoas P ON E.Tb_Pessoas_Id = P.Id_Pessoas
-    WHERE P.Email = ?";
-
-$stmt = mysqli_prepare($_con, $sql2);
-if ($stmt) {
-    // Vincule o parâmetro ao placeholder na consulta
-    mysqli_stmt_bind_param($stmt, "s", $email);
-
-    // Substitua $email pelo valor real do email
-    $email = $emailUsuario;
-
-    // Execute a declaração
-    mysqli_stmt_execute($stmt);
-
-    // Obtenha o resultado da consulta
-    $result2 = mysqli_stmt_get_result($stmt);
-
-    if ($result2 && mysqli_num_rows($result2) > 0) {
-        $row = mysqli_fetch_assoc($result2);
-        $Status = $row['Status'];
-    } else {
-        // Defina um valor padrão para $Status se a consulta não retornar resultados
-        $Status = '';
+if ($result_areas && $result_areas->num_rows > 0) {
+    while ($row = $result_areas->fetch_assoc()) {
+        $areas[] = $row['Area']; // Adicionar áreas ao array
     }
-    // Feche a declaração
-    mysqli_stmt_close($stmt);
-} else {
-    echo "Erro na preparação da declaração: " . mysqli_error($_con);
 }
-
 $totaldisponivel = 4 - $total_anuncios;
-
-// Recupere o CNPJ da empresa associada ao e-mail do usuário
-$sql_empresa = "SELECT e.CNPJ 
-                FROM Tb_Empresa e 
-                INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas 
-                WHERE p.Email = ?";
-$stmt_empresa = $_con->prepare($sql_empresa);
-if ($stmt_empresa) {
-    // Vincule o parâmetro
-    $stmt_empresa->bind_param("s", $emailUsuario);
-    
-    // Execute a consulta
-    $stmt_empresa->execute();
-    
-    // Obtenha o resultado
-    $result_empresa = $stmt_empresa->get_result();
-    
-    // Verifique se a consulta retornou resultados
-    if ($result_empresa->num_rows > 0) {
-        // Obtenha o CNPJ da empresa
-        $row_empresa = $result_empresa->fetch_assoc();
-        $cnpj_empresa = $row_empresa["CNPJ"];
-        
-        // Consulta SQL para selecionar as avaliações apenas da empresa específica
-        $sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
-                           FROM Tb_Questionarios q
-                           INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
-                           INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
-                           WHERE e.CNPJ = ?";
-        
-        $stmt_avaliacoes = $_con->prepare($sql_avaliacoes);
-        if ($stmt_avaliacoes) {
-            // Vincule o parâmetro
-            $stmt_avaliacoes->bind_param("s", $cnpj_empresa);
-            
-            // Execute a consulta
-            $stmt_avaliacoes->execute();
-            
-            // Obtenha o resultado
-            $result_avaliacoes = $stmt_avaliacoes->get_result();
-        }
-    }
-}
-
-// Recupere o CNPJ da empresa associada ao e-mail do usuário
-$sql_empresa = "SELECT e.CNPJ 
-        FROM Tb_Empresa e 
-        INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas 
-        WHERE p.Email = ?";
-$stmt_empresa = $_con->prepare($sql_empresa);
-if ($stmt_empresa) 
-// Vincule o parâmetro
-$stmt_empresa->bind_param("s", $emailUsuario);
-
-// Execute a consulta
-$stmt_empresa->execute();
-
-// Obtenha o resultado
-$result_empresa = $stmt_empresa->get_result();
-
-// Verifique se a consulta retornou resultados
-if ($result_empresa->num_rows > 0) 
-// Obtenha o CNPJ da empresa
-$row_empresa = $result_empresa->fetch_assoc();
-$cnpj_empresa = $row_empresa["CNPJ"];
-
-// Consulta SQL para selecionar as avaliações apenas da empresa específica
-$sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
-                    FROM Tb_Questionarios q
-                    INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
-                    INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
-                    WHERE e.CNPJ = ?";
-
-$stmt_avaliacoes = $_con->prepare($sql_avaliacoes);
-if ($stmt_avaliacoes) 
-    // Vincule o parâmetro
-    $stmt_avaliacoes->bind_param("s", $cnpj_empresa);
-    
-    // Execute a consulta
-    $stmt_avaliacoes->execute();
-    
-    // Obtenha o resultado
-    $result_avaliacoes = $stmt_avaliacoes->get_result();
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -281,27 +133,18 @@ if ($stmt_avaliacoes)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Anunciar</title>
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/criacao.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <style>
-        .aviso-verificado {
-            text-align: center;
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border: 1px solid #c3e6cb;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .aviso-nao-verificado {
+        .mensagem {
             text-align: center;
             background-color: #f8d7da;
             color: #721c24;
             padding: 10px;
             border: 1px solid #f5c6cb;
             border-radius: 5px;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -312,7 +155,8 @@ if ($stmt_avaliacoes)
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+                src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
@@ -322,312 +166,197 @@ if ($stmt_avaliacoes)
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
-    <div class="divTitle">
-        <div class="divCentraliza">
-            <div>
-                <div class="divTituloDigitavel">
-                    <h1 id="tituloAutomatico">B</h1>
-                    <i></i>
-                </div>
-                <p class="sinopse">Anuncie uma vaga e encontre o candidato ideal para sua empresa!<br>É fácil e
-                    conveniente - clique
-                    agora
-                    mesmo!</p>
-                <button onclick="window.location.href='../criarVaga/criarVaga.php'" class="btnInicial">Anunciar</button>
-            </div>
-        </div>
-    </div>
-    <?php
-    if ($verificado == 1) {
-    } else {
-        echo "<div class='aviso-nao-verificado'>Sua conta ainda não foi verificada. Por favor, verifique sua conta para desfrutar do máximo possível.</div>";
-        $totaldisponivel = 4 - $total_anuncios;
-        echo "<div class='aviso-nao-verificado'>Você tem mais " . $totaldisponivel . " anúncios disponíveis.</div>";
-    }
-    ?>
-    <div id="infoTema"></div>
-    <div class="divCarrossel">
-        <div class="divTituloComBtn">
-            <h2>Meus anúncios</h2>
-            <button class="btnAdicionar" onclick="window.location.href='../criarVaga/criarVaga.php'">
-                <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"
-                    state="hover-rotation" colors="primary:#000000,secondary:#ffffff" style="width:40px;height:40px">
-                </lord-icon>
-            </button>
-        </div>
-        <div class="container">
-            <a class="btnLeftSlider" id="leftAnuncios">
-                <img src="../../assets/images/icones_diversos/leftSlider.svg">
-            </a>
-            <a class="btnRightSlider" id="rightAnuncios">
-                <img src="../../assets/images/icones_diversos/rightSlider.svg">
-            </a>
-            <div class="carrosselBox" id="carrosselAnuncios">
-                <?php
-                // Loop para exibir as vagas restantes no carrossel
-                while ($row = $result->fetch_assoc()) {
-                    // Consulta para contar o número de inscritos para esta vaga
-                    $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
-                    $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
-                    $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
-                    $stmt_inscricoes->execute();
-                    $result_inscricoes = $stmt_inscricoes->get_result();
-
-                    // Verificar se a consulta teve sucesso
-                    if ($result_inscricoes === false) {
-                        // Tratar o erro, se necessário
-                        echo "Erro na consulta de contagem de inscrições: " . $_con->error;
-                        exit;
-                    }
-
-                    // Obter o resultado da contagem de inscrições
-                    $row_inscricoes = $result_inscricoes->fetch_assoc();
-                    $total_inscricoes = $row_inscricoes['total_inscricoes'];
-
-                    // Exibir a vaga e o número de inscritos
-                    echo '<a class="postLink" href="../MinhaVaga/Minhavaga.php?id=' . $row["Id_Anuncios"] . '">';
-                    echo '<article class="post">';
-                    echo '<div class="divAcessos">';
-                    echo '<img src="../../../imagens/people.svg"></img>';
-                    echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
-                    echo '</div>';
-
-                    echo '<header>';
-                    switch ($row["Categoria"]) {
-                        case "CLT":
-                            echo '<img src="../../../imagens/clt.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        case "Estágio":
-                        case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
-                            echo '<img src="../../../imagens/estagio.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        case "PJ":
-                            echo '<img src="../../../imagens/pj.svg">';
-                            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                            break;
-                        default:
-                            echo '<label class="tipoVaga">Categoria não definida</label>';
-                            break;
-                    }
-                    echo '</header>';
-                    echo '<section>';
-                    echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
-
-                    // Se não houver empresa, definir um valor padrão
-                    if (empty($nome_empresa)) {
-                        $nome_empresa = 'Confidencial';
-                    }
-
-                    // Agora pode imprimir
-                    echo '<p class="empresaVaga"> Por:' . $nome_empresa . '</p>';
-
-
-                    // Exibir o status da vaga e a data de criação
-                    $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-                    $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
-                    if ($row['Status'] == 'Aberto') {
-                        echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
-                        echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-                    } else {
-                        echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
-                        echo '<p class="dataVaga">' . $datadeTermino . '</p>';
-                    }
-
-
-                    echo '</section>';
-                    echo '</article>';
-                    echo '</a>';
-                }
-                ?>
-            </div>
-        </div>
-    </div>
-    <div class="divCarrossel">
-        <div class="divTituloComBtn">
-            <h2>Minhas avaliações</h2>
-            <button class="btnAdicionar" onclick="window.location.href='../criarTeste/criarTeste.php'">
-                <lord-icon src="https://cdn.lordicon.com/zrkkrrpl.json" trigger="hover" stroke="bold"
-                    state="hover-rotation" colors="primary:#000000,secondary:#ffffff" style="width:40px;height:40px">
-                </lord-icon>
-            </button>
-        </div>
-        <div class="container">
-            <a class="btnLeftSlider" id="leftTestes">
-                <img src="../../assets/images/icones_diversos/leftSlider.svg">
-            </a>
-            <a class="btnRightSlider" id="rightTestes">
-                <img src="../../assets/images/icones_diversos/rightSlider.svg">
-            </a>
-            <div class="carrosselBox" id="carrosselTestes">
-            <?php
-            if ($result_avaliacoes->num_rows > 0) {
-                // Loop através dos resultados da consulta
-                while ($row_avaliacao = $result_avaliacoes->fetch_assoc()) {
-                    // Extrai os dados do teste
-                    $idQuestionario = $row_avaliacao['Id_Questionario'];
-                    $nome = $row_avaliacao['Nome'];
-                    $area = $row_avaliacao['Area'];
-                    $nomeEmpresa = $row_avaliacao['Nome_da_Empresa'];
-                    // Saída HTML para cada teste no carrossel
-                    echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
-                    echo '<article class="testeCarrossel">';
-                    echo '<div class="divAcessos">';
-                    echo '<img src="../../../imagens/people.svg"></img>';
-                    echo '<small class="qntdAcessos">800</small>';
-                    echo '</div>';
-                    echo '<img src="../../../imagens/python.svg"></img>';
-                    echo '<div class="testeDetalhes">';
-                    echo '<div>';
-                    $limite = 21;
-
-                    // Obtenha o nome e limite-o se necessário
-                    if (strlen($nome) > $limite) {
-                        $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
-                    } else {
-                        $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
-                    }
-
-                    // Exibir o nome limitado
-                    echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
-                    echo '<small class="competenciasTeste">' . $area . '</small>';
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</article>';
-                    echo '</a>';
-                }
-                echo '<div class="divBtnVerMais">';
-                echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';
-                echo '<button class="verMais">Ver mais</button>';
-                echo '</a>';
-                echo '</div>';
-
-            } else {
-                echo "<p style='text-align:center; margin:0 auto;'>Nenhum teste encontrado.</p>";
-            }
-            ?>
-            </div>            
-        </div>
-    </div>
-    <div class="divCarrossel">
-        <div class="divTitulo">
-            <h2>Perfis de usuários</h2>
-        </div>
-        <div class="container">
-            <a class="btnLeftSlider" id="leftPerfis">
-                <img src="../../assets/images/icones_diversos/leftSlider.svg">
-            </a>
-            <a class="btnRightSlider" id="rightPerfis">
-                <img src="../../assets/images/icones_diversos/rightSlider.svg">
-            </a>
-            <div class="carrosselBox" id="carrosselPerfis">
-                <?php
-                $sqlCandidatos = "SELECT p.Id_Pessoas AS Pessoa_Id, p.Nome AS Nome, c.Autodefinicao AS Autodefinicao, c.Img_Perfil AS Img_Perfil
-                FROM Tb_Inscricoes i
-                INNER JOIN Tb_Candidato c ON i.Tb_Candidato_CPF = c.CPF
-                INNER JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
-                WHERE i.Tb_Vagas_Tb_Empresa_CNPJ = '$cnpj_empresa'";
-
-                $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
-
-                // Verificar se a consulta retornou resultados
-                if ($resultCandidatos && mysqli_num_rows($resultCandidatos) > 0) {
-                    // Loop sobre as informações das candidaturas
-                    while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
-                        ?>
-                        <a class="perfilLink"
-                            href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Pessoa_Id']; ?>">
-                            <article class="perfil">
-                                <div class="divImg">
-                                    <!-- Mostrar a imagem de perfil -->
-                                    <img src="<?php echo $candidatura['Img_Perfil']; ?>" alt=""
-                                        style="width: 100%;height: 99%;display: block;border-radius: 50%;object-fit: cover;">
-                                </div>
-
-                                <section>
-                                    <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
-                                </section>
-                                <section>
-                                    <?php
-                                    $limite_caracteres = 55;
-                                    $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
-                            
-                                    if (strlen($autodefinicao) > $limite_caracteres) {
-                                        $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
-                                    }
-                                    ?>
-                                    <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
-                                </section>
-                            </article>
-                        </a>
-                        <?php
-                    }
-
-                } else {
-                    // Caso não haja candidatos inscritos
-                    echo "<p style='text-align:center; margin:0 auto;'>Não há candidatos inscritos para suas vagas.</p>";
-
-                }
-                ?>
-
-            </div>
-        </div>
-    </div>
     <div class="divCommon">
-        <div class="divTitulo">
-            <h2>Nossos Parceiros</h2>
+        <div class="divTituloComBtn">
+            <a class="btnVoltar" href="../HomeRecrutador/homeRecrutador.php"><img class="backImg"
+                    src="../../assets/images/icones_diversos/back.svg"></a>
+            <h2>Criação de Vaga</h2>
         </div>
-        <div class="container">
-            <div class="carrosselInfinito">
-                <div class="trilhaCarrossel">
-                    <div class="slide">
-                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
-                    </div>
-                    <div class="slide">
-                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
-                    </div>
+        <form id="formvaga" method="POST" action="../../../src/services/cadastros/vaga.php" autocomplete="off">
+            <div class="containerForm">
+                <div class="containerSuperior">
+                    <div class="divInputs">
+                        <div class="divFlex">
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" id="titulo" name="titulo" type="text" required>
+                                    <div class="labelLine">Título</div>
+                                </div>
+                                <small name="aviso" id="aviso"></small>
+                            </div>
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" id="area" name="area" type="text" list="areaList"
+                                        required>
+                                    <div class="labelLine">Área</div>
+                                    <datalist id="areaList">
+                                        <?php
+                                        foreach ($areas as $area) {
+                                            echo "<option value='$area'>$area</option>";
+                                        }
+                                        ?>
+                                    </datalist>
+                                </div>
+                                <small name="aviso" id="aviso-Area"></small>
+                            </div>
+                        </div>
+                        <div class="divFlex">
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" id="cep" name="cep" type="text" required>
+                                    <div class="labelLine">CEP</div>
+                                </div>
+                                <small name="aviso"></small>
+                            </div>
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" id="bairro" name="bairro" type="text" required>
+                                    <div class="labelLine">Bairro</div>
+                                </div>
+                                <small name="aviso"></small>
+                            </div>
+                        </div>
+                        <div class="divFlex">
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" name="estado" id="estado" type="text" required>
+                                    <div class="labelLine">Estado</div>
+                                </div>
+                                <small name="aviso"></small>
+                            </div>
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" id="cidade" name="cidade" type="text" required>
+                                    <div class="labelLine">Cidade</div>
+                                </div>
+                                <small name="aviso"></small>
+                            </div>
+                        </div>
+                        <div class="divFlex">
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" name="endereco" id="endereco" type="text"
+                                        placeholder="Rua Fulano de Tal, 123" required>
+                                    <div class="labelLine">Endereço</div>
+                                </div>
+                                <small name="aviso"></small>
+                            </div>
+                            <div class="containerInput">
+                                <div class="contentInput">
+                                    <input class="inputAnimado" id="numero" name="numero" type="text"
+                                        placeholder="Número da empresa" required>
+                                    <div class="labelLine">Número</div>
+                                </div>
+                                <small name="aviso"></small>
+                            </div>
+                        </div>
+                        <div class="containerInput">
+                            <div class="contentInput">
+                                <input class="inputAnimado" name="horario" id="horario" type="text"
+                                    placeholder="seg a sáb, das 9:00 às 16:00" required>
+                                <div class="labelLine">Carga horária</div>
 
+                            </div>
+                            <small name="aviso" id="avisoHorario"></small>
+                        </div>
+                    </div>
+                    <div class="divTextArea">
+                        <div class="containerTextArea">
+                            <div class="contentInputTextArea">
+                                <textarea class="textAreaAnimada" name="descricao" id="descricao" type="text"
+                                    required></textarea>
+                                <div class="textArealabelLine">Descrição da Vaga</div>
+                            </div>
+                            <small name="aviso" id="aviso-descricao"></small>
+                        </div>
+                        <div class="divFlex" id="divFlexTextArea">
+                            <div class="containerTextArea">
+                                <div class="contentInputTextArea">
+                                    <textarea class="textAreaAnimada" name="requisitos" id="requisitos" type="text"
+                                        required></textarea>
+                                    <div class="textArealabelLine">Requisitos</div>
+                                </div>
+                                <small name="aviso" id="aviso-requisitos"></small>
+                            </div>
+                            <div class="containerTextArea">
+                                <div class="contentInputTextArea">
+                                    <textarea class="textAreaAnimada" name="beneficios" id="beneficios"
+                                        required></textarea>
+                                    <div class="textArealabelLine">Benefícios</div>
+                                </div>
+                                <small name="aviso" id="aviso-beneficios"></small>
 
-                    <div class="slide">
-                        <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slidePhp" src="../../assets/images/logos_parceiros/php.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slideFirebase" src="../../assets/images/logos_parceiros/firebase.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="logoFatec" src="../../assets/images/logos_parceiros/fatec.png">
-                    </div>
-                    <div class="slide">
-                        <img class="slideJs" src="../../assets/images/logos_parceiros/javascript.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slideHtml" src="../../assets/images/logos_parceiros/html.svg">
-                    </div>
-                    <div class="slide">
-                        <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="containerInferior">
+                    <div class="divFlexRadios">
+                        <div>
+                            <div class="divRadioContent">
+                                <h3>Tipo de profissional:</h3>
+                                <input type="radio" name="tipo" id="jovemAprendiz" value="Jovem Aprendiz"
+                                    class="radioBtn" required>
+                                <input type="radio" name="tipo" id="estagio" value="Estágio" class="radioBtn" required>
+                                <input type="radio" name="tipo" id="clt" value="CLT" class="radioBtn" required>
+                                <input type="radio" name="tipo" id="pj" value="PJ" class="radioBtn" required>
+                                <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem Aprendiz</label>
+                                <label for="estagio" class="btnRadio" id="btnEstagio">Estágio</label>
+                                <label for="clt" class="btnRadio" id="btnClt">CLT</label>
+                                <label for="pj" class="btnRadio" id="btnPj">PJ</label>
+                            </div>
+                            <div class="divRadioContent">
+                                <h3>Nível de aprendizado:</h3>
+                                <input type="radio" name="nivel" id="medio" value="Ensino Médio" class="radioBtn"
+                                    required>
+                                <input type="radio" name="nivel" id="tecnico" value="Técnico" class="radioBtn" required>
+                                <input type="radio" name="nivel" id="superior" value="Superior" class="radioBtn"
+                                    required>
+                                <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
+                                <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label>
+                                <label for="superior" class="btnRadio" id="btnSuperior">Ensino Superior</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="divRadioContent">
+                                <h3>Modalidade:</h3>
+                                <input type="radio" name="modalidade" id="remoto" value="Remoto" class="radioBtn"
+                                    required>
+                                <input type="radio" name="modalidade" id="presencial" value="Presencial"
+                                    class="radioBtn" required>
+                                <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>
+                                <label for="presencial" class="btnRadio" id="btnPresencial">Presencial</label>
+                            </div>
+                            <div class="divRadioContent">
+                                <h3>Jornada:</h3>
+                                <input type="radio" name="jornada" id="meioPeriodo" value="Meio período"
+                                    class="radioBtn" required>
+                                <input type="radio" name="jornada" id="integral" value="Tempo integral" class="radioBtn"
+                                    required>
+                                <label for="meioPeriodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>
+                                <label for="integral" class="btnRadio" id="btnIntegral">Tempo integral</label>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="emailSession" value="<?php echo $emailUsuario; ?>">
+                    <?php if ($verificado == 1): ?>
+                        <div class="divSalvar">
+                            <input type="submit" value="Salvar" class="btnSalvar">
+                        </div>
+                    <?php elseif ($totaldisponivel != 0): ?>
+                        <div class="divSalvar">
+                            <input type="submit" value="Salvar" class="btnSalvar">
+                        </div>
+                    <?php else: ?>
+                        <div class="mensagem">
+                            Você não tem anúncios disponíveis para salvar.
+                        </div>
+                    <?php endif; ?>
+
+
+                </div>
             </div>
-        </div>
+        </form>
     </div>
     <footer>
         <a>Política de Privacidade</a>
@@ -635,61 +364,81 @@ if ($stmt_avaliacoes)
         <a>Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
     </footer>
-
-
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="carrosselAnuncios.js"></script>
-    <script src="carrosselTestes.js"></script>
-    <script src="carrosselPerfis.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 
+    <script>
+        $(document).ready(function () {
+            // Novo regex para validar dias da semana e horários dentro de 24 horas
+            const regexDiasHorarios = /^((seg|ter|qua|qui|sex|sáb|dom)( a (seg|ter|qua|qui|sex|sáb|dom))? (das \d{1,2}:\d{2} (às|as) \d{1,2}:\d{2})|(\d{1,2}:\d{2} \- \d{1,2}:\d{2})|(\d{1,2}:\d{2}))$/i
+
+
+            function validarHorario() {
+                const horario = $("#horario").val();
+                const aviso = $("#avisoHorario");
+
+                if (horario === "") {
+                    aviso.text(""); // Limpar o aviso se o campo estiver vazio
+                    return;
+                }
+
+                if (!regexDiasHorarios.test(horario)) {
+                    console.log("Formato inválido Use esse exemplo: 'seg a sáb das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
+                    aviso.text("Formato inválido Use esse exemplo: 'seg a sáb das x:xx às xx:xx' ou 'sáb, xx:xx - xx:xx'.");
+                } else {
+                    console.log("Formato válido.");
+                    aviso.text("");
+                }
+            }
+
+            $("#horario").on("blur", function () {
+                validarHorario(); // Validar quando o campo perde o foco
+            });
+
+            $("#horario").on("input", function () {
+                const aviso = $("#avisoHorario");
+                const horario = $(this).val();
+
+                if (horario === "") {
+                    aviso.text(""); // Limpar o aviso se o campo estiver vazio
+                }
+            });
+
+            $("#formvaga").on("submit", function (e) {
+                validarHorario(); // Validar quando o formulário é enviado
+                if ($("#avisoHorario").text() !== "") {
+                    e.preventDefault(); // Impedir o envio se houver um aviso de erro
+                }
+            });
+        });
+
+    </script>
+    -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Função para definir o comportamento do placeholder
+            function configurarPlaceholder(elementId, focusText) {
+                var textArea = document.getElementById(elementId);
+
+                textArea.addEventListener("focus", function () {
+                    textArea.setAttribute("placeholder", focusText);
+                });
+
+                textArea.addEventListener("blur", function () {
+                    textArea.removeAttribute("placeholder");
+                });
+            }
+
+            // Configurar placeholders para diferentes campos
+            configurarPlaceholder("beneficios", "Separe os benefícios por vírgula: Benefícios 1, Benefícios 2 ...");
+            configurarPlaceholder("requisitos", "Separe os Requisitos por vírgula: Requisitos 1, Requisitos 2 ...");
+        });
+    </script>
     <script>
         // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
     <script src="../../../modoNoturno.js"></script>
-    <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
-    <script>
-        var nomeUsuario = "<?php echo $nomeUsuario; ?>";
-
-        if (nomeUsuario.trim() !== '') {
-            // O nome do usuário não está vazio, execute o código de animação
-            setTimeout(() => {
-                const titulo = document.querySelector("#tituloAutomatico");
-                const interval = 150; // variável do tempo de digitação
-
-                function DeterminaHorario() {
-                    let hora = new Date().getHours().toString().padStart(2, '0');
-                    if (hora < 12) {
-                        return "om dia";
-                    } else if (hora < 18) {
-                        return "oa tarde";
-                    } else {
-                        return "oa noite";
-                    }
-                }
-
-                let text1 = `${DeterminaHorario()}, ${nomeUsuario}!`;
-
-                function showText(titulo, text1, interval) {
-                    let char = text1.split("").reverse();
-
-                    let typer = setInterval(() => {
-                        if (!char.length) {
-                            return clearInterval(typer);
-                        }
-
-                        let next = char.pop();
-                        titulo.innerHTML += next;
-
-                    }, interval);
-                }
-
-                showText(titulo, text1, interval);
-            },);
-        } else {
-            console.log("Nome do usuário está vazio!");
-        }
-    </script>
     <script>
         var idPessoa = <?php echo $idPessoa; ?>;
 
@@ -720,8 +469,303 @@ if ($stmt_avaliacoes)
 
         });
     </script>
+    <script src="radioButtons.js"></script>
+    <script>
+        $(document).ready(function () {
+            let tituloValido = false;
+            let clearAvisoTimeout = null; // Variável para armazenar o timeout
+
+            function limparAviso() {
+                $("#aviso").text(""); // Limpa a mensagem
+                clearAvisoTimeout = null; // Limpa o timeout
+            }
+
+            function verificarTitulo(palavra, callback) {
+                const letrasRegex = /[a-zA-Z]/g; // Expressão regular para contar letras
+                const numLetras = (palavra.match(letrasRegex) || []).length; // Contar as letras
+
+                if (numLetras >= 2) { // Verifica se há pelo menos duas letras
+                    $.ajax({
+                        url: "verificar-palavra.php",
+                        type: "POST",
+                        data: { palavra: palavra },
+                        success: function (response) {
+                            try {
+                                const resultado = JSON.parse(response);
+                                if (resultado.proibido) {
+                                    $("#aviso").text("O título não pode ter '" + palavra + "' ela é uma palavra proibidas.").css("color", "red");
+                                    tituloValido = false;
+                                } else if (!resultado.existe) {
+                                    $("#aviso").text("Palavra '" + palavra + "' não existe, por favor digite outra palavra.").css("color", "red");
+                                    tituloValido = false;
+                                } else {
+                                    $("#aviso").text("Tudo Certo!").css("color", "#086507");
+                                    tituloValido = true;
+                                }
+                            } catch (e) {
+                                $("#aviso").text("Erro ao processar resposta do servidor.");
+                                tituloValido = false;
+                            }
+                            callback(); // Notifica que a verificação terminou
+                        },
+                        error: function () {
+                            $("#aviso").text("Erro ao verificar palavra. Tente novamente.");
+                            tituloValido = false;
+                            callback(); // Notifica que houve erro
+                        },
+                        timeout: 3000
+                    });
+                } else {
+                    $("#aviso").text("O título deve conter pelo menos duas letras.");
+                    tituloValido = false;
+                    callback(); // Notifica que a verificação terminou
+                }
+            }
+
+            $("#titulo").on("blur", function () {
+                const palavra = $(this).val();
+                if (palavra.trim() === "") { // Verifica se está vazio
+                    if (clearAvisoTimeout) {
+                        clearTimeout(clearAvisoTimeout); // Cancela o timeout anterior
+                    }
+                    clearAvisoTimeout = setTimeout(limparAviso, 3000); // Limpa aviso após 3 segundos
+                } else {
+                    verificarTitulo(palavra, function () {
+                        console.log("Verificação do título concluída.");
+                    });
+                }
+            });
+
+            $("#formvaga").on("submit", function (e) {
+                const palavra = $("#titulo").val();
+
+                verificarTitulo(palavra, function () {
+                    if (!tituloValido) {
+                        e.preventDefault();
+                        alert("O formulário não pode ser enviado, o título é inválido.");
+                    }
+                });
+
+                if (palavra.trim() === "") {
+                    e.preventDefault();
+                    $("#aviso").text("O campo título não pode estar vazio.");
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            let tituloValido = false;
+            let clearAvisoTimeout = null; // Variável para armazenar o timeout
+
+            function limparAviso() {
+                $("#aviso-Area").text(""); // Limpa a mensagem
+                clearAvisoTimeout = null; // Limpa o timeout
+            }
+
+            function verificarTitulo(palavra, callback) {
+                const letrasRegex = /[a-zA-Z]/g;
+                const numLetras = (palavra.match(letrasRegex) || []).length; // Contar as letras
+
+                if (numLetras >= 2) { // Verifica se há pelo menos duas letras
+                    $.ajax({
+                        url: "verificar-palavra.php",
+                        type: "POST",
+                        data: { palavra: palavra },
+                        success: function (response) {
+                            try {
+                                const resultado = JSON.parse(response);
+                                if (resultado.proibido) {
+                                    $("#aviso").text("A área não pode ter '" + palavra + "' ela é uma palavra proibidas.").css("color", "red");
+                                    tituloValido = false;
+                                } else if (!resultado.existe) {
+                                    $("#aviso").text("Palavra '" + palavra + "' não existe, por favor digite outra palavra.").css("color", "red");
+                                    tituloValido = false;
+                                } else {
+                                    $("#aviso").text("Tudo Certo!").css("color", "#086507");
+                                    tituloValido = true;
+                                }
+                            } catch (e) {
+                                $("#aviso").text("Erro ao processar resposta do servidor.");
+                                tituloValido = false;
+                            }
+                            callback(); // Notifica que a verificação terminou
+                        },
+                        error: function () {
+                            $("#aviso").text("Erro ao verificar palavra. Tente novamente.");
+                            tituloValido = false;
+                            callback(); // Notifica que houve erro
+                        },
+                        timeout: 3000
+                    });
+                } else {
+                    $("#aviso").text("O Área deve conter pelo menos duas letras.");
+                    tituloValido = false;
+                    callback(); // Notifica que a verificação terminou
+                }
+            }
+
+            $("#titulo").on("blur", function () {
+                const palavra = $(this).val();
+                if (palavra.trim() === "") { // Verifica se está vazio
+                    if (clearAvisoTimeout) {
+                        clearTimeout(clearAvisoTimeout); // Cancela o timeout anterior
+                    }
+                    clearAvisoTimeout = setTimeout(limparAviso, 3000); // Limpa aviso após 3 segundos
+                } else {
+                    verificarTitulo(palavra, function () {
+                        console.log("Verificação do título concluída.");
+                    });
+                }
+            });
+
+            $("#formvaga").on("submit", function (e) {
+                const palavra = $("#titulo").val();
+
+                verificarTitulo(palavra, function () {
+                    if (!tituloValido) {
+                        e.preventDefault();
+                        alert("O  formulário não pode ser enviado, o Área é inválido.");
+                    }
+                });
+
+                if (palavra.trim() === "") {
+                    e.preventDefault();
+                    $("#aviso").text("O campo área não pode estar vazio.");
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Mapa para rastrear se os campos são válidos
+            let camposValidos = {
+                descricao: false,
+                requisitos: false,
+                beneficios: false,
+            };
+
+            // Função para verificar palavras localmente e no servidor
+            function verificarPalavras(campo, palavras, callback) {
+                const letrasRegex = /[a-zA-Z]/g;
+                const palavrasInvalidas = [];
+
+                // Verificar localmente se as palavras têm pelo menos 2 letras
+                palavras.forEach((palavra) => {
+                    const numLetras = (palavra.match(letrasRegex) || []).length;
+                    if (numLetras < 2) {
+                        palavrasInvalidas.push(palavra);
+                    }
+                });
+
+                if (palavrasInvalidas.length > 0) {
+                    $("#aviso-" + campo).text(`Palavras inválidas: ${palavrasInvalidas.join(", ")}`);
+                    camposValidos[campo] = false;
+                    callback(); // Notifica que a verificação terminou
+                } else {
+                    $("#aviso-" + campo).text("Verificando palavras...");
+
+                    // Fazer chamada AJAX para verificar palavras no servidor
+                    $.ajax({
+                        url: "verificar-palavras.php",
+                        type: "POST",
+                        data: { palavras: palavras },
+                        success: function (response) {
+                            try {
+                                const resultado = JSON.parse(response);
+
+                                const palavrasInvalidasDoServidor = resultado.invalidas || [];
+                                const palavrasNaoExistem = resultado.nao_existem || [];
+
+                                let mensagemErro = "";
+
+                                if (palavrasInvalidasDoServidor.length > 0) {
+                                    mensagemErro += `Há palavras inválidas: <span style="color: red;">${palavrasInvalidasDoServidor.join(", ")}</span>. `;
+                                }
+
+                                if (palavrasNaoExistem.length > 0) {
+                                    mensagemErro += `Há palavras que não existem: <span style="color: red;">${palavrasNaoExistem.join(", ")}</span>. `;
+                                }
 
 
+                                if (mensagemErro) {
+                                    $("#aviso-" + campo).html(mensagemErro).css("color", "red");
+                                    camposValidos[campo] = false;
+                                } else {
+                                    $("#aviso-" + campo).text("Tudo certo!").css("color", "#086507");
+                                    camposValidos[campo] = true;
+                                }
+
+                            } catch (e) {
+                                $("#aviso-" + campo).text("Erro ao processar resposta do servidor.");
+                                camposValidos[campo] = false;
+                            }
+                            callback(); // Notifica que a verificação terminou
+                        },
+                        error: function () {
+                            $("#aviso-" + campo).text("Erro ao verificar palavras. Tente novamente.");
+                            camposValidos[campo] = false;
+                            callback();
+                        },
+                        timeout: 3000
+                    });
+                }
+            }
+
+            function verificarCampo(campoId) {
+                const campo = $("#" + campoId);
+                const valor = campo.val().trim();
+                const palavras = valor.split(/\s+/);
+
+                verificarPalavras(campoId, palavras, function () {
+                    console.log(`Verificação do campo ${campoId} concluída.`);
+                });
+            }
+
+            $("#descricao, #requisitos, #beneficios").on("blur", function () {
+                const campoId = $(this).attr("id");
+                verificarCampo(campoId);
+            });
+
+            $("#formvaga").on("submit", function (e) {
+                // Verificar todos os campos ao enviar o formulário
+                ["descricao", "requisitos", "beneficios"].forEach((campoId) => {
+                    verificarCampo(campoId);
+                });
+
+                // Verifique se todos os campos são válidos antes de permitir o envio
+                const todosValidos = Object.values(camposValidos).every((valido) => valido);
+
+                if (!todosValidos) {
+                    e.preventDefault();
+                    alert("O formulário não pode ser enviado. Por favor, corrija os erros.");
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#cep').on('change', function () {
+                var cep = $(this).val().replace(/\D/g, ''); // Remove caracteres não numéricos
+
+                // Verifica se o CEP tem 8 dígitos
+                if (cep.length == 8) {
+                    $.getJSON('https://viacep.com.br/ws/' + cep + '/json/', function (data) {
+                        if (!("erro" in data)) {
+                            $('#bairro').val(data.bairro);
+                            $('#estado').val(data.uf);
+                            $('#cidade').val(data.localidade);
+                            $('#endereco').val(data.logradouro);
+                        } else {
+                            alert('CEP não encontrado.');
+                        }
+                    });
+                } else {
+                    alert('CEP inválido. Por favor, insira um CEP válido com 8 dígitos.');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
