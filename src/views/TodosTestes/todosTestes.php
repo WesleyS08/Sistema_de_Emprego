@@ -1,5 +1,46 @@
 <?php
+
 include "../../services/conexão_com_banco.php";
+session_start(); // Inicia a sessão
+
+$emailUsuario = ''; // Supondo que o email do usuário esteja armazenado na sessão
+$idPessoa = '';
+
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset($_SESSION['email_session'])) {
+    // Se estiver autenticado com e-mail/senha
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session'])) {
+    // Se estiver autenticado com o Google
+    $emailUsuario = $_SESSION['google_session'];
+}
+// Verifique se o email do usuário está definido
+if (!empty($emailUsuario)) {
+    // Consulta SQL para obter o ID da pessoa pelo email
+    $sql_id_pessoa = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+    $stmt_id_pessoa = $_con->prepare($sql_id_pessoa);
+
+    if ($stmt_id_pessoa) {
+        $stmt_id_pessoa->bind_param("s", $emailUsuario);
+        $stmt_id_pessoa->execute();
+        $stmt_id_pessoa->store_result(); // Armazena o resultado para obter o número de linhas
+        if ($stmt_id_pessoa->num_rows > 0) {
+            $stmt_id_pessoa->bind_result($idPessoa); // Vincula o resultado a uma variável
+            $stmt_id_pessoa->fetch(); // Busca o valor do resultado
+            // Agora $idPessoa contém o ID da pessoa com o email fornecido
+        } else {
+            // Se nenhum resultado for encontrado, você pode tratar isso aqui
+            echo "Nenhum resultado encontrado para o email fornecido.";
+        }
+        $stmt_id_pessoa->close(); // Fecha a declaração preparada
+    } else {
+        // Se houver um erro na preparação da consulta, trate-o aqui
+        echo "Erro na preparação da consulta.";
+    }
+} else {
+    // Se o email do usuário não estiver definido, exiba uma mensagem de erro
+    echo "Email do usuário não definido.";
+}
 
 $sql = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
 FROM Tb_Questionarios q
@@ -34,7 +75,8 @@ $_con->close();
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
             <li><a href="../../../index.php">Deslogar</a></li>
-            <li><a href="../PerfilCandidato/perfilCandidato.php">Perfil</a></li>
+            <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
+
         </ul>
     </nav>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
@@ -57,6 +99,7 @@ $_con->close();
                 </div>
                 <div id="mostraFiltros">
                     <h3>Filtros</h3>
+                    
                     <img id="iconeFiltro" src="../../assets/images/icones_diversos/showHidden.svg">
                 </div>
                 <div class="containerFiltros">
