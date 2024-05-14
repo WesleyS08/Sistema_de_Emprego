@@ -58,6 +58,7 @@ if ($stmt) {
     <link rel="stylesheet" type="text/css" href="../../assets/styles/criacao.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/teste.css">
+
     <style>
         /* Oculta o texto "Nenhum item selecionado" */
         input[type="file"]::-webkit-file-upload-button,
@@ -90,27 +91,28 @@ if ($stmt) {
             <a class="btnVoltar"><img class="backImg" src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Criação de Teste</h2>
         </div>
-        <form autocomplete="off">
+        <form autocomplete="off" >
             <div class="containerForm">
                 <div class="containerSuperior">
                     <div class="divFlexSuperior">
-                        <div class="divImgTeste">
-                            <!-- Input para selecionar a imagem -->
-                            <input type="file" id="inputImagem" accept="image/jpeg, image/png"
-                                onchange="carregarImagem(event)"
-                                style="opacity: 0; position: absolute; width: 100%; height: 100%;">
-                            <p id="textoAdicionarImagem">Adicionar Imagem</p>
-                            <!-- Imagem carregada -->
-                            <div id="imagemCarregada" style="cursor: pointer;">
-                                <label for="inputImagem" class="custom-file-upload">
-                                    <div class="divIconeEditar" id="divIconeEditar">
-                                        <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover"
-                                            stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5"
-                                            style="width:110px;height:110px"></lord-icon>
-                                    </div>
-                                </label>
+            
+                            <div class="divImgTeste">
+                                <!-- Input para selecionar a imagem -->
+                                <input type="file" name="inputImagem" id="inputImagem" accept="image/jpeg, image/png"
+                                    onchange="carregarImagem(event)"
+                                    style="opacity: 0; position: absolute; width: 100%; height: 100%;">
+                                <p id="textoAdicionarImagem">Adicionar Imagem</p>
+                                <!-- Imagem carregada -->
+                                <div id="imagemCarregada" style="cursor: pointer;">
+                                    <label for="inputImagem" class="custom-file-upload">
+                                        <div class="divIconeEditar" id="divIconeEditar">
+                                            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover"
+                                                stroke="bold" colors="primary:#f5f5f5,secondary:#f5f5f5"
+                                                style="width:110px;height:110px"></lord-icon>
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
                         <div class="divInputs">
                             <div class="divFlex">
                                 <div class="containerInput">
@@ -192,6 +194,7 @@ if ($stmt) {
                     </div>
                     <div id="btnAdicionar">Adicionar</div>
                 </div>
+                <input type="hidden" name="idPessoa" id="idPessoa" value="<?php echo $idPessoa; ?>">
                 <div class="divSalvar">
                     <input type="submit" value="Salvar" class="btnSalvar">
                 </div>
@@ -223,8 +226,6 @@ if ($stmt) {
         function carregarImagem(event) {
             var imagemSelecionada = event.target.files[0];
             var idUsuario = <?php echo $idPessoa; ?>; // Obtém o ID do usuário
-            var area = document.getElementById("area").value; // Obtém o valor do campo de área
-            novoNomeTemp = "imagem_" + idUsuario;
             var urlImagem = URL.createObjectURL(imagemSelecionada);
             var imgElemento = document.createElement("img");
             imgElemento.style.width = "200px"; // Define a largura desejada da imagem
@@ -250,20 +251,8 @@ if ($stmt) {
             // Restaura o texto do parágrafo
             var pTextoAdicionarImagem = document.getElementById("textoAdicionarImagem");
             pTextoAdicionarImagem.style.display = "block";
-
-            // Altera o nome do arquivo
-            imagemSelecionadaTemp = imagemSelecionada;
-            imagemSelecionadaTemp.name = novoNomeTemp;
-
-            // Exibe o nome do arquivo após ser renomeado
-            console.log('Nome do arquivo antes  renomear:', imagemSelecionadaTemp.name);
-
-            // Adicione um ponto de interrupção aqui para verificar o valor de novoNome
-            console.log('Novo nome da imagem:', novoNomeTemp);
         }
-
     </script>
-
 </body>
 
 </html>
