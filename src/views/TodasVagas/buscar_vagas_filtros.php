@@ -7,6 +7,28 @@ $area = isset($_POST['area']) ? $_POST['area'] : 'Todas';
 $tipos = isset($_POST['tipos']) ? $_POST['tipos'] : [];
 $vagasAbertas = isset($_POST['vagasAbertas']) ? $_POST['vagasAbertas'] === 'true' : false;
 $termoPesquisa = isset($_POST['termo']) ? $_POST['termo'] : '';
+$idPessoa = isset($_POST['idPessoa']) ? intval($_POST['idPessoa']) : 0;
+$tema = isset($_POST['tema']) ? $_POST['tema'] === 'true' : false; // Verifica se o modo noturno deve ser aplicado
+
+// Segunda Consulta para selecionar o tema que salvo no banco de dados
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $tema = $row['Tema'] ?? null;
+    } else {
+        $tema = null;
+    }
+    $stmt->close();
+} else {
+    die("Erro ao preparar a query: " . $_con->error);
+}
 
 // Iniciar a consulta SQL para obter vagas com ou sem filtros
 $sql = "SELECT * 
@@ -17,6 +39,23 @@ $sql = "SELECT *
 // Adicionar condições para cada filtro, conforme necessário
 $parametros = [];
 $filtros = [];
+
+// Função para determinar a imagem com base na categoria do trabalho
+function determinarImagemCategoria($categoria)
+{
+    switch ($categoria) {
+        case 'Estágio':
+            return 'estagio';
+        case 'CLT':
+            return 'clt';
+        case 'PJ':
+            return 'pj';
+        case 'Jovem Aprendiz':
+            return 'estagio';
+        default:
+            return 'default';
+    }
+}
 
 // Filtrar por área
 if ($area != 'Todas') {
@@ -60,6 +99,7 @@ if ($stmt) {
 
     // Verificar se há resultados
     if ($result->num_rows > 0) {
+
         while ($row = $result->fetch_assoc()) {
             // Consulta para contar o número de inscritos para cada vaga
             $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
@@ -68,6 +108,7 @@ if ($stmt) {
             $stmt_inscricoes->execute();
             $result_inscricoes = $stmt_inscricoes->get_result();
             $total_inscricoes = $result_inscricoes->fetch_assoc()['total_inscricoes'] ?? 0;
+            $stmt_inscricoes->close();
 
             // Obter o nome da empresa
             $nome_empresa = $row['Nome_da_Empresa'] ?? 'Empresa não identificada';
@@ -79,54 +120,66 @@ if ($stmt) {
             echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
             echo '<article class="post">';
             echo '<div class="divAcessos">';
-            echo '<img src="../../../imagens/people.svg"></img>';
+            echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
             echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
             echo '</div>';
 
             echo '<header>';
-            switch ($row["Categoria"]) {
-                case "CLT":
-                    echo '<img src="../../../imagens/clt.svg">';
-                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                    break;
-                case "Estágio":
-                case "Jovem Aprendiz":
-                    echo '<img src="../../../imagens/estagio.svg">';
-                    echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
-                    break;
-                case "PJ":
-                    echo '<img src "../../../imagens/pj.svg">';
-                    echo '<label a classe "tipoVaga">' . $row["Categoria"] . '</label>';
-                    break;
-                default:
-                    echo '<label a classe "tipoVaga">Categoria não definida</label>';
-                    break;
-            }
+            echo '<img src="../../../imagens/' . determinarImagemCategoria($row["Categoria"]) . '.svg">';
+            echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
             echo '</header>';
 
             echo '<section>';
             echo '<h3 class="nomeVaga">' . ($row["Titulo"] ?? "Título não definido") . '</h3>';
-                // Se não houver empresa, definir um valor padrão
-                if (empty($nome_empresa)) {
-                    $nome_empresa = 'Confidencial';
-                }
-
-                // Agora pode imprimir
-                echo '<p class="empresaVaga"> Empresa:' . $nome_empresa . '</p>';
-
-
-                if ($row['Status'] == 'Aberto') {
-                    echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
-                    echo '<p class="dataVaga">' . $dataCriacao . '</p>';
-                } else {
-                    echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
-                    echo '<p class="dataVaga">' . $datadeTermino . '</p>';
-                }
-            echo '</section>';
-
-            echo '</article>';
-            echo '</a>';            
+            if (empty($nome_empresa)) {
+                $nome_empresa = 'Confidencial';
             }
+            echo '<p class="empresaVaga">' . $nome_empresa . '</p>';
+
+            if ($row['Status'] == 'Aberto') {
+                echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
+                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+            } else {
+                echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
+                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
+            }
+            echo '</section>';
+            echo '</article>';
+            echo '</a>';
+        }
+
+
+
+        echo '
+        <script>
+            var temaDoBancoDeDados = "' . $tema . '";
+        </script>
+        <script src="../../../modoNoturno.js"></script>
+        <script>
+            var idPessoa = ' . $idPessoa . ';
+
+            $(".btnModo").click(function () {
+                var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+                $.ajax({
+                    url: "../../services/Temas/atualizar_tema.php",
+                    method: "POST",
+                    data: { tema: novoTema, idPessoa: idPessoa },
+                    success: function () {
+                        console.log("Tema atualizado com sucesso");
+                    },
+                    error: function (error) {
+                        console.error("Erro ao salvar o tema:", error);
+                    }
+                });
+                if (novoTema === "noturno") {
+                    $("body").addClass("noturno");
+                    Noturno();
+                } else {
+                    $("body").removeClass("noturno");
+                    Claro();
+                }
+            });
+        </script>';
     } else {
         echo "<p class='infos' style='text-align:center; margin:0 auto; position: absolute'>Nenhuma vaga encontrada com os filtros selecionados.</p>";
     }

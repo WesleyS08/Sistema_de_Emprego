@@ -213,6 +213,24 @@ function determinarImagemCategoria($categoria)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <script>
+        function limparLocalStorageComExcecao() {
+            const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa'];
+
+            chavesParaLimpar.forEach(function (chave) {
+                localStorage.removeItem(chave);
+            });
+
+            const areaPadrao = 'Todas'; // Valor padrão para "area"
+            if (!localStorage.getItem('area')) {
+                localStorage.setItem('area', areaPadrao);
+            }
+
+            console.log("LocalStorage após limpeza:", localStorage);
+        }
+
+        window.addEventListener('load', limparLocalStorageComExcecao);
+    </script>
     <style>
         .aviso-verificado {
             text-align: center;
@@ -445,7 +463,7 @@ function determinarImagemCategoria($categoria)
                                 : 'Confidencial';
 
                             // Exibir o nome da empresa ou "Confidencial"
-                            echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
+                            echo '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
                             echo ' </section>';
                             echo ' <label class="statusVaga" style="color: green;">' . $row['Status'] . '</label>';
                             echo ' <label class="dataVaga">' . $row['Data_Inscricao'] . '</label>';

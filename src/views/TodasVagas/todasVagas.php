@@ -143,6 +143,7 @@ if ($result === false) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -158,10 +159,12 @@ if ($result === false) {
             overflow-y: auto;
             z-index: 1000;
         }
+
         .sugestao-item {
             padding: 8px;
             cursor: pointer;
         }
+
         .sugestao-item:hover {
             background-color: #fff;
         }
@@ -319,7 +322,7 @@ if ($result === false) {
                 ?>
             </div>
         </div>
-    </div>  
+    </div>
     <footer>
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
@@ -372,17 +375,19 @@ if ($result === false) {
     <script>
         $(document).ready(function () {
             var areaAtual = $('.selectArea').val();
+            var idPessoa = <?php echo json_encode($idPessoa); ?>; // Armazena o ID da pessoa
 
             // Atualiza a área sempre que o usuário muda a seleção
             $('.selectArea').on('change', function () {
-                areaAtual = $(this).val(); 
+                areaAtual = $(this).val();
             });
-            var termoAnterior = localStorage.getItem('termoPesquisa');
 
+            var termoAnterior = localStorage.getItem('termoPesquisa');
             if (termoAnterior) {
                 $('.inputPesquisa').val(termoAnterior);
-                buscarVagasPorTitulo(termoAnterior, areaAtual); // Passa a área correta
+                buscarVagasPorTitulo(termoAnterior, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
             }
+
             $('.inputPesquisa').on('input', function () {
                 var searchTerm = $(this).val();
                 localStorage.setItem('termoPesquisa', searchTerm);
@@ -393,7 +398,8 @@ if ($result === false) {
                         method: 'POST',
                         data: {
                             termo: searchTerm,
-                            area: areaAtual 
+                            area: areaAtual,
+                            idPessoa: idPessoa // Inclui o ID da pessoa
                         },
                         success: function (response) {
                             $('#sugestoes').html(response).show();
@@ -412,19 +418,20 @@ if ($result === false) {
                 $('.inputPesquisa').val(textoSelecionado);
                 $('#sugestoes').hide();
                 localStorage.setItem('termoPesquisa', textoSelecionado);
-                buscarVagasPorTitulo(textoSelecionado, areaAtual); 
+                buscarVagasPorTitulo(textoSelecionado, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
             });
 
-            function buscarVagasPorTitulo(termoPesquisa, area) {
+            function buscarVagasPorTitulo(termoPesquisa, area, idPessoa) {
                 $.ajax({
                     url: 'buscar_vaga_por_titulo.php',
                     method: 'POST',
                     data: {
                         termo: termoPesquisa,
-                        area: area
+                        area: area,
+                        idPessoa: idPessoa // Inclui o ID da pessoa
                     },
                     success: function (response) {
-                        $('.divGridVagas').html(response);
+                        $('.divGridVagas').html(response).addClass('noturno');
                     },
                     error: function () {
                         console.error("Erro ao buscar vagas por título.");
@@ -434,14 +441,33 @@ if ($result === false) {
         });
     </script>
 
+
     <!--================================ Buscar Vagas por filtros ======================================= -->
     <script>
         $(document).ready(function () {
+            var idPessoa = <?php echo json_encode($idPessoa); ?>; // Armazena o ID da pessoa
+            var tema = <?php echo json_encode($tema); ?>; // Armazena o tema
+
+            // Função para aplicar o modo noturno
+            function aplicarModoNoturno() {
+                if (tema === "noturno") {
+                    $("body").addClass("noturno");
+                    Noturno(); // Se necessário, chame aqui a função que configura o modo noturno
+                } else {
+                    $("body").removeClass("noturno");
+                    Claro(); // Se necessário, chame aqui a função que configura o modo claro
+                }
+            }
+
+            // Aplicar o modo noturno ao carregar a página
+            aplicarModoNoturno();
+
             // Quando houver uma mudança em qualquer filtro, salvar no localStorage
             $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
                 salvarFiltros();
-                aplicarFiltros(); 
+                aplicarFiltros();
             });
+
             function salvarFiltros() {
                 // Obter valores dos filtros
                 var area = $('.selectArea').val();
@@ -457,12 +483,14 @@ if ($result === false) {
                 localStorage.setItem('apenasVagasAbertas', apenasVagasAbertas);
                 localStorage.setItem('termoPesquisa', termoPesquisa);
             }
+
             function aplicarFiltros() {
                 // Obter valores dos filtros
                 var area = localStorage.getItem('area');
                 var tipos = JSON.parse(localStorage.getItem('tipos')) || [];
                 var apenasVagasAbertas = JSON.parse(localStorage.getItem('apenasVagasAbertas'));
                 var termoPesquisa = localStorage.getItem('termoPesquisa') || "";
+
                 // Aplicar os valores do localStorage aos elementos da página
                 $('.selectArea').val(area);
                 $('.checkBoxTipo').each(function () {
@@ -471,27 +499,44 @@ if ($result === false) {
                 $('#apenasVagasAbertas').prop('checked', apenasVagasAbertas);
                 $('.inputPesquisa').val(termoPesquisa);
 
+                // Filtros a serem enviados na requisição AJAX
+                var filtros = {
+                    area: area,
+                    tipos: tipos,
+                    vagasAbertas: apenasVagasAbertas,
+                    termo: termoPesquisa,
+                    idPessoa: idPessoa, // Certifique-se de que 'idPessoa' está definido em algum lugar no seu script
+                    tema: tema
+                };
+
+                // Log dos filtros no console para depuração
+                console.table(filtros);
+
                 // Chamada AJAX para buscar vagas com base nos filtros
                 $.ajax({
                     url: 'buscar_vagas_filtros.php',
                     method: 'POST',
-                    data: {
-                        area: area,
-                        tipos: tipos,
-                        vagasAbertas: apenasVagasAbertas,
-                        termo: termoPesquisa
-                    },
+                    data: filtros,
                     success: function (response) {
+                        // Inserir a resposta no DOM
                         $('.divGridVagas').html(response);
+
+                        // Adicionar a classe 'noturno' se o tema for noturno
+                        if (tema === 'noturno') {
+                            $('.divGridVagas').addClass('noturno');
+                        }
                     },
                     error: function () {
                         console.error("Erro ao buscar vagas com filtros.");
                     }
                 });
             }
+
             aplicarFiltros();
         });
     </script>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Função para alternar o estado do botão e salvar no localStorage
@@ -535,4 +580,5 @@ if ($result === false) {
         });
     </script>
 </body>
+
 </html>

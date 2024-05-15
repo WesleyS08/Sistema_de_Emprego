@@ -411,7 +411,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         idPessoa: idPessoa
                     },
                     success: function (response) {
-                        $('.divGridVagas').html(response);
+                        $('.divGridVagas').html(response).addclasse;
                     },
                     error: function () {
                         console.error("Erro ao buscar vagas por título.");
