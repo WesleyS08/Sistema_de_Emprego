@@ -123,8 +123,8 @@ if ($stmt) {
         // Obtenha o total de anúncios
         $row = $result->fetch_assoc();
         $total_anuncios = $row['total_anuncios'];
-        
-    } 
+
+    }
 }
 
 
@@ -197,34 +197,34 @@ $stmt_empresa = $_con->prepare($sql_empresa);
 if ($stmt_empresa) {
     // Vincule o parâmetro
     $stmt_empresa->bind_param("s", $emailUsuario);
-    
+
     // Execute a consulta
     $stmt_empresa->execute();
-    
+
     // Obtenha o resultado
     $result_empresa = $stmt_empresa->get_result();
-    
+
     // Verifique se a consulta retornou resultados
     if ($result_empresa->num_rows > 0) {
         // Obtenha o CNPJ da empresa
         $row_empresa = $result_empresa->fetch_assoc();
         $cnpj_empresa = $row_empresa["CNPJ"];
-        
+
         // Consulta SQL para selecionar as avaliações apenas da empresa específica
         $sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
                            FROM Tb_Questionarios q
                            INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
                            INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
                            WHERE e.CNPJ = ?";
-        
+
         $stmt_avaliacoes = $_con->prepare($sql_avaliacoes);
         if ($stmt_avaliacoes) {
             // Vincule o parâmetro
             $stmt_avaliacoes->bind_param("s", $cnpj_empresa);
-            
+
             // Execute a consulta
             $stmt_avaliacoes->execute();
-            
+
             // Obtenha o resultado
             $result_avaliacoes = $stmt_avaliacoes->get_result();
         }
@@ -237,9 +237,9 @@ $sql_empresa = "SELECT e.CNPJ
         INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas 
         WHERE p.Email = ?";
 $stmt_empresa = $_con->prepare($sql_empresa);
-if ($stmt_empresa) 
-// Vincule o parâmetro
-$stmt_empresa->bind_param("s", $emailUsuario);
+if ($stmt_empresa)
+    // Vincule o parâmetro
+    $stmt_empresa->bind_param("s", $emailUsuario);
 
 // Execute a consulta
 $stmt_empresa->execute();
@@ -248,9 +248,9 @@ $stmt_empresa->execute();
 $result_empresa = $stmt_empresa->get_result();
 
 // Verifique se a consulta retornou resultados
-if ($result_empresa->num_rows > 0) 
-// Obtenha o CNPJ da empresa
-$row_empresa = $result_empresa->fetch_assoc();
+if ($result_empresa->num_rows > 0)
+    // Obtenha o CNPJ da empresa
+    $row_empresa = $result_empresa->fetch_assoc();
 $cnpj_empresa = $row_empresa["CNPJ"];
 
 // Consulta SQL para selecionar as avaliações apenas da empresa específica
@@ -261,15 +261,15 @@ $sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa
                     WHERE e.CNPJ = ?";
 
 $stmt_avaliacoes = $_con->prepare($sql_avaliacoes);
-if ($stmt_avaliacoes) 
+if ($stmt_avaliacoes)
     // Vincule o parâmetro
     $stmt_avaliacoes->bind_param("s", $cnpj_empresa);
-    
-    // Execute a consulta
-    $stmt_avaliacoes->execute();
-    
-    // Obtenha o resultado
-    $result_avaliacoes = $stmt_avaliacoes->get_result();
+
+// Execute a consulta
+$stmt_avaliacoes->execute();
+
+// Obtenha o resultado
+$result_avaliacoes = $stmt_avaliacoes->get_result();
 
 ?>
 
@@ -283,6 +283,26 @@ if ($stmt_avaliacoes)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <script>
+        function limparLocalStorageComExcecao() {
+            const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa', 'btnJovemAprendizState', 'btnEstagioState', 'btnCltState', 'btnPjState'];
+
+            chavesParaLimpar.forEach(function (chave) {
+                localStorage.removeItem(chave);
+            });
+
+            const areaPadrao = 'Todas'; // Valor padrão para "area"
+            if (!localStorage.getItem('area')) {
+                localStorage.setItem('area', areaPadrao);
+            }
+        }
+
+        window.addEventListener('load', function () {
+            limparLocalStorageComExcecao();
+            console.table(localStorage); 
+        });
+    </script>
+
     <style>
         .aviso-verificado {
             text-align: center;
@@ -461,53 +481,53 @@ if ($stmt_avaliacoes)
                 <img src="../../assets/images/icones_diversos/rightSlider.svg">
             </a>
             <div class="carrosselBox" id="carrosselTestes">
-            <?php
-            if ($result_avaliacoes->num_rows > 0) {
-                // Loop através dos resultados da consulta
-                while ($row_avaliacao = $result_avaliacoes->fetch_assoc()) {
-                    // Extrai os dados do teste
-                    $idQuestionario = $row_avaliacao['Id_Questionario'];
-                    $nome = $row_avaliacao['Nome'];
-                    $area = $row_avaliacao['Area'];
-                    $nomeEmpresa = $row_avaliacao['Nome_da_Empresa'];
-                    // Saída HTML para cada teste no carrossel
-                    echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
-                    echo '<article class="testeCarrossel">';
-                    echo '<div class="divAcessos">';
-                    echo '<img src="../../../imagens/people.svg"></img>';
-                    echo '<small class="qntdAcessos">800</small>';
-                    echo '</div>';
-                    echo '<img src="../../../imagens/python.svg"></img>';
-                    echo '<div class="testeDetalhes">';
-                    echo '<div>';
-                    $limite = 21;
+                <?php
+                if ($result_avaliacoes->num_rows > 0) {
+                    // Loop através dos resultados da consulta
+                    while ($row_avaliacao = $result_avaliacoes->fetch_assoc()) {
+                        // Extrai os dados do teste
+                        $idQuestionario = $row_avaliacao['Id_Questionario'];
+                        $nome = $row_avaliacao['Nome'];
+                        $area = $row_avaliacao['Area'];
+                        $nomeEmpresa = $row_avaliacao['Nome_da_Empresa'];
+                        // Saída HTML para cada teste no carrossel
+                        echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
+                        echo '<article class="testeCarrossel">';
+                        echo '<div class="divAcessos">';
+                        echo '<img src="../../../imagens/people.svg"></img>';
+                        echo '<small class="qntdAcessos">800</small>';
+                        echo '</div>';
+                        echo '<img src="../../../imagens/python.svg"></img>';
+                        echo '<div class="testeDetalhes">';
+                        echo '<div>';
+                        $limite = 21;
 
-                    // Obtenha o nome e limite-o se necessário
-                    if (strlen($nome) > $limite) {
-                        $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
-                    } else {
-                        $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                        // Obtenha o nome e limite-o se necessário
+                        if (strlen($nome) > $limite) {
+                            $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
+                        } else {
+                            $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                        }
+
+                        // Exibir o nome limitado
+                        echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
+                        echo '<small class="competenciasTeste">' . $area . '</small>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</article>';
+                        echo '</a>';
                     }
-
-                    // Exibir o nome limitado
-                    echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
-                    echo '<small class="competenciasTeste">' . $area . '</small>';
-                    echo '</div>';
-                    echo '</div>';
-                    echo '</article>';
+                    echo '<div class="divBtnVerMais">';
+                    echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';
+                    echo '<button class="verMais">Ver mais</button>';
                     echo '</a>';
-                }
-                echo '<div class="divBtnVerMais">';
-                echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';
-                echo '<button class="verMais">Ver mais</button>';
-                echo '</a>';
-                echo '</div>';
+                    echo '</div>';
 
-            } else {
-                echo "<p style='text-align:center; margin:0 auto;'>Nenhum teste encontrado.</p>";
-            }
-            ?>
-            </div>            
+                } else {
+                    echo "<p style='text-align:center; margin:0 auto;'>Nenhum teste encontrado.</p>";
+                }
+                ?>
+            </div>
         </div>
     </div>
     <div class="divCarrossel">

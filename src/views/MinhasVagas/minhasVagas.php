@@ -265,7 +265,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                             break;
                         case "Estágio":
-                        case "Jovem Aprendiz": 
+                        case "Jovem Aprendiz":
                             echo '<img src="../../../imagens/estagio.svg">';
                             echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                             break;
@@ -283,8 +283,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     $nomeEmpresa = isset($row['Nome_da_Empresa']) && $row['Nome_da_Empresa'] !== null
                         ? $row['Nome_da_Empresa']
                         : 'Confidencial';
-                    // Exibir o nome da empresa ou "Confidencial"
-                    echo '<p class="empresaVaga"> Empresa:' . $nomeEmpresa . '</p>';
+                    echo '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                     $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
@@ -398,7 +397,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 $('.inputPesquisa').val(textoSelecionado);
                 $('#sugestoes').hide();
                 localStorage.setItem('termoPesquisa', textoSelecionado);
-                buscarVagasPorTitulo(textoSelecionado, areaAtual);
+                buscarVagasPorTitulo(textoSelecionado, areaAtual, idPessoa);
             });
 
             function buscarVagasPorTitulo(termoPesquisa, area) {
@@ -411,7 +410,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         idPessoa: idPessoa
                     },
                     success: function (response) {
-                        $('.divGridVagas').html(response).addclasse;
+                        $('.divGridVagas').html(response).addClass('noturno');
                     },
                     error: function () {
                         console.error("Erro ao buscar vagas por título.");
@@ -425,12 +424,27 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script>
         $(document).ready(function () {
             var idPessoa = <?php echo json_encode($idPessoa); ?>;
+            var tema = <?php echo json_encode($tema); ?>; // Armazena o tema
 
+            // Função para aplicar o modo noturno
+            function aplicarModoNoturno() {
+                if (tema === "noturno") {
+                    $("body").addClass("noturno");
+                    // Se necessário, chame aqui a função que configura o modo noturno (Ex: Noturno());
+                } else {
+                    $("body").removeClass("noturno");
+                    // Se necessário, chame aqui a função que configura o modo claro (Ex: Claro());
+                }
+            }
+
+            // Aplicar o modo noturno ao carregar a página
+            aplicarModoNoturno();
             // Quando houver uma mudança em qualquer filtro, salvar no localStorage
             $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
                 salvarFiltros();
                 aplicarFiltros();
             });
+
             function salvarFiltros() {
                 // Obter valores dos filtros
                 var area = $('.selectArea').val();
@@ -446,6 +460,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 localStorage.setItem('apenasVagasAbertas', apenasVagasAbertas);
                 localStorage.setItem('termoPesquisa', termoPesquisa);
             }
+
             function aplicarFiltros() {
                 // Obter valores dos filtros
                 var area = localStorage.getItem('area');
@@ -460,28 +475,37 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 $('#apenasVagasAbertas').prop('checked', apenasVagasAbertas);
                 $('.inputPesquisa').val(termoPesquisa);
 
+                var filtros = {
+                    idPessoa: idPessoa,
+                    area: area,
+                    tipos: tipos,
+                    vagasAbertas: apenasVagasAbertas,
+                    termo: termoPesquisa,
+                    tema: tema // Adicionando tema aos filtros
+                };
+
+                // Log dos filtros no console para depuração
+                console.table(filtros);
+
                 // Chamada AJAX para buscar vagas com base nos filtros
                 $.ajax({
                     url: 'buscar_vagas_filtros.php',
                     method: 'POST',
-                    data: {
-                        idPessoa: idPessoa,
-                        area: area,
-                        tipos: tipos,
-                        vagasAbertas: apenasVagasAbertas,
-                        termo: termoPesquisa
-                    },
+                    data: filtros,
                     success: function (response) {
-                        $('.divGridVagas').html(response);
+                        $('.divGridVagas').html(response).addClass('noturno');
+                        // Remova o ponto-e-vírgula extra no final desta linha se não for necessário
                     },
                     error: function () {
                         console.error("Erro ao buscar vagas com filtros.");
                     }
                 });
             }
+
             aplicarFiltros();
         });
     </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Função para alternar o estado do botão e salvar no localStorage

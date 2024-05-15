@@ -8,6 +8,29 @@ $tipos = isset($_POST['tipos']) ? $_POST['tipos'] : array();
 $vagasAbertas = isset($_POST['vagasAbertas']) ? $_POST['vagasAbertas'] === 'true' : false;
 $termoPesquisa = isset($_POST['termo']) ? $_POST['termo'] : '';
 
+$tema = isset($_POST['tema']) ? $_POST['tema'] === 'true' : false; // Verifica se o modo noturno deve ser aplicado
+
+// Segunda Consulta para selecionar o tema que salvo no banco de dados
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $tema = $row['Tema'] ?? null;
+    } else {
+        $tema = null;
+    }
+    $stmt->close();
+} else {
+    die("Erro ao preparar a query: " . $_con->error);
+}
+
+
 // Verificação do IdPessoa está presente 
 if (is_null($idPessoa)) {
     // ! Arrumar questão de tratamento de Erros !! 
@@ -153,9 +176,50 @@ if ($stmt) {
             echo '</article>';
             echo '</a>';
         }
+    
+        echo '
+        <script>
+            var temaDoBancoDeDados = "' . $tema . '";
+            // Função para aplicar o modo noturno ao carregar a página
+            function aplicarModoNoturno() {
+                if (temaDoBancoDeDados === "noturno") {
+                    $("body").addClass("noturno");
+                    Noturno(); // Se houver alguma lógica específica do modo noturno que precise ser executada, chame-a aqui
+                }
+            }
+            // Chame a função para aplicar o modo noturno ao carregar a página
+            aplicarModoNoturno();
+        </script>
+        <script src="../../../modoNoturno.js"></script>
+        <script>
+            var idPessoa = ' . $idPessoa . ';
+        
+            $(".btnModo").click(function () {
+                var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+                $.ajax({
+                    url: "../../services/Temas/atualizar_tema.php",
+                    method: "POST",
+                    data: { tema: novoTema, idPessoa: idPessoa },
+                    success: function () {
+                        console.log("Tema atualizado com sucesso");
+                    },
+                    error: function (error) {
+                        console.error("Erro ao salvar o tema:", error);
+                    }
+                });
+                if (novoTema === "noturno") {
+                    $("body").addClass("noturno");
+                    Noturno();
+                } else {
+                    $("body").removeClass("noturno");
+                    Claro();
+                }
+            });
+        </script>';
     } else {
-        echo "Nenhuma vaga encontrada com os filtros selecionados.";
+        echo "<p class='infos' style='text-align:center; margin:0 auto; position: absolute'>Nenhuma vaga encontrada com os filtros selecionados.</p>";
     }
+
 
     $stmt->close();
 } else {

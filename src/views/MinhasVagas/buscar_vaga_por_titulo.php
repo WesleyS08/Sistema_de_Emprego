@@ -58,6 +58,22 @@ $result = $stmt->get_result();
 // Inicialize uma variável para armazenar o HTML das vagas
 $htmlVagas = '';
 
+function determinarImagemCategoria($categoria)
+{
+    switch ($categoria) {
+        case 'Estágio':
+            return 'estagio';
+        case 'CLT':
+            return 'clt';
+        case 'PJ':
+            return 'pj';
+        case 'Jovem Aprendiz':
+            return 'estagio';
+        default:
+            return 'default';
+    }
+}
+
 // Verifique se há resultados
 if ($result->num_rows > 0) {
     // Se houver resultados, crie o HTML para exibir as vagas
@@ -87,23 +103,23 @@ if ($result->num_rows > 0) {
         $htmlVagas .=  '<header>';
         switch ($row["Categoria"]) {
             case "CLT":
-                $htmlVagas .=  '<img src="../../../imagens/clt.svg">';
-                $htmlVagas .=  '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                $htmlVagas .= '<img src="../../../imagens/clt.svg">';
+                $htmlVagas .= '<label class="tipoVaga">' . htmlspecialchars($row["Categoria"]) . '</label>';
                 break;
             case "Estágio":
-            case "Jovem Aprendiz": 
-                $htmlVagas .=  '<img src="../../../imagens/estagio.svg">';
-                $htmlVagas .=  '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+            case "Jovem Aprendiz":
+                $htmlVagas .= '<img src="../../../imagens/estagio.svg">';
+                $htmlVagas .= '<label class="tipoVaga">' . htmlspecialchars($row["Categoria"]) . '</label>';
                 break;
             case "PJ":
-                $htmlVagas .=  '<img src="../../../imagens/pj.svg">';
-                $htmlVagas .=  '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
+                $htmlVagas .= '<img src="../../../imagens/pj.svg">';
+                $htmlVagas .= '<label class="tipoVaga">' . htmlspecialchars($row["Categoria"]) . '</label>';
                 break;
             default:
-                $htmlVagas .=  '<label class="tipoVaga">Categoria não definida</label>';
+                $htmlVagas .= '<label class="tipoVaga">Categoria não definida</label>';
                 break;
         }
-        $htmlVagas .=  '</header>';
+        $htmlVagas .= '</header>';
         $htmlVagas .=  '<section>';
         $htmlVagas .=  '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
         $htmlVagas .=  '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
