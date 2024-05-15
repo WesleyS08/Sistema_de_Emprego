@@ -518,6 +518,11 @@ nav ul li a:hover{
     align-items: center;
 }
 
+.imgTeste{
+    width: 80px;
+    height: 80px;
+}
+
 .qntdAcessos{
     margin: 4px;
 }

@@ -132,7 +132,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <a class="btnVoltar"><img class="backImg" src="../../assets/images/icones_diversos/back.svg"></a>
+            <a class="btnVoltar"  href="../HomeRecrutador/homeRecrutador.php"><img class="backImg" src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Criação de Teste</h2>
         </div>
         <form autocomplete="off">

@@ -254,7 +254,7 @@ if ($result_empresa->num_rows > 0)
 $cnpj_empresa = $row_empresa["CNPJ"];
 
 // Consulta SQL para selecionar as avaliações apenas da empresa específica
-$sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
+$sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, q.ImagemQuestionario, e.Nome_da_Empresa
                     FROM Tb_Questionarios q
                     INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
                     INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
@@ -299,7 +299,7 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
 
         window.addEventListener('load', function () {
             limparLocalStorageComExcecao();
-            console.table(localStorage); 
+            console.table(localStorage);
         });
     </script>
 
@@ -419,7 +419,7 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                             echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                             break;
                         case "Estágio":
-                        case "Jovem Aprendiz": // Caso tenham a mesma aparência visual
+                        case "Jovem Aprendiz":
                             echo '<img src="../../../imagens/estagio.svg">';
                             echo '<label class="tipoVaga">' . $row["Categoria"] . '</label>';
                             break;
@@ -439,11 +439,8 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                     if (empty($nome_empresa)) {
                         $nome_empresa = 'Confidencial';
                     }
-
                     // Agora pode imprimir
                     echo '<p class="empresaVaga">' . $nome_empresa . '</p>';
-
-
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
                     $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
@@ -454,8 +451,6 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                         echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
                         echo '<p class="dataVaga">' . $datadeTermino . '</p>';
                     }
-
-
                     echo '</section>';
                     echo '</article>';
                     echo '</a>';
@@ -489,40 +484,57 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                         $idQuestionario = $row_avaliacao['Id_Questionario'];
                         $nome = $row_avaliacao['Nome'];
                         $area = $row_avaliacao['Area'];
+                        $img = $row_avaliacao['ImagemQuestionario'];
                         $nomeEmpresa = $row_avaliacao['Nome_da_Empresa'];
-                        // Saída HTML para cada teste no carrossel
-                        echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
-                        echo '<article class="testeCarrossel">';
-                        echo '<div class="divAcessos">';
-                        echo '<img src="../../../imagens/people.svg"></img>';
-                        echo '<small class="qntdAcessos">800</small>';
-                        echo '</div>';
-                        echo '<img src="../../../imagens/python.svg"></img>';
-                        echo '<div class="testeDetalhes">';
-                        echo '<div>';
-                        $limite = 21;
+                        $sql_contagem_respostas = "SELECT COUNT(*) AS total_respostas FROM Tb_Resultados WHERE Tb_Questionarios_ID = ?";
+                        $stmt_contagem_respostas = $_con->prepare($sql_contagem_respostas);
 
-                        // Obtenha o nome e limite-o se necessário
-                        if (strlen($nome) > $limite) {
-                            $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
-                        } else {
-                            $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                        if ($stmt_contagem_respostas) {
+                            $stmt_contagem_respostas->bind_param("i", $idQuestionario);
+                            $stmt_contagem_respostas->execute();
+                            $result_contagem_respostas = $stmt_contagem_respostas->get_result();
+
+                            // Verifica se a consulta retornou algum resultado
+                            if ($result_contagem_respostas->num_rows > 0) {
+                                $row_contagem_respostas = $result_contagem_respostas->fetch_assoc();
+                                $total_respostas = $row_contagem_respostas['total_respostas'];
+                            } else {
+                                $total_respostas = 0;
+                            }
+
+                            // Saída HTML para cada teste no carrossel
+                            echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
+                            echo '<article class="testeCarrossel">';
+                            echo '<div class="divAcessos">';
+                            echo '<img src="../../../imagens/people.svg"></img>';
+                            echo '<small class="qntdAcessos">' . $total_respostas . '</small>';
+                            echo '</div>';
+                            echo '<img class="imgTeste" src="' . $row_avaliacao['ImagemQuestionario'] . '"></img>'; // Exibindo a imagem do Excel do banco de dados
+                            echo '<div class="divDetalhesTeste">';
+                            echo '<div>';
+                            $limite = 21;
+
+                            // Obtenha o nome e limite-o se necessário
+                            if (strlen($nome) > $limite) {
+                                $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
+                            } else {
+                                $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                            }
+
+                            // Exibir o nome limitado
+                            echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
+                            echo '<small class="competenciasTeste">' . $area . '</small>';
+                            echo '</div>';
+                         
+                            echo '</article>';
+                            echo '</a>';
                         }
-
-                        // Exibir o nome limitado
-                        echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
-                        echo '<small class="competenciasTeste">' . $area . '</small>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</article>';
-                        echo '</a>';
                     }
                     echo '<div class="divBtnVerMais">';
                     echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';
                     echo '<button class="verMais">Ver mais</button>';
                     echo '</a>';
                     echo '</div>';
-
                 } else {
                     echo "<p style='text-align:center; margin:0 auto;'>Nenhum teste encontrado.</p>";
                 }
@@ -566,7 +578,9 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                                 </div>
 
                                 <section>
-                                    <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
+                                    <p class="nomePessoa">
+                                        <?php echo $candidatura['Nome']; ?>
+                                    </p>
                                 </section>
                                 <section>
                                     <?php
@@ -577,7 +591,9 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                                         $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
                                     }
                                     ?>
-                                    <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
+                                    <small class="descricaoPessoa">
+                                        <?php echo $autodefinicao; ?>
+                                    </small>
                                 </section>
                             </article>
                         </a>
