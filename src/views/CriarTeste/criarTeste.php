@@ -135,7 +135,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
             <a class="btnVoltar"  href="../HomeRecrutador/homeRecrutador.php"><img class="backImg" src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Criação de Teste</h2>
         </div>
-        <form autocomplete="off">
+        <form autocomplete="off"  id="formulario">
             <div class="containerForm">
                 <div class="containerSuperior">
                     <div class="divFlexSuperior">

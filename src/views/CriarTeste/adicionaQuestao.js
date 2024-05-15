@@ -1,7 +1,6 @@
 let questoesAdicionadas = document.querySelector(".questoesAdicionadas");
 let acumula = 2;
 
-
 function validarPalavras(palavra) {
     return new Promise((resolve, reject) => {
         console.log('Enviando solicitação de validação de palavras:', palavra);
@@ -142,4 +141,18 @@ function adicionarPergunta(pergunta) {
     acumula++;
 }
 
+function validarEnvioFormulario(event) {
+    let perguntas = document.querySelectorAll(".articleQuestao");
+    for (let i = 0; i < perguntas.length; i++) {
+        let opcoesResposta = perguntas[i].querySelectorAll(".divRadio input[type='radio']");
+        let algumaOpcaoSelecionada = Array.from(opcoesResposta).some(opcao => opcao.checked);
+        if (!algumaOpcaoSelecionada) {
+            alert("Por favor, selecione pelo menos uma opção de resposta para a pergunta " + (i + 1));
+            event.preventDefault(); // Bloquear envio do formulário
+            return;
+        }
+    }
+}
+
 document.querySelector("#btnAdicionar").addEventListener("click", AdicionarQuestao);
+document.querySelector("#formulario").addEventListener("submit", validarEnvioFormulario);
