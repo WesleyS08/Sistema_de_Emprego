@@ -304,12 +304,8 @@ function determinarImagemCategoria($categoria)
                             <img class="estrela" src="imagens/star.svg">
                             <small class="dataEnvio">13/03/2024</small>
                         </section>
-                        <section>
+                        <section class="opiniao">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                        <section class="likes">
-                            <img src="imagens/like.svg">
-                            <label class="qntdLikes">1000</label>
                         </section>
                     </article>
                 </a>
@@ -327,12 +323,8 @@ function determinarImagemCategoria($categoria)
                             <img class="estrela" src="imagens/star.svg">
                             <small class="dataEnvio">13/03/2024</small>
                         </section>
-                        <section>
+                        <section class="opiniao">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                        <section class="likes">
-                            <img src="imagens/like.svg">
-                            <label class="qntdLikes">1000</label>
                         </section>
                     </article>
                 </a>
@@ -350,12 +342,8 @@ function determinarImagemCategoria($categoria)
                             <img class="estrela" src="imagens/star.svg">
                             <small class="dataEnvio">13/03/2024</small>
                         </section>
-                        <section>
+                        <section class="opiniao">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                        <section class="likes">
-                            <img src="imagens/like.svg">
-                            <label class="qntdLikes">1000</label>
                         </section>
                     </article>
                 </a>
@@ -373,12 +361,8 @@ function determinarImagemCategoria($categoria)
                             <img class="estrela" src="imagens/star.svg">
                             <small class="dataEnvio">13/03/2024</small>
                         </section>
-                        <section>
+                        <section class="opiniao">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                        <section class="likes">
-                            <img src="imagens/like.svg">
-                            <label class="qntdLikes">1000</label>
                         </section>
                     </article>
                 </a>

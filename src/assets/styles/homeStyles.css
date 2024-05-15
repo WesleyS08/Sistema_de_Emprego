@@ -661,6 +661,10 @@ nav ul li a:hover{
     text-align: center;
 }
 
+.opiniao{    
+    line-height: 1.5em;
+}
+
 /* ------------------------- Carrossel Infinito -------------------------*/
 
 .carrosselInfinito{  
