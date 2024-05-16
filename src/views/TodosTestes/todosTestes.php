@@ -175,8 +175,13 @@ $_con->close();
                 ?>
             </div>  
         </div>
-    </div>
-  
+    </div>  
+    <footer>
+        <a>Política de Privacidade</a>
+        <a href="../NossoContato/nossoContato.html">Nosso contato</a>
+        <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
+        <p class="sinopse">SIAS 2024</p>
+    </footer>  
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="tituloDigitavel.js"></script>
     <script src="checkButtons.js"></script>

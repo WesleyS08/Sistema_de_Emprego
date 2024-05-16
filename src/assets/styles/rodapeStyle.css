@@ -1,17 +1,24 @@
 #fieldsetAvalieNos{
     width: 500px;
+    height: 500px;
 }
 
-#fieldsetAvalieNos legend{
+#fieldsetNossoContato{
+    width: 500px;
+    height: 300px;
+
+}
+
+legend{
     text-align: left;
 }
 
-#fieldsetAvalieNos h3{
+h3{
     font-size: 16pt;
 }
 
 .pergunta{
-    font-size: 12pt;
+    font-size: 14pt;
 }
 
 input[type="radio"]{
@@ -19,25 +26,37 @@ input[type="radio"]{
 }
 
 .divEstrelas{
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .flexEstrelas{
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .estrela{
-    width: 26px;
+    width: 32px;
     margin: 0px 8px;
     transition: 0.2s ease;
 }
 
 #divTextAreaAvalieNos{
     margin: 30px 0px;
+    height: 250px;
 }
 
 #btnAvaliar{    
     font-size: 14pt;
     width: 150px;
     height: 40px;
+}
+
+.enderecoContato{
+    margin-left: 16px;
+    font-size: 20pt;
+}
+
+.divContatos{
+    display: grid;
+    align-items: center;
+    height: 100%;
 }

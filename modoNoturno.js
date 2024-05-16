@@ -45,6 +45,10 @@ let legends = document.querySelectorAll("legend");
 let backImgs = document.querySelectorAll(".backImg");
 let nomeFiltros = document.querySelectorAll(".nomeFiltro");
 
+let gemails = document.querySelectorAll("#gemail");
+let zaps = document.querySelectorAll("#zap");
+let xs = document.querySelectorAll("#x");
+
 var styleElem = document.head.appendChild(document.createElement("style"));
 
 function Noturno(){
@@ -95,6 +99,10 @@ function Noturno(){
         
         divTituloDigitaveis.forEach((divTituloDigitavelTodos) => divTituloDigitavelTodos.style.color="whitesmoke");
         piscas.forEach((pisca) => pisca.style.backgroundColor="whitesmoke");
+        
+        gemails.forEach((gemail) => gemail.src="../../assets/images/icones_diversos/gmailWhite.svg")
+        zaps.forEach((zap) => zap.src="../../assets/images/icones_diversos/zapWhite.svg")
+        xs.forEach((x) => x.src="../../assets/images/icones_diversos/xWhite.svg")
 
         const elementosNoturnos = document.querySelectorAll('.noturno');
         elementosNoturnos.forEach(element => {
@@ -153,6 +161,10 @@ function Claro(){
 
         divTituloDigitaveis.forEach((divTituloDigitavelTodos) => divTituloDigitavelTodos.style.color="black");
         piscas.forEach((pisca) => pisca.style.backgroundColor="black");
+
+        gemails.forEach((gemail) => gemail.src="../../assets/images/icones_diversos/gmail.svg")
+        zaps.forEach((zap) => zap.src="../../assets/images/icones_diversos/zap.svg")
+        xs.forEach((x) => x.src="../../assets/images/icones_diversos/x.svg")
 
         const elementosNoturnos = document.querySelectorAll('.noturno');
         elementosNoturnos.forEach(element => {

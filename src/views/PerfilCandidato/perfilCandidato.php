@@ -390,10 +390,10 @@ if ($result && mysqli_num_rows($result) > 0) {
     </div>
     <footer>
         <a>Política de Privacidade</a>
-        <a>Nosso contato</a>
-        <a>Avalie-nos</a>
+        <a href="../NossoContato/nossoContato.html">Nosso contato</a>
+        <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
-    </footer>    
+    </footer> 
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="acumuloDePontos.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

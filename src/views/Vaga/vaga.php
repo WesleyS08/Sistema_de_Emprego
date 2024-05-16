@@ -499,13 +499,13 @@ $totaldisponivel = 4 - $total_inscricoes;
     <div id="endereco" style="display: none;" data-rua="<?php echo $Rua; ?>" data-numero="<?php echo $Numero; ?>"
         data-bairro="<?php echo $bairro; ?>" data-cidade="<?php echo $Cidade; ?>" data-estado="<?php echo $Estado; ?>"
         data-cep="<?php echo $CEP; ?>">
-    </div>
+    </div>    
     <footer>
         <a>Política de Privacidade</a>
-        <a>Nosso contato</a>
-        <a>Avalie-nos</a>
+        <a href="../NossoContato/nossoContato.html">Nosso contato</a>
+        <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
-    </footer>
+    </footer>  
     <script src="trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"

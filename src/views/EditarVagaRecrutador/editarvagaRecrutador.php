@@ -440,8 +440,8 @@ if (isset($_GET['id'])) {
     </div>
     <footer>
         <a>Política de Privacidade</a>
-        <a>Nosso contato</a>
-        <a>Avalie-nos</a>
+        <a href="../NossoContato/nossoContato.html">Nosso contato</a>
+        <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="radioButtons.js"></script>
