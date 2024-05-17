@@ -97,7 +97,24 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Empresa` (
 )
 ENGINE = InnoDB;
 
-
+-- -----------------------------------------------------
+-- Table `SIAS`.`Tb_Avaliacoes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Avaliacoes` (
+  `Id_Avaliacao` INT NOT NULL AUTO_INCREMENT,
+  `Tb_Pessoas_Id` INT NOT NULL,
+  `Nota` INT NOT NULL,
+  `Data_Avaliacao` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Texto` TEXT,
+  PRIMARY KEY (`Id_Avaliacao`),
+  INDEX `fk_Tb_Avaliacoes_Tb_Pessoas_idx` (`Tb_Pessoas_Id` ASC),
+  CONSTRAINT `fk_Tb_Avaliacoes_Tb_Pessoas`
+    FOREIGN KEY (`Tb_Pessoas_Id`)
+    REFERENCES `SIAS`.`Tb_Pessoas` (`Id_Pessoas`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Questionarios`
@@ -252,26 +269,6 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Recomendacoes` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `SIAS`.`Tb_Respostas` - Esta tabela pode não ser mais necessária.
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Respostas` (
-  `Id_Respostas` INT NOT NULL AUTO_INCREMENT,
-  `Errada` VARCHAR(255) NULL,
-  `Errada2` VARCHAR(255) NULL,
-  `Errada3` VARCHAR(255) NULL,
-  `Errada4` VARCHAR(255) NULL,
-  `Certa` VARCHAR(255) NULL,
-  `Tb_Questionarios_Id_Questionario` INT NOT NULL,
-  PRIMARY KEY (`Id_Respostas`, `Tb_Questionarios_Id_Questionario`),
-  INDEX `fk_Tb_Respostas_Tb_Questionarios1_idx` (`Tb_Questionarios_Id_Questionario` ASC) ,
-  CONSTRAINT `fk_Tb_Respostas_Tb_Questionarios1`
-    FOREIGN KEY (`Tb_Questionarios_Id_Questionario`)
-    REFERENCES `SIAS`.`Tb_Questionarios` (`Id_Questionario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Questoes`
