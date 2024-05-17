@@ -132,10 +132,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn" id="divTituloCriacaoVaga">
-            <a class="btnVoltar"  href="../HomeRecrutador/homeRecrutador.php"><img class="backImg" src="../../assets/images/icones_diversos/back.svg"></a>
+            <a class="btnVoltar" href="../HomeRecrutador/homeRecrutador.php"><img class="backImg"
+                    src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Criação de Teste</h2>
         </div>
-        <form autocomplete="off"  id="formulario">
+        <form autocomplete="off" id="formulario">
             <div class="containerForm">
                 <div class="containerSuperior">
                     <div class="divFlexSuperior">
@@ -203,14 +204,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 </div>
                                 <small name="aviso" id="avisoArea"></small>
                             </div>
-                            <div class="containerInput">
-                                <div class="contentInput">
-                                    <input class="inputAnimado" name="data" id="data" type="date"
-                                        placeholder="Data do questionário" required>
-                                    <div class="labelLine"></div>
-                                </div>
-                                <small name="aviso"></small>
+
+                            <div class="contentInput">
+                                <input class="inputAnimado" name="data" id="data" type="date" style="display: none;"
+                                    required>
+                                <div class="labelLine"></div>
                             </div>
+                            <small id="aviso"></small>
+
                             <div class="containerInput">
                                 <div class="contentInput">
                                     <input class="inputAnimado" name="competencias" id="competencias" type="text"
@@ -274,6 +275,16 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="mostraIcone.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="processarQuestoes.js"></script>
+    <script>
+        // Obtém a data atual
+        var dataAtual = new Date();
+
+        // Formata a data para o formato YYYY-MM-DD, que é o formato esperado pelo input type="date"
+        var dataFormatada = dataAtual.toISOString().slice(0, 10);
+
+        // Define o valor do campo de data como a data atual formatada
+        document.getElementById('data').value = dataFormatada;
+    </script>
     <script>
         // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
@@ -522,21 +533,27 @@ if ($result_areas && $result_areas->num_rows > 0) {
             function verificarCampo(campoId) {
                 const campo = $("#" + campoId);
                 const valor = campo.val().trim();
+
+                // Dividir o valor em palavras usando espaço como separador
                 const palavras = valor.split(/\s+/);
 
-                verificarPalavras(campoId, palavras, function () {
+                // Remover palavras vazias
+                const palavrasLimpo = palavras.filter(palavra => palavra.trim() !== '');
+
+                verificarPalavras(campoId, palavrasLimpo, function () {
                     console.log(`Verificação do campo ${campoId} concluída.`);
                 });
             }
+
 
             $("#competencias").on("blur", function () {
                 const campoId = $(this).attr("id");
                 verificarCampo(campoId);
             });
 
-            $("form").on("submit", function (e) {
+            $("#form").on("submit", function (e) {
                 // Verificar todos os campos ao enviar o formulário
-                Object.keys(camposValidos).forEach((campoId) => {
+                ["competencias"].forEach((campoId) => {
                     verificarCampo(campoId);
                 });
 
