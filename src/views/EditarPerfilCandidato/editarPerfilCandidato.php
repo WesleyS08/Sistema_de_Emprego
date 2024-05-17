@@ -6,18 +6,15 @@ session_start();
 
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
-// Verificar se o usuário está autenticado como candidato
-if (isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
-    // Se estiver autenticado como candidato
-    $autenticadoComoCandidato = true;
-    $emailUsuario = '';
 
-    // Definir o e-mail do usuário com base no tipo de sessão
-    if (isset($_SESSION['email_session'])) {
-        $emailUsuario = $_SESSION['email_session'];
-    } elseif (isset($_SESSION['google_session'])) {
-        $emailUsuario = $_SESSION['google_session'];
-    }
+$autenticadoComoCandidato = true;
+$emailUsuario = '';
+
+// Definir o e-mail do usuário com base no tipo de sessão
+if (isset($_SESSION['email_session'])) {
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session'])) {
+    $emailUsuario = $_SESSION['google_session'];
 } else {
     // Se não estiver autenticado como candidato, redirecione para a página de login
     header("Location: ../Login/login.html");
@@ -116,6 +113,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <title>Editar Perfil</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
@@ -136,13 +135,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </nav>
     <div class="divCommon">
         <div class="divTituloComBtn">
-            <a class="btnVoltar" href='../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'> <img class="backImg"
-                    src="../../assets/images/icones_diversos/back.svg"></a>
+            <a class="btnVoltar" href='../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>'> <img
+                    class="backImg" src="../../assets/images/icones_diversos/back.svg"></a>
             <h2>Editar Perfil</h2>
         </div>
         <div class="divEdicaoPerfil">
-            <form method="post" action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>"
-                autocomplete="off" enctype="multipart/form-data">
+            <form id="meuFormulario" method="post"
+                action="../../../src/services/Perfil/PerfilCandidato.php?id=<?php echo $idPessoa; ?>" autocomplete="off"
+                enctype="multipart/form-data">
                 <div class="divBackgroundImg">
                     <div class="btnEditarFundo">
                         <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold"
@@ -182,7 +182,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     value="<?php echo $nomeUsuario ?>">
                                 <div class="labelLine">Nome</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso-nome" class="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
@@ -197,7 +197,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     ?>
                                 </datalist>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso-area" class="aviso"></small>
                         </div>
                     </div>
                     <div class="inputUnico">
@@ -208,26 +208,27 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     value="<?php echo $autoDefinicaoUsuario ?>" required>
                                 <div class="labelLine">Breve descrição</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso-breveDescricao" class="aviso"></small>
                         </div>
                     </div>
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="email" name="email" type="text"
+                                <input class="inputAnimado" id="email" name="email" type="email"
                                     value="<?php echo $emailUsuario ?>" required>
                                 <div class="labelLine">Email</div>
                             </div>
                             <small id="aviso" name="aviso" style="display: none;">Caso altere o email é necessário
                                 realizar login novamente</small>
                         </div>
+
                         <div class="containerInput">
                             <div class="contentInput">
                                 <input class="inputAnimado" maxlength="15" id="telefone" name="telefone" type="text"
                                     value="<?php echo $telefoneUsuario ?>" required>
                                 <div class="labelLine">Telefone</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso-telefone" class="aviso"></small>
                         </div>
                     </div>
                     <div class="inputsLadoALado">
@@ -237,27 +238,25 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             ?>
 
                             <div class="contentInput">
-                                <!-- Preenche o campo de data com a data de nascimento do usuário -->
                                 <input class="inputAnimado" maxlength="10" id="data" name="data" type="text"
                                     value="<?php echo htmlspecialchars($dataNascimentoUsuario_formatada); ?>" required>
                                 <div class="labelLine">Data de Nascimento</div>
                             </div>
 
-                            <small name="aviso"></small>
+                            <small id="aviso-idade" class="aviso"></small>
                         </div>
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="genero" name="genero" type="text" list="generoList"
-                                    value="<?php echo $generoUsuario ?>" required>
-                                <div class="labelLine">Gênero</div>
-                                <datalist id="generoList">
-                                    <option>Homem Cisgênero</option>
-                                    <option>Mulher Cisgênero</option>
-                                    <option>Homem Transgênero</option>
-                                    <option>Mulher Transgênero</option>
-                                    <option>Não Binário</option>
-                                    <option>Agênero</option>
-                                </datalist>
+                                <select class="inputAnimado" id="genero" name="genero" required>
+                                    <option value="Homem" <?php echo ($generoUsuario == 'Homem') ? 'selected' : ''; ?>>
+                                        Homem</option>
+                                    <option value="Mulher" <?php echo ($generoUsuario == 'Mulher') ? 'selected' : ''; ?>>
+                                        Mulher</option>
+                                    <option value="Outros" <?php echo ($generoUsuario == 'Outros') ? 'selected' : ''; ?>>
+                                        Outros</option>
+                                    <option value="Prefiro não informar" <?php echo ($generoUsuario == 'Prefiro não informar') ? 'selected' : ''; ?>>Prefiro não informar</option>
+
+                                </select>
                             </div>
                             <small name="aviso"></small>
                         </div>
@@ -275,7 +274,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 </select>
                                 <div class="labelLine">Estado Civil</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso-estado" class="aviso"></small>
                         </div>
 
 
@@ -285,7 +284,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     value="<?php echo $cidadeUsuario ?>" required>
                                 <div class="labelLine">Cidade</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso-cidade" class="aviso"></small>
                         </div>
                     </div>
                     <div class="divCheckBox">
@@ -299,7 +298,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     required><?php echo $sobreUsuario ?></textarea>
                                 <div class="textArealabelLine">Sobre Mim</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small id="aviso-sobre" class="aviso"></small>
                         </div>
                     </div>
                     <div class="divElementos">
@@ -314,7 +313,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                         <div class="textArealabelLine">Adicione cursos e tecnologias que você domina
                                         </div>
                                     </div>
-                                    <small name="aviso"></small>
+                                    <small id="aviso-habilidades" class="aviso"></small>
                                 </div>
                             </div>
                         </div>
@@ -327,7 +326,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                             required><?php echo $escolaridadeUsuario ?></textarea>
                                         <div class="textArealabelLine">Adicione suas formações</div>
                                     </div>
-                                    <small name="aviso"></small>
+                                    <small id="aviso-cursos" class="aviso"></small>
                                 </div>
                             </div>
                         </div>
@@ -340,7 +339,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                             type="text" required><?php echo $experienciaUsuario ?></textarea>
                                         <div class="textArealabelLine">Adicione suas experiências profissionais</div>
                                     </div>
-                                    <small name="aviso"></small>
+                                    <small id="aviso-experiencias" class="aviso"></small>
                                 </div>
                             </div>
                         </div>
@@ -434,14 +433,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         </div>
                     </form>
 
-
-
-
-
-
-
-
-
                     <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
                 </div>
             </form>
@@ -458,6 +449,169 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="avisoInicial.js"></script>
     <script src="adicionaElementos.js"></script>
     <script src="mascaras.js"></script>
+    <script>
+        // Função para validar a idade mínima
+        function validarIdadeMinima(dataNascimento, idadeMinima) {
+            // Converter a data de nascimento em um objeto Date
+            var dataNascimentoObj = new Date(dataNascimento);
+
+            // Obter a data atual
+            var dataAtual = new Date();
+
+            // Calcular a diferença de idade em anos
+            var idade = dataAtual.getFullYear() - dataNascimentoObj.getFullYear();
+
+            // Verificar se a idade é menor que a idade mínima
+            if (idade < idadeMinima) {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Função para exibir ou ocultar o aviso de idade mínima
+        function atualizarAvisoIdadeMinima() {
+            var dataInput = document.getElementById('data');
+            var aviso = document.getElementById('aviso-idade');
+
+            if (dataInput.value !== '') {
+                // Defina a idade mínima desejada (por exemplo, 18 anos)
+                var idadeMinima = 14;
+
+                // Verificar se a idade inserida atende à idade mínima
+                if (!validarIdadeMinima(dataInput.value, idadeMinima)) {
+                    aviso.innerText = 'Você deve ter pelo menos ' + idadeMinima + ' anos de idade.';
+                    aviso.style.color = 'red';
+                    aviso.style.display = 'block';
+                } else {
+                    aviso.innerText = '';
+                    aviso.style.display = 'none';
+                }
+            } else {
+                aviso.innerText = '';
+                aviso.style.display = 'none';
+            }
+        }
+
+        // Adicionar um ouvinte de evento ao input de data para verificar a idade mínima quando ele mudar
+        document.getElementById('data').addEventListener('change', atualizarAvisoIdadeMinima);
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Mapa para rastrear se os campos são válidos
+            let camposValidos = {
+                area: false,
+                breveDescricao: false,
+                sobre: false,
+                habilidades: false,
+                cursos: false,
+                experiencias: false,
+            };
+
+            // Função para verificar palavras localmente e no servidor
+            function verificarPalavras(campo, palavras, callback) {
+                const letrasRegex = /[a-zA-Z]/g;
+                const palavrasInvalidas = [];
+
+                // Verificar localmente se as palavras têm pelo menos 2 letras
+                palavras.forEach((palavra) => {
+                    const numLetras = (palavra.match(letrasRegex) || []).length;
+                    if (numLetras < 2) {
+                        palavrasInvalidas.push(palavra);
+                    }
+                });
+
+                if (palavrasInvalidas.length > 0) {
+                    $("#aviso-" + campo).text(`Palavras inválidas: ${palavrasInvalidas.join(", ")}`);
+                    camposValidos[campo] = false;
+                    callback(); // Notifica que a verificação terminou
+                } else {
+                    $("#aviso-" + campo).text("Verificando palavras...");
+
+                    // Fazer chamada AJAX para verificar palavras no servidor
+                    $.ajax({
+                        url: "verificar-palavras.php",
+                        type: "POST",
+                        data: { palavras: palavras },
+                        success: function (response) {
+                            try {
+                                const resultado = JSON.parse(response);
+
+                                const palavrasInvalidasDoServidor = resultado.invalidas || [];
+                                const palavrasNaoExistem = resultado.nao_existem || [];
+
+                                let mensagemErro = "";
+
+                                if (palavrasInvalidasDoServidor.length > 0) {
+                                    mensagemErro += `Há palavras inválidas: <span style="color: red;">${palavrasInvalidasDoServidor.join(", ")}</span>. `;
+                                }
+
+                                if (palavrasNaoExistem.length > 0) {
+                                    mensagemErro += `Há palavras que não existem: <span style="color: red;">${palavrasNaoExistem.join(", ")}</span>. `;
+                                }
+
+                                if (mensagemErro) {
+                                    $("#aviso-" + campo).html(mensagemErro).css("color", "red");
+                                    camposValidos[campo] = false;
+                                } else {
+                                    $("#aviso-" + campo).text("Tudo certo!").css("color", "#086507");
+                                    camposValidos[campo] = true;
+                                }
+                            } catch (e) {
+                                $("#aviso-" + campo).text("Erro ao processar resposta do servidor.");
+                                camposValidos[campo] = false;
+                            }
+                            callback(); // Notifica que a verificação terminou
+                        },
+                        error: function () {
+                            $("#aviso-" + campo).text("Erro ao verificar palavras. Tente novamente.");
+                            camposValidos[campo] = false;
+                            callback();
+                        },
+                        timeout: 3000
+                    });
+                }
+            }
+
+            function verificarCampo(campoId) {
+                const campo = $("#" + campoId);
+                const valor = campo.val().trim();
+                const palavras = valor.split(/\s+/);
+
+                console.log(`Verificando campo ${campoId} com valor: ${valor}`);
+                verificarPalavras(campoId, palavras, function () {
+                    console.log(`Verificação do campo ${campoId} concluída.`);
+                    console.table(camposValidos); // Exibir informações dos campos
+                });
+            }
+
+            // Verificar todos os campos ao carregar a página
+            ["area", "breveDescricao", "sobre", "habilidades", "cursos", "experiencias"].forEach((campoId) => {
+                verificarCampo(campoId);
+            });
+
+            $("#area, #breveDescricao, #sobre, #habilidades, #cursos, #experiencias").on("blur", function () {
+                const campoId = $(this).attr("id");
+                verificarCampo(campoId);
+            });
+
+            $("#meuFormulario").on("submit", function (e) {
+                // Verificar todos os campos ao enviar o formulário
+                ["area", "breveDescricao", "sobre", "habilidades", "cursos", "experiencias"].forEach((campoId) => {
+                    verificarCampo(campoId);
+                });
+
+                // Verifique se todos os campos são válidos antes de permitir o envio
+                const todosValidos = Object.values(camposValidos).every((valido) => valido);
+
+                if (!todosValidos) {
+                    e.preventDefault();
+                    alert("O formulário não pode ser enviado. Por favor, corrija os erros.");
+                }
+            });
+        });
+    </script>
+
     <script>
         // Função para exibir o aviso quando o usuário alterar o campo de email
         function exibirAviso() {
