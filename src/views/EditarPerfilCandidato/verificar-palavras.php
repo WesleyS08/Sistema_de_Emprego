@@ -78,41 +78,34 @@ $palavrasProibidas = [
     "comi a sua", "comi o seu", "comi sua", "Culhao", "Culhao_con",
 ];
 
-
 // Converte todas as palavras proibidas para minúsculas para uma comparação consistente
 $palavrasProibidasMin = array_map('strtolower', $palavrasProibidas);
 
 $palavrasInvalidas = [];
 $palavrasNaoExistem = [];
 
-// Loop para verificar cada palavra recebida do cliente
-foreach ($palavras as $palavra) {
-    // Verificar se a palavra é proibida
-    if (in_array($palavra, $palavrasProibidasMin)) {
-        $palavrasInvalidas[] = $palavra;
-        continue; // Não é necessário verificar se a palavra existe se já é proibida
-    }
+// Construa uma string com todas as palavras separadas por "+"
+$palavrasString = implode("+", $palavras);
 
-    // Endpoint do Dicionário Priberam para a palavra pesquisada
-    $endpoint = "https://dicionario.priberam.org/" . urlencode($palavra);
-    // Configuração do contexto HTTP para capturar erros sem falhar
-    $options = [
-        'http' => [
-            'method' => 'GET',
-            'ignore_errors' => true,
-        ],
-    ];
-    $context = stream_context_create($options);
+// Endpoint do Dicionário Priberam para as palavras pesquisadas
+$endpoint = "https://dicionario.priberam.org/" . urlencode($palavrasString);
+// Configuração do contexto HTTP para capturar erros sem falhar
+$options = [
+    'http' => [
+        'method' => 'GET',
+        'ignore_errors' => true,
+    ],
+];
+$context = stream_context_create($options);
 
-    // Obtenha o conteúdo da página do Priberam
-    $response = file_get_contents($endpoint, false, $context);
+// Obtenha o conteúdo da página do Priberam
+$response = file_get_contents($endpoint, false, $context);
 
-    // Verifique se a frase "Palavra não encontrada." está presente na resposta
-    $nao_existe = strpos($response, 'Palavra não encontrada.') !== false;
+// Verifique se a frase "Palavra não encontrada." está presente na resposta
+$nao_existe = strpos($response, 'Palavra não encontrada.') !== false;
 
-    if ($nao_existe) {
-        $palavrasNaoExistem[] = $palavra;
-    }
+if ($nao_existe) {
+    $palavrasNaoExistem = $palavras;
 }
 
 // Retorne o resultado como JSON
@@ -120,4 +113,3 @@ echo json_encode([
     'invalidas' => $palavrasInvalidas,
     'nao_existem' => $palavrasNaoExistem,
 ]);
-?>
