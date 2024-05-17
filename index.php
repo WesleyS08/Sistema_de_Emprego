@@ -66,6 +66,7 @@ function determinarImagemCategoria($categoria)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="src/assets/styles/homeStyles.css">
+
 </head>
 
 <body>
@@ -202,13 +203,14 @@ function determinarImagemCategoria($categoria)
     </div>
 
     <?php
-    $sql = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
-    FROM Tb_Questionarios q
-    INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
-    INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
-    INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas
-    LIMIT 4"; // Limitar a 4 questionários para não ficar muitos questionários poluindo a tela    
+    $sql = "SELECT q.Id_Questionario, q.Nome, q.Area, q.ImagemQuestionario, e.Nome_da_Empresa 
+   FROM Tb_Questionarios q
+   INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+   INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+   INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas
+   LIMIT 4";
     $result = $_con->query($sql);
+
     ?>
     <div class="divCommon">
         <div class="divTitulo">
@@ -226,6 +228,13 @@ function determinarImagemCategoria($categoria)
                         $nome = $row['Nome'];
                         $area = $row['Area'];
                         $nomeEmpresa = $row['Nome_da_Empresa'];
+                        $img = $row['ImagemQuestionario'];
+
+                        // Consulta SQL para contar o número de pessoas que responderam a este questionário
+                        $sql_contar_respostas = "SELECT COUNT(DISTINCT Tb_Candidato_CPF) AS total_pessoas FROM Tb_Resultados WHERE Tb_Questionarios_ID = $idQuestionario";
+                        $stmt_contar_respostas = $pdo->query($sql_contar_respostas);
+                        $row_respostas = $stmt_contar_respostas->fetch(PDO::FETCH_ASSOC);
+                        $total_pessoas = $row_respostas['total_pessoas'];
 
                         // Verifica se é hora de começar uma nova linha
                         if ($counter % 2 == 0) {
@@ -236,9 +245,18 @@ function determinarImagemCategoria($categoria)
                             <article class="teste">
                                 <div class="divAcessos">
                                     <img src="imagens/people.svg"></img>
-                                    <small class="qntdAcessos">800</small>
+                                    <small class="qntdAcessos"><?php echo $total_pessoas; ?></small>
                                 </div>
-                                <img src="imagens/excel.svg"></img>
+                                <?php
+                                // Define o diretório base onde as imagens estão armazenadas
+                                $baseDir = "src/assets/ImagesTestes/";
+
+                                // Concatena o diretório base com o nome da imagem
+                                $imgPath = $baseDir . $img;
+
+                                // Exibe a imagem
+                                ?>
+                                <img src="<?php echo $imgPath; ?>" />
                                 <div class="divDetalhesTeste">
                                     <div>
                                         <?php
@@ -275,13 +293,13 @@ function determinarImagemCategoria($categoria)
                         echo '</div>'; // Fecha a div "gridTestes"
                     }
                     ?>
-            </div>
-            <a href="src/views/Login/login.html"><button>Ver mais</button></a>
-            <?php
-            } else { // Se não houver resultados, exibe uma mensagem
-                echo "<p style='text-align:center; margin:0 auto;'>Nenhum questionário encontrado.</p>";
-            }
-            ?>
+                </div>
+                <a href="src/views/Login/login.html"><button>Ver mais</button></a>
+                <?php
+                } else { // Se não houver resultados, exibe uma mensagem
+                    echo "<p style='text-align:center; margin:0 auto;'>Nenhum questionário encontrado.</p>";
+                }
+                ?>
         </div>
     </div>
     <div class="divCommon">
@@ -290,82 +308,89 @@ function determinarImagemCategoria($categoria)
         </div>
         <div class="container">
             <div class="divComentarios">
-                <a class="comentarioLink">
-                    <article class="comentario">
-                        <header>
-                            <div class="divImg"></div>
-                            <label class="nomePessoa">Clarice Josefina da Silva Machado</label>
-                        </header>
-                        <section class="sectionEstrelas">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star.svg">
-                            <small class="dataEnvio">13/03/2024</small>
-                        </section>
-                        <section class="opiniao">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                    </article>
-                </a>
-                <a class="comentarioLink">
-                    <article class="comentario">
-                        <header>
-                            <div class="divImg"></div>
-                            <label class="nomePessoa">Martinho Lutero da Silva dsdas das</label>
-                        </header>
-                        <section class="sectionEstrelas">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star.svg">
-                            <small class="dataEnvio">13/03/2024</small>
-                        </section>
-                        <section class="opiniao">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                    </article>
-                </a>
-                <a class="comentarioLink">
-                    <article class="comentario">
-                        <header>
-                            <div class="divImg"></div>
-                            <label class="nomePessoa">Pedro Borges</label>
-                        </header>
-                        <section class="sectionEstrelas">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star.svg">
-                            <small class="dataEnvio">13/03/2024</small>
-                        </section>
-                        <section class="opiniao">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                    </article>
-                </a>
-                <a class="comentarioLink">
-                    <article class="comentario">
-                        <header>
-                            <div class="divImg"></div>
-                            <label class="nomePessoa">Pedro Borges</label>
-                        </header>
-                        <section class="sectionEstrelas">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star-fill.svg">
-                            <img class="estrela" src="imagens/star.svg">
-                            <small class="dataEnvio">13/03/2024</small>
-                        </section>
-                        <section class="opiniao">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt aspernatur temporibu
-                        </section>
-                    </article>
-                </a>
+                <?php
+                // Consulta para recuperar as 5 avaliações mais recentes, juntamente com o nome do usuário
+                $consulta = "SELECT a.*, p.Nome, 
+             CASE 
+                 WHEN c.CPF IS NOT NULL THEN 'candidato' 
+                 WHEN e.CNPJ IS NOT NULL THEN 'empresa' 
+                 ELSE 'indefinido' 
+             END AS tipo_usuario,
+             CASE 
+                 WHEN c.CPF IS NOT NULL THEN c.Img_Perfil
+                 WHEN e.CNPJ IS NOT NULL THEN e.Img_Perfil
+                 ELSE ''
+             END AS Img_Perfil
+             FROM Tb_Avaliacoes AS a
+             INNER JOIN Tb_Pessoas AS p ON a.Tb_Pessoas_Id = p.Id_Pessoas
+             LEFT JOIN Tb_Candidato AS c ON p.Id_Pessoas = c.Tb_Pessoas_Id
+             LEFT JOIN Tb_Empresa AS e ON p.Id_Pessoas = e.Tb_Pessoas_Id
+             ORDER BY a.Data_Avaliacao DESC
+             LIMIT 4";
+
+                $stmt = $_con->prepare($consulta);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+
+                // Verifica se há resultados da consulta
+                if ($resultado->num_rows > 0) {
+                    // Loop através dos resultados
+                    while ($avaliacao = $resultado->fetch_assoc()) {
+                        echo '<script>';
+                        echo 'console.table(' . json_encode($avaliacao) . ');';
+                        echo '</script>';
+                        // Verificar se o campo Img_Perfil está presente e seu valor
+                        if (isset($avaliacao['Img_Perfil'])) {
+                            // Imprimir o caminho da imagem para depuração
+                            echo '<script>';
+                            echo 'console.log("Caminho da imagem:", ' . json_encode($avaliacao['Img_Perfil']) . ');';
+                            echo '</script>';
+                        }
+                        ?>
+                        <a class="comentarioLink">
+                            <article class="comentario">
+                                <header>
+
+                                    <?php
+                                    // Define o diretório base onde as imagens estão armazenadas
+                                    $baseDir = "src/assets/imagensPerfil/";
+
+                                    // Concatena o diretório base com o nome da imagem
+                                    $imgPath = $baseDir . $avaliacao['Img_Perfil'];
+
+                                    // Exibe a imagem
+                                    ?>
+                                    <?php if (!empty($avaliacao['Img_Perfil'])): ?>
+                                        <div class="divImg" style="background-image: url('<?php echo $imgPath; ?>');"></div>
+                                    <?php else: ?>
+                                        <div class="divImg"></div>
+                                    <?php endif; ?>
+
+                                    <label class="nomePessoa"><?php echo $avaliacao['Nome']; ?></label>
+                                </header>
+                                <section class="sectionEstrelas">
+                                    <?php for ($i = 0; $i < $avaliacao['Nota']; $i++): ?>
+                                        <img class="estrela" src="imagens/star-fill.svg">
+                                    <?php endfor; ?>
+                                    <?php for ($i = $avaliacao['Nota']; $i < 5; $i++): ?>
+                                        <img class="estrela" src="imagens/star.svg">
+                                    <?php endfor; ?>
+                                    <small
+                                        class="dataEnvio"><?php echo date("d/m/Y", strtotime($avaliacao['Data_Avaliacao'])); ?></small>
+                                </section>
+                                <section class="opiniao">
+                                    <?php echo $avaliacao['Texto']; ?>
+                                </section>
+                            </article>
+                        </a>
+                        <?php
+                    }
+                } else {
+                    echo "<p style='text-align:center; margin:0 auto;'>Nenhuma avaliação encontrado.</p>";
+                }
+                ?>
+
+
                 <button id="btnRunningGuy" onclick="location.href='src/views/Login/login.html'">Faça parte!<br>
                     <lord-icon src="https://cdn.lordicon.com/gwvmctbb.json" trigger="hover"
                         colors="primary:#ffffff,secondary:#ffffff" style="width:90px;height:90px">
@@ -432,7 +457,7 @@ function determinarImagemCategoria($categoria)
     <footer>
         <a>Política de Privacidade</a>
         <a>Nosso contato</a>
-        <a>Avalie-nos</a>
+        <a href="src\views\AvalieNos\avalieNos.php">Avalie-nos</a>
         <p>SIAS 2024</p>
     </footer>
 
