@@ -13,7 +13,7 @@ if (!isset($_GET['userId']) || !isset($_GET['emailUsuario'])) {
     exit();
 }
  
-// Obtenha o ID do usuário e o endereço de e-mail do recrutador do parâmetro GET
+// Obtenha o ID do usuário e o endereço de e-mail do usuário do parâmetro GET
 $userId = $_GET['userId'];
 $emailUsuario = $_GET['emailUsuario'];
  
@@ -110,7 +110,7 @@ try {
                     </html>
                 ";
  
-    $mail->AltBody = "Olá, recrutador!\n\nPara ativar seu cadastro, clique no seguinte link:\n$link";
+    $mail->AltBody = "Olá, Usuário!\n\nPara ativar seu cadastro, clique no seguinte link:\n$link";
  
     // Enviar e-mail
     if ($mail->send()) {

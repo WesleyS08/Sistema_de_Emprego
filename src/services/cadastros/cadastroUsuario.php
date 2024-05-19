@@ -54,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Executar as instruções SQL dentro da transação
             $stmt1->execute();
+           
 
             // Obtenção do Id do usuário inserido na última tabela (tb_pessoas)
             $userId = $_con->query("SELECT LAST_INSERT_ID()")->fetch_row()[0];
@@ -68,9 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($stmt1->affected_rows > 0 && $stmt2->affected_rows > 0) {
                 // Confirma a transação
                 $_con->commit();
- 
-                // Redirecionar para o script de envio de e-mail
-                header("Location: envio_Usuario.php?userId=$userId&emailUsuario=$emailUsuario");
+                 header("Location: envio_Usuario.php?userId=$userId&emailUsuario=$emailUsuario");
                 exit();
             } else {
                 // Se a transação falhar, rollback

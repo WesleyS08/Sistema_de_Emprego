@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_con->commit();
  
                 // Redirecionar para o script de envio de e-mail
-                header("Location: envio_email.php?userId=$userId&emailRecrutador=$emailRecrutador");
+                header("Location: envio_Recrutador.php?userId=$userId&emailRecrutador=$emailRecrutador");
                 exit();
             } else {
                 // Se a transação falhar, rollback
