@@ -73,10 +73,11 @@ if (empty($emailUsuario)) {
             color: #555;
         }
 
-        #aviso-opiniao{
-            color: #red;
-            margin-top: -5px;"
-        }
+        #aviso-opiniao {
+    color: red;
+    margin-top: -5px;
+}
+
     </style>
 </head>
 
@@ -215,7 +216,7 @@ if (empty($emailUsuario)) {
                 // Verificar localmente se as palavras têm pelo menos 2 letras
                 palavras.forEach((palavra) => {
                     const numLetras = (palavra.match(letrasRegex) || []).length;
-                    if (numLetras < 2) {
+                    if (numLetras < 0) {
                         palavrasInvalidas.push(palavra);
                     }
                 });
