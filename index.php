@@ -256,7 +256,7 @@ function determinarImagemCategoria($categoria)
 
                                 // Exibe a imagem
                                 ?>
-                                <img src="<?php echo $imgPath; ?>" />
+                                <img src="<?php echo $imgPath; ?>" width="150" height="100" />
                                 <div class="divDetalhesTeste">
                                     <div>
                                         <?php
@@ -389,9 +389,7 @@ function determinarImagemCategoria($categoria)
                     echo "<p style='text-align:center; margin:0 auto;'>Nenhuma avaliação encontrado.</p>";
                 }
                 ?>
-
-
-                <button id="btnRunningGuy" onclick="location.href='src/views/Login/login.html'">Faça parte!<br>
+                <button id="btnRunningGuy" onclick="location.href='src/views/AvalieNos/AvalieNos.php'">Faça parte!<br>
                     <lord-icon src="https://cdn.lordicon.com/gwvmctbb.json" trigger="hover"
                         colors="primary:#ffffff,secondary:#ffffff" style="width:90px;height:90px">
                     </lord-icon>
