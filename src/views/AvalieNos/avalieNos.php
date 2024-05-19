@@ -66,6 +66,17 @@ if (empty($emailUsuario)) {
             border-radius: 5px;
             margin-bottom: 10px;
         }
+
+        .containerTextArea small {
+            display: block;
+            margin-top: 5px;
+            color: #555;
+        }
+
+        #aviso-opiniao{
+            color: #red;
+            margin-top: -5px;"
+        }
     </style>
 </head>
 
@@ -115,7 +126,8 @@ if (empty($emailUsuario)) {
                                         maxlength="155" oninput="atualizarContador(this)"></textarea>
                                     <div class="textArealabelLine">Minha opinião</div>
                                 </div>
-                                <small id="contador-caracteres" name="aviso"></small>
+                                <small id="contador-caracteres"></small>
+                                <small id="aviso-opiniao"></small>
                             </div>
                         </div>
                         <div class="divBtnAtualizar">
@@ -158,7 +170,7 @@ if (empty($emailUsuario)) {
                                         required></textarea>
                                     <div class="textArealabelLine">Minha opinião</div>
                                 </div>
-                                <small name="aviso"></small>
+                                <small id="aviso-opiniao"></small>
                             </div>
                         </div>
                         <div class="alert">
@@ -172,15 +184,126 @@ if (empty($emailUsuario)) {
     <script src="../../../modoNoturno.js"></script>
     <script src="adicionaEstrelas.js"></script>
     <script src="hoverEstrelas.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-    function atualizarContador(textarea) {
-        var contador = document.getElementById('contador-caracteres');
-        var limite = parseInt(textarea.getAttribute('maxlength'));
-        var caracteresDigitados = textarea.value.length;
-        var caracteresRestantes = limite - caracteresDigitados;
-        contador.textContent = caracteresRestantes + ' caracteres restantes';
-    }
-</script>
+        function atualizarContador(textarea) {
+            var contadorCaracteres = document.getElementById('contador-caracteres');
+            var contadorPalavras = document.getElementById('contador-palavras');
+            var limite = parseInt(textarea.getAttribute('maxlength'));
+            var caracteresDigitados = textarea.value.length;
+            var caracteresRestantes = limite - caracteresDigitados;
+            var palavras = textarea.value.trim().split(/\s+/).filter(function (palavra) {
+                return palavra.length > 0;
+            });
+            var numeroPalavras = palavras.length;
+
+            contadorCaracteres.textContent = caracteresRestantes + ' caracteres restantes';
+            contadorPalavras.textContent = numeroPalavras + ' palavras digitadas';
+        }
+
+        $(document).ready(function () {
+            // Mapa para rastrear se os campos são válidos
+            let camposValidos = {
+                opiniao: false,
+            };
+
+            // Função para verificar palavras localmente e no servidor
+            function verificarPalavras(campo, palavras, callback) {
+                const letrasRegex = /[a-zA-Z]/g;
+                const palavrasInvalidas = [];
+
+                // Verificar localmente se as palavras têm pelo menos 2 letras
+                palavras.forEach((palavra) => {
+                    const numLetras = (palavra.match(letrasRegex) || []).length;
+                    if (numLetras < 2) {
+                        palavrasInvalidas.push(palavra);
+                    }
+                });
+
+                if (palavrasInvalidas.length > 0) {
+                    $("#aviso-" + campo).text(`Palavras inválidas: ${palavrasInvalidas.join(", ")}`);
+                    camposValidos[campo] = false;
+                    callback(); // Notifica que a verificação terminou
+                } else {
+                    $("#aviso-" + campo).text("Verificando palavras...");
+
+                    // Fazer chamada AJAX para verificar palavras no servidor
+                    $.ajax({
+                        url: "verificar-palavras.php",
+                        type: "POST",
+                        data: { palavras: palavras },
+                        success: function (response) {
+                            try {
+                                const resultado = JSON.parse(response);
+
+                                const palavrasInvalidasDoServidor = resultado.invalidas || [];
+                                const palavrasNaoExistem = resultado.nao_existem || [];
+
+                                let mensagemErro = "";
+
+                                if (palavrasInvalidasDoServidor.length > 0) {
+                                    mensagemErro += `Há palavras inválidas: <span style="color: red; margin-top: -20px">${palavrasInvalidasDoServidor.join(", ")}</span>. `;
+                                }
+
+                                if (palavrasNaoExistem.length > 0) {
+                                    mensagemErro += `Há palavras que não existem: <span style="color: red; margin-top: -20px">${palavrasNaoExistem.join(", ")}</span>. `;
+                                }
+
+                                if (mensagemErro) {
+                                    $("#aviso-" + campo).html(mensagemErro).css("color", "red");
+                                    camposValidos[campo] = false;
+                                } else {
+                                    $("#aviso-" + campo).text("Tudo certo!").css("color", "#086507");
+                                    camposValidos[campo] = true;
+                                }
+
+                            } catch (e) {
+                                $("#aviso-" + campo).text("Erro ao processar resposta do servidor.");
+                                camposValidos[campo] = false;
+                            }
+                            callback(); // Notifica que a verificação terminou
+                        },
+                        error: function () {
+                            $("#aviso-" + campo).text("Erro ao verificar palavras. Tente novamente.");
+                            camposValidos[campo] = false;
+                            callback();
+                        },
+                        timeout: 3000
+                    });
+                }
+            }
+
+            function verificarCampo(campoId) {
+                const campo = $("#" + campoId);
+                const valor = campo.val().trim();
+                const palavras = valor.split(/\s+/);
+
+                verificarPalavras(campoId, palavras, function () {
+                    console.log(`Verificação do campo ${campoId} concluída.`);
+                });
+            }
+
+            $("#opiniao").on("blur", function () {
+                const campoId = $(this).attr("id");
+                verificarCampo(campoId);
+            });
+
+            $("form").on("submit", function (e) {
+                // Verificar todos os campos ao enviar o formulário
+                ["opiniao"].forEach((campoId) => {
+                    verificarCampo(campoId);
+                });
+
+                // Verifique se todos os campos são válidos antes de permitir o envio
+                const todosValidos = Object.values(camposValidos).every((valido) => valido);
+
+                if (!todosValidos) {
+                    e.preventDefault();
+                    alert("O formulário não pode ser enviado. Por favor, corrija os erros.");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
