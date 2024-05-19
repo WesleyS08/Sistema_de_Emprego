@@ -331,10 +331,16 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="divBtnAtualizar">
                             <input type="submit" value="Atualizar">
                         </div>
+                        
 
-                        <form method="post" action="../../../src/services/ExcluirConta/excluirContaEmpresa.php">
-                            <div style="    text-align: center;
-                                margin-top: 20px;
+                    </form>
+
+                </div>
+
+
+                <form method="post" action="../../../src/services/ExcluirConta/excluirContaEmpresa.php">
+                    <div style="    text-align: center;
+                                margin-top: -41px;
                                 cursor: pointer;
                                 border: 1px solid #c90000;
                                 font-size: 16pt;
@@ -346,35 +352,26 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 transition: 0.2s ease;
                                 box-shadow: 0px 0px 8px silver;
                                 align-content: center;
-                                margin-left: 35%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                                margin-left: 38%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
 
-                                <a href="#" onclick="openModal('../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>&action=delete')">Excluir Conta</a>
-                                
-                            </div>
+                        <a href="#" onclick="openModal('../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>&action=delete')">Excluir Conta</a>
 
-                        </form>
-                        
-                        <!-- Modal de Confirmação -->
-                        <div id="confirmDeleteModal" class="modal">
-                            <div class="modal-content">
-                                <span class="close-button">&times;</span>
-                                <h2>Confirmação de Deleção</h2>
-                                <p>Você tem certeza de que deseja deletar esta vaga?</p>
-                                <button class="cancel-button" onclick="closeModal()">Cancelar</button>
-                                <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
-                            </div>
-                        </div>
+                    </div>
+
+                </form>
+
+                <!-- Modal de Confirmação -->
+                <div id="confirmDeleteModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Confirmação de Deleção</h2>
+                        <p>Você tem certeza de que deseja deletar esta vaga?</p>
+                        <button class="cancel-button" onclick="closeModal()">Cancelar</button>
+                        <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
+                    </div>
                 </div>
-
-
-
-
-                <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
-
+</form>
         </div>
-
-        </form>
-    </div>
     </div>
     <footer>
         <a>Política de Privacidade</a>
@@ -382,148 +379,148 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
     </footer>
-        <script src="https://cdn.lordicon.com/lordicon.js"></script>
-        <script src="mostraIcone.js"></script>
-        <script src="avisoInicial.js"></script>
-        <script src="adicionaElementos.js"></script>
-        <script src="mascaras.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            // Função para exibir o aviso quando o usuário alterar o campo de email
-            function exibirAviso() {
-                document.getElementById('aviso').style.display = 'block';
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="mostraIcone.js"></script>
+    <script src="avisoInicial.js"></script>
+    <script src="adicionaElementos.js"></script>
+    <script src="mascaras.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Função para exibir o aviso quando o usuário alterar o campo de email
+        function exibirAviso() {
+            document.getElementById('aviso').style.display = 'block';
+        }
+
+        // Adicionar um evento de clique ao campo de email para chamar a função exibirAviso()
+        document.getElementById('email').addEventListener('change', exibirAviso);
+    </script>
+    <?php
+    // Obtém a URL da imagem de perfil do banco de dados
+    $urlImagemPerfil = $dadosEmpresa['Img_Perfil'];
+    ?>
+    <script>
+        $(document).ready(function() {
+            // Adiciona um evento de clique ao botão de edição de foto de perfil
+            $('#divFotoDePerfil').click(function() {
+                $('#foto_perfil_upload').click(); // Simula o clique no campo de upload de foto de perfil
+            });
+
+            // Evento disparado quando um arquivo é selecionado para a foto de perfil
+            $('#foto_perfil_upload').change(function() {
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                // Define o que fazer quando o arquivo é lido
+                reader.onload = function(e) {
+                    $('#preview_container').css('background-image', 'url(' + e.target.result + ')'); // Define a imagem de fundo com a imagem carregada
+                    $('#preview_container').show(); // Exibe o contêiner de pré-visualização
+                };
+
+                // Lê o arquivo como uma URL de dados
+                reader.readAsDataURL(file);
+            });
+
+            // Carrega a imagem de perfil ao carregar a página
+            $('#preview_container').css('background-image', 'url(<?php echo $urlImagemPerfil; ?>)');
+        });
+    </script>
+    <?php
+    //
+    $urlImagemFundo = $dadosEmpresa['Img_Banner'];
+    ?>
+    <script>
+        $(document).ready(function() {
+            // Função para carregar a imagem de fundo com base na URL fornecida
+            function carregarImagemDeFundo(url) {
+                $('.divBackgroundImg').css('background-image', 'url(' + url + ')');
             }
 
-            // Adicionar um evento de clique ao campo de email para chamar a função exibirAviso()
-            document.getElementById('email').addEventListener('change', exibirAviso);
-        </script>
-        <?php
-        // Obtém a URL da imagem de perfil do banco de dados
-        $urlImagemPerfil = $dadosEmpresa['Img_Perfil'];
-        ?>
-        <script>
-            $(document).ready(function() {
-                // Adiciona um evento de clique ao botão de edição de foto de perfil
-                $('#divFotoDePerfil').click(function() {
-                    $('#foto_perfil_upload').click(); // Simula o clique no campo de upload de foto de perfil
-                });
+            // Carrega a imagem de fundo ao carregar a página
+            carregarImagemDeFundo('<?php echo $urlImagemFundo; ?>');
 
-                // Evento disparado quando um arquivo é selecionado para a foto de perfil
-                $('#foto_perfil_upload').change(function() {
-                    var file = this.files[0];
-                    var reader = new FileReader();
-
-                    // Define o que fazer quando o arquivo é lido
-                    reader.onload = function(e) {
-                        $('#preview_container').css('background-image', 'url(' + e.target.result + ')'); // Define a imagem de fundo com a imagem carregada
-                        $('#preview_container').show(); // Exibe o contêiner de pré-visualização
-                    };
-
-                    // Lê o arquivo como uma URL de dados
-                    reader.readAsDataURL(file);
-                });
-
-                // Carrega a imagem de perfil ao carregar a página
-                $('#preview_container').css('background-image', 'url(<?php echo $urlImagemPerfil; ?>)');
+            // Adiciona um evento de clique ao botão de edição do fundo
+            $('.btnEditarFundo').click(function() {
+                // Simula o clique no campo de upload de fundo
+                $('#fundo_upload').click();
             });
-        </script>
-        <?php
-        //
-        $urlImagemFundo = $dadosEmpresa['Img_Banner'];
-        ?>
-        <script>
-            $(document).ready(function() {
-                // Função para carregar a imagem de fundo com base na URL fornecida
-                function carregarImagemDeFundo(url) {
-                    $('.divBackgroundImg').css('background-image', 'url(' + url + ')');
+
+            // Evento disparado quando um arquivo é selecionado
+            $('#fundo_upload').change(function() {
+                // Lê o arquivo selecionado
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                // Define o que fazer quando o arquivo é lido
+                reader.onload = function(e) {
+                    // Aplica a imagem de fundo à div
+                    carregarImagemDeFundo(e.target.result);
+                };
+
+                // Lê o arquivo como uma URL de dados
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
+    <script src="../../../modoNoturno.js"></script>
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+
+        $(".btnModo").click(function() {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: {
+                    tema: novoTema,
+                    idPessoa: idPessoa
+                },
+                success: function() {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function(error) {
+                    console.error("Erro ao salvar o tema:", error);
                 }
-
-                // Carrega a imagem de fundo ao carregar a página
-                carregarImagemDeFundo('<?php echo $urlImagemFundo; ?>');
-
-                // Adiciona um evento de clique ao botão de edição do fundo
-                $('.btnEditarFundo').click(function() {
-                    // Simula o clique no campo de upload de fundo
-                    $('#fundo_upload').click();
-                });
-
-                // Evento disparado quando um arquivo é selecionado
-                $('#fundo_upload').change(function() {
-                    // Lê o arquivo selecionado
-                    var file = this.files[0];
-                    var reader = new FileReader();
-
-                    // Define o que fazer quando o arquivo é lido
-                    reader.onload = function(e) {
-                        // Aplica a imagem de fundo à div
-                        carregarImagemDeFundo(e.target.result);
-                    };
-
-                    // Lê o arquivo como uma URL de dados
-                    reader.readAsDataURL(file);
-                });
             });
-        </script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script>
-            var temaDoBancoDeDados = "<?php echo $tema; ?>";
-        </script>
-        <script src="../../../modoNoturno.js"></script>
-        <script>
-            var idPessoa = <?php echo $idPessoa; ?>;
-
-            $(".btnModo").click(function() {
-                var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-
-
-                // Salva o novo tema no banco de dados via AJAX
-                $.ajax({
-                    url: "../../services/Temas/atualizar_tema.php",
-                    method: "POST",
-                    data: {
-                        tema: novoTema,
-                        idPessoa: idPessoa
-                    },
-                    success: function() {
-                        console.log("Tema atualizado com sucesso");
-                    },
-                    error: function(error) {
-                        console.error("Erro ao salvar o tema:", error);
-                    }
-                });
-                // Atualiza a classe do body para mudar o tema
-                if (novoTema === "noturno") {
-                    $("body").addClass("noturno");
-                    Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
-                } else {
-                    $("body").removeClass("noturno");
-                    Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
-                }
-
-            });
-        </script>
-        <script>
-            function openModal(deleteUrl) {
-                // Define o URL de deleção
-                document.getElementById("confirmDeleteButton").setAttribute("href", deleteUrl);
-                // Exibe o modal
-                document.getElementById("confirmDeleteModal").style.display = "block";
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
             }
 
-            function closeModal() {
-                // Fecha o modal
-                document.getElementById("confirmDeleteModal").style.display = "none";
+        });
+    </script>
+    <script>
+        function openModal(deleteUrl) {
+            // Define o URL de deleção
+            document.getElementById("confirmDeleteButton").setAttribute("href", deleteUrl);
+            // Exibe o modal
+            document.getElementById("confirmDeleteModal").style.display = "block";
+        }
+
+        function closeModal() {
+            // Fecha o modal
+            document.getElementById("confirmDeleteModal").style.display = "none";
+        }
+
+        document.querySelector(".close-button").addEventListener("click", closeModal);
+
+        // Fecha o modal ao clicar fora do modal
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("confirmDeleteModal")) {
+                closeModal();
             }
-
-            document.querySelector(".close-button").addEventListener("click", closeModal);
-
-            // Fecha o modal ao clicar fora do modal
-            window.onclick = function(event) {
-                if (event.target == document.getElementById("confirmDeleteModal")) {
-                    closeModal();
-                }
-            };
-        </script>
+        };
+    </script>
 
 </body>
 
