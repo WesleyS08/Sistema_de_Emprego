@@ -89,6 +89,8 @@ function enviarDados() {
             console.log(data);
             // Enviar a imagem agora
             enviarImagem(formData.idPessoa);
+            if (data.message === "Questionário criado com sucesso." && data.redirect) {
+                window.location.href = data.redirect; }
         })
         .catch(error => {
             console.error('Erro ao enviar dados:', error);

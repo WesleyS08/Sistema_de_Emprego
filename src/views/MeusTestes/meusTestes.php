@@ -220,7 +220,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     }
 
                                     // Exibir o HTML com os detalhes do questionário e o total de respostas
-                                    echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.html">';
+                                    echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
                                     echo '<article class="testeCarrossel">';
                                     echo '<div class="divAcessos">';
                                     echo '<img src="../../../imagens/people.svg"></img>';

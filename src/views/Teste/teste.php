@@ -4,12 +4,21 @@ include "../../services/conexão_com_banco.php";
 // Iniciar a sessão
 session_start();
 
-// Verificar se a sessão não está ativada
-if (!isset($_SESSION['email_session']) && !isset($_SESSION['google_session'])) {
-    // Redirecionar o usuário para a página anterior
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
-    exit();
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
+$emailUsuario = '';
+
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'candidato') {
+    $emailUsuario = $_SESSION['google_session'];
+} else {
+
+    header("Location: ../Login/login.html");
+    exit;
 }
+
+$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
 
 // Recuperar o ID do questionário da URL
 $id_questionario = $_GET['id'];

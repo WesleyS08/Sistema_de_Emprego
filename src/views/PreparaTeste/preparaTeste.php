@@ -18,7 +18,7 @@ if(isset($_GET['id'])) {
     }
 
     // Consulta para obter os detalhes do questionário com base no ID
-    $sql = "SELECT q.Nome, q.Area, q.DataQuestionario, q.Nivel, q.Descricao, q.Tempo, e.Nome_da_Empresa
+    $sql = "SELECT q.Nome, q.Area, q.DataQuestionario, q.Nivel, q.Descricao, q.Tempo, q.ImagemQuestionario, e.Nome_da_Empresa
             FROM Tb_Questionarios q
             JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
             JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
@@ -35,6 +35,7 @@ if(isset($_GET['id'])) {
         $nivelQuestionario = $row['Nivel'];
         $duracaoTeste = $row['Tempo'];
         $nomeEmpresa = $row['Nome_da_Empresa'];
+        $imagemQuestionario = $row['ImagemQuestionario'];
 ?>
 
 <!DOCTYPE html>
@@ -76,9 +77,18 @@ if(isset($_GET['id'])) {
                 </div>
             </header>            
             <section class="sectionPrincipal">
-                <div class="divImgteste">
-                    <!-- Aqui irá a lógica futura de inserção de imagem no questionário, se houver... -->
-                </div>
+            <div class="divImgteste">
+                <?php
+                // Verifica se a imagem do questionário está definida
+                if (!empty($imagemQuestionario)) {
+                    // Mostra a imagem do questionário
+                    echo '<img src="' . $imagemQuestionario . '" alt="Imagem do Questionário">';
+                } else {
+                    // Caso a imagem não esteja definida, devemos mostrar uma imagem padrão, que no momento, não existe, então, só tem um echo mesmo :)
+                    echo 'Imagem não disponível';
+                }
+                ?>
+            </div>
                 <div class="divInformacoes">
                     <div>
                         <div class="divLabels"><label class="infos">Por: </label><label class="infos" id="autorTeste"><?php echo $nomeEmpresa ?></label></div>

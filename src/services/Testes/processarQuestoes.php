@@ -87,7 +87,12 @@ try {
     $pdo->commit();
 
     // Retorna uma resposta de sucesso
-    echo json_encode(array("message" => "Questionário criado com sucesso."));
+    echo json_encode(array(
+        "message" => "Questionário criado com sucesso.",
+        "redirect" => "../../views/AvisoQuestionarioCriado/avisoQuestionarioCriado.html"
+    ));
+    exit();
+
 } catch (Exception $e) {
     // Se ocorrer algum erro, rollback da transação e retorna uma resposta de erro
     $pdo->rollBack();

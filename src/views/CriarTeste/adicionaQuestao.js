@@ -1,5 +1,6 @@
 let questoesAdicionadas = document.querySelector(".questoesAdicionadas");
 let acumula = 2;
+const LIMITE_QUESTOES = 30;
 
 function validarPalavras(palavra) {
     return new Promise((resolve, reject) => {
@@ -24,6 +25,19 @@ function validarPalavras(palavra) {
 }
 
 function AdicionarQuestao() {
+    // Verificar se atingiu o limite de 30 questões
+    if (acumula > LIMITE_QUESTOES) {
+        let aviso = document.querySelector("#avisoLimite");
+        if (!aviso) {
+            aviso = document.createElement("p");
+            aviso.id = "avisoLimite";
+            aviso.style.color = "red";
+            aviso.textContent = "Não é possível adicionar mais questões.";
+            document.querySelector("#btnAdicionar").insertAdjacentElement("afterend", aviso);
+        }
+        return;
+    }
+
     // Verificar se a pergunta anterior está vazia
     if (acumula > 2) {
         let perguntasAnteriores = document.querySelectorAll(".divPergunta");
