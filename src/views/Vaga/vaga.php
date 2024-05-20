@@ -430,14 +430,15 @@ $totaldisponivel = 4 - $total_inscricoes;
                                 echo '     </button>';
                                 echo ' </div>';
                             } elseif ($Status == 'Aberto' && $candidatoInscrito == 1  && $verificado == 1) {
-                                // Indique que o candidato já está inscrito
+                                // Indicar que o candidato já está inscrito e permitir retirar candidatura
                                 echo '    <div class="divSendButton">';
-                                echo '    <button disabled style="cursor: default; background-color: #723911;">';
-                                echo '        <h4>Já inscrito</h4>';
-                                echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"';
-                                echo '            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                                echo '    </button>';
-                                echo '</div>';
+                                echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
+                                echo '        <button>';
+                                echo '            <h4>Retirar Candidatura</h4>';
+                                echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                                echo '        </button>';
+                                echo '    </form>';
+                                echo '    </div>';
                             } elseif ($Status != 'Aberto') {
                                 // Indique que a vaga está encerrada
                                 echo '<p>Status: Encerrado</p>';
