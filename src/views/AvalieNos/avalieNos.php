@@ -74,10 +74,21 @@ if (empty($emailUsuario)) {
         }
 
         #aviso-opiniao {
-    color: red;
-    margin-top: -5px;
-}
+            color: #red;
+            margin-top: -5px;
+        }
 
+        .alert-success {
+            background-color: #0c750a;
+            /* Verde claro */
+            color: #fff;
+            /* Verde escuro para o texto */
+            padding: 10px;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -95,7 +106,9 @@ if (empty($emailUsuario)) {
                     <legend>
                         <h3>Avalie-nos</h3>
                     </legend>
-                    <form method="post" action="../../services/Avaliação/Avaliaçao.php">
+                    <div id="sucesso" style="display: none;" class="alert alert-success">Avaliação enviada com sucesso!
+                    </div>
+                    <form id="avaliacaoForm" method="post">
                         <input type="hidden" name="email" value="<?php echo htmlspecialchars($emailUsuario); ?>">
                         <input type="hidden" name="idPessoa" value="<?php echo htmlspecialchars($idPessoa); ?>">
                         <div class="divEstrelas">
@@ -302,6 +315,37 @@ if (empty($emailUsuario)) {
                     e.preventDefault();
                     alert("O formulário não pode ser enviado. Por favor, corrija os erros.");
                 }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#avaliacaoForm").on("submit", function (e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: "../../services/Avaliação/Avaliaçao.php",
+                    type: "POST",
+                    data: formData,
+                    success: function (response) {
+                        // Verificar a resposta do servidor
+                        if (response.trim() === 'success') {
+                            $("#sucesso").show();
+
+                            // Esconder a mensagem após 5 segundos
+                            setTimeout(function () {
+                                $("#sucesso").hide();
+                            }, 5000);
+                        } else {
+                            alert(response); // Exibir mensagem de erro
+                        }
+                    },
+                    error: function () {
+                        alert("Erro ao enviar a avaliação. Tente novamente.");
+                    }
+                });
             });
         });
     </script>

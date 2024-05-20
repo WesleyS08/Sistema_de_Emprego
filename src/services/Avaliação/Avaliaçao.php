@@ -28,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt) {
         // Vincular os parâmetros à consulta
         $stmt->bind_param("iis", $idPessoa, $nota, $texto);
-        
+
         // Executar a declaração
         if ($stmt->execute()) {
-            echo "Avaliação salva com sucesso.";
+            echo "success";
         } else {
             echo "Erro ao salvar a avaliação.";
         }
