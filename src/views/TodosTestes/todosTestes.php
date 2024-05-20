@@ -38,23 +38,72 @@ if (!empty($emailUsuario)) {
         echo "Erro na preparação da consulta.";
     }
 } else {
-    // Se o email do usuário não estiver definido, exiba uma mensagem de erro
-    echo "Email do usuário não definido.";
+}
+$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+$stmt = $_con->prepare($sql);
+
+// Verifique se a preparação da declaração foi bem-sucedida e atribuir a variável 
+if ($stmt) {
+    $stmt->bind_param("s", $emailUsuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Verifique se a consulta retornou resultados
+    if ($result->num_rows > 0) {
+        // Obtenha o ID da pessoa
+        $row = $result->fetch_assoc();
+        $idPessoa = $row['Id_Pessoas'];
+    }
+    //! Feche a declaração
+    $stmt->close();
 }
 
-$sql = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
-FROM Tb_Questionarios q
-INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
-INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
-INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas";
-$result = $_con->query($sql);
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
 
-$_con->close();
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
 
+    $result = $stmt->get_result();
+    if ($result) {
+        $row = $result->fetch_assoc();
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null; // No caso de não haver resultado
+        }
+    } else {
+        $tema = null; // Se o resultado for nulo
+    }
+} else {
+    // ! Arrumar questão de tratamento de Erros !! 
+    die("Erro ao preparar a query.");
+}
+
+// Quarta Consulta ao banco de dados para obter as areas 
+$sql_areas = "
+    SELECT DISTINCT Area 
+    FROM Tb_questionarios 
+    ORDER BY Area ASC";
+
+$stmt_areas = $_con->prepare($sql_areas);
+$stmt_areas->execute();
+$result_areas = $stmt_areas->get_result();
+
+$areas = ["Todas"]; // Adicionar a opção "Todas" ao início do array
+
+if ($result_areas && $result_areas->num_rows > 0) {
+    while ($row = $result_areas->fetch_assoc()) {
+        $areas[] = $row['Area'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,15 +111,16 @@ $_con->close();
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/todosStyle.css">
 </head>
+
 <body>
     <nav>
         <input type="checkbox" id="check">
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeCandidato/homeCandidato.html"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
-        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
-        <ul>            
+        <a href="#"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+        <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
@@ -87,71 +137,57 @@ $_con->close();
         <div class="container">
             <div class="divPesquisa">
                 <div class="divFlexInput">
-                    <input class="inputPesquisa" type="text" placeholder="Pesquisar">
-                    <button class="searchButton">
-                        <lord-icon
-                            src="https://cdn.lordicon.com/kkvxgpti.json"
-                            trigger="hover"
-                            colors="primary:#f5f5f5"
-                            style="width:36px;height:36px">
-                        </lord-icon>
-                    </button>
+                    <input class="inputPesquisa" type="text" placeholder="Pesquisa por Título">
+                </div>
+                <div id="sugestoes" class="sugestoes" style="display: none;">
                 </div>
                 <div id="mostraFiltros">
                     <h3>Filtros</h3>
-                    
                     <img id="iconeFiltro" src="../../assets/images/icones_diversos/showHidden.svg">
                 </div>
                 <div class="containerFiltros">
                     <div class="contentFiltro">
                         <label class="nomeFiltro">Área:</label>
                         <select class="selectArea">
-                            <option>Tecnologia</option>
-                            <option>Medicia</option>
-                            <option>Engenharia</option>
-                            <option>Economia</option>                                        
-                            <option>Vendas</option>  
-                            <option>Educação</option>                                    
-                            <option>Direito</option>                                                                          
-                            <option>Administração</option>                                                                                                            
-                            <option>Agronegócio</option>                                                                                                                                                  
-                            <option>Gastronomia</option>
+                            <?php
+                            foreach ($areas as $area) {
+                                echo "<option value='$area'>$area</option>";
+                            } ?>
                         </select>
                     </div>
                     <div class="contentFiltro">
                         <label class="nomeFiltro">Criador do teste:</label>
-                        <input class="selectArea" type="text" id="criadorFiltro" name="criadorFiltro" placeholder="Cisco, Microsoft, etc">
+                        <input class="selectArea" type="text" id="criadorFiltro" name="criadorFiltro"
+                            placeholder="Cisco, Microsoft, etc">
                     </div>
                     <div class="contentFiltro">
                         <label class="nomeFiltro">Nível:</label>
                         <input class="checkBoxTipo" type="checkbox" name="nivel" id="basico" value="Básico" required>
-                        <input class="checkBoxTipo" type="checkbox" name="nivel" id="intermediario" value="Intermediário" required>
-                        <input class="checkBoxTipo" type="checkbox" name="nivel" id="experiente" value="Experiente" required>
+                        <input class="checkBoxTipo" type="checkbox" name="nivel" id="intermediario"
+                            value="Intermediário" required>
+                        <input class="checkBoxTipo" type="checkbox" name="nivel" id="experiente" value="Experiente"
+                            required>
                         <label for="basico" class="btnCheckBox" id="btnBasico">Básico</label>
                         <label for="intermediario" class="btnCheckBox" id="btnIntermediario">Intermediário</label>
                         <label for="experiente" class="btnCheckBox" id="btnExperiente">Experiente</label>
                     </div>
-                    <div class="contentFiltro">
-                        <button>Aplicar</button>
-                    </div>
-                </div>                
+                </div>
             </div>
-            <div class="divGridTestes">               
+            <div class="divGridTestes">
                 <?php
-                
+                $sql = "SELECT DISTINCT q.*, e.Nome_da_Empresa
+        FROM Tb_Questionarios q
+        LEFT JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+        LEFT JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ";
+                $result = $_con->query($sql);
+
                 if ($result->num_rows > 0) {
-                    // Contador para controlar a exibição em grids 3x3
-                    $contador = 0;
-                
-                    // Loop através dos resultados da consulta
                     while ($row = $result->fetch_assoc()) {
-                        // Extrai os dados do questionário
                         $idQuestionario = $row['Id_Questionario'];
                         $nome = $row['Nome'];
                         $area = $row['Area'];
                         $nomeEmpresa = $row['Nome_da_Empresa'];
-                
-                        // Saída HTML para cada questionário
+
                         echo "<a class='testeCarrosselLink' href='../PreparaTeste/preparaTeste.php?id=$idQuestionario'>";
                         echo '<article class="testeCarrossel">';
                         echo '<div class="divAcessos">';
@@ -171,22 +207,118 @@ $_con->close();
                     }
                 } else {
                     echo "<p> Nenhum questionário encontrado.</p>";
-                }              
+                }
                 ?>
-            </div>  
+            </div>
         </div>
-    </div>  
+    </div>
     <footer>
         <a>Política de Privacidade</a>
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
         <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
-    </footer>  
+    </footer>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="tituloDigitavel.js"></script>
     <script src="checkButtons.js"></script>
-    <script src="mostrarFiltros.js"></script>    
+    <script src="mostrarFiltros.js"></script>
+    <!-- Atribui o tema salvo no banco de dados a essa variável e passa ela pro modo noturno  -->
+    <script>
+        var temaDoBancoDeDados = "<?php echo $tema; ?>";
+    </script>
     <script src="../../../modoNoturno.js"></script>
+    <script>
+        var idPessoa = <?php echo $idPessoa; ?>;
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno();
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); /
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.inputPesquisa').keyup(function () {
+                var query = $(this).val();
+                var area = $('.selectArea').val(); // Captura o valor selecionado na área
+                if (query != '') {
+                    $.ajax({
+                        url: 'obter_sugestoes.php',
+                        method: 'POST',
+                        data: { query: query, area: area }, // Envia também a área selecionada
+                        success: function (data) {
+                            $('#sugestoes').html(data);
+                            $('.sugestoes').show();
+                            // Exibe os dados recebidos no console do navegador
+                            console.table(data);
+                        }
+                    });
+                } else {
+                    $('.sugestoes').hide();
+                }
+            });
+
+            $(document).on('click', '.sugestao-item', function () {
+                var sugestao = $(this).text();
+                $('.inputPesquisa').val(sugestao); // Define o valor do campo de pesquisa com a sugestão clicada
+                $('.sugestoes').hide(); // Esconde as sugestões após clicar
+            });
+        });
+    </script>
+  <script>
+$(document).ready(function () {
+    // Função para executar a pesquisa
+    function executarPesquisa() {
+        var termo = $('.inputPesquisa').val();
+        var area = $('.selectArea').val();
+        var criador = $('#criadorFiltro').val();
+        var niveis = [];
+        $('.checkBoxTipo:checked').each(function () {
+            niveis.push($(this).val());
+        });
+
+        // Realizar a solicitação AJAX para processar a pesquisa
+        $.ajax({
+            url: 'processar_pesquisa.php',
+            method: 'POST',
+            data: { termo: termo, area: area, criador: criador, niveis: niveis },
+            success: function (response) {
+                $('.divGridTestes').html(response); 
+            },
+            error: function (error) {
+                console.error("Erro ao processar a pesquisa:", error);
+            }
+        });
+    }
+
+    // Executar a pesquisa quando houver uma alteração em qualquer elemento relevante
+    $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
+        executarPesquisa();
+    });
+
+    // Executar a pesquisa inicialmente ao carregar a página
+    executarPesquisa();
+});
+</script>
 </body>
 <style>
     /* Adiciona espaçamento entre os questionários */
@@ -196,8 +328,29 @@ $_con->close();
 
     /* Define o efeito de hover */
     .testeCarrosselCustom:hover {
-        transform: scale(1.05); /* Aumenta em 5% ao passar o mouse */
-        transition: transform 0.3s ease; /* Transição suave com duração de 0.3 segundos */
+        transform: scale(1.05);
+        /* Aumenta em 5% ao passar o mouse */
+        transition: transform 0.3s ease;
+        /* Transição suave com duração de 0.3 segundos */
+    }
+
+    .sugestoes {
+        position: absolute;
+        border: 1px solid #ccc;
+        background-color: #cecece;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+    .sugestao-item {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .sugestao-item:hover {
+        background-color: #fff;
     }
 </style>
+
 </html>

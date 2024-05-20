@@ -148,6 +148,7 @@ VALUES
 -- Populando a tabela Tb_Avaliacoes com texto aleatório limitado
 INSERT INTO `SIAS`.`Tb_Avaliacoes` (`Tb_Pessoas_Id`, `Nota`, `Texto`)
 SELECT 
+    FLOOR(1 + RAND() * 50) AS `Tb_Pessoas_Id`,  -- IDs aleatórios de 1 a 50
     FLOOR(1 + RAND() * 5) AS `Nota`,  -- Nota aleatória de 1 a 5
     LEFT(CONCAT('Texto de avaliação com até 150 caracteres. ', RPAD('', FLOOR(1 + RAND() * 100), '.')), 100) AS `Texto`  -- Texto aleatório limitado a 150 caracteres
 FROM 
