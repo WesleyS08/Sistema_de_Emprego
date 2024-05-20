@@ -156,11 +156,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         </select>
                     </div>
                     <div class="contentFiltro">
-                        <label class="nomeFiltro">Criador do teste:</label>
-                        <input class="selectArea" type="text" id="criadorFiltro" name="criadorFiltro"
-                            placeholder="Cisco, Microsoft, etc">
-                    </div>
-                    <div class="contentFiltro">
                         <label class="nomeFiltro">Nível:</label>
                         <input class="checkBoxTipo" type="checkbox" name="nivel" id="basico" value="Básico" required>
                         <input class="checkBoxTipo" type="checkbox" name="nivel" id="intermediario"
@@ -284,41 +279,41 @@ if ($result_areas && $result_areas->num_rows > 0) {
             });
         });
     </script>
-  <script>
-$(document).ready(function () {
-    // Função para executar a pesquisa
-    function executarPesquisa() {
-        var termo = $('.inputPesquisa').val();
-        var area = $('.selectArea').val();
-        var criador = $('#criadorFiltro').val();
-        var niveis = [];
-        $('.checkBoxTipo:checked').each(function () {
-            niveis.push($(this).val());
-        });
+    <script>
+        $(document).ready(function () {
+            // Função para executar a pesquisa
+            function executarPesquisa() {
+                var termo = $('.inputPesquisa').val();
+                var area = $('.selectArea').val();
+                var criador = $('#criadorFiltro').val();
+                var niveis = [];
+                $('.checkBoxTipo:checked').each(function () {
+                    niveis.push($(this).val());
+                });
 
-        // Realizar a solicitação AJAX para processar a pesquisa
-        $.ajax({
-            url: 'processar_pesquisa.php',
-            method: 'POST',
-            data: { termo: termo, area: area, criador: criador, niveis: niveis },
-            success: function (response) {
-                $('.divGridTestes').html(response); 
-            },
-            error: function (error) {
-                console.error("Erro ao processar a pesquisa:", error);
+                // Realizar a solicitação AJAX para processar a pesquisa
+                $.ajax({
+                    url: 'processar_pesquisa.php',
+                    method: 'POST',
+                    data: { termo: termo, area: area, criador: criador, niveis: niveis },
+                    success: function (response) {
+                        $('.divGridTestes').html(response);
+                    },
+                    error: function (error) {
+                        console.error("Erro ao processar a pesquisa:", error);
+                    }
+                });
             }
+
+            // Executar a pesquisa quando houver uma alteração em qualquer elemento relevante
+            $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
+                executarPesquisa();
+            });
+
+            // Executar a pesquisa inicialmente ao carregar a página
+            executarPesquisa();
         });
-    }
-
-    // Executar a pesquisa quando houver uma alteração em qualquer elemento relevante
-    $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
-        executarPesquisa();
-    });
-
-    // Executar a pesquisa inicialmente ao carregar a página
-    executarPesquisa();
-});
-</script>
+    </script>
 </body>
 <style>
     /* Adiciona espaçamento entre os questionários */

@@ -204,16 +204,16 @@ LIMIT 25;       -- Inserir 25 inscrições
 -- Inserir os 10 questionários na tabela Tb_Questionarios
 INSERT INTO `SIAS`.`Tb_Questionarios` (`Nome`, `Area`, `DataQuestionario`, `Nivel`, `Tempo`, `Descricao`, `ImagemQuestionario`)
 VALUES
-('Questionário de TI', 'Tecnologia da Informação', CURDATE(), 'Fácil', '30 minutos', 'Avaliação de conhecimentos em TI.', NULL),
-('Questionário de Marketing', 'Marketing', CURDATE(), 'Médio', '40 minutos', 'Avaliação de conhecimentos em Marketing.', NULL),
-('Questionário de Finanças', 'Finanças', CURDATE(), 'Médio', '40 minutos', 'Avaliação de conhecimentos em Finanças.', NULL),
-('Questionário de Recursos Humanos', 'Recursos Humanos', CURDATE(), 'Difícil', '50 minutos', 'Avaliação de conhecimentos em RH.', NULL),
-('Questionário de Gestão de Projetos', 'Gestão de Projetos', CURDATE(), 'Médio', '45 minutos', 'Avaliação de conhecimentos em Gestão de Projetos.', NULL),
-('Questionário de Liderança', 'Liderança', CURDATE(), 'Difícil', '50 minutos', 'Avaliação de conhecimentos em Liderança.', NULL),
-('Questionário de Ética Profissional', 'Ética Profissional', CURDATE(), 'Fácil', '30 minutos', 'Avaliação de conhecimentos em Ética Profissional.', NULL),
-('Questionário de Comunicação', 'Comunicação', CURDATE(), 'Médio', '40 minutos', 'Avaliação de conhecimentos em Comunicação.', NULL),
-('Questionário de Logística', 'Logística', CURDATE(), 'Fácil', '35 minutos', 'Avaliação de conhecimentos em Logística.', NULL),
-('Questionário de Vendas', 'Vendas', CURDATE(), 'Difícil', '50 minutos', 'Avaliação de conhecimentos em Vendas.', NULL);
+('Questionário de TI', 'Tecnologia da Informação', CURDATE(), 'Básico', '30 minutos', 'Avaliação de conhecimentos em TI.', NULL),
+('Questionário de Marketing', 'Marketing', CURDATE(), 'Intermediário', '40 minutos', 'Avaliação de conhecimentos em Marketing.', NULL),
+('Questionário de Finanças', 'Finanças', CURDATE(), 'Intermediário', '40 minutos', 'Avaliação de conhecimentos em Finanças.', NULL),
+('Questionário de Recursos Humanos', 'Recursos Humanos', CURDATE(), 'Experiente', '50 minutos', 'Avaliação de conhecimentos em RH.', NULL),
+('Questionário de Gestão de Projetos', 'Gestão de Projetos', CURDATE(), 'Intermediário', '45 minutos', 'Avaliação de conhecimentos em Gestão de Projetos.', NULL),
+('Questionário de Liderança', 'Liderança', CURDATE(), 'Experiente', '50 minutos', 'Avaliação de conhecimentos em Liderança.', NULL),
+('Questionário de Ética Profissional', 'Ética Profissional', CURDATE(), 'Básico', '30 minutos', 'Avaliação de conhecimentos em Ética Profissional.', NULL),
+('Questionário de Comunicação', 'Comunicação', CURDATE(), 'Intermediário', '40 minutos', 'Avaliação de conhecimentos em Comunicação.', NULL),
+('Questionário de Logística', 'Logística', CURDATE(), 'Básico', '35 minutos', 'Avaliação de conhecimentos em Logística.', NULL),
+('Questionário de Vendas', 'Vendas', CURDATE(), 'Experiente', '50 minutos', 'Avaliação de conhecimentos em Vendas.', NULL);
 
 -- Recuperar os Ids dos questionários recém-inseridos
 SET @id_questionario_ti = (SELECT `Id_Questionario` FROM `SIAS`.`Tb_Questionarios` WHERE `Nome` = 'Questionário de TI');
