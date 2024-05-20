@@ -145,6 +145,21 @@ VALUES
 ('Estágio', 'Especialista em Redes Sociais', 'Gestão de redes sociais.', 'Marketing', 'São Paulo', 'Pleno', NOW(), 'Remoto', 'Vale transporte, Seguro de vida', 'Experiência com redes sociais', '10:00 - 19:00', 'SP', 'Integral', '22000-000', 'Av. Paulista', '456', 'Bela Vista'),
 ('PJ', 'Administrador de Sistemas', 'Gerenciamento de sistemas e servidores.', 'TI', 'Recife', 'Sênior', NOW(), 'Remoto', 'Plano de saúde, Vale alimentação', 'Experiência com administração de sistemas', '09:00 - 18:00', 'PE', 'Integral', '23000-000', 'Rua da Aurora', '123', 'Boa Vista');
 
+-- Populando a tabela Tb_Avaliacoes com texto aleatório limitado
+INSERT INTO `SIAS`.`Tb_Avaliacoes` (`Tb_Pessoas_Id`, `Nota`, `Texto`)
+SELECT 
+    FLOOR(1 + RAND() * 5) AS `Nota`,  -- Nota aleatória de 1 a 5
+    LEFT(CONCAT('Texto de avaliação com até 150 caracteres. ', RPAD('', FLOOR(1 + RAND() * 100), '.')), 100) AS `Texto`  -- Texto aleatório limitado a 150 caracteres
+FROM 
+    -- Utiliza uma tabela auxiliar para gerar múltiplas linhas
+    (SELECT 1 AS `dummy`) AS `d`
+CROSS JOIN
+    -- Uma tabela com números de 1 a 100 (você pode ajustar o número de acordo com a quantidade de avaliações que deseja gerar)
+    (SELECT a.N + b.N * 10 + 1 AS `N` 
+     FROM (SELECT 0 AS `N` UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) AS a
+     CROSS JOIN (SELECT 0 AS `N` UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) AS b
+    ) AS `numbers`
+LIMIT 50;
 
 -- Definir o início do ID para o anúncio (substitua pelo valor correto, como o próximo ID na sequência)
 SET @next_anuncio_id = 1;  -- Começando com o ID 1 para exemplo
@@ -184,3 +199,72 @@ FROM
    LIMIT 13) AS `Candidato`
 ORDER BY RAND() -- Ordem aleatória para distribuir as inscrições
 LIMIT 25;       -- Inserir 25 inscrições
+
+-- Inserir os 10 questionários na tabela Tb_Questionarios
+INSERT INTO `SIAS`.`Tb_Questionarios` (`Nome`, `Area`, `DataQuestionario`, `Nivel`, `Tempo`, `Descricao`, `ImagemQuestionario`)
+VALUES
+('Questionário de TI', 'Tecnologia da Informação', CURDATE(), 'Fácil', '30 minutos', 'Avaliação de conhecimentos em TI.', NULL),
+('Questionário de Marketing', 'Marketing', CURDATE(), 'Médio', '40 minutos', 'Avaliação de conhecimentos em Marketing.', NULL),
+('Questionário de Finanças', 'Finanças', CURDATE(), 'Médio', '40 minutos', 'Avaliação de conhecimentos em Finanças.', NULL),
+('Questionário de Recursos Humanos', 'Recursos Humanos', CURDATE(), 'Difícil', '50 minutos', 'Avaliação de conhecimentos em RH.', NULL),
+('Questionário de Gestão de Projetos', 'Gestão de Projetos', CURDATE(), 'Médio', '45 minutos', 'Avaliação de conhecimentos em Gestão de Projetos.', NULL),
+('Questionário de Liderança', 'Liderança', CURDATE(), 'Difícil', '50 minutos', 'Avaliação de conhecimentos em Liderança.', NULL),
+('Questionário de Ética Profissional', 'Ética Profissional', CURDATE(), 'Fácil', '30 minutos', 'Avaliação de conhecimentos em Ética Profissional.', NULL),
+('Questionário de Comunicação', 'Comunicação', CURDATE(), 'Médio', '40 minutos', 'Avaliação de conhecimentos em Comunicação.', NULL),
+('Questionário de Logística', 'Logística', CURDATE(), 'Fácil', '35 minutos', 'Avaliação de conhecimentos em Logística.', NULL),
+('Questionário de Vendas', 'Vendas', CURDATE(), 'Difícil', '50 minutos', 'Avaliação de conhecimentos em Vendas.', NULL);
+
+-- Recuperar os Ids dos questionários recém-inseridos
+SET @id_questionario_ti = (SELECT `Id_Questionario` FROM `SIAS`.`Tb_Questionarios` WHERE `Nome` = 'Questionário de TI');
+SET @id_questionario_marketing = (SELECT `Id_Questionario` FROM `SIAS`.`Tb_Questionarios` WHERE `Nome` = 'Questionário de Marketing');
+
+-- Populando a tabela Tb_Questoes
+INSERT INTO `SIAS`.`Tb_Questoes` (`Enunciado`, `Area`, `Id_Questionario`)
+VALUES
+('O que é um banco de dados relacional?', 'TI', @id_questionario_ti),
+('Explique o conceito de marketing digital.', 'Marketing', @id_questionario_marketing),
+('Quais são os principais comandos SQL?', 'TI', @id_questionario_ti),
+('Quais são os pilares do marketing tradicional?', 'Marketing', @id_questionario_marketing);
+
+-- Recuperar os Ids das questões recém-inseridas
+SET @id_questao_1 = (SELECT `Id_Questao` FROM `SIAS`.`Tb_Questoes` WHERE `Enunciado` = 'O que é um banco de dados relacional?');
+SET @id_questao_2 = (SELECT `Id_Questao` FROM `SIAS`.`Tb_Questoes` WHERE `Enunciado` = 'Explique o conceito de marketing digital.');
+SET @id_questao_3 = (SELECT `Id_Questao` FROM `SIAS`.`Tb_Questoes` WHERE `Enunciado` = 'Quais são os principais comandos SQL?');
+SET @id_questao_4 = (SELECT `Id_Questao` FROM `SIAS`.`Tb_Questoes` WHERE `Enunciado` = 'Quais são os pilares do marketing tradicional?');
+
+-- Populando a tabela Tb_Alternativas
+INSERT INTO `SIAS`.`Tb_Alternativas` (`Texto`, `Correta`, `Tb_Questoes_Id_Questao`)
+VALUES
+('Um banco de dados que utiliza tabelas para armazenar dados.', true, @id_questao_1),
+('Uma ferramenta para gestão de projetos.', false, @id_questao_1),
+('Uma técnica de desenvolvimento ágil.', false, @id_questao_1),
+('Promoção de produtos por meio de canais digitais.', true, @id_questao_2),
+('Gestão de equipes de vendas.', false, @id_questao_2),
+('Estratégia de fidelização de clientes.', false, @id_questao_2),
+('SELECT, INSERT, UPDATE, DELETE', true, @id_questao_3),
+('JOIN, GROUP BY, ORDER BY', true, @id_questao_3),
+('Python, Java, C++', false, @id_questao_3),
+('Produto, Preço, Praça, Promoção', true, @id_questao_4),
+('Planejamento, Execução, Monitoramento', false, @id_questao_4),
+('Segmentação, Targeting, Posicionamento', false, @id_questao_4);
+
+-- Populando a tabela Tb_Questionario_Questoes
+INSERT INTO `SIAS`.`Tb_Questionario_Questoes` (`Id_Questionario`, `Tb_Questoes_Id_Questao`)
+VALUES
+(@id_questionario_ti, @id_questao_1),
+(@id_questionario_ti, @id_questao_3),
+(@id_questionario_marketing, @id_questao_2),
+(@id_questionario_marketing, @id_questao_4);
+
+-- Populando a tabela Tb_Empresa_Questionario com CNPJs de empresas fictícias já existentes
+INSERT INTO `SIAS`.`Tb_Empresa_Questionario` (`Id_Empresa`, `Id_Questionario`)
+SELECT `CNPJ`, @id_questionario_ti
+FROM `SIAS`.`Tb_Empresa`
+ORDER BY RAND()
+LIMIT 5;
+
+INSERT INTO `SIAS`.`Tb_Empresa_Questionario` (`Id_Empresa`, `Id_Questionario`)
+SELECT `CNPJ`, @id_questionario_marketing
+FROM `SIAS`.`Tb_Empresa`
+ORDER BY RAND()
+LIMIT 5;
