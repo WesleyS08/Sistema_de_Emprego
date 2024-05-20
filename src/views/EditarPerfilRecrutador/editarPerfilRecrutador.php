@@ -111,85 +111,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <title>Editar Perfil</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
-    <style>
-        .modal {
-            display: none;
-            /* Esconde o modal por padrão */
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            /* Permite rolar se necessário */
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Fundo translúcido para o overlay */
-        }
-
-        .modal-content {
-
-            background-color: white;
-            margin: 15% auto;
-            /* Centraliza o modal na tela */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            /* Tamanho do modal */
-            text-align: center;
-            /* Centraliza o texto */
-            border-radius: 10px;
-        }
-
-        .modal-content p {
-            text-align: center;
-            padding: 10px 20px;
-
-        }
-
-        .modal-content .let {
-            text-align: center;
-            padding: 10px 20px;
-
-        }
-
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .delete-button {
-            background-color: red;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .cancel-button {
-            background-color: gray;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .delete-button:hover,
-        .cancel-button:hover {
-            opacity: 0.8;
-        }
-    </style>
 </head>
 
 <body>
@@ -330,47 +251,23 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         </div>
                         <div class="divBtnAtualizar">
                             <input type="submit" value="Atualizar">
+                            <a id="excluir" href="#" onclick="openModal('../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>&action=delete')">Excluir Conta</a>
                         </div>
-                        
-
                     </form>
 
                 </div>
-
-
-                <form method="post" action="../../../src/services/ExcluirConta/excluirContaEmpresa.php">
-                    <div style="    text-align: center;
-                                margin-top: -41px;
-                                cursor: pointer;
-                                border: 1px solid #c90000;
-                                font-size: 16pt;
-                                width: 200px;
-                                height: 50px;
-                                background-color: #ef0505;
-                                color: whitesmoke;
-                                border-radius: 14px;
-                                transition: 0.2s ease;
-                                box-shadow: 0px 0px 8px silver;
-                                align-content: center;
-                                margin-left: 38%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-
-                        <a href="#" onclick="openModal('../../../src/services/ExcluirConta/excluirContaEmpresa.php?id=<?php echo $idPessoa; ?>&action=delete')">Excluir Conta</a>
-
-                    </div>
-
-                </form>
+</form>
 
                 <!-- Modal de Confirmação -->
                 <div id="confirmDeleteModal" class="modal">
                     <div class="modal-content">
                         <span class="close-button">&times;</span>
-                        <h2>Confirmação de Deleção</h2>
-                        <p>Você tem certeza de que deseja deletar esta vaga?</p>
+                        <h4>Confirmação de Deleção</h4>
+                        <p class="naoMuda">Você tem certeza de que deseja deletar esta vaga?</p>
                         <button class="cancel-button" onclick="closeModal()">Cancelar</button>
-                        <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
+                        <a id="confirmDeleteButton" class="delete-button">Deletar</a>
                     </div>
                 </div>
-</form>
         </div>
     </div>
     <footer>

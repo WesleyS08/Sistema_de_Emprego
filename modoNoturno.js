@@ -44,6 +44,7 @@ let legends = document.querySelectorAll("legend");
 
 let backImgs = document.querySelectorAll(".backImg");
 let nomeFiltros = document.querySelectorAll(".nomeFiltro");
+let naoMudas = document.querySelectorAll(".naoMuda");
 
 let gemails = document.querySelectorAll("#gemail");
 let zaps = document.querySelectorAll("#zap");
@@ -96,6 +97,7 @@ function Noturno(){
 
         backImgs.forEach((backImg) => backImg.src="../../assets/images/icones_diversos/backWhite.svg");        
         nomeFiltros.forEach((nomeFiltro) => nomeFiltro.style.color="whitesmoke");        
+        naoMudas.forEach((naoMuda) => naoMuda.style.color="black"); 
         
         divTituloDigitaveis.forEach((divTituloDigitavelTodos) => divTituloDigitavelTodos.style.color="whitesmoke");
         piscas.forEach((pisca) => pisca.style.backgroundColor="whitesmoke");
@@ -158,6 +160,7 @@ function Claro(){
         
         backImgs.forEach((backImg) => backImg.src="../../assets/images/icones_diversos/back.svg");        
         nomeFiltros.forEach((nomeFiltro) => nomeFiltro.style.color="black");
+        naoMudas.forEach((naoMuda) => naoMuda.style.color="black"); 
 
         divTituloDigitaveis.forEach((divTituloDigitavelTodos) => divTituloDigitavelTodos.style.color="black");
         piscas.forEach((pisca) => pisca.style.backgroundColor="black");

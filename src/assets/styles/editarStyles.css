@@ -7,7 +7,6 @@
 }
 
 .divBackgroundImg{
-    background-image: url("../../assets/images/figuras/imgFundo.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -312,11 +311,12 @@ input[type="checkbox"]{
 /* ------------------------- Button -------------------------*/
 
 .divBtnAtualizar{
-    text-align: center;
+    display: flex;
     margin-top: 20px;
+    justify-content: center;
 }
 
-.divBtnAtualizar input{
+.divBtnAtualizar input, .divBtnAtualizar a{
     cursor: pointer;
     border: 1px solid black;
     font-size: 16pt;
@@ -327,8 +327,108 @@ input[type="checkbox"]{
     border-radius: 14px;
     transition: 0.2s ease;    
     box-shadow: 0px 0px 8px silver;
+    margin: 0px 20px;
 }
 
-.divBtnAtualizar input:hover{
+#excluir{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: brown;
+    border: 1px solid brown;
+}
+
+.divBtnAtualizar input:hover, #excluir:hover{
     transform: scale(1.1);
+}
+
+
+/* ------------------------- Modal -------------------------*/
+
+.modal {
+    display: none;
+    /* Esconde o modal por padrão */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 150vh;
+    overflow: auto;
+    /* Permite rolar se necessário */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fundo translúcido para o overlay */
+}
+
+.modal-content {
+
+    background-color: white;
+    margin: 15% auto;
+    /* Centraliza o modal na tela */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    /* Tamanho do modal */
+    text-align: center;
+    /* Centraliza o texto */
+    border-radius: 10px;
+}
+
+.modal-content h4{
+    font-size: 20pt;
+    color: black;
+}
+
+.modal-content p {
+    text-align: center;
+    padding: 10px 20px;
+
+}
+
+.modal-content .let {
+    text-align: center;
+    padding: 10px 20px;
+
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover{
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.delete-button {
+    background-color: brown;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin: 0px 4px;
+}
+
+.cancel-button {
+    background-color: gray;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0px 4px;
+}
+
+.cancel-button:hover{
+    transform: scale(1);
+}
+
+.delete-button:hover{
+    transform: scale(1.08);
 }
