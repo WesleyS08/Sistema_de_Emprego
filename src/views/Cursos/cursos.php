@@ -129,6 +129,49 @@ function preencherHTMLComCursos($categoria)
     }
 }
 
+// Consulta para obter a data da última atualização
+$query = "SELECT Ultima_Atualizacao FROM Tb_Cursos ORDER BY Ultima_Atualizacao DESC LIMIT 1";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($result && $result['Ultima_Atualizacao'] !== null) {
+    $ultimaAtualizacao = $result['Ultima_Atualizacao'];
+    $dataAtual = new DateTime(); // Data atual
+    $dataUltimaAtualizacao = new DateTime($ultimaAtualizacao); // Data da última atualização
+
+    // Calcular a diferença de dias
+    $diff = $dataAtual->diff($dataUltimaAtualizacao)->days;
+
+    if ($diff >= 15) {
+        // Calcular a data limite (16 dias atrás a partir da data atual)
+        $dataAtual = new DateTime(); // Data atual
+        $dataLimite = $dataAtual->modify('-16 days')->format('Y-m-d');
+
+        // Consulta para excluir registros cuja última atualização foi há 16 dias ou mais
+        $deleteQuery = "DELETE FROM Tb_Cursos WHERE Ultima_Atualizacao <= :dataLimite";
+        $deleteStmt = $pdo->prepare($deleteQuery);
+        $deleteStmt->bindParam(':dataLimite', $dataLimite);
+        $deleteStmt->execute();
+
+        // Verificar se algum registro foi excluído
+        $registrosExcluidos = $deleteStmt->rowCount();
+        if ($registrosExcluidos > 0) {
+            //$message = "Registros com última atualização há 16 dias ou mais foram excluídos.";
+            include '../../services/Obter_cursos.php';
+        } else {
+            //$message = "Nenhum registro com última atualização há 16 dias ou mais foi encontrado.";
+        }
+    } else {
+        //$message = "A última atualização foi há $diff dias, que é menor que 15 dias.";
+    }
+} else {
+    include '../../services/Obter_cursos.php';
+}
+
+//echo json_encode(['message' => $message]);
+
 ?>
 
 <!DOCTYPE html>
@@ -351,6 +394,18 @@ function preencherHTMLComCursos($categoria)
                 $("body").removeClass("noturno");
                 Claro(); 
             }
+        });
+    </script>
+     <script>
+        document.getElementById('checkUpdate').addEventListener('click', function () {
+            fetch('consulta.php')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
         });
     </script>
 </body>
