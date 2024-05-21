@@ -1,6 +1,17 @@
 
+body{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
 .divCommon{
     margin-top: 50px;
+    flex-grow: 1;
+}
+
+footer{
+  align-items: flex-end;
 }
 
 #divTituloDigitavelTodos{

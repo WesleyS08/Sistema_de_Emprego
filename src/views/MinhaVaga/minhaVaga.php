@@ -224,89 +224,11 @@ if ($stmt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaga</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
     <link rel="stylesheet" type="text/css" href="minhaVaga.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
-    <style>
-        .modal {
-            display: none;
-            /* Esconde o modal por padrão */
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            /* Permite rolar se necessário */
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Fundo translúcido para o overlay */
-        }
-
-        .modal-content {
-
-            background-color: white;
-            margin: 15% auto;
-            /* Centraliza o modal na tela */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            /* Tamanho do modal */
-            text-align: center;
-            /* Centraliza o texto */
-            border-radius: 10px;
-        }
-
-        .modal-content p {
-            text-align: center;
-            padding: 10px 20px;
-
-        }
-
-        .modal-content .let {
-            text-align: center;
-            padding: 10px 20px;
-
-        }
-
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-button:hover,
-        .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .delete-button {
-            background-color: red;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .cancel-button {
-            background-color: gray;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .delete-button:hover,
-        .cancel-button:hover {
-            opacity: 0.8;
-        }
-    </style>
 </head>
 
 <body>
@@ -371,9 +293,8 @@ if ($stmt) {
     <!-- Modal de Confirmação -->
     <div id="confirmDeleteModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Confirmação de Deleção</h2>
-            <p>Você tem certeza de que deseja deletar esta vaga?</p>
+            <h4>Confirmação de Deleção</h4>
+            <p class="naoMuda">Você tem certeza de que deseja deletar esta vaga?</p>
             <button class="cancel-button" onclick="closeModal()">Cancelar</button>
             <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
         </div>

@@ -261,11 +261,10 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 <!-- Modal de Confirmação -->
                 <div id="confirmDeleteModal" class="modal">
                     <div class="modal-content">
-                        <span class="close-button">&times;</span>
                         <h4>Confirmação de Deleção</h4>
                         <p class="naoMuda">Você tem certeza de que deseja deletar esta vaga?</p>
                         <button class="cancel-button" onclick="closeModal()">Cancelar</button>
-                        <a id="confirmDeleteButton" class="delete-button">Deletar</a>
+                        <a id="confirmDeleteButton" href="#" class="delete-button">Deletar</a>
                     </div>
                 </div>
         </div>

@@ -45,6 +45,7 @@ h3{
     align-items: center;
     margin-right: 30px;
     margin-bottom: 24px;
+    z-index: -1;
 }
 
 lord-icon{
