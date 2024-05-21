@@ -149,13 +149,11 @@ function extrairInformacoesCursosFatec($url)
     return $informacoesCursos;
 }
 
-// Função para extrair informações de cursos do Sebrae
-// Função para extrair informações de cursos do Sebrae
-function extrairInformacoesCursosSebrae($url)
-{
-    // URL base
-    $urlBase = "https://sebrae.com.br";
 
+// Função para extrair informações de cursos do novo site
+// Função para extrair informações de cursos do site EV
+function extrairInformacoesCursosEV($url)
+{
     // Obtendo o conteúdo da página
     $html = file_get_contents($url);
 
@@ -171,55 +169,58 @@ function extrairInformacoesCursosSebrae($url)
     // Restaurando os erros de HTML mal formado
     libxml_use_internal_errors(false);
 
-    // Obtendo todos os elementos com a classe "sb-components__card"
-    $cursos = $dom->getElementsByTagName('div');
+    // Obtendo todos os elementos com a classe "m-card"
+    $cursos = $dom->getElementsByTagName('article');
 
     // Array para armazenar as informações dos cursos
     $informacoesCursos = [];
 
     // Iterando sobre os elementos e extraindo informações
     foreach ($cursos as $curso) {
-        // Verificando se o elemento tem a classe "sb-components__card"
-        if ($curso->getAttribute('class') === 'sb-components__card') {
+        // Verificando se o elemento tem a classe "m-card"
+        if (strpos($curso->getAttribute('class'), 'm-card') !== false) {
             // Obtendo o nome do curso
-            $nome = $curso->getElementsByTagName('h2')[0]->nodeValue;
+            $nome = $curso->getElementsByTagName('h3')[0]->nodeValue;
+
+            // Obtendo a descrição do curso
+            $descricao = $curso->getElementsByTagName('p')[0]->nodeValue;
 
             // Obtendo a duração do curso
             $duracao = '';
-            foreach ($curso->childNodes as $child) {
-                if ($child->nodeType === XML_ELEMENT_NODE && $child->getAttribute('class') === 'sb-components__card__info__details__icon ic1') {
-                    $duracao = $child->nodeValue;
+            foreach ($curso->getElementsByTagName('p') as $p) {
+                if (strpos($p->nodeValue, 'Duração') !== false) {
+                    $duracao = $p->getElementsByTagName('strong')[0]->nodeValue;
                     break;
                 }
             }
 
-            // Obtendo a categoria do curso
-            $categoria = '';
-            foreach ($curso->childNodes as $child) {
-                if ($child->nodeType === XML_ELEMENT_NODE && $child->getAttribute('class') === 'sb-components__card__info__tags__theme familia-default') {
-                    $categoria = $child->nodeValue;
+            // Obtendo o nível do curso
+            $nivel = '';
+            foreach ($curso->getElementsByTagName('p') as $p) {
+                if (strpos($p->nodeValue, 'Nível') !== false) {
+                    $nivel = $p->getElementsByTagName('strong')[0]->nodeValue;
                     break;
                 }
             }
-
-            $nivel = "Técnico"; // Definindo o nível como "Técnico" (baseado no seu comentário)
 
             // Obtendo o link do curso
-            $link = $urlBase . $curso->getElementsByTagName('a')[0]->getAttribute('href');
+            $link = "https://www.ev.org.br" . $curso->getElementsByTagName('a')[1]->getAttribute('href');
 
-            // Mostrar os valores obtidos para verificar se estão corretos
-            var_dump($nome, $duracao, $categoria, $nivel, $link);
+            // Definindo o preço como "Gratuito"
+            $preco = "Gratuito";
 
-            // Obtendo a URL da imagem
-            $imgUrl = ''; // Deixando vazio, pois não foi encontrado na página fornecida
+            // Obtendo a URL da imagem (se disponível)
+            $imgUrl = 'https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/032013/bradesco_v_rgb.png?itok=58ZX99XK';
+        
 
             // Armazenando as informações do curso em um array
             $informacoesCursos[] = [
                 'Nome' => $nome,
-                'Duração' => $duracao,
-                'Categoria' => $categoria,
-                'Nível' => $nivel,
                 'Link' => $link,
+                'Duração' => $duracao,
+                'Nível' => $nivel,
+                'Tipo de Curso' => '',
+                'Preço' => $preco,
                 'URL da Imagem' => $imgUrl
             ];
         }
@@ -247,6 +248,7 @@ function conectarBancoDados()
 
     return $conexao;
 }
+
 // Função para inserir informações dos cursos no banco de dados
 function inserirInformacoesCursos($informacoesCursos, $conexao, $categoria)
 {
@@ -263,7 +265,7 @@ function inserirInformacoesCursos($informacoesCursos, $conexao, $categoria)
     // Iterando sobre as informações dos cursos
     foreach ($informacoesCursos as $curso) {
         // Ligando parâmetros
-        $stmt->bind_param("sssssss", $curso['Nome'], $curso['Duração'], $curso['Nivel'], $curso['Link'], $curso['URL da Imagem'], $curso['Tipo'], $categoria);
+        $stmt->bind_param("sssssss", $curso['Nome'], $curso['Duração'], $curso['Nível'], $curso['Link'], $curso['URL da Imagem'], $curso['Tipo de Curso'], $categoria);
 
         // Executando a declaração
         $resultado = $stmt->execute();
@@ -277,23 +279,15 @@ function inserirInformacoesCursos($informacoesCursos, $conexao, $categoria)
     $stmt->close();
 }
 
-// URL da página das Fatecs
+// URLs das páginas
 $urlFatec = "https://www.cps.sp.gov.br/fatec/cursos-oferecidos-pelas-fatecs/";
-
-// URL da página das Etecs
 $urlEtec = "https://www.cps.sp.gov.br/etec/cursos-oferecidos-pelas-etecs/";
+$urlEV = "https://www.ev.org.br/cursos";
 
-// URL da página do Sebrae
-$urlSebrae = "https://sebrae.com.br/sites/PortalSebrae/cursosonline";
-
-// Obtendo informações dos cursos das Fatecs
+// Obtendo informações dos cursos
 $informacoesFatec = extrairInformacoesCursosFatec($urlFatec);
-
-// Obtendo informações dos cursos das Etecs
 $informacoesEtec = extrairInformacoesCursosEtec($urlEtec);
-
-// Obtendo informações dos cursos do Sebrae
-$informacoesSebrae = extrairInformacoesCursosSebrae($urlSebrae);
+$informacoesEV = extrairInformacoesCursosEV($urlEV);
 
 // Conectando ao banco de dados
 $conexao = conectarBancoDados();
@@ -301,7 +295,7 @@ $conexao = conectarBancoDados();
 // Inserindo informações dos cursos no banco de dados
 inserirInformacoesCursos($informacoesFatec, $conexao, "Fatecs");
 inserirInformacoesCursos($informacoesEtec, $conexao, "Etecs");
-inserirInformacoesCursos($informacoesSebrae, $conexao, "Sebrae");
+inserirInformacoesCursos($informacoesEV, $conexao, "Bradesco");
 
 // Fechando a conexão com o banco de dados
 $conexao->close();
