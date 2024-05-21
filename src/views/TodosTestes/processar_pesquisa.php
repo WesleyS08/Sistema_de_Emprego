@@ -85,16 +85,7 @@ if ($stmt) {
             echo '</a>';
         }
     } else {
-        // Se não houver resultados, exibir uma mensagem junto com os filtros de pesquisa
-        echo "<p>Oh, não encontramos nenhum questionário correspondente a essa busca.</p>";
-        echo "<p>Filtros utilizados:</p>";
-        echo "<ul>";
-        echo "<li>Termo de pesquisa: " . htmlspecialchars($termoPesquisa) . "</li>";
-        echo "<li>Área: " . htmlspecialchars($area) . "</li>";
-        echo "<li>Criador: " . htmlspecialchars($criador) . "</li>";
-        echo "<li>Níveis: " . htmlspecialchars(implode(', ', $niveis)) . "</li>";
-        echo "<li>Consulta SQL:" . $sql . "</li>";
-        echo "</ul>";
+        echo "<p class='infos' style='text-align:center; margin:0 auto; position: absolute'>Oh, não encontramos nenhum questionário correspondente a essa busca.</p>";
     }
 } else {
     echo "Houve uma falha na preparação da consulta: " . $pdo->errorInfo()[2];

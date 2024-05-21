@@ -284,24 +284,24 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <script>
-        function limparLocalStorageComExcecao() {
-            const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa', 'btnJovemAprendizState', 'btnEstagioState', 'btnCltState', 'btnPjState'];
+    function limparLocalStorageComExcecao() {
+        const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa', 'btnJovemAprendizState', 'btnEstagioState', 'btnCltState', 'btnPjState', 'termo', 'criador', 'niveis'];
 
-            chavesParaLimpar.forEach(function (chave) {
-                localStorage.removeItem(chave);
-            });
-
-            const areaPadrao = 'Todas'; // Valor padrão para "area"
-            if (!localStorage.getItem('area')) {
-                localStorage.setItem('area', areaPadrao);
-            }
-        }
-
-        window.addEventListener('load', function () {
-            limparLocalStorageComExcecao();
-            console.table(localStorage);
+        chavesParaLimpar.forEach(function (chave) {
+            localStorage.removeItem(chave);
         });
-    </script>
+
+        const areaPadrao = 'Todas'; // Valor padrão para "area"
+        if (!localStorage.getItem('area')) {
+            localStorage.setItem('area', areaPadrao);
+        }
+    }
+
+    window.addEventListener('load', function () {
+        limparLocalStorageComExcecao();
+        console.table(localStorage);
+    });
+</script>
 
     <style>
         .aviso-verificado {

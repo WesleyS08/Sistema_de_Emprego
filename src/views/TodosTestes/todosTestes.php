@@ -252,6 +252,84 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </script>
     <script>
         $(document).ready(function () {
+            // Função para carregar valores do localStorage
+            function carregarValores() {
+                var termo = localStorage.getItem('termo');
+                var area = localStorage.getItem('area');
+                var criador = localStorage.getItem('criador');
+                var niveis = localStorage.getItem('niveis');
+
+                if (termo) {
+                    $('.inputPesquisa').val(termo);
+                }
+                if (area) {
+                    $('.selectArea').val(area);
+                }
+                if (criador) {
+                    $('#criadorFiltro').val(criador);
+                }
+                if (niveis) {
+                    niveis = JSON.parse(niveis);
+                    $('.checkBoxTipo').prop('checked', false); // Desmarcar todos os checkboxes primeiro
+                    niveis.forEach(function (nivel) {
+                        $('#' + nivel.toLowerCase()).prop('checked', true);
+                    });
+                }
+            }
+
+            // Função para salvar valores no localStorage
+            function salvarValores() {
+                var termo = $('.inputPesquisa').val();
+                var area = $('.selectArea').val();
+                var criador = $('#criadorFiltro').val();
+                var niveis = [];
+                $('.checkBoxTipo:checked').each(function () {
+                    niveis.push($(this).val());
+                });
+
+                localStorage.setItem('termo', termo);
+                localStorage.setItem('area', area);
+                localStorage.setItem('criador', criador);
+                localStorage.setItem('niveis', JSON.stringify(niveis));
+            }
+
+            // Carregar valores ao inicializar
+            carregarValores();
+
+            // Função para executar a pesquisa
+            function executarPesquisa() {
+                var termo = $('.inputPesquisa').val();
+                var area = $('.selectArea').val();
+                var criador = $('#criadorFiltro').val();
+                var niveis = [];
+                $('.checkBoxTipo:checked').each(function () {
+                    niveis.push($(this).val());
+                });
+
+                // Realizar a solicitação AJAX para processar a pesquisa
+                $.ajax({
+                    url: 'processar_pesquisa.php',
+                    method: 'POST',
+                    data: { termo: termo, area: area, criador: criador, niveis: niveis },
+                    success: function (response) {
+                        $('.divGridTestes').html(response).addClass('noturno');
+                    },
+                    error: function (error) {
+                        console.error("Erro ao processar a pesquisa:", error);
+                    }
+                });
+            }
+
+            // Adicionar eventos para salvar valores no localStorage
+            $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
+                salvarValores();
+                executarPesquisa();
+            });
+
+            // Executar a pesquisa inicialmente ao carregar a página
+            executarPesquisa();
+
+            // Sugestões de pesquisa
             $('.inputPesquisa').keyup(function () {
                 var query = $(this).val();
                 var area = $('.selectArea').val(); // Captura o valor selecionado na área
@@ -274,44 +352,49 @@ if ($result_areas && $result_areas->num_rows > 0) {
 
             $(document).on('click', '.sugestao-item', function () {
                 var sugestao = $(this).text();
-                $('.inputPesquisa').val(sugestao); // Define o valor do campo de pesquisa com a sugestão clicada
-                $('.sugestoes').hide(); // Esconde as sugestões após clicar
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Função para executar a pesquisa
-            function executarPesquisa() {
-                var termo = $('.inputPesquisa').val();
-                var area = $('.selectArea').val();
-                var criador = $('#criadorFiltro').val();
-                var niveis = [];
-                $('.checkBoxTipo:checked').each(function () {
-                    niveis.push($(this).val());
-                });
-
-                // Realizar a solicitação AJAX para processar a pesquisa
-                $.ajax({
-                    url: 'processar_pesquisa.php',
-                    method: 'POST',
-                    data: { termo: termo, area: area, criador: criador, niveis: niveis },
-                    success: function (response) {
-                        $('.divGridTestes').html(response);
-                    },
-                    error: function (error) {
-                        console.error("Erro ao processar a pesquisa:", error);
-                    }
-                });
-            }
-
-            // Executar a pesquisa quando houver uma alteração em qualquer elemento relevante
-            $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
+                $('.inputPesquisa').val(sugestao);
+                $('.sugestoes').hide();
+                salvarValores();
                 executarPesquisa();
             });
 
-            // Executar a pesquisa inicialmente ao carregar a página
-            executarPesquisa();
+            // Função para alternar o estado do botão e salvar no localStorage
+            function toggleButtonState(buttonId) {
+                const button = document.querySelector(`#${buttonId}`);
+                let isActive = localStorage.getItem(`${buttonId}State`) === 'true';
+                // Alternar o estado do botão
+                isActive = !isActive;
+                localStorage.setItem(`${buttonId}State`, isActive); // Salvar no localStorage
+                if (isActive) {
+                    button.style.backgroundColor = "var(--laranja)";
+                    button.style.border = "1px solid var(--laranja)";
+                    button.style.color = "whitesmoke";
+                } else {
+                    button.style = "initial";
+                }
+            }
+            // Função para restaurar os estados dos botões ao carregar a página
+            function restaurarEstadosDosBotoes() {
+                const buttonIds = ["btnBasico", "btnIntermediario", "btnExperiente"];
+                buttonIds.forEach(buttonId => {
+                    const button = document.querySelector(`#${buttonId}`);
+                    if (button) {
+                        const isActive = localStorage.getItem(`${buttonId}State`) === 'true';
+                        if (isActive) {
+                            button.style.backgroundColor = "var(--laranja)";
+                            button.style.border = "1px solid var(--laranja)";
+                            button.style.color = "whitesmoke";
+                        } else {
+                            button.style = "initial";
+                        }
+                    }
+                });
+            }
+            restaurarEstadosDosBotoes();
+            // Configurar eventos de clique para alternar estados e salvar no localStorage
+            document.querySelector("#btnBasico").addEventListener("click", () => toggleButtonState("btnBasico"));
+            document.querySelector("#btnIntermediario").addEventListener("click", () => toggleButtonState("btnIntermediario"));
+            document.querySelector("#btnExperiente").addEventListener("click", () => toggleButtonState("btnExperiente"));
         });
     </script>
 </body>

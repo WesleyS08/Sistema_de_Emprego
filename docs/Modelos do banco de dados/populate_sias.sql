@@ -264,8 +264,28 @@ FROM `SIAS`.`Tb_Empresa`
 ORDER BY RAND()
 LIMIT 5;
 
-INSERT INTO `SIAS`.`Tb_Empresa_Questionario` (`Id_Empresa`, `Id_Questionario`)
-SELECT `CNPJ`, @id_questionario_marketing
-FROM `SIAS`.`Tb_Empresa`
-ORDER BY RAND()
-LIMIT 5;
+-- Declaração de variáveis
+SET @id_questionario = 1;
+
+-- Loop para inserir registros na tabela Tb_Empresa_Questionario para cada questionário de 1 a 10
+DELIMITER //
+CREATE PROCEDURE insert_empresas_questionarios()
+BEGIN
+    DECLARE id_questionario INT DEFAULT 1;
+    
+    WHILE id_questionario <= 10 DO
+        -- Inserir registros na tabela Tb_Empresa_Questionario
+        INSERT INTO `SIAS`.`Tb_Empresa_Questionario` (`Id_Empresa`, `Id_Questionario`)
+        SELECT `CNPJ`, id_questionario
+        FROM `SIAS`.`Tb_Empresa`
+        ORDER BY RAND()
+        LIMIT 5;
+        
+        -- Incrementar o valor do id_questionario
+        SET id_questionario = id_questionario + 1;
+    END WHILE;
+END //
+DELIMITER ;
+
+-- Executar o procedimento armazenado
+CALL insert_empresas_questionarios();
