@@ -299,7 +299,8 @@ function preencherHTMLComCursos($categoria)
                         } else {
                             data.forEach(curso => {
                                 const cursoDiv = document.createElement('div');
-                                cursoDiv.className = '';
+                                cursoDiv.className = "cursoLink";
+                 
                                 cursoDiv.innerHTML = `
                                 <a class="cursoLink" href="${curso.link}">
                                     <article class="curso">

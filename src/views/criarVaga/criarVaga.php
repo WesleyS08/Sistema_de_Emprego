@@ -653,7 +653,7 @@ $totaldisponivel = 4 - $total_anuncios;
                 // Verificar localmente se as palavras têm pelo menos 2 letras
                 palavras.forEach((palavra) => {
                     const numLetras = (palavra.match(letrasRegex) || []).length;
-                    if (numLetras < 2) {
+                    if (numLetras < 1) {
                         palavrasInvalidas.push(palavra);
                     }
                 });
