@@ -80,7 +80,7 @@ function determinarImagemCategoria($categoria)
             <li><a href="src/views/TodasVagas/todasVagas.php">Vagas</a></li>
             <!--Colocar  link depois   -->
             <li><a href="src/views/TodosTestes/todosTestes.php">Testes</a></li>
-            <li><a href="#">Cursos</a></li>
+            <li><a href="src/views/Cursos/cursos.php">Cursos</a></li>
             <li><a href="src/views/Login/login.html">Perfil</a></li>
         </ul>
     </nav>

@@ -237,16 +237,18 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Cursos` (
   `Id_Cursos` INT NOT NULL AUTO_INCREMENT,
-  `Tema` VARCHAR(45) NULL,
-  `Duracao` VARCHAR(45) NULL,
-  `Certificado` VARCHAR(45) NULL,
-  `Site` VARCHAR(45) NULL,
-  `Gratuito` VARCHAR(45) NULL,
-  `Titulo` VARCHAR(45) NULL,
-  `Descricao` VARCHAR(255) NULL,
-  PRIMARY KEY (`Id_Cursos`))
-ENGINE = InnoDB;
-
+  `Nome_do_Curso` VARCHAR(255) NULL,
+  `Descricao` TEXT NULL,
+  `Duração` VARCHAR(45) NULL,
+  `Nivel` VARCHAR(45) NULL,
+  `Link` VARCHAR(255) NULL,
+  `URL_da_Imagem` VARCHAR(255) NULL,
+  `Tipo` VARCHAR(45) NULL,
+  `Categoria` VARCHAR(100) NULL,
+  `Preco` DECIMAL(10, 2) NULL,
+  `Ultima_Atualizacao` DATE NULL,
+  PRIMARY KEY (`Id_Cursos`)
+) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Recomendacoes`
