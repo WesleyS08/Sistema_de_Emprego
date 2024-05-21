@@ -5,7 +5,8 @@ session_start(); // Inicia a sessão
 
 $emailUsuario = ''; // Supondo que o email do usuário esteja armazenado na sessão
 $idPessoa = '';
-
+//Caminho inicial para caso seja visitante
+$linkHome = "../../../index.php";
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
 if (isset($_SESSION['email_session'])) {
     // Se estiver autenticado com e-mail/senha
@@ -28,16 +29,32 @@ if (!empty($emailUsuario)) {
             $stmt_id_pessoa->bind_result($idPessoa); // Vincula o resultado a uma variável
             $stmt_id_pessoa->fetch(); // Busca o valor do resultado
             // Agora $idPessoa contém o ID da pessoa com o email fornecido
-        } else {
-            // Se nenhum resultado for encontrado, você pode tratar isso aqui
-            echo "Nenhum resultado encontrado para o email fornecido.";
-        }
+            if ($idPessoa > 0) {
+                // Se o email estiver cadastrado, defina uma variável para mostrar o botão
+                $mostrarBotao = true;
+                //Exibe link para candidatos acessar suas contas
+                $exibirLink = true;
+                $exibirHome = true;
+
+                //Link para acessar conta de candidato
+                $linkPerfil = "../PerfilCandidato/perfilCandidato.php?id=$idPessoa";
+                //Caso esteja verificado, Perfil direciona corretamente
+                $linkHome = "../homeCandidato/homeCandidato.php";
+
+            } else {
+                // Se o email não estiver cadastrado, defina a variável para não mostrar o botão
+                $mostrarBotao = false;
+                //Permite acessar Perfil, porém será direcionado para login como caminho
+                $exibirLink = true;
+              
+            }
         $stmt_id_pessoa->close(); // Fecha a declaração preparada
+    
     } else {
         // Se houver um erro na preparação da consulta, trate-o aqui
         echo "Erro na preparação da consulta.";
     }
-} else {
+}
 }
 $sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
@@ -54,12 +71,14 @@ if ($stmt) {
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
     }
+    
     //! Feche a declaração
     $stmt->close();
 }
 
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
+
 
 // Verifique se a preparação foi bem-sucedida
 if ($stmt) {
@@ -82,6 +101,7 @@ if ($stmt) {
     die("Erro ao preparar a query.");
 }
 
+
 // Quarta Consulta ao banco de dados para obter as areas 
 $sql_areas = "
     SELECT DISTINCT Area 
@@ -99,6 +119,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
         $areas[] = $row['Area'];
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -118,15 +139,27 @@ if ($result_areas && $result_areas->num_rows > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="#"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <a href="<?php echo $linkHome; ?>"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <li><a href="../../../index.php">Deslogar</a></li>
-            <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
 
+            <?php 
+            //Botão fica escondido caso seja visitante
+            if (isset($mostrarBotao) && $mostrarBotao): ?>
+            <li><a href="../../../index.php">Deslogar</a></li>
+            <?php endif; ?>
+            
+
+
+            <?php if (isset($exibirLink) && $exibirLink): ?>
+                <li><a href="<?php echo $linkPerfil; ?>">Perfil</a></li>
+            
+            <?php else: ?>
+            <li><a href="../Login/login.html">Login</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
@@ -246,7 +279,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); /
+                Claro(); 
             }
         });
     </script>

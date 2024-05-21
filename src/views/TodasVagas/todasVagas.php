@@ -366,7 +366,7 @@ if ($result === false) {
                 Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); /
+                Claro(); 
             }
         });
     </script>
