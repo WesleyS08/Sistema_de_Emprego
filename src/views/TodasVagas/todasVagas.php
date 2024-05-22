@@ -186,7 +186,6 @@ if ($result === false) {
         echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
         echo '    <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>';
         echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
-        echo '  <li><a href="../../../index.php">Deslogar</a></li>';
         echo '    <li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoa . '">Perfil</a></li>';
         echo '</ul>';
         echo '</nav>';

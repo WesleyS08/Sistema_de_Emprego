@@ -266,7 +266,6 @@ function determinarImagemCategoria($categoria)
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <li><a href="../../../index.php">Deslogar</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
@@ -288,7 +287,7 @@ function determinarImagemCategoria($categoria)
     } else {
         echo "<div class='aviso-nao-verificado'>Sua conta ainda não foi verificada. Por favor, verifique sua conta para desfrutar do máximo possível.</div>";
         $totaldisponivel = 4 - $total_inscricoes;
-        echo "<div class='aviso-nao-verificado'>Você tem mais " . $totaldisponivel . " anúncios disponíveis.</div>";
+        echo "<div class='aviso-nao-verificado'>Você tem  " . $totaldisponivel . " buscas disponíveis.</div>";
     }
     ?>
     <div class="divCarrossel">

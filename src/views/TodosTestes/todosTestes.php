@@ -147,13 +147,14 @@ if ($result_areas && $result_areas->num_rows > 0) {
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
 
             <?php 
+            /*
             //Botão fica escondido caso seja visitante
             if (isset($mostrarBotao) && $mostrarBotao): ?>
             <li><a href="../../../index.php">Deslogar</a></li>
             <?php endif; ?>
-            
-
-
+            */
+            ?>    
+              
             <?php if (isset($exibirLink) && $exibirLink): ?>
                 <li><a href="<?php echo $linkPerfil; ?>">Perfil</a></li>
             

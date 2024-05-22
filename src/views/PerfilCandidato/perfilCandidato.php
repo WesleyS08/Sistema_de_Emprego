@@ -147,7 +147,6 @@ if ($result && mysqli_num_rows($result) > 0) {
             <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <li><a href="../../../index.php">Deslogar</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
