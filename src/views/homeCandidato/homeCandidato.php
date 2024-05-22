@@ -359,10 +359,8 @@ function determinarImagemCategoria($categoria)
                     if (empty($nome_empresa)) {
                         $nome_empresa = 'Confidencial';
                     }
-
                     // Agora pode imprimir
                     echo '<p class="empresaVaga">' . $nome_empresa . '</p>';
-
 
                     // Exibir o status da vaga e a data de criação
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
@@ -374,8 +372,6 @@ function determinarImagemCategoria($categoria)
                         echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
                         echo '<p class="dataVaga">' . $datadeTermino . '</p>';
                     }
-
-
                     echo '</section>';
                     echo '</article>';
                     echo '</a>';
@@ -470,7 +466,7 @@ function determinarImagemCategoria($categoria)
                             echo '</a>';
                         }
                     } else {
-                        echo '<div style="margin-left: 5%; margin-top: 20px;">Nenhuma inscrição encontrada para este candidato.</div>';
+                        echo "<p style='text-align:center; margin:0 auto;'>Não há inscrições realizadas.</p>";
                     }
 
                     $stmt->close();

@@ -181,56 +181,55 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         $Data_de_Termino = ''; // Definir também a data de término como vazia
     }
 
-    // Segunda consulta no banco de dados para pegar o CPF do candidato e o CNPJ da empresa
+    // Consulta para pegar o CPF do candidato e o CNPJ da empresa
     $sql = "SELECT Tb_Candidato.CPF, Tb_Empresa.CNPJ
-   FROM Tb_Candidato
-   INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-   LEFT JOIN Tb_Empresa ON Tb_Candidato.Tb_Pessoas_Id = Tb_Empresa.Tb_Pessoas_Id
-   WHERE Tb_Pessoas.Email = '$emailUsuario'";
+FROM Tb_Candidato
+INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+LEFT JOIN Tb_Empresa ON Tb_Candidato.Tb_Pessoas_Id = Tb_Empresa.Tb_Pessoas_Id
+WHERE Tb_Pessoas.Email = ?";
 
-    $result = mysqli_query($_con, $sql); // Executar a consulta
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result); // Obtém o resultado da consulta
+    $stmt = $_con->prepare($sql);
+    $stmt->bind_param('s', $emailUsuario); // Bind do parâmetro para evitar injeção de SQL
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc(); // Obtém o resultado da consulta
         $cpfCandidato = $row['CPF']; // Armazena o CPF do candidato
         $cnpjEmpresa = $row['CNPJ']; // Armazena o CNPJ da empresa, se houver
 
         // Verifica se o usuário já se inscreveu para a vaga (apenas se for um candidato)
+        $sqlVerificaInscricao = "SELECT 1
+FROM Tb_Inscricoes 
+WHERE Tb_Vagas_Tb_Anuncios_Id = ?
+AND Tb_Candidato_CPF = ?
+LIMIT 1";
 
-    }
-// SQL para verificar se o candidato já está inscrito
-$sqlVerificaInscricao = "SELECT 1
-                         FROM Tb_Inscricoes 
-                         WHERE Tb_Vagas_Tb_Anuncios_Id = ?
-                         AND Tb_Candidato_CPF = ?
-                         LIMIT 1";
+        // Preparar a consulta para prevenir injeção de SQL
+        $stmtVerifica = $_con->prepare($sqlVerificaInscricao);
+        $stmtVerifica->bind_param('is', $idAnuncio, $cpfCandidato); // Vincular parâmetros para segurança
+        $stmtVerifica->execute();
+        $resultVerifica = $stmtVerifica->get_result();
 
-// Preparar a consulta para prevenir injeção de SQL
-$stmt = $_con->prepare($sqlVerificaInscricao);
+        // Definir a variável com base no resultado da consulta
+        $candidatoInscrito = ($resultVerifica->num_rows > 0) ? true : false;
 
-// Vincular parâmetros para segurança
-$stmt->bind_param('is', $idAnuncio, $cpfCandidato);
+        // Terceira consulta para obter o status da vaga
+        $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = ?";
+        $stmtStatus = $_con->prepare($sql2);
+        $stmtStatus->bind_param('i', $idAnuncio); // Bind do parâmetro para evitar injeção de SQL
+        $stmtStatus->execute();
+        $resultStatus = $stmtStatus->get_result();
 
-// Executar a consulta
-$stmt->execute();
-
-// Obter o resultado
-$result = $stmt->get_result();
-
-// Verificar se o candidato está inscrito
-$candidatoInscrito = ($result->num_rows > 0);
-
-    // Terceira consulta para obter o status da vaga
-    $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = $idAnuncio";
-    $result2 = mysqli_query($_con, $sql2);
-
-    if ($result2 && mysqli_num_rows($result2) > 0) {
-        $row = mysqli_fetch_assoc($result2);
-        $Status = $row['Status'];
+        if ($resultStatus && $resultStatus->num_rows > 0) {
+            $rowStatus = $resultStatus->fetch_assoc();
+            $Status = $rowStatus['Status'];
+        } else {
+            // Defina um valor padrão para $Status se a consulta não retornar resultados
+            $Status = '';
+        }
     } else {
-        // Defina um valor padrão para $Status se a consulta não retornar resultados
-        $Status = '';
-    }
 
+    }
 }
 $totaldisponivel = 4 - $total_inscricoes;
 ?>
@@ -256,6 +255,7 @@ $totaldisponivel = 4 - $total_inscricoes;
             border: 1px solid #f5c6cb;
             border-radius: 5px;
             margin-top: 10px;
+            height: 60px;
         }
     </style>
 </head>
@@ -407,68 +407,140 @@ $totaldisponivel = 4 - $total_inscricoes;
                         <div class="divDescricao">
                             <h3>Descrição da vaga</h3>
                             <p>
-                                <?php echo $Descricao;
-                                echo $total_inscricoes; ?>
+                                <?php echo $Descricao; ?>
                             </p>
                         </div>
                     </div>
 
                     <?php
-                    switch ($idPessoa) {
-                        case null:
-                            
+                    $caseType = '';
+
+                    if ($Status != 'Aberto') {
+                        // Se a vaga não estiver aberta, é considerada encerrada
+                        $caseType = 'encerrado';
+
+                    } elseif ($verificado == 1) {
+                        // Se o candidato foi verificado
+                    
+                        if ($candidatoInscrito == true) {
+                            // Se o candidato está inscrito, ele é considerado "verificado e inscrito"
+                            $caseType = 'verificadoInscrito';
+                        } else {
+                            // Se o candidato não está inscrito, ele é considerado "verificado e não inscrito"
+                            $caseType = 'verificadoNaoInscrito';
+                        }
+                    } elseif ($verificado == 0) {
+                        // Se o candidato não foi verificado
+                    
+                        if ($total_inscricoes >= 4) {
+                            // Se o total de inscrições do candidato for maior ou igual a 4, ele atingiu o limite de inscrições
+                            $caseType = 'naoVerificadoLimiteExcedido';
+
+                        } elseif ($total_inscricoes >= 0) {
+                            // Se o candidato não atingiu o limite de inscrições e já possui inscrições
+                    
+                            if ($candidatoInscrito == true) {
+                                // Se o candidato está inscrito, ele é considerado "não verificado e inscrito com inscrições"
+                                $caseType = 'naoVerificadoInscritoComInscricoes';
+                            } else {
+                                // Se o candidato não está inscrito, ele é considerado "não verificado e não inscrito com inscrições"
+                                $caseType = 'naoVerificadoNaoInscritoComInscricoes';
+                            }
+                        } else {
+                            // Se o candidato não atingiu o limite de inscrições e não possui inscrições anteriores
+                            // Permitir que candidatos não verificados se inscrevam mesmo sem inscrições anteriores
+                            if (!$candidatoInscrito) {
+                                // Se o candidato não está inscrito, ele é considerado "não verificado e não inscrito sem inscrições"
+                                $caseType = 'naoVerificadoNaoInscritoSemInscricoes';
+                            } else {
+                                // Se o candidato está inscrito, ele é considerado "não verificado e inscrito sem inscrições"
+                                $caseType = 'naoVerificadoInscritoSemInscricoes';
+                            }
+                        }
+                    }
+
+                    switch ($caseType) {
+                        case 'encerrado':
+                            // Indique que a vaga está encerrada
+                            echo '<p>Status: Encerrado</p>';
+                            break;
+
+                        case 'verificadoInscrito':
+                            // Indicar que o candidato já está inscrito e permitir retirar candidatura
+                            echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
+                            echo '        <button>';
+                            echo '            <h4>Retirar Candidatura</h4>';
+                            echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                            echo '        </button>';
+                            echo '    </form>';
+                            echo '    </div>';
+                            break;
+
+                        case 'verificadoNaoInscrito':
+                            // Carregue o formulário de candidatura para verificado e não inscrito
+                            echo '<form method="POST" action="../../services/cadastros/processar_candidatura.php?id_anuncio=' . $idAnuncio . '"> ';
+                            echo ' <div class="divSendButton">';
+                            echo '     <button>';
+                            echo '         <h4>Candidatar-se</h4>';
+                            echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                            echo '     </button>';
+                            echo ' </div>';
+                            break;
+
+                        case 'naoVerificadoInscritoComInscricoes':
+                            // Indicar que o candidato já está inscrito
+                            echo '    <div class="divSendButton">';
+                            echo '    <button disabled style="cursor: default; background-color: #723911;">';
+                            echo '        <h4>Já inscrito</h4>';
+                            echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                            echo '    </button>';
+                            echo '</div>';
+                            echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
+                            echo '        <button>';
+                            echo '            <h4>Retirar Candidatura</h4>';
+                            echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                            echo '        </button>';
+                            echo '    </form>';
+                            echo '    </div>';
+                            break;
+
+                        case 'naoVerificadoNaoInscritoComInscricoes':
+                            // Carregue o formulário de candidatura para não verificado e não inscrito
+                            echo '<form method="POST" action="../../services/cadastros/processar_candidatura.php?id_anuncio=' . $idAnuncio . '"> ';
+                            echo ' <div class="divSendButton">';
+                            echo '     <button>';
+                            echo '         <h4>Candidatar-se</h4>';
+                            echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                            echo '     </button>';
+                            echo ' </div>';
+                            break;
+
+                        case 'naoVerificadoInscritoSemInscricoes':
+                            // Indicar que o candidato já está inscrito e não há inscrições disponíveis
+                            echo '    <div class="divSendButton">';
+                            echo '    <button disabled style="cursor: default; background-color: #723911;">';
+                            echo '        <h4>Já inscrito</h4>';
+                            echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                            echo '    </button>';
+                            echo '</div>';
+                            echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
+                            echo '        <button>';
+                            echo '            <h4>Retirar Candidatura</h4>';
+                            echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
+                            echo '        </button>';
+                            echo '    </form>';
+                            echo '    </div>';
+                            break;
+
+                        case 'naoVerificadoNaoInscritoSemInscricoes':
+                            // Indicar que não há inscrições disponíveis
+                            echo '<div class="mensagem">Você não tem anúncios disponíveis para se candidatar.</div>';
                             break;
                         default:
-                            if ($Status == 'Aberto' && !$candidatoInscrito && $verificado == 1) {
-                                // Carregue o formulário de candidatura
-                                echo '<form method="POST"';
-                                echo 'action="../../services/cadastros/processar_candidatura.php?id_anuncio=' . $idAnuncio . '"> ';
-                                echo ' <div class="divSendButton">';
-                                echo '     <button>';
-                                echo '         <h4>Candidatar-se</h4>';
-                                echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                                echo '     </button>';
-                                echo ' </div>';
-                            } elseif ($Status == 'Aberto' && $candidatoInscrito == 1  && $verificado == 1) {
-                                // Indicar que o candidato já está inscrito e permitir retirar candidatura
-                                echo '    <div class="divSendButton">';
-                                echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
-                                echo '        <button>';
-                                echo '            <h4>Retirar Candidatura</h4>';
-                                echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                                echo '        </button>';
-                                echo '    </form>';
-                                echo '    </div>';
-                            } elseif ($Status != 'Aberto') {
-                                // Indique que a vaga está encerrada
-                                echo '<p>Status: Encerrado</p>';
-                            } elseif ($verificado == 0 && !$candidatoInscrito && $total_inscricoes != 0) {
-                                // Carregue o formulário de candidatura
-                                echo '<form method="POST" action="../../services/cadastros/processar_candidatura.php?id_anuncio=' . $idAnuncio . '"> ';
-                                echo ' <div class="divSendButton">';
-                                echo '     <button>';
-                                echo '         <h4>Candidatar-se</h4>';
-                                echo '         <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                                echo '     </button>';
-                                echo ' </div>';
-                            } elseif ($verificado == 0 &&  $candidatoInscrito == 1 && $total_inscricoes != 0) {
-                                echo '    <div class="divSendButton">';
-                                echo '    <button disabled style="cursor: default; background-color: #723911;">';
-                                echo '        <h4>Já inscrito</h4>';
-                                echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover"';
-                                echo '            colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                                echo '    </button>';
-                                echo '</div>';
-                            } elseif  ($verificado == 0 &&  $total_inscricoes <= 0) {
-                                echo '<div class="mensagem">
-                                    Você não tem anúncios disponíveis para salvar.
-                                </div>';
-                            }
+                            echo '<div class="mensagem">Situação não reconhecida.</div>';
+                            break;
                     }
                     ?>
-
-
                 </div>
                 <?php
                 // Divida os requisitos e benefícios por vírgula e remova espaços em branco desnecessários
@@ -480,7 +552,9 @@ $totaldisponivel = 4 - $total_inscricoes;
                         <h3>Requisitos</h3>
                         <ul>
                             <?php foreach ($arrayRequisitos as $requisito) { ?>
-                                <li><?php echo $requisito; ?></li>
+                                <li>
+                                    <p><?php echo $requisito; ?></p>
+                                </li>
                             <?php } ?>
                         </ul>
                     </div>
@@ -488,9 +562,12 @@ $totaldisponivel = 4 - $total_inscricoes;
                         <h3>Benefícios</h3>
                         <ul>
                             <?php foreach ($arrayBeneficios as $beneficio) { ?>
-                                <li><?php echo $beneficio; ?></li>
+                                <li>
+                                    <p><?php echo $beneficio; ?></p>
+                                </li>
                             <?php } ?>
                         </ul>
+
                     </div>
                 </div>
                 <div id="map" style="height: 400px; margin-top:5%"></div>
@@ -500,13 +577,13 @@ $totaldisponivel = 4 - $total_inscricoes;
     <div id="endereco" style="display: none;" data-rua="<?php echo $Rua; ?>" data-numero="<?php echo $Numero; ?>"
         data-bairro="<?php echo $bairro; ?>" data-cidade="<?php echo $Cidade; ?>" data-estado="<?php echo $Estado; ?>"
         data-cep="<?php echo $CEP; ?>">
-    </div>    
+    </div>
     <footer>
         <a>Política de Privacidade</a>
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
         <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
-    </footer>  
+    </footer>
     <script src="trocaIcones.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
@@ -524,8 +601,6 @@ $totaldisponivel = 4 - $total_inscricoes;
             L.marker([latitude, longitude]).addTo(map)
                 .bindPopup('<?php echo !empty($NomeEmpresa) ? $NomeEmpresa : "Confidencial"; ?>')
                 .openPopup();
-
-
         }
         // Obtenha as informações de endereço do HTML
         var enderecoDiv = document.getElementById('endereco');
