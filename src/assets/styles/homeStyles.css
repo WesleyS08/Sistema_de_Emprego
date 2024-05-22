@@ -438,6 +438,16 @@ nav ul li a:hover{
     position: relative;
 }
 
+.noturno .post{
+    border: 1px solid silver;
+    border-radius: 10px;
+    width: 250px;
+    height: 160px;
+    box-shadow: none;
+    padding: 8px;
+    position: relative;
+}
+
 .post header{
     display: flex;
     align-items: center;
@@ -547,6 +557,15 @@ nav ul li a:hover{
     padding: 6px;
     display: flex;
     box-shadow: 4px 4px 4px silver;
+}
+
+.noturno .testeCarrossel{
+    width: 340px;
+    position: relative;
+    border: 1px solid silver;
+    padding: 6px;
+    display: flex;
+    box-shadow: none;
 }
 
 /* ------------------------- Comentário -------------------------*/
