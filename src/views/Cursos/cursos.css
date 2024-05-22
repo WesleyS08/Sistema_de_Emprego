@@ -29,6 +29,18 @@
     align-items: center;
 }
 
+.noturno .curso{
+    width: 360px;
+    height: 130px;
+    border: 1px solid silver;
+    border-radius: 10px;
+    box-shadow: none;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+} 
+
+
 .divLogoCurso img{
     width: 100px;
 }

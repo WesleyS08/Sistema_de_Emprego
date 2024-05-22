@@ -36,31 +36,6 @@ if ($stmt) {
     $stmt->close();
 }
 
-// Segunda Consulta para selecionar o tema que salvo no banco de dados
-$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
-$stmt = $_con->prepare($query);
-
-// Verifique se a preparação foi bem-sucedida
-if ($stmt) {
-    $stmt->bind_param('i', $idPessoa);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result) {
-        $row = $result->fetch_assoc();
-        if ($row && isset($row['Tema'])) {
-            $tema = $row['Tema'];
-        } else {
-            $tema = null;
-        }
-    } else {
-        $tema = null;
-    }
-} else {
-    // ! Arrumar questão de tratamento de Erros !! 
-    die("Erro ao preparar a query.");
-}
-
 // Função para buscar os cursos do banco de dados
 function buscarCursosDoBanco($categoria)
 {
@@ -172,6 +147,33 @@ if ($result && $result['Ultima_Atualizacao'] !== null) {
 
 //echo json_encode(['message' => $message]);
 
+
+// Segunda Consulta para selecionar o tema que salvo no banco de dados
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result) {
+        $row = $result->fetch_assoc();
+        if ($row && isset($row['Tema'])) {
+            $tema = $row['Tema'];
+        } else {
+            $tema = null;
+        }
+    } else {
+        $tema = null;
+    }
+} else {
+    // ! Arrumar questão de tratamento de Erros !! 
+    die("Erro ao preparar a query.");
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -193,7 +195,7 @@ if ($result && $result['Ultima_Atualizacao'] !== null) {
             <img src="../../../imagens/menu.svg">
         </label>
         <?php if ($idPessoa): ?>
-            <a href="../../homeCandidato/homeCandidato.php"><img id="logo"
+            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
                     src="../../assets/images/logos_empresa/logo_sias.png"></a>
             <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
             <ul>
@@ -202,13 +204,15 @@ if ($result && $result['Ultima_Atualizacao'] !== null) {
                 <li><a href="../Cursos/cursos.php">Cursos</a></li>
                 <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
             </ul>
+        <?php else: ?>
+            <a href="../../../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
+            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+            <ul>
+                <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+                <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
+                <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            </ul>
         <?php endif; ?>
-        <a href="../../../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
-        <ul>
-            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
-            <li><a href="../Cursos/cursos.php">Cursos</a></li>
-        </ul>
     </nav>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
         <h1 id="tituloAutomatico">C</h1>
@@ -229,6 +233,7 @@ if ($result && $result['Ultima_Atualizacao'] !== null) {
             <div id="divGridCursos" class="divGridCursos">
                 <!--Aqui vai os cursos da pesquisa-->
             </div>
+
         </div>
     </div>
 
@@ -327,76 +332,107 @@ if ($result && $result['Ultima_Atualizacao'] !== null) {
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
     <script src="../../../modoNoturno.js"></script>
+
     <script>
-        document.getElementById('inputPesquisa').addEventListener('input', function () {
-            const query = document.getElementById('inputPesquisa').value;
-            // Only proceed if there's a query
-            if (query.length > 0) {
-                fetch('buscar_cursos.php?titulo=' + encodeURIComponent(query))
-                    .then(response => response.json())
-                    .then(data => {
-                        const divGridCursos = document.getElementById('divGridCursos');
-                        divGridCursos.innerHTML = '';
-                        if (data.length === 0) {
-                            divGridCursos.innerHTML = '<p>Nenhum curso encontrado</p>';
-                        } else {
-                            data.forEach(curso => {
-                                const cursoDiv = document.createElement('div');
-                                cursoDiv.className = "cursoLink";
-                 
-                                cursoDiv.innerHTML = `
-                                <a class="cursoLink" href="${curso.link}">
-                                    <article class="curso">
-                                        <div class="divLogoCurso">
-                                            <img src="${curso.url_imagem}" alt="Imagem do curso ${curso.nome}" style="width: 100px; height: 100px;">
-                                        </div>
-                                        <section>
-                                            <p id="empresaCurso">${curso.categoria}</p>
-                                            <h3>${curso.nome.substring(0, 18)}...</h3>
-                                            <div class="divFlexSpace">
-                                                <p>${curso.nivel}</p>
-                                                <p>Duração: ${curso.duracao}</p>
-                                            </div>
-                                        </section>
-                                    </article>
-                                </a>
-                            `;
-                                divGridCursos.appendChild(cursoDiv);
-                            });
+        $(document).ready(function () {
+            $('#inputPesquisa').on('input', function () {
+                var query = $(this).val().trim();
+                if (query.length > 0) {
+                    $.ajax({
+                        url: 'sugerir_cursos.php',
+                        method: 'GET',
+                        data: { query: query },
+                        success: function (response) {
+                            $('#sugestoesCursos').html(response);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Erro ao obter sugestões de cursos:', error);
                         }
-                    })
-                    .catch(error => console.error('Erro:', error));
-            } else {
-                // Clear the results if the query is empty
-                document.getElementById('divGridCursos').innerHTML = '';
-            }
+                    });
+                } else {
+                    $('#sugestoesCursos').empty();
+                }
+            });
         });
     </script>
+
     <script>
         var idPessoa = <?php echo $idPessoa; ?>;
-        $(".btnModo").click(function () {
-            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+
+        function atualizarEstiloENotificarServidor(novoTema) {
             $.ajax({
                 url: "../../services/Temas/atualizar_tema.php",
                 method: "POST",
                 data: { tema: novoTema, idPessoa: idPessoa },
                 success: function () {
                     console.log("Tema atualizado com sucesso");
+                    atualizarEstiloPagina(novoTema); // Chama a função para atualizar o estilo da página
                 },
                 error: function (error) {
                     console.error("Erro ao salvar o tema:", error);
                 }
             });
+        }
+
+        // Função para atualizar o estilo da página
+        function atualizarEstiloPagina(novoTema) {
             if (novoTema === "noturno") {
                 $("body").addClass("noturno");
                 Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); 
+                Claro();
             }
+
+            // Após atualizar o estilo da página, execute a busca
+            executarBusca();
+        }
+
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+            atualizarEstiloENotificarServidor(novoTema);
         });
+
+        // Função para executar a busca
+        function executarBusca() {
+            const query = document.getElementById('inputPesquisa').value;
+            // Procede apenas se houver uma consulta
+            if (query.length > 0) {
+                // Obter o ID da pessoa
+                var idPessoa = <?php echo $idPessoa; ?>;
+
+                // Debug: Exibir o valor do ID da pessoa no console
+                console.log('ID da pessoa:', idPessoa);
+
+                // Enviar a consulta e o ID da pessoa para buscar_cursos.php
+                fetch('buscar_cursos.php?titulo=' + encodeURIComponent(query) + '&idPessoa=' + idPessoa)
+                    .then(response => response.text())
+                    .then(data => {
+                        // Exibir os dados enviados no console
+                        console.table({
+                            Query: query,
+                            ID_Pessoa: idPessoa
+                        });
+
+                        const divGridCursos = document.getElementById('divGridCursos');
+                        divGridCursos.innerHTML = data;
+                    })
+                    .catch(error => console.error('Erro:', error));
+            } else {
+                // Limpa os resultados se a consulta estiver vazia
+                document.getElementById('divGridCursos').innerHTML = '';
+            }
+        }
+
+        // Evento de click no botão de pesquisa
+        document.getElementById('searchButton').addEventListener('click', function () {
+            executarBusca();
+        });
+
+        // Chamar a função de busca quando a página carregar pela primeira vez
+        executarBusca();
     </script>
-     <script>
+    <script>
         document.getElementById('checkUpdate').addEventListener('click', function () {
             fetch('consulta.php')
                 .then(response => response.json())
@@ -409,4 +445,5 @@ if ($result && $result['Ultima_Atualizacao'] !== null) {
         });
     </script>
 </body>
+
 </html>
