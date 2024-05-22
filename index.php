@@ -79,9 +79,9 @@ function determinarImagemCategoria($categoria)
         <ul>
             <li><a href="src/views/TodasVagas/todasVagas.php">Vagas</a></li>
             <!--Colocar  link depois   -->
-            <li><a href="src/views/TodosTestes/todosTestes.php">Testes</a></li>
+            <li><a href="src/views/Login/login.html">Testes</a></li>
             <li><a href="src/views/Cursos/cursos.php">Cursos</a></li>
-            <li><a href="src/views/Login/login.html">Perfil</a></li>
+            <li><a href="src/views/Login/login.html">Login</a></li>
         </ul>
     </nav>
     <div class="divTitle">
@@ -389,7 +389,7 @@ function determinarImagemCategoria($categoria)
                     echo "<p style='text-align:center; margin:0 auto;'>Nenhuma avaliação encontrado.</p>";
                 }
                 ?>
-                <button id="btnRunningGuy" onclick="location.href='src/views/AvalieNos/AvalieNos.php'">Faça parte!<br>
+                <button id="btnRunningGuy" onclick="location.href='src/views/Cadastro/cadastro.html'">Faça parte!<br>
                     <lord-icon src="https://cdn.lordicon.com/gwvmctbb.json" trigger="hover"
                         colors="primary:#ffffff,secondary:#ffffff" style="width:90px;height:90px">
                     </lord-icon>
@@ -454,8 +454,9 @@ function determinarImagemCategoria($categoria)
     </div>
     <footer>
         <a>Política de Privacidade</a>
-        <a>Nosso contato</a>
-        <a href="src\views\AvalieNos\avalieNos.php">Avalie-nos</a>
+        <a href="src/views/NossoContato/nossoContato.html">Nosso contato</a>
+        
+        <a href="src/views/Cadastro/cadastro.html">Avalie-nos</a>
         <p>SIAS 2024</p>
     </footer>
 
