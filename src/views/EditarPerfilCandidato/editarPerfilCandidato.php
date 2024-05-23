@@ -248,10 +248,10 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         <div class="containerInput">
                             <div class="contentInput">
                                 <select class="inputAnimado" id="genero" name="genero" required>
-                                    <option value="Homem" <?php echo ($generoUsuario == 'Homem') ? 'selected' : ''; ?>>
-                                        Homem</option>
-                                    <option value="Mulher" <?php echo ($generoUsuario == 'Mulher') ? 'selected' : ''; ?>>
-                                        Mulher</option>
+                                    <option value="Homem" <?php echo ($generoUsuario == 'Masculino') ? 'selected' : ''; ?>>
+                                        Masculino</option>
+                                    <option value="Mulher" <?php echo ($generoUsuario == 'Feminino') ? 'selected' : ''; ?>>
+                                        Feminino</option>
                                     <option value="Outros" <?php echo ($generoUsuario == 'Outros') ? 'selected' : ''; ?>>
                                         Outros</option>
                                     <option value="Prefiro não informar" <?php echo ($generoUsuario == 'Prefiro não informar') ? 'selected' : ''; ?>>Prefiro não informar</option>
@@ -285,6 +285,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 <div class="labelLine">Cidade</div>
                             </div>
                             <small id="aviso-cidade" class="aviso"></small>
+                            <div id="sugestoes-cidades"></div>
                         </div>
                     </div>
                     <div class="divCheckBox">
@@ -498,7 +499,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </script>
     <script>
         $(document).ready(function () {
-            // Mapa para rastrear se os campos são válidos
             let camposValidos = {
                 area: false,
                 breveDescricao: false,
@@ -508,15 +508,23 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 experiencias: false,
             };
 
-            // Função para verificar palavras localmente e no servidor
             function verificarPalavras(campo, palavras, callback) {
+                // Verifique se o campo está vazio ou se não contém palavras válidas
+                if (palavras.length === 0 || palavras.every(palavra => palavra.trim() === "")) {
+                    // Limpar qualquer mensagem existente
+                    $("#aviso-" + campo).text("");
+                    camposValidos[campo] = false;
+                    callback(); // Notifica que a verificação terminou
+                    return;
+                }
+
                 const letrasRegex = /[a-zA-Z]/g;
                 const palavrasInvalidas = [];
 
                 // Verificar localmente se as palavras têm pelo menos 2 letras
                 palavras.forEach((palavra) => {
                     const numLetras = (palavra.match(letrasRegex) || []).length;
-                    if (numLetras < 2) {
+                    if (numLetras < 1) {
                         palavrasInvalidas.push(palavra);
                     }
                 });
@@ -610,6 +618,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 }
             });
         });
+
     </script>
 
     <script>
@@ -724,6 +733,104 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
             }
 
+        });
+    </script>
+    <script>
+        // Lista de cidades conhecidas
+        var cidadesConhecidas = [
+            "São Paulo",
+            "Rio de Janeiro",
+            "Belo Horizonte",
+            // Adicione mais cidades conforme necessário
+        ];
+
+        $(document).ready(function () {
+            $('#cidade').on('input', function () {
+                var cidadeDigitada = $(this).val().trim();
+                var sugestoes = [];
+
+                if (cidadeDigitada === '') {
+                    $('#sugestoes-cidades').empty(); // Limpar sugestões se o campo estiver vazio
+                    return;
+                }
+
+                // Verificar a semelhança entre a cidade digitada e as cidades conhecidas
+                cidadesConhecidas.forEach(function (cidadeConhecida) {
+                    var distancia = calcularDistanciaLevenshtein(cidadeDigitada.toLowerCase(), cidadeConhecida.toLowerCase());
+                    if (distancia < 5) { // Se a distância for menor que 5, considere como sugestão
+                        sugestoes.push(cidadeConhecida);
+                    }
+                });
+
+                // Exibir sugestões na página
+                exibirSugestoes(sugestoes);
+            });
+
+            // Verificar se a cidade digitada é válida quando o campo perde o foco
+            $('#cidade').on('blur', function () {
+                var cidadeDigitada = $(this).val().trim();
+                var cidadeValida = verificarCidadeValida(cidadeDigitada);
+                if (!cidadeValida) {
+                    $('#aviso-cidade').text('Cidade inválida. Por favor, verifique novamente.');
+                } else {
+                    $('#aviso-cidade').text('');
+                }
+            });
+
+            // Completar a cidade quando o usuário pressiona Enter ou Tab
+            $('#cidade').on('keydown', function (event) {
+                var sugestaoSelecionada = $('.sugestao').first().text();
+                if (event.key === 'Enter' || event.key === 'Tab') {
+                    if (sugestaoSelecionada) {
+                        $(this).val(sugestaoSelecionada);
+                        $('#sugestoes-cidades').empty(); // Limpar sugestões
+                        event.preventDefault(); // Evitar a submissão do formulário
+                    }
+                }
+            });
+
+            // Função para exibir sugestões de cidades
+            function exibirSugestoes(sugestoes) {
+                var sugestoesHtml = '';
+                sugestoes.forEach(function (sugestao) {
+                    sugestoesHtml += '<div class="sugestao">' + sugestao + '</div>';
+                });
+                $('#sugestoes-cidades').html(sugestoesHtml);
+            }
+
+            // Função para verificar se a cidade digitada é válida
+            function verificarCidadeValida(cidadeDigitada) {
+                return cidadesConhecidas.includes(cidadeDigitada);
+            }
+
+            // Função para calcular a distância de Levenshtein entre duas strings
+            function calcularDistanciaLevenshtein(s1, s2) {
+                var m = s1.length;
+                var n = s2.length;
+                var d = [];
+
+                for (var i = 0; i <= m; i++) {
+                    d[i] = [i];
+                }
+                for (var j = 0; j <= n; j++) {
+                    d[0][j] = j;
+                }
+
+                for (var j = 1; j <= n; j++) {
+                    for (var i = 1; i <= m; i++) {
+                        if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                            d[i][j] = d[i - 1][j - 1];
+                        } else {
+                            d[i][j] = Math.min(d[i - 1][j] + 1,
+                                d[i][j - 1] + 1, 
+                                d[i - 1][j - 1] + 1 
+                            );
+                        }
+                    }
+                }
+
+                return d[m][n];
+            }
         });
     </script>
 
