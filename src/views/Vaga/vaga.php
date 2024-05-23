@@ -1,240 +1,246 @@
 <?php
-include "../../services/conexão_com_banco.php"; // Verifique se o caminho está correto
-session_start(); // Sempre inicie a sessão no início do arquivo
-
-
+include "../../services/conexão_com_banco.php";
+session_start();
 
 // Definição de variáveis com valores padrão
-$nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : 'Anônimo';
-$emailUsuario = '';
+$nomeUsuario = $_SESSION['nome_usuario'] ?? 'Anônimo';
+$emailUsuario = $_SESSION['email_session'] ?? ($_SESSION['google_session'] ?? '');
 $candidatoInscrito = false;
-//Atribuição vazia é necessária para iniciar
 $Status = '';
-
-// Verificar se há um e-mail na sessão
-if (isset($_SESSION['email_session'])) {
-    $emailUsuario = $_SESSION['email_session'];
-} elseif (isset($_SESSION['google_session'])) {
-    $emailUsuario = $_SESSION['google_session'];
-}
+$verificado = 0;
+$total_inscricoes = 0;
+$cpf = '';
 
 // Verificar se o usuário está autenticado como candidato
 $autenticadoComoCandidato = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato';
-
-// Definir se a sessão tem um e-mail
-$autenticadoComEmail = !empty($emailUsuario);
-
-// Verificar se é uma sessão de candidato com e-mail
-$autenticadoCandidatoComEmail = $autenticadoComEmail && $autenticadoComoCandidato;
 
 // Primeira consulta para obter o ID da pessoa logada
 $sql = "SELECT Id_Pessoas, Verificado FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
 
-// Verifique se a preparação da declaração foi bem-sucedida
 if ($stmt) {
-    // Vincule o parâmetro ao placeholder na consulta
     $stmt->bind_param("s", $emailUsuario);
-    // Execute a declaração
     $stmt->execute();
-    // Obtenha o resultado da consulta
     $result = $stmt->get_result();
-    // Verifique se a consulta retornou resultados
+
     if ($result->num_rows > 0) {
-        // Obtenha o ID da pessoa e se ela está verificada
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
         $verificado = $row['Verificado'] ?? 0;
     } else {
-        // Registre um erro no arquivo de log do servidor
         error_log("Nenhuma linha retornada pela consulta SQL: " . $stmt->error);
-        // Ou você pode imprimir uma mensagem de erro na tela para fins de depuração
-     $stmt->error;
     }
     $stmt->close();
+} else {
+    die("Erro ao preparar a consulta: " . $_con->error);
 }
 
+// Consulta para obter o tema
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
 
-// Verifique se a preparação foi bem-sucedida
 if ($stmt) {
-    // Execute a query com o parâmetro
-    $stmt->bind_param('i', $idPessoa); // Vincula o parâmetro
-    $stmt->execute();
-
-    // Obter resultado usando o método correto
-    $result = $stmt->get_result(); // Obtenha o resultado como mysqli_result
-    if ($result) {
-        $row = $result->fetch_assoc(); // Obter a linha como array associativo
-        if ($row && isset($row['Tema'])) {
-            $tema = $row['Tema'];
-        } else {
-            $tema = null; // No caso de não haver resultado
-        }
-    } else {
-        $tema = null; // Se o resultado for nulo
-    }
-} else {
-    die("Erro ao preparar a query.");
-}
-
-$query = "
-    SELECT
-        COUNT(*) AS total_inscricoes
-    FROM
-        Tb_Inscricoes ins
-    JOIN
-        Tb_Vagas va ON ins.Tb_Vagas_Tb_Anuncios_Id = va.Tb_Anuncios_Id
-    JOIN
-        Tb_Anuncios an ON va.Tb_Anuncios_Id = an.Id_Anuncios
-    JOIN
-        Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
-    WHERE
-        ins.Tb_Candidato_CPF = ?
-    ORDER BY
-        (va.Status = 'Encerrado'),
-        va.Data_de_Termino ASC
-";
-
-$stmt = $_con->prepare($query);
-$stmt->bind_param('s', $cpf);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Verifique se a consulta retornou resultados
-if ($result->num_rows > 0) {
-    // Obtenha o total de inscrições
-    $row = $result->fetch_assoc();
-    $total_inscricoes = $row['total_inscricoes'];
-
-}
-
-
-// verifica se o id da vaga foi mandando pela url 
-if (isset($_GET['id'])) {
-    if ($_con->connect_error) {
-        die("Falha na conexão: " . $_con->connect_error);
-    }
-
-    // Obter o ID do anúncio da variável GET
-    $idAnuncio = $_GET['id'];
-
-    // Primeira consulta no banco de dados para informações do anúncio
-    $sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa, Tb_Empresa.Tb_Pessoas_Id AS Id_Pessoa_Empresa,
-Tb_Vagas.Data_de_Termino
-FROM Tb_Anuncios
-INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
-
-    $result = mysqli_query($_con, $sql); // Executar a consulta SQL
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $nomeEmpresa = $row['Nome_da_Empresa'];
-        $idPessoaEmpresa = $row['Id_Pessoa_Empresa']; // Aqui está o ID da pessoa representando a empresa
-        $Data_de_Termino = $row['Data_de_Termino']; // Aqui está a data de término do anúncio
-    }
-
-    // Verifica se retornou alguma coisa da pesquisa
-    $result = mysqli_query($_con, $sql);
-    if ($result && mysqli_num_rows($result) > 0) {
-        $dadosAnuncio = mysqli_fetch_assoc($result);
-
-        // Atribuição das informações do banco de dados a variáveis
-        $Categoria = $dadosAnuncio['Categoria'];
-        $Titulo = $dadosAnuncio['Titulo'];
-        $Descricao = $dadosAnuncio['Descricao'];
-        $Area = $dadosAnuncio['Area'];
-        $Cidade = $dadosAnuncio['Cidade'];
-        $Nivel_Operacional = $dadosAnuncio['Nivel_Operacional'];
-        $Data_de_Criacao = $dadosAnuncio['Data_de_Criacao'];
-        $Modalidade = $dadosAnuncio['Modalidade'];
-        $Beneficios = $dadosAnuncio['Beneficios'];
-        $Requisitos = $dadosAnuncio['Requisitos'];
-        $Horario = $dadosAnuncio['Horario'];
-        $Estado = $dadosAnuncio['Estado'];
-        $Jornada = $dadosAnuncio['Jornada'];
-        $CEP = $dadosAnuncio['CEP'];
-        $Rua = $dadosAnuncio['Rua'];
-        $bairro = $dadosAnuncio['Bairro'];
-        $Numero = $dadosAnuncio['Numero'];
-        $NomeEmpresa = $dadosAnuncio['Nome_da_Empresa'];
-    } else {
-        // Caso não seja encontrado nenhum anúncio com o ID fornecido
-// Definir os campos como vazios
-        $Categoria = '';
-        $Titulo = '';
-        $Descricao = '';
-        $Area = '';
-        $Cidade = '';
-        $Nivel_Operacional = '';
-        $Data_de_Criacao = '';
-        $Modalidade = '';
-        $Beneficios = '';
-        $Requisitos = '';
-        $Horario = '';
-        $Estado = '';
-        $Jornada = '';
-        $CEP = '';
-        $Numero = '';
-        $NomeEmpresa = '';
-        $Data_de_Termino = ''; // Definir também a data de término como vazia
-    }
-
-    // Consulta para pegar o CPF do candidato e o CNPJ da empresa
-    $sql = "SELECT Tb_Candidato.CPF, Tb_Empresa.CNPJ
-FROM Tb_Candidato
-INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-LEFT JOIN Tb_Empresa ON Tb_Candidato.Tb_Pessoas_Id = Tb_Empresa.Tb_Pessoas_Id
-WHERE Tb_Pessoas.Email = ?";
-
-    $stmt = $_con->prepare($sql);
-    $stmt->bind_param('s', $emailUsuario); // Bind do parâmetro para evitar injeção de SQL
+    $stmt->bind_param('i', $idPessoa);
     $stmt->execute();
     $result = $stmt->get_result();
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc(); // Obtém o resultado da consulta
-        $cpfCandidato = $row['CPF']; // Armazena o CPF do candidato
-        $cnpjEmpresa = $row['CNPJ']; // Armazena o CNPJ da empresa, se houver
+    $tema = $result->fetch_assoc()['Tema'] ?? null;
+    $stmt->close();
+} else {
+    die("Erro ao preparar a query: " . $_con->error);
+}
 
-        // Verifica se o usuário já se inscreveu para a vaga (apenas se for um candidato)
-        $sqlVerificaInscricao = "SELECT 1
-FROM Tb_Inscricoes 
-WHERE Tb_Vagas_Tb_Anuncios_Id = ?
-AND Tb_Candidato_CPF = ?
-LIMIT 1";
+// Verifica se o id da vaga foi enviado pela URL
+if (isset($_GET['id'])) {
+    $idAnuncio = $_GET['id'];
 
-        // Preparar a consulta para prevenir injeção de SQL
-        $stmtVerifica = $_con->prepare($sqlVerificaInscricao);
-        $stmtVerifica->bind_param('is', $idAnuncio, $cpfCandidato); // Vincular parâmetros para segurança
-        $stmtVerifica->execute();
-        $resultVerifica = $stmtVerifica->get_result();
+    $sql = "
+        SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa, Tb_Empresa.Tb_Pessoas_Id AS Id_Pessoa_Empresa, Tb_Vagas.Data_de_Termino
+        FROM Tb_Anuncios
+        INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+        INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+        WHERE Tb_Anuncios.Id_Anuncios = ?
+    ";
+    $stmt = $_con->prepare($sql);
 
-        // Definir a variável com base no resultado da consulta
-        $candidatoInscrito = ($resultVerifica->num_rows > 0) ? true : false;
+    if ($stmt) {
+        $stmt->bind_param('i', $idAnuncio);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        // Terceira consulta para obter o status da vaga
-        $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = ?";
-        $stmtStatus = $_con->prepare($sql2);
-        $stmtStatus->bind_param('i', $idAnuncio); // Bind do parâmetro para evitar injeção de SQL
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $nomeEmpresa = $row['Nome_da_Empresa'];
+            $idPessoaEmpresa = $row['Id_Pessoa_Empresa'];
+            $Data_de_Termino = $row['Data_de_Termino'];
+
+            // Atribuição das informações do banco de dados a variáveis
+            $Categoria = $row['Categoria'];
+            $Titulo = $row['Titulo'];
+            $Descricao = $row['Descricao'];
+            $Area = $row['Area'];
+            $Cidade = $row['Cidade'];
+            $Nivel_Operacional = $row['Nivel_Operacional'];
+            $Data_de_Criacao = $row['Data_de_Criacao'];
+            $Modalidade = $row['Modalidade'];
+            $Beneficios = $row['Beneficios'];
+            $Requisitos = $row['Requisitos'];
+            $Horario = $row['Horario'];
+            $Estado = $row['Estado'];
+            $Jornada = $row['Jornada'];
+            $CEP = $row['CEP'];
+            $Rua = $row['Rua'];
+            $bairro = $row['Bairro'];
+            $Numero = $row['Numero'];
+            $NomeEmpresa = $row['Nome_da_Empresa'];
+        } else {
+            // Campos vazios se nenhum anúncio for encontrado
+            $Categoria = '';
+            $Titulo = '';
+            $Descricao = '';
+            $Area = '';
+            $Cidade = '';
+            $Nivel_Operacional = '';
+            $Data_de_Criacao = '';
+            $Modalidade = '';
+            $Beneficios = '';
+            $Requisitos = '';
+            $Horario = '';
+            $Estado = '';
+            $Jornada = '';
+            $CEP = '';
+            $Rua = '';
+            $bairro = '';
+            $Numero = '';
+            $NomeEmpresa = '';
+            $Data_de_Termino = '';
+        }
+        $stmt->close();
+    } else {
+        die("Erro ao preparar a consulta (detalhes do anúncio): " . $_con->error);
+    }
+
+    $sql2 = "SELECT Status FROM Tb_Vagas WHERE Tb_Anuncios_Id = ?";
+    $stmtStatus = $_con->prepare($sql2);
+
+    if ($stmtStatus) {
+        $stmtStatus->bind_param('i', $idAnuncio);
         $stmtStatus->execute();
         $resultStatus = $stmtStatus->get_result();
 
-        if ($resultStatus && $resultStatus->num_rows > 0) {
-            $rowStatus = $resultStatus->fetch_assoc();
-            $Status = $rowStatus['Status'];
-        } else {
-            // Defina um valor padrão para $Status se a consulta não retornar resultados
-            $Status = '';
-        }
+        $Status = $resultStatus->fetch_assoc()['Status'] ?? '';
+        $stmtStatus->close();
     } else {
+        die("Erro ao preparar a consulta (status da vaga): " . $_con->error);
+    }
 
+    if ($autenticadoComoCandidato) {
+        $sql = "
+            SELECT Tb_Candidato.CPF, Tb_Empresa.CNPJ
+            FROM Tb_Candidato
+            INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+            LEFT JOIN Tb_Empresa ON Tb_Candidato.Tb_Pessoas_Id = Tb_Empresa.Tb_Pessoas_Id
+            WHERE Tb_Pessoas.Email = ?
+        ";
+        $stmt = $_con->prepare($sql);
+
+        if ($stmt) {
+            $stmt->bind_param('s', $emailUsuario);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $cpfCandidato = $row['CPF'];
+                $cnpjEmpresa = $row['CNPJ'];
+
+                $sqlVerificaInscricao = "
+                    SELECT 1
+                    FROM Tb_Inscricoes
+                    WHERE Tb_Vagas_Tb_Anuncios_Id = ?
+                    AND Tb_Candidato_CPF = ?
+                    LIMIT 1
+                ";
+                $stmtVerifica = $_con->prepare($sqlVerificaInscricao);
+
+                if ($stmtVerifica) {
+                    $stmtVerifica->bind_param('is', $idAnuncio, $cpfCandidato);
+                    $stmtVerifica->execute();
+                    $resultVerifica = $stmtVerifica->get_result();
+
+                    $candidatoInscrito = ($resultVerifica->num_rows > 0);
+                    $stmtVerifica->close();
+                } else {
+                    die("Erro ao preparar a consulta (verificação de inscrição): " . $_con->error);
+                }
+            } else {
+                // Não encontrou CPF/CNPJ, mas não é erro para visitantes
+                $cpfCandidato = '';
+                $cnpjEmpresa = '';
+            }
+            $stmt->close();
+        } else {
+            die("Erro ao preparar a consulta (dados do candidato): " . $_con->error);
+        }
+    }
+
+    // Consulta para contar o total de inscrições
+    if ($autenticadoComoCandidato) {
+        $query = "
+            SELECT COUNT(*) AS total_inscricoes
+            FROM Tb_Inscricoes ins
+            JOIN Tb_Vagas va ON ins.Tb_Vagas_Tb_Anuncios_Id = va.Tb_Anuncios_Id
+            JOIN Tb_Anuncios an ON va.Tb_Anuncios_Id = an.Id_Anuncios
+            JOIN Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
+            WHERE ins.Tb_Candidato_CPF = ?
+        ";
+        $stmt = $_con->prepare($query);
+
+        if ($stmt) {
+            $stmt->bind_param('s', $cpfCandidato);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $total_inscricoes = $result->fetch_assoc()['total_inscricoes'];
+            }
+            $stmt->close();
+        } else {
+            die("Erro ao preparar a consulta (total de inscrições): " . $_con->error);
+        }
     }
 }
+
 $totaldisponivel = 4 - $total_inscricoes;
 ?>
+
+<script>
+    console.log("Nome do Usuário: <?php echo $nomeUsuario; ?>");
+    console.log("Email do Usuário: <?php echo $emailUsuario; ?>");
+    console.log("Tema: <?php echo isset($tema) ? $tema : 'Nenhum'; ?>");
+    console.log("Total de Inscrições: <?php echo $total_inscricoes; ?>");
+    console.log("Inscrições Disponíveis: <?php echo $totaldisponivel; ?>");
+    console.log("Candidato Inscrito: <?php echo $candidatoInscrito ? 'Sim' : 'Não'; ?>");
+    console.log("Status: <?php echo $Status; ?>");
+    console.log("Categoria: <?php echo $Categoria; ?>");
+    console.log("Título: <?php echo $Titulo; ?>");
+    console.log("Descrição: <?php echo $Descricao; ?>");
+    console.log("Área: <?php echo $Area; ?>");
+    console.log("Cidade: <?php echo $Cidade; ?>");
+    console.log("Nível Operacional: <?php echo $Nivel_Operacional; ?>");
+    console.log("Data de Criação: <?php echo $Data_de_Criacao; ?>");
+    console.log("Modalidade: <?php echo $Modalidade; ?>");
+    console.log("Benefícios: <?php echo $Beneficios; ?>");
+    console.log("Requisitos: <?php echo $Requisitos; ?>");
+    console.log("Horário: <?php echo $Horario; ?>");
+    console.log("Estado: <?php echo $Estado; ?>");
+    console.log("Jornada: <?php echo $Jornada; ?>");
+    console.log("CEP: <?php echo $CEP; ?>");
+    console.log("Rua: <?php echo $Rua; ?>");
+    console.log("Bairro: <?php echo $bairro; ?>");
+    console.log("Número: <?php echo $Numero; ?>");
+    console.log("verificado: <?php echo $verificado; ?>");
+    console.log("Nome da Empresa: <?php echo $NomeEmpresa; ?>");
+    console.log("Data de Término: <?php echo $Data_de_Termino; ?>");
+</script>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -416,48 +422,39 @@ $totaldisponivel = 4 - $total_inscricoes;
                     <?php
                     $caseType = '';
 
-                    if ($Status != 'Aberto') {
+                    // Verifica se idPessoa está definido
+                    if (isset($idPessoa) && $idPessoa != '') {
                         // Se a vaga não estiver aberta, é considerada encerrada
-                        $caseType = 'encerrado';
-
-                    } elseif ($verificado == 1) {
-                        // Se o candidato foi verificado
-                    
-                        if ($candidatoInscrito == true) {
-                            // Se o candidato está inscrito, ele é considerado "verificado e inscrito"
-                            $caseType = 'verificadoInscrito';
-                        } else {
-                            // Se o candidato não está inscrito, ele é considerado "verificado e não inscrito"
-                            $caseType = 'verificadoNaoInscrito';
-                        }
-                    } elseif ($verificado == 0) {
-                        // Se o candidato não foi verificado
-                    
-                        if ($total_inscricoes >= 4) {
-                            // Se o total de inscrições do candidato for maior ou igual a 4, ele atingiu o limite de inscrições
-                            $caseType = 'naoVerificadoLimiteExcedido';
-
-                        } elseif ($total_inscricoes >= 0) {
-                            // Se o candidato não atingiu o limite de inscrições e já possui inscrições
-                    
-                            if ($candidatoInscrito == true) {
-                                // Se o candidato está inscrito, ele é considerado "não verificado e inscrito com inscrições"
-                                $caseType = 'naoVerificadoInscritoComInscricoes';
+                        if ($Status != 'Aberto') {
+                            $caseType = 'encerrado';
+                        } elseif ($verificado == 1) {
+                            // Se o candidato foi verificado
+                            if ($candidatoInscrito) {
+                                $caseType = 'verificadoInscrito';
                             } else {
-                                // Se o candidato não está inscrito, ele é considerado "não verificado e não inscrito com inscrições"
-                                $caseType = 'naoVerificadoNaoInscritoComInscricoes';
+                                $caseType = 'verificadoNaoInscrito';
                             }
-                        } else {
-                            // Se o candidato não atingiu o limite de inscrições e não possui inscrições anteriores
-                            // Permitir que candidatos não verificados se inscrevam mesmo sem inscrições anteriores
-                            if (!$candidatoInscrito) {
-                                // Se o candidato não está inscrito, ele é considerado "não verificado e não inscrito sem inscrições"
-                                $caseType = 'naoVerificadoNaoInscritoSemInscricoes';
+                        } elseif ($verificado == 0) {
+                            // Se o candidato não foi verificado
+                            if ($total_inscricoes >= 4) {
+                                $caseType = 'naoVerificadoLimiteExcedido';
+                            } elseif ($total_inscricoes >= 0) {
+                                if ($candidatoInscrito) {
+                                    $caseType = 'naoVerificadoInscritoComInscricoes';
+                                } else {
+                                    $caseType = 'naoVerificadoNaoInscritoComInscricoes';
+                                }
                             } else {
-                                // Se o candidato está inscrito, ele é considerado "não verificado e inscrito sem inscrições"
-                                $caseType = 'naoVerificadoInscritoSemInscricoes';
+                                if (!$candidatoInscrito) {
+                                    $caseType = 'naoVerificadoNaoInscritoSemInscricoes';
+                                } else {
+                                    $caseType = 'naoVerificadoInscritoSemInscricoes';
+                                }
                             }
                         }
+                    } else {
+                        // Caso não tenha o idPessoa
+                        $caseType = 'semIdPessoa';
                     }
 
                     switch ($caseType) {
@@ -523,7 +520,8 @@ $totaldisponivel = 4 - $total_inscricoes;
                             echo '     </div>';
                             echo '    </form>';
                             break;
-
+                        case 'semIdPessoa':
+                            break;
                         case 'naoVerificadoNaoInscritoSemInscricoes':
                             // Indicar que não há inscrições disponíveis
                             echo '<div class="mensagem">Você não tem anúncios disponíveis para se candidatar.</div>';
@@ -536,8 +534,8 @@ $totaldisponivel = 4 - $total_inscricoes;
                 </div>
                 <?php
                 // Divida os requisitos e benefícios por vírgula e remova espaços em branco desnecessários
-                $arrayRequisitos = array_filter(array_map('trim', explode(',', $dadosAnuncio['Requisitos'])));
-                $arrayBeneficios = array_filter(array_map('trim', explode(',', $dadosAnuncio['Beneficios'])));
+                $arrayRequisitos = array_filter(array_map('trim', explode(',', $Requisitos)));
+                $arrayBeneficios = array_filter(array_map('trim', explode(',', $Beneficios)));
                 ?>
                 <div class="divFlex" id="divBoxes">
                     <div class="divBox">
@@ -555,7 +553,7 @@ $totaldisponivel = 4 - $total_inscricoes;
                         <ul>
                             <?php foreach ($arrayBeneficios as $beneficio) { ?>
                                 <li class="infos">
-                                   <?php echo $beneficio; ?>
+                                    <?php echo $beneficio; ?>
                                 </li>
                             <?php } ?>
                         </ul>
@@ -635,34 +633,34 @@ $totaldisponivel = 4 - $total_inscricoes;
     <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
-    var idPessoa = <?php echo $idPessoa; ?>;
+        var idPessoa = <?php echo $idPessoa; ?>;
 
-    $(".btnModo").click(function () {
-        var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
 
-        // Salva o novo tema no banco de dados via AJAX
-        $.ajax({
-            url: "../../services/Temas/atualizar_tema.php",
-            method: "POST",
-            data: {tema: novoTema, idPessoa: idPessoa },
-            success: function () {
-                console.log("Tema atualizado com sucesso");
-            },
-            error: function (error) {
-                console.error("Erro ao salvar o tema:", error);
+            // Salva o novo tema no banco de dados via AJAX
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema, idPessoa: idPessoa },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+
+            // Atualiza a classe do body para mudar o tema
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
             }
         });
-
-        // Atualiza a classe do body para mudar o tema
-        if (novoTema === "noturno") {
-            $("body").addClass("noturno");
-            Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
-        } else {
-            $("body").removeClass("noturno");
-            Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
-        }
-    });
-</script>
+    </script>
 
 </body>
 
