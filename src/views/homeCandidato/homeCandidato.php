@@ -277,8 +277,8 @@ function determinarImagemCategoria($categoria)
                     <i></i>
                 </div>
                 <p class="sinopse">Encontre vagas que combinam com você!<br>Clique e explore as oportunidades.</p>
-                <button onclick="location.href='../TodasVagas/todasVagas.php'" class="btnInicial">Ver todas as
-                    vagas</button>
+                <button onclick="location.href='../TodasVagas/todasVagas.php'" class="btnInicial">Encontre sua
+                    vaga</button>
             </div>
         </div>
     </div>

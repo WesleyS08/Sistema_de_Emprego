@@ -8,6 +8,8 @@ session_start(); // Sempre inicie a sessão no início do arquivo
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : 'Anônimo';
 $emailUsuario = '';
 $candidatoInscrito = false;
+//Atribuição vazia é necessária para iniciar
+$Status = '';
 
 // Verificar se há um e-mail na sessão
 if (isset($_SESSION['email_session'])) {
@@ -47,7 +49,7 @@ if ($stmt) {
         // Registre um erro no arquivo de log do servidor
         error_log("Nenhuma linha retornada pela consulta SQL: " . $stmt->error);
         // Ou você pode imprimir uma mensagem de erro na tela para fins de depuração
-        echo "Nenhuma linha retornada pela consulta SQL: " . $stmt->error;
+     $stmt->error;
     }
     $stmt->close();
 }
@@ -109,7 +111,7 @@ if ($result->num_rows > 0) {
 }
 
 
-// verifica se o id da vaga doi mandando pela url 
+// verifica se o id da vaga foi mandando pela url 
 if (isset($_GET['id'])) {
     if ($_con->connect_error) {
         die("Falha na conexão: " . $_con->connect_error);
@@ -274,12 +276,11 @@ $totaldisponivel = 4 - $total_inscricoes;
         echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
         echo '    <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>';
         echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
-        echo '  <li><a href="../../../index.php">Deslogar</a></li>';
         echo '    <li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoa . '">Perfil</a></li>';
         echo '</ul>';
         echo '</nav>';
     } else {
-        // Se não for autenticado como candidato, mostrar menu padrão ou genérico
+        // Se não for autenticado como candidato, mostrar menu padrão 
         echo '<nav>';
         echo '    <input type="checkbox" id="check"> ';
         echo '    <label for="check" class="menuBtn">';
@@ -290,7 +291,7 @@ $totaldisponivel = 4 - $total_inscricoes;
         echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
         echo '    <li><a href="../Login/login.html">Testes</a></li>';
         echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
-        echo '    <li><a href="../Login/login.html">Perfil</a></li>'; // Se não autenticado, redireciona para login
+        echo '    <li><a href="../Login/login.html">Login</a></li>'; // Se não autenticado, redireciona para login
         echo '</ul>';
         echo '</nav>';
     }
@@ -338,7 +339,7 @@ $totaldisponivel = 4 - $total_inscricoes;
                 </label>
             <?php } else { ?>
                 <label style="color: red;">
-                    <?php echo $Status; ?>
+                    <?php echo 'Encerrado'; ?>
                 </label>
             <?php } ?>
         </div>
@@ -643,36 +644,35 @@ $totaldisponivel = 4 - $total_inscricoes;
     <script src="../../../modoNoturno.js"></script>
     <!-- Eu movi o titulo digitavel pra cá, para pegar o nome do usario que está com seção  -->
     <script>
-        <script>
-            var idPessoa = <?php echo $idPessoa; ?>;
+    var idPessoa = <?php echo $idPessoa; ?>;
 
-            $(".btnModo").click(function () {
-            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+    $(".btnModo").click(function () {
+        var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
 
-
-            // Salva o novo tema no banco de dados via AJAX
-            $.ajax({
-                url: "../../services/Temas/atualizar_tema.php",
+        // Salva o novo tema no banco de dados via AJAX
+        $.ajax({
+            url: "../../services/Temas/atualizar_tema.php",
             method: "POST",
             data: {tema: novoTema, idPessoa: idPessoa },
             success: function () {
                 console.log("Tema atualizado com sucesso");
-                },
+            },
             error: function (error) {
                 console.error("Erro ao salvar o tema:", error);
-                }
-            });
-            // Atualiza a classe do body para mudar o tema
-            if (novoTema === "noturno") {
-                $("body").addClass("noturno");
-            Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
-            } else {
-                $("body").removeClass("noturno");
-            Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
             }
-
         });
-    </script>
+
+        // Atualiza a classe do body para mudar o tema
+        if (novoTema === "noturno") {
+            $("body").addClass("noturno");
+            Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+        } else {
+            $("body").removeClass("noturno");
+            Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+        }
+    });
+</script>
+
 </body>
 
 </html>
