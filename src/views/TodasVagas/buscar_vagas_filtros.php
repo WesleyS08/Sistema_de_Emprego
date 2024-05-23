@@ -2,6 +2,16 @@
 // Conexão com o banco de dados
 include "../../services/conexão_com_banco.php";
 
+// Função para remover palavras de ligação do termo de pesquisa
+function removerPalavrasDeLigacao($string, $palavras_de_ligacao) {
+    $string = strtolower($string);
+    $palavras = explode(" ", $string);
+    $palavras = array_filter($palavras, function($palavra) use ($palavras_de_ligacao) {
+        return !in_array($palavra, $palavras_de_ligacao);
+    });
+    return implode(" ", $palavras);
+}
+
 // Receber os filtros enviados pela solicitação AJAX
 $area = isset($_POST['area']) ? $_POST['area'] : 'Todas';
 $tipos = isset($_POST['tipos']) ? $_POST['tipos'] : [];
@@ -30,6 +40,12 @@ if ($stmt) {
     die("Erro ao preparar a query: " . $_con->error);
 }
 
+// Defina suas palavras de ligação
+$palavras_de_ligacao = array('de', 'em', 'para', 'com', 'por', 'sem');
+
+// Remover palavras de ligação do termo de pesquisa
+$termoPesquisa = removerPalavrasDeLigacao($termoPesquisa, $palavras_de_ligacao);
+
 // Iniciar a consulta SQL para obter vagas com ou sem filtros
 $sql = "SELECT * 
         FROM Tb_Anuncios 
@@ -39,7 +55,6 @@ $sql = "SELECT *
 // Adicionar condições para cada filtro, conforme necessário
 $parametros = [];
 $filtros = [];
-
 // Função para determinar a imagem com base na categoria do trabalho
 function determinarImagemCategoria($categoria)
 {

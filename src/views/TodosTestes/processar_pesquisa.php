@@ -7,6 +7,29 @@ $termoPesquisa = isset($_POST['termo']) ? $_POST['termo'] . '%' : '%'; // Valor 
 $area = isset($_POST['area']) ? $_POST['area'] : 'Todas'; // Valor padrão: Todas
 $criador = isset($_POST['criador']) ? $_POST['criador'] : '';
 $niveis = isset($_POST['niveis']) ? $_POST['niveis'] : [];
+$idPessoa = isset($_POST['idPessoa']) ? intval($_POST['idPessoa']) : 0;
+$tema = isset($_POST['tema']) ? $_POST['tema'] === 'true' : false; // Verifica se o modo noturno deve ser aplicado
+
+
+// Segunda Consulta para selecionar o tema que salvo no banco de dados
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $tema = $row['Tema'] ?? null;
+    } else {
+        $tema = null;
+    }
+    $stmt->close();
+} else {
+    die("Erro ao preparar a query: " . $_con->error);
+}
 
 // Consulta SQL base
 $sql = "SELECT DISTINCT q.*, e.Nome_da_Empresa
@@ -66,12 +89,20 @@ if ($stmt) {
             $row_respostas = $stmt_contar_respostas->fetch(PDO::FETCH_ASSOC);
             $total_pessoas = $row_respostas['total_pessoas'];
 
+
+             // Determinar a cor do nome da empresa com base no tema
+    $cor_nome_empresa = ($tema == 'noturno') ? "#FFFFFF" : "#000000"; // Branco para tema noturno, preto para tema padrão
+    
             // Saída HTML para cada questionário
             echo "<a class='testeCarrosselLink' href='../PreparaTeste/preparaTeste.php?id=$idQuestionario'>";
             echo '<article class="testeCarrossel">';
             echo '<div class="divAcessos">';
-            echo '<img src="../../../imagens/people.svg"></img>';
-            echo '<small class="qntdAcessos">' .$total_pessoas .'</small>';
+            if ($tema == 'noturno') {
+                echo '<img src="../../assets/images/icones_diversos/peopleWhite.svg"></img>';
+            } else {
+                echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+            }
+            echo '<small class="qntdAcessos">' . $total_pessoas . '</small>';
             echo '</div>';
             echo '<img class="imgTeste" src="' . $ImagemQuestionario . '"></img>';
             echo '<div class="divDetalhesTeste divDetalhesTesteCustom">';
@@ -85,7 +116,7 @@ if ($stmt) {
             echo '</a>';
         }
     } else {
-        echo "<p class='infos' style='text-align:center; margin:0 auto; position: absolute'>Oh, não encontramos nenhum questionário correspondente a essa busca.</p>";
+        echo "<p class='infos' style='text-align:center; margin:0 auto; position: absolute'>Nenhum Teste encontrado com os filtros selecionados.</p>";
     }
 } else {
     echo "Houve uma falha na preparação da consulta: " . $pdo->errorInfo()[2];

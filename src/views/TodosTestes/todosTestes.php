@@ -46,15 +46,15 @@ if (!empty($emailUsuario)) {
                 $mostrarBotao = false;
                 //Permite acessar Perfil, porém será direcionado para login como caminho
                 $exibirLink = true;
-              
+
             }
-        $stmt_id_pessoa->close(); // Fecha a declaração preparada
-    
-    } else {
-        // Se houver um erro na preparação da consulta, trate-o aqui
-        echo "Erro na preparação da consulta.";
+            $stmt_id_pessoa->close(); // Fecha a declaração preparada
+
+        } else {
+            // Se houver um erro na preparação da consulta, trate-o aqui
+            echo "Erro na preparação da consulta.";
+        }
     }
-}
 }
 $sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
 $stmt = $_con->prepare($sql);
@@ -71,7 +71,7 @@ if ($stmt) {
         $row = $result->fetch_assoc();
         $idPessoa = $row['Id_Pessoas'];
     }
-    
+
     //! Feche a declaração
     $stmt->close();
 }
@@ -146,20 +146,20 @@ if ($result_areas && $result_areas->num_rows > 0) {
             <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
 
-            <?php 
+            <?php
             /*
             //Botão fica escondido caso seja visitante
             if (isset($mostrarBotao) && $mostrarBotao): ?>
             <li><a href="../../../index.php">Deslogar</a></li>
             <?php endif; ?>
             */
-            ?>    
-              
+            ?>
+
             <?php if (isset($exibirLink) && $exibirLink): ?>
                 <li><a href="<?php echo $linkPerfil; ?>">Perfil</a></li>
-            
+
             <?php else: ?>
-            <li><a href="../Login/login.html">Login</a></li>
+                <li><a href="../Login/login.html">Login</a></li>
             <?php endif; ?>
         </ul>
     </nav>
@@ -220,7 +220,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         echo "<a class='testeCarrosselLink' href='../PreparaTeste/preparaTeste.php?id=$idQuestionario'>";
                         echo '<article class="testeCarrossel">';
                         echo '<div class="divAcessos">';
-                        echo '<img src="../../../imagens/people.svg"></img>';
+                        echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
                         echo '<small class="qntdAcessos">800</small>';
                         echo '</div>';
                         echo '<img src="../../../imagens/excel.svg"></img>';
@@ -253,6 +253,8 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="tituloDigitavel.js"></script>
     <script src="checkButtons.js"></script>
     <script src="mostrarFiltros.js"></script>
+    <!--================================ Parte do tema noturno ======================================= -->
+
     <!-- Atribui o tema salvo no banco de dados a essa variável e passa ela pro modo noturno  -->
     <script>
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
@@ -260,6 +262,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="../../../modoNoturno.js"></script>
     <script>
         var idPessoa = <?php echo $idPessoa; ?>;
+
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
             // Salva o novo tema no banco de dados via AJAX
@@ -269,6 +272,10 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 data: { tema: novoTema, idPessoa: idPessoa },
                 success: function () {
                     console.log("Tema atualizado com sucesso");
+
+                    // Atualizar a imagem dentro da divAcessos
+                    var novoIcone = novoTema === "noturno" ? "peopleWhite.svg" : "people.svg";
+                    $(".divAcessos img").attr("src", "../../assets/images/icones_diversos/" + novoIcone);
                 },
                 error: function (error) {
                     console.error("Erro ao salvar o tema:", error);
@@ -280,13 +287,32 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); 
+                Claro();
             }
         });
+
     </script>
     <script>
         $(document).ready(function () {
-            // Função para carregar valores do localStorage
+            var idPessoa = <?php echo json_encode($idPessoa); ?>;
+            var tema = <?php echo json_encode($tema); ?>;
+
+            // Função para aplicar o modo noturno
+            function aplicarModoNoturno() {
+                if (tema === "noturno") {
+                    $("body").addClass("noturno");
+                    Noturno(); // Se necessário, chame aqui a função que configura o modo noturno
+                } else {
+                    $("body").removeClass("noturno");
+                    Claro(); // Se necessário, chame aqui a função que configura o modo claro
+                }
+            }
+
+            // Aplicar o modo noturno ao carregar a página
+            aplicarModoNoturno();
+
+            var selectedSuggestionIndex = -1;
+
             function carregarValores() {
                 var termo = localStorage.getItem('termo');
                 var area = localStorage.getItem('area');
@@ -304,14 +330,16 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 }
                 if (niveis) {
                     niveis = JSON.parse(niveis);
-                    $('.checkBoxTipo').prop('checked', false); // Desmarcar todos os checkboxes primeiro
+                    $('.checkBoxTipo').prop('checked', false);
                     niveis.forEach(function (nivel) {
                         $('#' + nivel.toLowerCase()).prop('checked', true);
                     });
                 }
+
+                restaurarEstadosDosBotoes();
             }
 
-            // Função para salvar valores no localStorage
+
             function salvarValores() {
                 var termo = $('.inputPesquisa').val();
                 var area = $('.selectArea').val();
@@ -324,27 +352,24 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 localStorage.setItem('termo', termo);
                 localStorage.setItem('area', area);
                 localStorage.setItem('criador', criador);
-                localStorage.setItem('niveis', JSON.stringify(niveis));
+                localStorage.setItem('niveis', JSON.stringify(niveis)); // Salvar os níveis como JSON
+
             }
 
-            // Carregar valores ao inicializar
-            carregarValores();
-
-            // Função para executar a pesquisa
             function executarPesquisa() {
+                salvarValores(); // Salvar valores antes de executar a pesquisa
                 var termo = $('.inputPesquisa').val();
                 var area = $('.selectArea').val();
                 var criador = $('#criadorFiltro').val();
-                var niveis = [];
-                $('.checkBoxTipo:checked').each(function () {
-                    niveis.push($(this).val());
-                });
+                var niveis = JSON.parse(localStorage.getItem('niveis'));
 
-                // Realizar a solicitação AJAX para processar a pesquisa
                 $.ajax({
                     url: 'processar_pesquisa.php',
                     method: 'POST',
-                    data: { termo: termo, area: area, criador: criador, niveis: niveis },
+                    data: {
+                        termo: termo, area: area, criador: criador, niveis: niveis, idPessoa: idPessoa,
+                        tema: tema
+                    },
                     success: function (response) {
                         $('.divGridTestes').html(response).addClass('noturno');
                     },
@@ -353,34 +378,27 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     }
                 });
             }
-
-            // Adicionar eventos para salvar valores no localStorage
             $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
                 salvarValores();
                 executarPesquisa();
             });
 
-            // Executar a pesquisa inicialmente ao carregar a página
             executarPesquisa();
 
-            // Sugestões de pesquisa
-            $('.inputPesquisa').keyup(function () {
-                var query = $(this).val();
-                var area = $('.selectArea').val(); // Captura o valor selecionado na área
-                if (query != '') {
-                    $.ajax({
-                        url: 'obter_sugestoes.php',
-                        method: 'POST',
-                        data: { query: query, area: area }, // Envia também a área selecionada
-                        success: function (data) {
-                            $('#sugestoes').html(data);
-                            $('.sugestoes').show();
-                            // Exibe os dados recebidos no console do navegador
-                            console.table(data);
-                        }
-                    });
-                } else {
+            $('.inputPesquisa').focus(function () {
+                exibirSugestoes();
+            });
+
+            $('.inputPesquisa').blur(function () {
+                setTimeout(function () {
                     $('.sugestoes').hide();
+                }, 1000);
+            });
+
+            $('.inputPesquisa').on('keyup', function (e) {
+                var key = e.key.toLowerCase();
+                if (key >= 'a' && key <= 'z') {
+                    exibirSugestoes();
                 }
             });
 
@@ -392,13 +410,65 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 executarPesquisa();
             });
 
-            // Função para alternar o estado do botão e salvar no localStorage
+            function exibirSugestoes() {
+                var query = $('.inputPesquisa').val();
+                var area = $('.selectArea').val();
+                if (query != '') {
+                    $.ajax({
+                        url: 'obter_sugestoes.php',
+                        method: 'POST',
+                        data: { query: query, area: area },
+                        success: function (data) {
+                            $('#sugestoes').html(data);
+                            $('.sugestoes').show();
+                            reapplySelection();
+                            console.table(data);
+                        }
+                    });
+                } else {
+                    $('.sugestoes').hide();
+                }
+            }
+
+            function reapplySelection() {
+                if (selectedSuggestionIndex !== -1) {
+                    highlightSuggestion(selectedSuggestionIndex);
+                }
+            }
+
+            $('.inputPesquisa').keydown(function (e) {
+                var suggestions = $('.sugestao-item');
+                if (suggestions.length) {
+                    if (e.keyCode === 38) { // Tecla para cima
+                        selectedSuggestionIndex = (selectedSuggestionIndex === -1) ? suggestions.length - 1 : (selectedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
+                        highlightSuggestion(selectedSuggestionIndex);
+                    } else if (e.keyCode === 40) { // Tecla para baixo
+                        selectedSuggestionIndex = (selectedSuggestionIndex + 1) % suggestions.length;
+                        highlightSuggestion(selectedSuggestionIndex);
+                    } else if (e.keyCode === 13) { // Tecla Enter
+                        if (selectedSuggestionIndex !== -1) {
+                            var suggestionText = suggestions.eq(selectedSuggestionIndex).text();
+                            $('.inputPesquisa').val(suggestionText);
+                            $('.sugestoes').hide();
+                            selectedSuggestionIndex = -1;
+                            salvarValores();
+                            executarPesquisa();
+                        }
+                    }
+                }
+            });
+
+            function highlightSuggestion(index) {
+                console.log('highlightSuggestion called with index:', index);
+                $('.sugestao-item').removeClass('selected');
+                $('.sugestao-item').eq(index).addClass('selected');
+            }
+
             function toggleButtonState(buttonId) {
                 const button = document.querySelector(`#${buttonId}`);
                 let isActive = localStorage.getItem(`${buttonId}State`) === 'true';
-                // Alternar o estado do botão
                 isActive = !isActive;
-                localStorage.setItem(`${buttonId}State`, isActive); // Salvar no localStorage
+                localStorage.setItem(`${buttonId}State`, isActive);
                 if (isActive) {
                     button.style.backgroundColor = "var(--laranja)";
                     button.style.border = "1px solid var(--laranja)";
@@ -407,28 +477,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     button.style = "initial";
                 }
             }
-            // Função para restaurar os estados dos botões ao carregar a página
-            function restaurarEstadosDosBotoes() {
-                const buttonIds = ["btnBasico", "btnIntermediario", "btnExperiente"];
-                buttonIds.forEach(buttonId => {
-                    const button = document.querySelector(`#${buttonId}`);
-                    if (button) {
-                        const isActive = localStorage.getItem(`${buttonId}State`) === 'true';
-                        if (isActive) {
-                            button.style.backgroundColor = "var(--laranja)";
-                            button.style.border = "1px solid var(--laranja)";
-                            button.style.color = "whitesmoke";
-                        } else {
-                            button.style = "initial";
-                        }
-                    }
-                });
-            }
-            restaurarEstadosDosBotoes();
-            // Configurar eventos de clique para alternar estados e salvar no localStorage
-            document.querySelector("#btnBasico").addEventListener("click", () => toggleButtonState("btnBasico"));
-            document.querySelector("#btnIntermediario").addEventListener("click", () => toggleButtonState("btnIntermediario"));
-            document.querySelector("#btnExperiente").addEventListener("click", () => toggleButtonState("btnExperiente"));
         });
     </script>
 </body>
@@ -462,6 +510,10 @@ if ($result_areas && $result_areas->num_rows > 0) {
 
     .sugestao-item:hover {
         background-color: #fff;
+    }
+
+    .selected {
+        background-color: #fff !important;
     }
 </style>
 

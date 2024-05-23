@@ -1,6 +1,7 @@
 <?php
 // Conexão com o banco de dados
-include "../../services/conexão_com_banco.php"; // Ajuste o caminho conforme necessário
+include "../../services/conexão_com_banco.php";
+
 
 
 // Receber o termo de busca e a área enviados pela solicitação AJAX
@@ -9,12 +10,14 @@ $area = isset($_POST['area']) ? trim($_POST['area']) : '';
 
 // Preparar a consulta SQL para buscar títulos com base no termo e na área
 $sql = "SELECT Tb_Anuncios.Titulo 
-        FROM Tb_Anuncios
-        JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-        JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-        WHERE Tb_Anuncios.Titulo LIKE ?
-          AND (? = 'Todas' OR Tb_Anuncios.Area = ?)
-        LIMIT 3";  // Limitar o número de resultados
+FROM Tb_Anuncios
+JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+WHERE LOWER(REGEXP_REPLACE(Tb_Anuncios.Titulo, '\\b(de|em|para|com|por|sem)\\b', '')) LIKE LOWER(?)
+  AND (? = 'Todas' OR LOWER(Tb_Anuncios.Area) = LOWER(?))
+LIMIT 3";
+
+// Limitar o número de resultados
 
 $stmt = $_con->prepare($sql);
 $likeTerm = "%" . $termo . "%";
