@@ -203,12 +203,13 @@ function determinarImagemCategoria($categoria)
     </div>
 
     <?php
-    $sql = "SELECT q.Id_Questionario, q.Nome, q.Area, q.ImagemQuestionario, e.Nome_da_Empresa 
+    $sql = "SELECT DISTINCT q.Id_Questionario, q.Nome, q.Area, q.ImagemQuestionario, e.Nome_da_Empresa 
    FROM Tb_Questionarios q
    INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
    INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
    INNER JOIN Tb_Pessoas p ON e.Tb_Pessoas_Id = p.Id_Pessoas
    LIMIT 4";
+
     $result = $_con->query($sql);
 
     ?>
@@ -455,7 +456,7 @@ function determinarImagemCategoria($categoria)
     <footer>
         <a>Política de Privacidade</a>
         <a href="src/views/NossoContato/nossoContato.html">Nosso contato</a>
-        
+
         <a href="src/views/Cadastro/cadastro.html">Avalie-nos</a>
         <p>SIAS 2024</p>
     </footer>

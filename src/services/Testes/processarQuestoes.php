@@ -89,7 +89,7 @@ try {
     // Retorna uma resposta de sucesso
     echo json_encode(array(
         "message" => "Questionário criado com sucesso.",
-        "redirect" => "../../views/AvisoQuestionarioCriado/avisoQuestionarioCriado.html"
+        //"redirect" => "../../views/AvisoQuestionarioCriado/avisoQuestionarioCriado.html"
     ));
     exit();
 

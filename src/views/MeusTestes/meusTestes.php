@@ -227,7 +227,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     echo '<img src="../../../imagens/people.svg"></img>';
                                     echo '<small class="qntdAcessos">' . $total_respostas . '</small>';
                                     echo '</div>';
-                                    echo '<img class="imgTeste" src="' . $row_questionarios['ImagemQuestionario'] . '"></img>'; // Exibindo a imagem do Excel do banco de dados
+                                    echo '<img class="imgTeste" src="' . $row_questionarios['ImagemQuestionario'] . '"></img>'; 
                                     echo '<div class="divDetalhesTeste">';
                                     echo '<div>';
                                     echo '<p class="nomeTeste">' . $row_questionarios['Nome'] . '</p>'; // Exibindo o título do questionário
