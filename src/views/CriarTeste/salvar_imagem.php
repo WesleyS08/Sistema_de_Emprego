@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Retorna o caminho da imagem e a mensagem de sucesso para o JavaScript
                     echo json_encode(array(
                         "success" => "Questionário criado com sucesso",
-                        "redirect" => "../views/AvisoQuestionarioCriado/avisoQuestionarioCriado.html",
+                        "redirect" => "../AvisoQuestionarioCriado/avisoQuestionarioCriado.html",
                         "caminho_imagem" => $caminho
                     ));
                 } else {
