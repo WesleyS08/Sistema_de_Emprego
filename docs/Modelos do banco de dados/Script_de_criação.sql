@@ -247,6 +247,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Cursos` (
   `Categoria` VARCHAR(100) NULL,
   `Preco` DECIMAL(10, 2) NULL,
   `Ultima_Atualizacao` DATE NULL,
+  `cliques` INT DEFAULT 0,
   PRIMARY KEY (`Id_Cursos`)
 ) ENGINE = InnoDB;
 
@@ -255,10 +256,11 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Cursos` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Recomendacoes` (
   `Tb_Candidato_CPF` VARCHAR(11) NOT NULL,
+  `Tipo_Vaga` VARCHAR(45) NOT NULL, 
   `Tb_Cursos_Id` INT NOT NULL,
   PRIMARY KEY (`Tb_Candidato_CPF`, `Tb_Cursos_Id`),
-  INDEX `fk_Tb_Candidato_has_Tb_Cursos_Tb_Cursos1_idx` (`Tb_Cursos_Id` ASC) ,
-  INDEX `fk_Tb_Candidato_has_Tb_Cursos_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC) ,
+  INDEX `fk_Tb_Candidato_has_Tb_Cursos_Tb_Cursos1_idx` (`Tb_Cursos_Id` ASC),
+  INDEX `fk_Tb_Candidato_has_Tb_Cursos_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC),
   CONSTRAINT `fk_Tb_Candidato_has_Tb_Cursos_Tb_Candidato1`
     FOREIGN KEY (`Tb_Candidato_CPF`)
     REFERENCES `SIAS`.`Tb_Candidato` (`CPF`)
@@ -268,7 +270,8 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Recomendacoes` (
     FOREIGN KEY (`Tb_Cursos_Id`)
     REFERENCES `SIAS`.`Tb_Cursos` (`Id_Cursos`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
 
 
