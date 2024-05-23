@@ -468,16 +468,20 @@ if ($stmt) {
                     <div class="divBox">
                         <h3>Requisitos</h3>
                         <ul>
-                            <?php foreach ($arrayRequisitos as $requisito) { ?>
-                                <li><?php echo $requisito; ?></li>
+                        <?php foreach ($arrayRequisitos as $requisito) { ?>
+                                <li class="infos">
+                                    <?php echo $requisito; ?>
+                                </li>
                             <?php } ?>
                         </ul>
                     </div>
                     <div class="divBox">
                         <h3>Benefícios</h3>
                         <ul>
-                            <?php foreach ($arrayBeneficios as $beneficio) { ?>
-                                <li><?php echo $beneficio; ?></li>
+                        <?php foreach ($arrayBeneficios as $beneficio) { ?>
+                                <li class="infos">
+                                   <?php echo $beneficio; ?>
+                                </li>
                             <?php } ?>
                         </ul>
                     </div>
