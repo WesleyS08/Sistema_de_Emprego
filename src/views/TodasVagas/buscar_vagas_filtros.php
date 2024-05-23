@@ -120,7 +120,11 @@ if ($stmt) {
             echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
             echo '<article class="post">';
             echo '<div class="divAcessos">';
-            echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+            if ($tema == 'noturno') {
+                echo '<img src="../../assets/images/icones_diversos/peopleWhite.svg"></img>';
+            } else {
+                echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+            }
             echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
             echo '</div>';
 
@@ -147,39 +151,6 @@ if ($stmt) {
             echo '</article>';
             echo '</a>';
         }
-
-
-
-        echo '
-        <script>
-            var temaDoBancoDeDados = "' . $tema . '";
-        </script>
-        <script src="../../../modoNoturno.js"></script>
-        <script>
-            var idPessoa = ' . $idPessoa . ';
-
-            $(".btnModo").click(function () {
-                var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-                $.ajax({
-                    url: "../../services/Temas/atualizar_tema.php",
-                    method: "POST",
-                    data: { tema: novoTema, idPessoa: idPessoa },
-                    success: function () {
-                        console.log("Tema atualizado com sucesso");
-                    },
-                    error: function (error) {
-                        console.error("Erro ao salvar o tema:", error);
-                    }
-                });
-                if (novoTema === "noturno") {
-                    $("body").addClass("noturno");
-                    Noturno();
-                } else {
-                    $("body").removeClass("noturno");
-                    Claro();
-                }
-            });
-        </script>';
     } else {
         echo "<p class='infos' style='text-align:center; margin:0 auto; position: absolute'>Nenhuma vaga encontrada com os filtros selecionados.</p>";
     }

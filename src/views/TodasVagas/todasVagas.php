@@ -274,7 +274,7 @@ if ($result === false) {
                     echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
                     echo '<article class="post">';
                     echo '<div class="divAcessos">';
-                    echo '<img src="../../../imagens/people.svg"></img>';
+                    echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
                     echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
                     echo '</div>';
                     echo '<header>';
@@ -354,6 +354,10 @@ if ($result === false) {
                 data: { tema: novoTema, idPessoa: idPessoa },
                 success: function () {
                     console.log("Tema atualizado com sucesso");
+
+                    // Atualizar a imagem dentro da divAcessos
+                    var novoIcone = novoTema === "noturno" ? "peopleWhite.svg" : "people.svg";
+                    $(".divAcessos img").attr("src", "../../assets/images/icones_diversos/" + novoIcone);
                 },
                 error: function (error) {
                     console.error("Erro ao salvar o tema:", error);
@@ -365,9 +369,10 @@ if ($result === false) {
                 Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); 
+                Claro();
             }
         });
+
     </script>
 
     <!--================================ Obter sugestão dos títulos ======================================= -->

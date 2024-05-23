@@ -69,7 +69,11 @@ if ($result->num_rows > 0) {
         $htmlVagas .= '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . htmlspecialchars($row["Id_Anuncios"]) . '">';
         $htmlVagas .= '<article class="post">';
         $htmlVagas .=  '<div class="divAcessos">';
-        $htmlVagas .=  '<img src="../../../imagens/people.svg"></img>';
+        if ($tema == 'noturno') {
+            $htmlVagas .= '<img src="../../assets/images/icones_diversos/peopleWhite.svg"></img>';
+        } else {
+        $htmlVagas .= '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+        }
         $htmlVagas .=  '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
         $htmlVagas .=  '</div>';
         $htmlVagas .= '<header>';
@@ -109,37 +113,6 @@ if ($result->num_rows > 0) {
         $htmlVagas .= '</article>';
         $htmlVagas .= '</a>';
     }
-
-    $htmlVagas .= '
-    <script>
-        var temaDoBancoDeDados = "' . htmlspecialchars($tema) . '";
-    </script>
-    <script src="../../../modoNoturno.js"></script>
-    <script>
-        var idPessoa = ' . intval($idPessoa) . ';
-
-        $(".btnModo").click(function () {
-            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-            $.ajax({
-                url: "../../services/Temas/atualizar_tema.php",
-                method: "POST",
-                data: { tema: novoTema, idPessoa: idPessoa },
-                success: function () {
-                    console.log("Tema atualizado com sucesso");
-                },
-                error: function (error) {
-                    console.error("Erro ao salvar o tema:", error);
-                }
-            });
-            if (novoTema === "noturno") {
-                $("body").addClass("noturno");
-                Noturno();
-            } else {
-                $("body").removeClass("noturno");
-                Claro();
-            }
-        });
-    </script>';
 } else {
     $htmlVagas .= '<div class="sem-resultados">Nenhuma vaga encontrada</div>';
 }
