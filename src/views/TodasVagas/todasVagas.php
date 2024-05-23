@@ -2,7 +2,6 @@
 include "../../services/conexão_com_banco.php";
 
 session_start();
-// * =========================   Comentários ao longo fo código corrigidos ========================== *//
 
 // ?  Inicia a variável do email vazia
 $emailUsuario = '';
@@ -333,7 +332,52 @@ if ($result === false) {
     <script src="mostrarFiltros.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <script src="tituloDigitavel.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            // Evento change para as checkboxes de tipos de vagas
+            $(".checkBoxTipo").change(function () {
+                // Captura os tipos de vagas selecionados
+                var tiposVagaSelecionados = [];
+                $(".checkBoxTipo:checked").each(function () {
+                    tiposVagaSelecionados.push($(this).val());
+                });
+
+                // Captura o ID da pessoa do PHP
+                var idPessoa = <?php echo json_encode($idPessoa); ?>;
+
+                // Envia os tipos de vagas selecionados e o ID da pessoa para o servidor via AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "salvar_tipos_vaga.php",
+                    data: {
+                        id_pessoa: idPessoa,
+                        tipos_vaga: tiposVagaSelecionados
+                    },
+                    success: function (response) {
+                        // Manipula a resposta do servidor
+                        if (response.success) {
+                            alert("Dados salvos com sucesso!");
+                        } else {
+                            alert("Falha ao salvar os dados. Tente novamente.");
+                        }
+                    },
+
+                    error: function (xhr, status, error) {
+                        // Manipula erros de requisição, se houver
+                        console.error(error); // Exibe o erro no console
+                        //alert("Erro ao enviar os dados. Por favor, tente novamente."); // Exibe uma mensagem de erro
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
 
     <!--================================ Parte do tema noturno ======================================= -->
 

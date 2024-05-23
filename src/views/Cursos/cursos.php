@@ -86,7 +86,7 @@ function preencherHTMLComCursos($categoria)
 
     // Iterando sobre os cursos e preenchendo o HTML
     foreach ($cursos as $curso) {
-        echo '<a class="cursoLink" href="' . $curso['Link'] . '">';
+        echo '<a class="cursoLink" href="' . $curso['Link'] . '" target="_blank" onclick="registrarClique(' . $curso['Id_Cursos'] . ')">';
         echo '<article class="curso">';
         echo '<div class="divLogoCurso">';
         echo '<img src="' . $curso['URL_da_Imagem'] . '">';
@@ -194,25 +194,39 @@ if ($stmt) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <?php if ($idPessoa): ?>
-            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
-                    src="../../assets/images/logos_empresa/logo_sias.png"></a>
-            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
-            <ul>
-                <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-                <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
-                <li><a href="../Cursos/cursos.php">Cursos</a></li>
-                <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
-            </ul>
-        <?php else: ?>
-            <a href="../../../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a>
-            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
-            <ul>
-                <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-                <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
-                <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            </ul>
-        <?php endif; ?>
+        <?php
+        //*  Se tiver um idPessoa mostra esse navbar 
+        if ($idPessoa) {
+            echo '<nav>';
+            echo '    <input type="checkbox" id="check"> ';
+            echo '    <label for="check" class="menuBtn">';
+            echo '        <img src="../../../imagens/menu.svg">';
+            echo '    </label> ';
+            echo '<a href="../HomeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
+            echo '<button class="btnModo"><img src="../../../imagens/moon.svg"></button>';
+            echo '<ul>';
+            echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+            echo '    <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>';
+            echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
+            echo '    <li><a href="../PerfilCandidato/perfilCandidato.php?id=' . $idPessoa . '">Perfil</a></li>';
+            echo '</ul>';
+            echo '</nav>';
+        } else {
+            echo '<nav>';
+            echo '    <input type="checkbox" id="check"> ';
+            echo '    <label for="check" class="menuBtn">';
+            echo '        <img src="../../../imagens/menu.svg">';
+            echo '    </label> ';
+            echo '<a href="../../../index.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> ';
+            echo '<ul>';
+            echo '    <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>';
+            echo '    <li><a href="../Login/login.html">Testes</a></li>';
+            echo '    <li><a href="../Cursos/cursos.php">Cursos</a></li>';
+            echo '    <li><a href="../Login/login.html">Login</a></li>';
+            echo '</ul>';
+            echo '</nav>';
+        }
+        ?>
     </nav>
     <div class="divTituloDigitavel" id="divTituloDigitavelTodos">
         <h1 id="tituloAutomatico">C</h1>
@@ -223,11 +237,6 @@ if ($stmt) {
             <div class="divPesquisa">
                 <div class="divFlexInput">
                     <input id="inputPesquisa" class="inputPesquisa" placeholder="Pesquisar" type="text">
-                    <button id="searchButton" class="searchButton">
-                        <lord-icon src="https://cdn.lordicon.com/kkvxgpti.json" trigger="hover" colors="primary:#f5f5f5"
-                            style="width:36px;height:36px">
-                        </lord-icon>
-                    </button>
                 </div>
             </div>
             <div id="divGridCursos" class="divGridCursos">
@@ -357,16 +366,16 @@ if ($stmt) {
     </script>
 
     <script>
-        var idPessoa = <?php echo $idPessoa; ?>;
-
+        // Função para atualizar o estilo da página e notificar o servidor
         function atualizarEstiloENotificarServidor(novoTema) {
+            var idPessoa = <?php echo $idPessoa; ?>;
             $.ajax({
                 url: "../../services/Temas/atualizar_tema.php",
                 method: "POST",
                 data: { tema: novoTema, idPessoa: idPessoa },
                 success: function () {
                     console.log("Tema atualizado com sucesso");
-                    atualizarEstiloPagina(novoTema); // Chama a função para atualizar o estilo da página
+                    atualizarEstiloPagina(novoTema); // Atualiza o estilo da página
                 },
                 error: function (error) {
                     console.error("Erro ao salvar o tema:", error);
@@ -378,44 +387,39 @@ if ($stmt) {
         function atualizarEstiloPagina(novoTema) {
             if (novoTema === "noturno") {
                 $("body").addClass("noturno");
-                Noturno();
+                Noturno(); // Ativa funcionalidades noturnas
             } else {
                 $("body").removeClass("noturno");
-                Claro();
+                Claro(); // Ativa funcionalidades claras
             }
-
-            // Após atualizar o estilo da página, execute a busca
-            executarBusca();
+            executarBusca(); // Executa a busca após atualizar o estilo da página
         }
 
+        // Evento de clique no botão de alternância de tema
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
             atualizarEstiloENotificarServidor(novoTema);
         });
 
-        // Função para executar a busca
+        document.getElementById('inputPesquisa').addEventListener('input', function () {
+            executarBusca();
+        });
+
+        // Função para executar a busca em tempo real
         function executarBusca() {
             const query = document.getElementById('inputPesquisa').value;
-            // Procede apenas se houver uma consulta
+            const idPessoa = <?php echo $idPessoa; ?>;
+            const novoTema = $("body").hasClass("noturno") ? "claro" : "noturno"; // Obter o valor do tema
             if (query.length > 0) {
-                // Obter o ID da pessoa
-                var idPessoa = <?php echo $idPessoa; ?>;
-
-                // Debug: Exibir o valor do ID da pessoa no console
-                console.log('ID da pessoa:', idPessoa);
-
-                // Enviar a consulta e o ID da pessoa para buscar_cursos.php
-                fetch('buscar_cursos.php?titulo=' + encodeURIComponent(query) + '&idPessoa=' + idPessoa)
+                fetch(`buscar_cursos.php?titulo=${encodeURIComponent(query)}&idPessoa=${idPessoa}&tema=${novoTema}`) // Inclua o tema na URL da busca
                     .then(response => response.text())
                     .then(data => {
-                        // Exibir os dados enviados no console
                         console.table({
                             Query: query,
-                            ID_Pessoa: idPessoa
+                            ID_Pessoa: idPessoa,
+                            tema: novoTema
                         });
-
-                        const divGridCursos = document.getElementById('divGridCursos');
-                        divGridCursos.innerHTML = data;
+                        document.getElementById('divGridCursos').innerHTML = data;
                     })
                     .catch(error => console.error('Erro:', error));
             } else {
@@ -423,15 +427,15 @@ if ($stmt) {
                 document.getElementById('divGridCursos').innerHTML = '';
             }
         }
-
-        // Evento de click no botão de pesquisa
+        // Evento de clique no botão de pesquisa
         document.getElementById('searchButton').addEventListener('click', function () {
             executarBusca();
         });
 
-        // Chamar a função de busca quando a página carregar pela primeira vez
+        // Executar a busca quando a página carregar pela primeira vez
         executarBusca();
     </script>
+
     <script>
         document.getElementById('checkUpdate').addEventListener('click', function () {
             fetch('consulta.php')
@@ -443,6 +447,37 @@ if ($stmt) {
                     console.error('Erro:', error);
                 });
         });
+    </script>
+    <script>
+        function registrarClique(cursoID) {
+            // Fazendo uma requisição AJAX para registrar o clique
+            fetch('registrar_clique.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cursoID: cursoID })
+            })
+                .then(response => response.text()) // Alterado para .text() para depuração
+                .then(data => {
+                    console.log('Resposta do servidor:', data); // Log da resposta do servidor
+                    let jsonData;
+                    try {
+                        jsonData = JSON.parse(data);
+                    } catch (e) {
+                        console.error('Erro ao fazer parse do JSON:', e);
+                        return;
+                    }
+                    if (jsonData.success) {
+                        console.log('Clique registrado com sucesso');
+                    } else {
+                        console.error('Erro ao registrar clique');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Erro:', error);
+                });
+        }
     </script>
 </body>
 
