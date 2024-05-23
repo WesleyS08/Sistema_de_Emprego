@@ -468,12 +468,13 @@ $totaldisponivel = 4 - $total_inscricoes;
                         case 'verificadoInscrito':
                             // Indicar que o candidato já está inscrito e permitir retirar candidatura
                             echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
-                            echo '        <button>';
+                            echo '     <div class="divSendButton">';
+                            echo '        <button style="background-color: #a04809; border-color:#a04809 ">';
                             echo '            <h4>Retirar Candidatura</h4>';
                             echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
                             echo '        </button>';
+                            echo '     </div>';
                             echo '    </form>';
-                            echo '    </div>';
                             break;
 
                         case 'verificadoNaoInscrito':
@@ -489,19 +490,14 @@ $totaldisponivel = 4 - $total_inscricoes;
 
                         case 'naoVerificadoInscritoComInscricoes':
                             // Indicar que o candidato já está inscrito
-                            echo '    <div class="divSendButton">';
-                            echo '    <button disabled style="cursor: default; background-color: #723911;">';
-                            echo '        <h4>Já inscrito</h4>';
-                            echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                            echo '    </button>';
-                            echo '</div>';
                             echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
-                            echo '        <button>';
+                            echo '     <div class="divSendButton">';
+                            echo '        <button style="background-color: #a04809; border-color:#a04809 ">';
                             echo '            <h4>Retirar Candidatura</h4>';
                             echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
                             echo '        </button>';
+                            echo '     </div>';
                             echo '    </form>';
-                            echo '    </div>';
                             break;
 
                         case 'naoVerificadoNaoInscritoComInscricoes':
@@ -517,19 +513,14 @@ $totaldisponivel = 4 - $total_inscricoes;
 
                         case 'naoVerificadoInscritoSemInscricoes':
                             // Indicar que o candidato já está inscrito e não há inscrições disponíveis
-                            echo '    <div class="divSendButton">';
-                            echo '    <button disabled style="cursor: default; background-color: #723911;">';
-                            echo '        <h4>Já inscrito</h4>';
-                            echo '        <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
-                            echo '    </button>';
-                            echo '</div>';
                             echo '    <form method="POST" action="../../services/cadastros/processar_retirada_candidatura.php?id_anuncio=' . $idAnuncio . '">';
-                            echo '        <button>';
+                            echo '     <div class="divSendButton">';
+                            echo '        <button style="background-color: #a04809; border-color:#a04809 ">';
                             echo '            <h4>Retirar Candidatura</h4>';
                             echo '            <lord-icon src="https://cdn.lordicon.com/oqdmuxru.json" trigger="hover" colors="primary:#f5f5f5" style="width:80px;height:80px"></lord-icon>';
                             echo '        </button>';
+                            echo '     </div>';
                             echo '    </form>';
-                            echo '    </div>';
                             break;
 
                         case 'naoVerificadoNaoInscritoSemInscricoes':
@@ -552,8 +543,8 @@ $totaldisponivel = 4 - $total_inscricoes;
                         <h3>Requisitos</h3>
                         <ul>
                             <?php foreach ($arrayRequisitos as $requisito) { ?>
-                                <li>
-                                    <p><?php echo $requisito; ?></p>
+                                <li class="infos">
+                                    <?php echo $requisito; ?>
                                 </li>
                             <?php } ?>
                         </ul>
@@ -562,8 +553,8 @@ $totaldisponivel = 4 - $total_inscricoes;
                         <h3>Benefícios</h3>
                         <ul>
                             <?php foreach ($arrayBeneficios as $beneficio) { ?>
-                                <li>
-                                    <p><?php echo $beneficio; ?></p>
+                                <li class="infos">
+                                   <?php echo $beneficio; ?>
                                 </li>
                             <?php } ?>
                         </ul>

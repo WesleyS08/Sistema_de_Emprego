@@ -32,11 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute();
             $result = $stmt->get_result();
 
-            // Verifica se há resultados e imprime o CNPJ da empresa
+            // Verifica se há resultados
             if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $cnpj = $row["CNPJ"]; // Armazena o CNPJ obtido
-                }
+                // Obtém o CNPJ da empresa
+                $row = $result->fetch_assoc();
+                $cnpj = $row["CNPJ"];
 
                 // Consulta SQL para obter o último registro da Tb_Empresa_Questionario para o CNPJ especificado
                 $sql = "SELECT * FROM Tb_Empresa_Questionario WHERE Id_Empresa = '$cnpj' ORDER BY Id_Questionario DESC LIMIT 1";
@@ -54,27 +54,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     // Executa a atualização
                     $_con->query($sql_update);
+
+                    // Retorna o caminho da imagem e a mensagem de sucesso para o JavaScript
+                    echo json_encode(array(
+                        "success" => "Questionário criado com sucesso",
+                        "redirect" => "../views/AvisoQuestionarioCriado/avisoQuestionarioCriado.html",
+                        "caminho_imagem" => $caminho
+                    ));
                 } else {
                     // Se não houver resultados na segunda consulta, retorna uma mensagem de erro
-                    echo json_encode(array('erro' => 'Nenhum registro encontrado na Tb_Empresa_Questionario para o CNPJ especificado.'));
+                    echo json_encode(array('error' => 'Nenhum registro encontrado na Tb_Empresa_Questionario para o CNPJ especificado.'));
                 }
-
-                // Retorna o caminho da imagem para o JavaScript
-                echo json_encode(array('caminho_imagem' => $caminho));
             } else {
                 // Se não houver resultados na primeira consulta, retorna uma mensagem de erro
-                echo json_encode(array('erro' => 'Nenhum CNPJ encontrado para o ID de pessoa especificado.'));
+                echo json_encode(array('error' => 'Nenhum CNPJ encontrado para o ID de pessoa especificado.'));
             }
         } else {
             // Se houver um erro no upload, retorna uma mensagem de erro
-            echo json_encode(array('erro' => 'Erro ao fazer upload da imagem.'));
+            echo json_encode(array('error' => 'Erro ao fazer upload da imagem.'));
         }
     } else {
         // Se não foi enviado um arquivo, retorna uma mensagem de erro
-        echo json_encode(array('erro' => 'Nenhuma imagem foi enviada.'));
+        echo json_encode(array('error' => 'Nenhuma imagem foi enviada.'));
     }
 } else {
     // Se o método de requisição não for POST, retorna uma mensagem de erro
-    echo json_encode(array('erro' => 'Método de requisição inválido.'));
+    echo json_encode(array('error' => 'Método de requisição inválido.'));
 }
 ?>

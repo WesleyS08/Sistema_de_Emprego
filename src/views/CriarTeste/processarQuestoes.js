@@ -98,12 +98,12 @@ function enviarDados() {
 }
 
 // Função para enviar apenas a imagem via AJAX
+// Função para enviar apenas a imagem via AJAX
 function enviarImagem(idPessoa) {
     // Cria um novo FormData para a imagem
     let formDataIMG = new FormData();
     let imagem = document.getElementById('inputImagem').files[0];
     formDataIMG.append('inputImagem', imagem);
-
     formDataIMG.append('idPessoa', idPessoa); // Usando o idPessoa passado como parâmetro
 
     // Envia a imagem via AJAX
@@ -111,32 +111,37 @@ function enviarImagem(idPessoa) {
         method: 'POST',
         body: formDataIMG,
     })
-        .then(response => {
-            if (response.ok) {
-                return response.json(); // Retorna a resposta do servidor para o próximo then
-            } else {
-                throw new Error('Erro ao enviar imagem');
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Retorna a resposta do servidor para o próximo then
+        } else {
+            throw new Error('Erro ao enviar imagem');
+        }
+    })
+    .then(data => {
+        // Trata a resposta do servidor
+        console.log(data);
+        if (data.hasOwnProperty('success')) {
+            // Se a chave 'success' existir, exibe uma mensagem de sucesso
+            alert(data.success);
+            // Redireciona o usuário se o redirecionamento estiver presente na resposta
+            if (data.redirect) {
+                window.location.href = data.redirect;
             }
-        })
-        .then(data => {
-            // Trata a resposta do servidor
-            console.log(data);
-            if (data.hasOwnProperty('success')) {
-                // Se a chave 'success' existir, exibe uma mensagem de sucesso
-                alert(data.success);
-            } else if (data.hasOwnProperty('error')) {
-                // Se a chave 'error' existir, exibe uma mensagem de erro
-                alert(data.error);
-            } else {
-                // Se a resposta não contiver nem 'success' nem 'error', exibe uma mensagem genérica de erro
-                throw new Error('Resposta inválida do servidor');
-            }
-        })
-        .catch(error => {
-            // Captura e exibe qualquer erro ocorrido durante o processo de envio da imagem
-            console.error('Erro ao enviar imagem:', error);
-        });
+        } else if (data.hasOwnProperty('error')) {
+            // Se a chave 'error' existir, exibe uma mensagem de erro
+            alert(data.error);
+        } else {
+            // Se a resposta não contiver nem 'success' nem 'error', exibe uma mensagem genérica de erro
+            throw new Error('Resposta inválida do servidor');
+        }
+    })
+    .catch(error => {
+        // Captura e exibe qualquer erro ocorrido durante o processo de envio da imagem
+        console.error('Erro ao enviar imagem:', error);
+    });
 }
+
 
 // Chamar a função para enviar dados quando o formulário for submetido
 document.querySelector('form').addEventListener('submit', function (event) {
