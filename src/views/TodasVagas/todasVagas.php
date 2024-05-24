@@ -466,7 +466,7 @@ if ($result === false) {
                                 } else if (e.which === 40) { // Seta para baixo
                                     sugestoes.removeClass('selecionada');
                                     sugestoes.eq((index + 1) % sugestoes.length).addClass('selecionada');
-                                } else if (e.which === 13 || e.which === 9 || e.which === 32) { // Enter, Tab ou Espaço
+                                } else if (e.which === 13 || e.which === 9 ) { // Enter, Tab 
                                     var textoSelecionado = $('.selecionada').text();
                                     $('.inputPesquisa').val(textoSelecionado);
                                     $('#sugestoes').hide();

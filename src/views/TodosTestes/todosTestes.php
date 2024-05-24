@@ -294,25 +294,24 @@ if ($result_areas && $result_areas->num_rows > 0) {
     </script>
     <script>
         $(document).ready(function () {
-            var idPessoa = <?php echo json_encode($idPessoa); ?>;
-            var tema = <?php echo json_encode($tema); ?>;
+            var idPessoa = <?php echo json_encode($idPessoa); ?>; // Armazena o ID da pessoa
+            var tema = <?php echo json_encode($tema); ?>; // Armazena o tema (noturno ou claro)
 
             // Função para aplicar o modo noturno
             function aplicarModoNoturno() {
                 if (tema === "noturno") {
                     $("body").addClass("noturno");
-                    Noturno(); // Se necessário, chame aqui a função que configura o modo noturno
+                    Noturno(); // Chama a função que configura o modo noturno
                 } else {
                     $("body").removeClass("noturno");
-                    Claro(); // Se necessário, chame aqui a função que configura o modo claro
+                    Claro(); // Chama a função que configura o modo claro
                 }
             }
 
             // Aplicar o modo noturno ao carregar a página
             aplicarModoNoturno();
 
-            var selectedSuggestionIndex = -1;
-
+            // Carrega os valores salvos no localStorage
             function carregarValores() {
                 var termo = localStorage.getItem('termo');
                 var area = localStorage.getItem('area');
@@ -339,7 +338,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 restaurarEstadosDosBotoes();
             }
 
-
+            // Salva os valores no localStorage
             function salvarValores() {
                 var termo = $('.inputPesquisa').val();
                 var area = $('.selectArea').val();
@@ -353,9 +352,9 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 localStorage.setItem('area', area);
                 localStorage.setItem('criador', criador);
                 localStorage.setItem('niveis', JSON.stringify(niveis)); // Salvar os níveis como JSON
-
             }
 
+            // Executa a pesquisa
             function executarPesquisa() {
                 salvarValores(); // Salvar valores antes de executar a pesquisa
                 var termo = $('.inputPesquisa').val();
@@ -367,8 +366,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     url: 'processar_pesquisa.php',
                     method: 'POST',
                     data: {
-                        termo: termo, area: area, criador: criador, niveis: niveis, idPessoa: idPessoa,
-                        tema: tema
+                        termo: termo, area: area, criador: criador, niveis: niveis, idPessoa: idPessoa, tema: tema
                     },
                     success: function (response) {
                         $('.divGridTestes').html(response).addClass('noturno');
@@ -378,30 +376,29 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     }
                 });
             }
+
+            // Eventos para salvar valores e executar pesquisa quando inputs mudam
             $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
                 salvarValores();
                 executarPesquisa();
             });
 
+            // Executa a pesquisa ao carregar a página
             executarPesquisa();
 
+            // Exibe sugestões ao focar na inputPesquisa
             $('.inputPesquisa').focus(function () {
                 exibirSugestoes();
             });
 
+            // Oculta sugestões após 5 segundos de perder o foco
             $('.inputPesquisa').blur(function () {
                 setTimeout(function () {
                     $('.sugestoes').hide();
-                }, 1000);
+                }, 5000);
             });
 
-            $('.inputPesquisa').on('keyup', function (e) {
-                var key = e.key.toLowerCase();
-                if (key >= 'a' && key <= 'z') {
-                    exibirSugestoes();
-                }
-            });
-
+            // Seleciona sugestão ao clicar nela
             $(document).on('click', '.sugestao-item', function () {
                 var sugestao = $(this).text();
                 $('.inputPesquisa').val(sugestao);
@@ -410,60 +407,64 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 executarPesquisa();
             });
 
+            // Função para exibir sugestões
             function exibirSugestoes() {
-                var query = $('.inputPesquisa').val();
+                var termo = $('.inputPesquisa').val();
                 var area = $('.selectArea').val();
-                if (query != '') {
+                if (termo != '') {
                     $.ajax({
                         url: 'obter_sugestoes.php',
                         method: 'POST',
-                        data: { query: query, area: area },
-                        success: function (data) {
-                            $('#sugestoes').html(data);
-                            $('.sugestoes').show();
-                            reapplySelection();
-                            console.table(data);
+                        data: { termo: termo, area: area },
+                        success: function (response) {
+                            $('#sugestoes').html(response).show();
+                            // Adiciona evento de teclado para seleção das sugestões
+                            $('.sugestao-item').first().addClass('selecionada');
+                            $(document).on('keydown', function (e) {
+                                var sugestoes = $('.sugestao-item');
+                                var index = sugestoes.index($('.selecionada'));
+                                if (e.which === 38) { // Seta para cima
+                                    sugestoes.removeClass('selecionada');
+                                    sugestoes.eq(index === 0 ? sugestoes.length - 1 : index - 1).addClass('selecionada');
+                                } else if (e.which === 40) { // Seta para baixo
+                                    sugestoes.removeClass('selecionada');
+                                    sugestoes.eq((index + 1) % sugestoes.length).addClass('selecionada');
+                                } else if (e.which === 13 || e.which === 9) { // Enter, Tab ou Espaço
+                                    var textoSelecionado = $('.selecionada').text();
+                                    $('.inputPesquisa').val(textoSelecionado);
+                                    $('#sugestoes').hide();
+                                    localStorage.setItem('termoPesquisa', textoSelecionado);
+                                    executarPesquisa(); // Chama a função para executar a pesquisa
+                                }
+                            });
+                        },
+                        error: function () {
+                            console.error("Erro ao buscar sugestões.");
                         }
                     });
                 } else {
-                    $('.sugestoes').hide();
+                    $('.inputPesquisa').on('blur', function () {
+                        setTimeout(function () {
+                            $('#sugestoes').hide();
+                        }, 5000); // Oculta as sugestões após 5 segundos de perder o foco
+                    });
                 }
             }
 
-            function reapplySelection() {
-                if (selectedSuggestionIndex !== -1) {
-                    highlightSuggestion(selectedSuggestionIndex);
-                }
-            }
+            // Evento para chamar a função ao digitar na inputPesquisa
+            $('.inputPesquisa').on('input', exibirSugestoes);
 
-            $('.inputPesquisa').keydown(function (e) {
-                var suggestions = $('.sugestao-item');
-                if (suggestions.length) {
-                    if (e.keyCode === 38) { // Tecla para cima
-                        selectedSuggestionIndex = (selectedSuggestionIndex === -1) ? suggestions.length - 1 : (selectedSuggestionIndex - 1 + suggestions.length) % suggestions.length;
-                        highlightSuggestion(selectedSuggestionIndex);
-                    } else if (e.keyCode === 40) { // Tecla para baixo
-                        selectedSuggestionIndex = (selectedSuggestionIndex + 1) % suggestions.length;
-                        highlightSuggestion(selectedSuggestionIndex);
-                    } else if (e.keyCode === 13) { // Tecla Enter
-                        if (selectedSuggestionIndex !== -1) {
-                            var suggestionText = suggestions.eq(selectedSuggestionIndex).text();
-                            $('.inputPesquisa').val(suggestionText);
-                            $('.sugestoes').hide();
-                            selectedSuggestionIndex = -1;
-                            salvarValores();
-                            executarPesquisa();
-                        }
-                    }
-                }
-            });
+            // Chamada inicial para esconder as sugestões
+            $('#sugestoes').hide();
 
+            // Função para destacar a sugestão
             function highlightSuggestion(index) {
                 console.log('highlightSuggestion called with index:', index);
                 $('.sugestao-item').removeClass('selected');
                 $('.sugestao-item').eq(index).addClass('selected');
             }
 
+            // Função para alternar o estado do botão
             function toggleButtonState(buttonId) {
                 const button = document.querySelector(`#${buttonId}`);
                 let isActive = localStorage.getItem(`${buttonId}State`) === 'true';
@@ -512,8 +513,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
         background-color: #fff;
     }
 
-    .selected {
-        background-color: #fff !important;
+    .selecionada {
+        background-color: #f0f0f0;
+        /* Cor de fundo da sugestão selecionada */
+        color: #333;
+        /* Cor do texto da sugestão selecionada */
     }
 </style>
 

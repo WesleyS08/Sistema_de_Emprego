@@ -3,7 +3,7 @@
 include "../../services/conexão_com_banco.php";
 
 // Receber os filtros enviados pela solicitação AJAX
-$termoPesquisa = isset($_POST['termo']) ? $_POST['termo'] . '%' : '%'; // Valor padrão: qualquer termo
+$termoPesquisa = isset($_POST['termo']) ? preg_replace('/\s+/', ' ', trim($_POST['termo'])) : ''; // Valor padrão: qualquer termo
 $area = isset($_POST['area']) ? $_POST['area'] : 'Todas'; // Valor padrão: Todas
 $criador = isset($_POST['criador']) ? $_POST['criador'] : '';
 $niveis = isset($_POST['niveis']) ? $_POST['niveis'] : [];
