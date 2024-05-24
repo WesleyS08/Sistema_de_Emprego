@@ -167,6 +167,13 @@ if ($result === false) {
         .sugestao-item:hover {
             background-color: #fff;
         }
+
+        .selecionada {
+            background-color: #f0f0f0;
+            /* Cor de fundo da sugestão selecionada */
+            color: #333;
+            /* Cor do texto da sugestão selecionada */
+        }
     </style>
 </head>
 
@@ -376,9 +383,6 @@ if ($result === false) {
         });
     </script>
 
-
-
-
     <!--================================ Parte do tema noturno ======================================= -->
 
     <!-- Atribui o tema salvo no banco de dados a essa variável e passa ela pro modo noturno  -->
@@ -451,13 +455,36 @@ if ($result === false) {
                         },
                         success: function (response) {
                             $('#sugestoes').html(response).show();
+                            // Adiciona evento de teclado para seleção das sugestões
+                            $('.sugestao-item').first().addClass('selecionada');
+                            $(document).on('keydown', function (e) {
+                                var sugestoes = $('.sugestao-item');
+                                var index = sugestoes.index($('.selecionada'));
+                                if (e.which === 38) { // Seta para cima
+                                    sugestoes.removeClass('selecionada');
+                                    sugestoes.eq(index === 0 ? sugestoes.length - 1 : index - 1).addClass('selecionada');
+                                } else if (e.which === 40) { // Seta para baixo
+                                    sugestoes.removeClass('selecionada');
+                                    sugestoes.eq((index + 1) % sugestoes.length).addClass('selecionada');
+                                } else if (e.which === 13 || e.which === 9 || e.which === 32) { // Enter, Tab ou Espaço
+                                    var textoSelecionado = $('.selecionada').text();
+                                    $('.inputPesquisa').val(textoSelecionado);
+                                    $('#sugestoes').hide();
+                                    localStorage.setItem('termoPesquisa', textoSelecionado);
+                                    buscarVagasPorTitulo(textoSelecionado, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
+                                }
+                            });
                         },
                         error: function () {
                             console.error("Erro ao buscar sugestões.");
                         }
                     });
                 } else {
-                    $('#sugestoes').hide();
+                    $('.inputPesquisa').on('blur', function () {
+                        setTimeout(function () {
+                            $('#sugestoes').hide();
+                        }, 5000); // Oculta as sugestões após 5 segundos de perder o foco
+                    });
                 }
             });
 

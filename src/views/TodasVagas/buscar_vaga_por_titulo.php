@@ -4,6 +4,7 @@ include "../../services/conexão_com_banco.php";
 // Receber o termo de pesquisa e o ID da pessoa usando POST
 $termo = isset($_POST['termo']) ? $_POST['termo'] : '';
 $idPessoa = isset($_POST['idPessoa']) ? intval($_POST['idPessoa']) : 0;
+$tema = 0;
 
 if ($idPessoa > 0) {
     // Consulta para selecionar o tema salvo no banco de dados

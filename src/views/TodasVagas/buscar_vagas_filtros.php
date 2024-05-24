@@ -3,12 +3,16 @@
 include "../../services/conexão_com_banco.php";
 
 // Função para remover palavras de ligação do termo de pesquisa
-function removerPalavrasDeLigacao($string, $palavras_de_ligacao) {
+function removerPalavrasDeLigacao($string, $palavras_de_ligacao)
+{
     $string = strtolower($string);
+    // Dividir a string em palavras
     $palavras = explode(" ", $string);
-    $palavras = array_filter($palavras, function($palavra) use ($palavras_de_ligacao) {
-        return !in_array($palavra, $palavras_de_ligacao);
+    // Remover espaços em branco e palavras de ligação
+    $palavras = array_filter($palavras, function ($palavra) use ($palavras_de_ligacao) {
+        return !in_array($palavra, $palavras_de_ligacao) && !empty (trim($palavra));
     });
+    // Reunir as palavras filtradas em uma string novamente
     return implode(" ", $palavras);
 }
 
@@ -46,6 +50,9 @@ $palavras_de_ligacao = array('de', 'em', 'para', 'com', 'por', 'sem');
 // Remover palavras de ligação do termo de pesquisa
 $termoPesquisa = removerPalavrasDeLigacao($termoPesquisa, $palavras_de_ligacao);
 
+// Dividir o termo de pesquisa em palavras
+$palavrasChave = explode(" ", $termoPesquisa);
+
 // Iniciar a consulta SQL para obter vagas com ou sem filtros
 $sql = "SELECT * 
         FROM Tb_Anuncios 
@@ -55,6 +62,13 @@ $sql = "SELECT *
 // Adicionar condições para cada filtro, conforme necessário
 $parametros = [];
 $filtros = [];
+
+foreach ($palavrasChave as $index => $palavra) {
+    $parametro = "termo" . ($index + 1);
+    $filtros[] = "Tb_Anuncios.Titulo LIKE ?";
+    $parametros[] = '%' . $palavra . '%';
+}
+
 // Função para determinar a imagem com base na categoria do trabalho
 function determinarImagemCategoria($categoria)
 {
@@ -86,12 +100,6 @@ if (!empty($tipos)) {
 // Filtrar por vagas abertas
 if ($vagasAbertas) {
     $filtros[] = "Tb_Vagas.Status = 'Aberto'";
-}
-
-// Filtrar por termo de pesquisa
-if (!empty($termoPesquisa)) {
-    $filtros[] = "Tb_Anuncios.Titulo LIKE ?";
-    $parametros[] = '%' . $termoPesquisa . '%';
 }
 
 // Adicionar filtros à consulta
