@@ -8,6 +8,7 @@ $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : ''
 $emailUsuario = '';
 $candidatoInscrito = false;
 $autenticadoComoPublicador = false;
+$empresa = false;
 
 // Verificar se o usuário está autenticado e definir o e-mail do usuário
 if (isset($_SESSION['email_session'])) {
@@ -17,6 +18,24 @@ if (isset($_SESSION['email_session'])) {
     // Se estiver autenticado com o Google
     $emailUsuario = $_SESSION['google_session'];
 }
+
+// Consulta SQL para obter o ID do usuário como empresa
+$sql = "SELECT e.Tb_Pessoas_Id AS idUsuario FROM Tb_Pessoas AS p
+        INNER JOIN Tb_Empresa AS e ON p.Id_Pessoas = e.Tb_Pessoas_Id
+        WHERE p.Email = ?";
+$stmt = $_con->prepare($sql);
+$stmt->bind_param("s", $emailUsuario);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Verificar se o usuário é uma empresa
+if ($result->num_rows > 0) {
+    $idUsuarioEmpresa = $result->fetch_assoc()['idUsuario'];
+    $empresa = true;
+} else {
+    $empresa = false;
+}
+
 
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 
@@ -118,46 +137,68 @@ if ($result && mysqli_num_rows($result) > 0) {
 } else {
 
     echo "Candidato não encontrado.";
-    
+
     exit(); // Termina o script após exibir a mensagem
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-    <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">    
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/perfilStyle.css">
 </head>
+
 <body>
     <nav>
         <input type="checkbox" id="check">
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../homeCandidato/homeCandidato.php"><img id="logo" src="../../assets/images/logos_empresa/logo_sias.png"></a> 
-        <button class="btnModo"><img src="../../../imagens/moon.svg"></button> 
-        <ul>            
-            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-            <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
-            <li><a href="../Cursos/cursos.php">Cursos</a></li>
-            <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
-        </ul>
+        <?php if ($empresa = false) { ?>
+            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
+                    src="../../assets/images/logos_empresa/logo_sias.png"></a>
+            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+            <ul>
+                <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+                <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
+                <li><a href="../Cursos/cursos.php">Cursos</a></li>
+                <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
+            </ul>
+        <?php } else { ?>
+            <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+                    src="../../assets/images/logos_empresa/logo_sias.png"></a>
+            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+            <ul>
+                <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+                <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+                <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
+                <li><a href="../../../index.php">Deslogar</a></li>
+                <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idUsuarioEmpresa; ?>">Perfil</a></li>
+            </ul>
+        <?php } ?>
     </nav>
     <div class="divBackgroundImg" id="divBackgroundImgDefinida">
-    <img src="<?php echo $caminhoImagemBanner; ?>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
-    <div class="divFotoDePerfil" id="divFotoDePerfilDefinida">
+        <?php
+        if (!empty($caminhoImagemBanner)) { ?>
+            <img src="<?php echo $caminhoImagemBanner; ?>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+        <?php } else { ?>
+            <img src="https://static.vecteezy.com/system/resources/previews/010/705/558/non_2x/orange-modern-abstract-background-for-banner-landing-page-poster-presentation-or-flyer-free-vector.jpg"
+                alt="" style="width: 100%; height: 100%; object-fit: cover;">
+        <?php } ?>
+
+        <div class="divFotoDePerfil" id="divFotoDePerfilDefinida">
             <img src="<?php echo $caminhoImagemPerfil; ?>" alt=""
                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
         </div>
         <?php if ($podeEditar) { ?>
-            <a class="acessarEditarPerfil" href="../EditarPerfilCandidato/editarPerfilCandidato.php?id=<?php echo $idPessoa; ?>">
+            <a class="acessarEditarPerfil"
+                href="../EditarPerfilCandidato/editarPerfilCandidato.php?id=<?php echo $idPessoa; ?>">
                 <div>
                     <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
                         colors="primary:#ffffff,secondary:#ffffff" style="width:30px;height:30px">
@@ -167,7 +208,7 @@ if ($result && mysqli_num_rows($result) > 0) {
             </a>
         <?php } ?>
     </div>
-    <div class="divCommon">        
+    <div class="divCommon">
         <div class="containerPerfil">
             <div class="divTitulo">
                 <h2 id="nomeUsuario"><?php echo $nomeUsuario ?></h2>
@@ -175,84 +216,70 @@ if ($result && mysqli_num_rows($result) > 0) {
             </div>
             <div class="contentPerfil" id="informacoesIniciais">
                 <div class="divFlex">
-                    <lord-icon class="iconeVaga"
-                        src="https://cdn.lordicon.com/lenjvibx.json"
-                        trigger="loop"
-                        stroke="bold"
-                        state="loop-flutter"
-                        colors="primary:#000000,secondary:#e88c30"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/lenjvibx.json" trigger="loop"
+                        stroke="bold" state="loop-flutter" colors="primary:#000000,secondary:#e88c30"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <label id="idadeUsuario" class="infos"><?php echo $dataNascimentoUsuario, " Anos"?></label>
+                    <label id="idadeUsuario" class="infos"><?php echo $dataNascimentoUsuario, " Anos" ?></label>
                 </div>
                 <div class="divFlex">
-                    <lord-icon class="iconeVaga"
-                        src="https://cdn.lordicon.com/bgebyztw.json"
-                        trigger="morph"
-                        stroke="bold"
-                        state="hover-jumping"
-                        colors="primary:#000000,secondary:#e88c30"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/bgebyztw.json" trigger="morph"
+                        stroke="bold" state="hover-jumping" colors="primary:#000000,secondary:#e88c30"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <label id="generoUsuario" class="infos"><?php echo $generoUsuario?></label>
+                    <label id="generoUsuario" class="infos"><?php echo $generoUsuario ?></label>
                 </div>
                 <div class="divFlex">
-                    <lord-icon class="iconeVaga"
-                        src="https://cdn.lordicon.com/surcxhka.json"
-                        trigger="loop"
-                        stroke="bold"
-                        state="loop-roll"
-                        colors="primary:#000000,secondary:#e88c30"
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/surcxhka.json" trigger="loop"
+                        stroke="bold" state="loop-roll" colors="primary:#000000,secondary:#e88c30"
                         style="width:30px;height:30px">
                     </lord-icon>
-                    <label id="localUsuario" class="infos"><?php echo $cidadeUsuario?></label>
+                    <label id="localUsuario" class="infos"><?php echo $cidadeUsuario ?></label>
                 </div>
                 <div class="divFlex">
-                    <lord-icon class="iconeVaga"
-                        src="https://cdn.lordicon.com/lqcyrjta.json"
-                        trigger="hover"
-                        stroke="bold"
-                        colors="primary:#000000,secondary:#e88c30"
-                        style="width:30px;height:30px">
-                    </lord-icon>                    
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/lqcyrjta.json" trigger="hover"
+                        stroke="bold" colors="primary:#000000,secondary:#e88c30" style="width:30px;height:30px">
+                    </lord-icon>
                     <label id="pcdUsuario" class="infos">
                         <?php echo $pcdUsuario == 1 ? 'PCD: Sim' : 'PCD: Não'; ?>
                     </label>
                 </div>
             </div>
-            <div class="contentPerfil">                
+            <div class="contentPerfil">
                 <h3>Área</h3>
-                <p id="areaUsuario"><?php echo $areaUsuario?></p>
+                <p id="areaUsuario"><?php echo $areaUsuario ?></p>
             </div>
             <div class="contentPerfil" id="contentSobre">
                 <fieldset>
-                    <legend><h3>Sobre Mim</h3></legend>
-                    <p id="sobre"><?php echo $sobreUsuario?></p>
+                    <legend>
+                        <h3>Sobre Mim</h3>
+                    </legend>
+                    <p id="sobre"><?php echo $sobreUsuario ?></p>
                 </fieldset>
             </div>
             <div class="divGridElementos">
-                <div class="contentPerfil">                
-                <h3>Habilidades e Tecnologias</h3>
+                <div class="contentPerfil">
+                    <h3>Habilidades e Tecnologias</h3>
                     <p id="habilidades">
                         <?php
-                            // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
-                            $padroes_de_separacao = array("-", ",", ":");
+                        // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
+                        $padroes_de_separacao = array("-", ",", ":");
 
-                            // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
-                            $cursoUsuario = str_replace($padroes_de_separacao, "§", $cursoUsuario);
+                        // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
+                        $cursoUsuario = str_replace($padroes_de_separacao, "§", $cursoUsuario);
 
-                            // Divida os dados em um array usando a marca única como separador
-                            $dados_array = explode("§", $cursoUsuario);
+                        // Divida os dados em um array usando a marca única como separador
+                        $dados_array = explode("§", $cursoUsuario);
 
-                            // Imprima cada item do array em uma linha separada
-                            foreach ($dados_array as $dado) {
-                                // Se o dado não estiver vazio, imprima-o
-                                if (!empty(trim($dado))) {
-                                    echo "- $dado <br>";
-                                }
+                        // Imprima cada item do array em uma linha separada
+                        foreach ($dados_array as $dado) {
+                            // Se o dado não estiver vazio, imprima-o
+                            if (!empty(trim($dado))) {
+                                echo "- $dado <br>";
                             }
+                        }
                         ?>
-                    </p>   
+                    </p>
 
                     <!--
                     <ul class="elementosAdicionados" id="habilidadesAdicionadas">
@@ -261,99 +288,95 @@ if ($result && mysqli_num_rows($result) > 0) {
                         <li>Cisco Packet Tracer</li>
                         <li>Formatação de Windows</li>
                     </ul>
-                    -->                    
-                    
+                    -->
+
                 </div>
-                <div class="contentPerfil">                
-                <h3>Cursos e Formações</h3>
+                <div class="contentPerfil">
+                    <h3>Cursos e Formações</h3>
                     <p id="cursos">
                         <?php
-                            // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
-                            $padroes_de_separacao = array("-", ",");
+                        // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
+                        $padroes_de_separacao = array("-", ",");
 
-                            // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
-                            $escolaridadeUsuario = str_replace($padroes_de_separacao, "§", $escolaridadeUsuario);
+                        // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
+                        $escolaridadeUsuario = str_replace($padroes_de_separacao, "§", $escolaridadeUsuario);
 
-                            // Divida os dados em um array usando a marca única como separador
-                            $dados_array = explode("§", $escolaridadeUsuario);
+                        // Divida os dados em um array usando a marca única como separador
+                        $dados_array = explode("§", $escolaridadeUsuario);
 
-                            // Imprima cada item do array em uma linha separada
-                            foreach ($dados_array as $dado) {
-                                // Se o dado não estiver vazio, imprima-o
-                                if (!empty(trim($dado))) {
-                                    echo "- $dado <br>";
-                                }
+                        // Imprima cada item do array em uma linha separada
+                        foreach ($dados_array as $dado) {
+                            // Se o dado não estiver vazio, imprima-o
+                            if (!empty(trim($dado))) {
+                                echo "- $dado <br>";
                             }
+                        }
                         ?>
                     </p>
-                    
+
                     <!--
                     <ul class="elementosAdicionados" id="cursosAdicionados">
                         <li>Desenvolvimento de Software Muliplataforma</li>
                         <li>Redes de Computadores</li>
                     </ul>
                     -->
-                    
+
                 </div>
-                <div class="contentPerfil">                
-                <h3>Experiências de Trabalho</h3>
+                <div class="contentPerfil">
+                    <h3>Experiências de Trabalho</h3>
                     <p id="experiencias">
                         <?php
-                            // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
-                            $padroes_de_separacao = array("-", ",", ":");
+                        // Divida os dados em um array usando traços, vírgulas, dois pontos, etc.
+                        $padroes_de_separacao = array("-", ",", ":");
 
-                            // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
-                            $experienciaUsuario = str_replace($padroes_de_separacao, "§", $experienciaUsuario);
+                        // Substitua todos os padrões de separação por uma marca única (§ neste exemplo)
+                        $experienciaUsuario = str_replace($padroes_de_separacao, "§", $experienciaUsuario);
 
-                            // Divida os dados em um array usando a marca única como separador
-                            $dados_array = explode("§", $experienciaUsuario);
+                        // Divida os dados em um array usando a marca única como separador
+                        $dados_array = explode("§", $experienciaUsuario);
 
-                            // Imprima cada item do array em uma linha separada
-                            foreach ($dados_array as $dado) {
-                                // Se o dado não estiver vazio, imprima-o
-                                if (!empty(trim($dado))) {
-                                    echo "- $dado <br>";
-                                }
+                        // Imprima cada item do array em uma linha separada
+                        foreach ($dados_array as $dado) {
+                            // Se o dado não estiver vazio, imprima-o
+                            if (!empty(trim($dado))) {
+                                echo "- $dado <br>";
                             }
+                        }
                         ?>
                     </p>
-                    
+
                     <!--
                     <ul class="elementosAdicionados" id="experienciasAdicionadas">
                         <li>Atendente de Telemarketing</li>
                         <li>Lixeiro</li>
                         <li>Desenvolvimento de Bomba Atômica</li>
                     </ul>
-                    -->                    
+                    -->
                 </div>
-            </div>  
+            </div>
             <div class="contentPerfil" id="contentPerfilPontuacao">
                 <div class="divTituloDigitavel">
-                    <lord-icon class="iconeVaga"
-                    src="https://cdn.lordicon.com/iawrhwdo.json"
-                    trigger="loop"
-                    stroke="bold"
-                    state="loop-cycle"
-                    colors="primary:#000000,secondary:#c76f16"
-                    style="width:40px;height:40px">
-                </lord-icon>
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/iawrhwdo.json" trigger="loop"
+                        stroke="bold" state="loop-cycle" colors="primary:#000000,secondary:#c76f16"
+                        style="width:40px;height:40px">
+                    </lord-icon>
                     <h3>Pontos acumulados</h3>
-                    <lord-icon class="iconeVaga"
-                    src="https://cdn.lordicon.com/iawrhwdo.json"
-                    trigger="loop"
-                    stroke="bold"
-                    state="loop-cycle"
-                    colors="primary:#000000,secondary:#c76f16"
-                    style="width:40px;height:40px">
-                </lord-icon>
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/iawrhwdo.json" trigger="loop"
+                        stroke="bold" state="loop-cycle" colors="primary:#000000,secondary:#c76f16"
+                        style="width:40px;height:40px">
+                    </lord-icon>
                 </div>
                 <div class="divPontuacao">
                     <?php
-
                     arsort($pontuacaoPorArea);
-                    
+
+
                     if (empty($pontuacaoPorArea)) {
-                        echo "<div class='infos' style='display: flex; justify-content: center; align-items: center;  text-align: center'>Você ainda não possui pontuação. Realize os testes para começar!</div>";
+                        if ($podeEditar == true) {
+                            echo "<div class='infos' style='display: flex; justify-content: center; align-items: center; text-align: center'>Você ainda não possui pontuação. Realize os testes para começar!</div>";
+                        } elseif ($podeEditar == false) {
+                            echo "<div class='infos' style='display: flex; justify-content: center; align-items: center; text-align: center'>Parece que o candidato ainda não fez nenhum teste.</div>";
+                        }
                     } else {
                         // Itera sobre o array e exibe as pontuações
                         foreach ($pontuacaoPorArea as $area => $pontuacao) {
@@ -367,28 +390,22 @@ if ($result && mysqli_num_rows($result) > 0) {
                         }
                     }
                     ?>
+                </div>
             </div>
-            </div>           
             <div class="contentPerfil">
                 <h3>Contato</h3>
                 <div class="divFlexContato">
-                    <lord-icon class="iconeVaga"
-                        src="https://cdn.lordicon.com/nzixoeyk.json"
-                        trigger="hover"
-                        colors="primary:#000000"
-                        style="width:30px;height:30px">
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/nzixoeyk.json" trigger="hover"
+                        colors="primary:#000000" style="width:30px;height:30px">
                     </lord-icon>
-                    <a id="email" class="infos"><?php echo $emailUsuario?></a>
-                </div>           
+                    <a id="email" class="infos"><?php echo $emailUsuario ?></a>
+                </div>
                 <div class="divFlexContato">
-                    <lord-icon class="iconeVaga"
-                        src="https://cdn.lordicon.com/rsvfayfn.json"
-                        trigger="hover"
-                        colors="primary:#000000"
-                        style="width:30px;height:30px">
+                    <lord-icon class="iconeVaga" src="https://cdn.lordicon.com/rsvfayfn.json" trigger="hover"
+                        colors="primary:#000000" style="width:30px;height:30px">
                     </lord-icon>
                     <a id="telefone" class="infos"><?php echo $telefoneUsuario ?></a>
-                </div>     
+                </div>
             </div>
         </div>
     </div>
@@ -397,7 +414,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
         <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
-    </footer> 
+    </footer>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="acumuloDePontos.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -407,11 +424,8 @@ if ($result && mysqli_num_rows($result) > 0) {
     <script src="../../../modoNoturno.js"></script>
     <script>
         var idPessoa = <?php echo $idPessoa; ?>;
-
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-
-
             // Salva o novo tema no banco de dados via AJAX
             $.ajax({
                 url: "../../services/Temas/atualizar_tema.php",
@@ -432,8 +446,8 @@ if ($result && mysqli_num_rows($result) > 0) {
                 $("body").removeClass("noturno");
                 Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
             }
-
         });
     </script>
 </body>
+
 </html>
