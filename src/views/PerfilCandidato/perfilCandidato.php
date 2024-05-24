@@ -352,14 +352,19 @@ if ($result && mysqli_num_rows($result) > 0) {
 
                     arsort($pontuacaoPorArea);
                     
-                    foreach ($pontuacaoPorArea as $area => $pontuacao) {
-                        echo "<div class='divPontuacaoArea'>";
-                        echo "<label class='nomeArea'>$area:</label>";
-                        echo "<div class='divProgresso'>";
-                        echo "<div class='progresso'></div>"; // Adicione a classe 'progresso' aqui
-                        echo "<label class='numPontos'>$pontuacao</label>"; // Adicione a classe 'numPontos' aqui
-                        echo "</div>";
-                        echo "</div>";
+                    if (empty($pontuacaoPorArea)) {
+                        echo "<div class='infos' style='display: flex; justify-content: center; align-items: center;  text-align: center'>Você ainda não possui pontuação. Realize os testes para começar!</div>";
+                    } else {
+                        // Itera sobre o array e exibe as pontuações
+                        foreach ($pontuacaoPorArea as $area => $pontuacao) {
+                            echo "<div class='divPontuacaoArea'>";
+                            echo "<label class='nomeArea'>$area:</label>";
+                            echo "<div class='divProgresso'>";
+                            echo "<div class='progresso'></div>"; // Adicione a classe 'progresso' aqui
+                            echo "<label class='numPontos'>$pontuacao</label>"; // Adicione a classe 'numPontos' aqui
+                            echo "</div>";
+                            echo "</div>";
+                        }
                     }
                     ?>
             </div>

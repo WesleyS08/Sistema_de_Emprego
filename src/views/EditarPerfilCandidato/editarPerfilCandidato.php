@@ -100,10 +100,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
     }
 }
 
-
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -114,7 +111,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/editarStyles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </head>
 
 <body>
@@ -131,6 +127,43 @@ if ($result_areas && $result_areas->num_rows > 0) {
             <li><a href="../TodosTeste/todosTeste.php">Testes</a></li>
             <li><a href="../Cursos/cursos.php">Cursos</a></li>
             <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
+            <style>
+                .sugestao {
+                    cursor: pointer;
+                    padding: 5px;
+                    border-bottom: 1px solid #ccc;
+                }
+
+                .sugestao:hover,
+                .selecionada {
+                    background-color: #f0f0f0;
+                }
+
+                .containerInput {
+                    margin: 20px;
+                }
+
+                .contentInput {
+                    position: relative;
+                }
+
+                .inputAnimado {
+                    padding: 10px;
+                    font-size: 16px;
+                }
+
+                .labelLine {
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    font-size: 14px;
+                    color: grey;
+                }
+
+                .mensagem-erro {
+                    color: red;
+                }
+            </style>
         </ul>
     </nav>
     <div class="divCommon">
@@ -214,12 +247,13 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     <div class="inputsLadoALado">
                         <div class="containerInput">
                             <div class="contentInput">
-                                <input class="inputAnimado" id="email" name="email" type="email"
+                                <input class="inputAnimado" id="email" name="email" type="text"
                                     value="<?php echo $emailUsuario ?>" required>
                                 <div class="labelLine">Email</div>
                             </div>
                             <small id="aviso" name="aviso" style="display: none;">Caso altere o email é necessário
                                 realizar login novamente</small>
+                            <small id="emailError" style="display: none;">Por favor, insira um email válido.</small>
                         </div>
 
                         <div class="containerInput">
@@ -285,7 +319,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                 <div class="labelLine">Cidade</div>
                             </div>
                             <small id="aviso-cidade" class="aviso"></small>
-                            <div id="sugestoes-cidades"></div>
+                            <div id="sugestoes-cidades" class="aviso"></div>
                         </div>
                     </div>
                     <div class="divCheckBox">
@@ -408,34 +442,30 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         </div>-->
 
                     </div>
-                    <div class="divBtnAtualizar">
-                        <input type="submit" value="Atualizar">
-                    </div>
-
-
-                    <form method="post" action="../../../src/services/ExcluirConta/excluirContaCandidato.php">
-                        <div style="    text-align: center;
-    margin-top: 20px;
-    cursor: pointer;
-    border: 1px solid #c90000;
-    font-size: 16pt;
-    width: 200px;
-    height: 50px;
-    background-color: #ef0505;
-    color: whitesmoke;
-    border-radius: 14px;
-    transition: 0.2s ease;
-    box-shadow: 0px 0px 8px silver;
-    align-content: center;
-    margin-left: 35%;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                            <a
-                                href="../../../src/services/ExcluirConta/excluirContaCandidato.php?id=<?php echo $idPessoa; ?>">Excluir
-                                Conta</a>
-                        </div>
-                    </form>
 
                     <input type="hidden" name="email_usuario" value="<?php echo $emailUsuario; ?>">
+
+
+                    <div class="divBtnAtualizar">
+                        <input type="submit" value="Atualizar">
+                        <a id="excluir" href="#"
+                            onclick="openModal('../../../src/services/ExcluirConta/excluirContaCandidato.php?id=<?php echo $idPessoa; ?>&action=delete')">Excluir
+                            Conta</a>
+                    </div>
                 </div>
+            </form>
+            <!-- Modal de Confirmação -->
+            <div id="confirmDeleteModal" class="modal">
+                <div class="modal-content">
+                    <h4>Confirmação de Deleção</h4>
+                    <p class="naoMuda">Você tem certeza de que deseja deletar esta vaga?</p>
+                    <button class="cancel-button" onclick="closeModal()">Cancelar</button>
+                    <a id="confirmDeleteButton" href="../../../src/services/ExcluirConta/excluirContaCandidato.php?id=<?php echo $idPessoa; ?>"
+                        class="delete-button">Deletar</a>
+                </div>
+            </div>
+            <form method="post" action="../../../src/services/ExcluirConta/excluirContaCandidato.php">
+
             </form>
         </div>
     </div>
@@ -450,6 +480,28 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="avisoInicial.js"></script>
     <script src="adicionaElementos.js"></script>
     <script src="mascaras.js"></script>
+    <script>
+        function openModal(deleteUrl) {
+            // Define o URL de deleção
+            document.getElementById("confirmDeleteButton").setAttribute("href", deleteUrl);
+            // Exibe o modal
+            document.getElementById("confirmDeleteModal").style.display = "block";
+        }
+
+        function closeModal() {
+            // Fecha o modal
+            document.getElementById("confirmDeleteModal").style.display = "none";
+        }
+
+        document.querySelector(".close-button").addEventListener("click", closeModal);
+
+        // Fecha o modal ao clicar fora do modal
+        window.onclick = function (event) {
+            if (event.target == document.getElementById("confirmDeleteModal")) {
+                closeModal();
+            }
+        };
+    </script>
     <script>
         // Função para validar a idade mínima
         function validarIdadeMinima(dataNascimento, idadeMinima) {
@@ -618,7 +670,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 }
             });
         });
-
     </script>
 
     <script>
@@ -727,84 +778,107 @@ if ($result_areas && $result_areas->num_rows > 0) {
             // Atualiza a classe do body para mudar o tema
             if (novoTema === "noturno") {
                 $("body").addClass("noturno");
-                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+                Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+                Claro();
             }
 
         });
     </script>
     <script>
-        // Lista de cidades conhecidas
-        var cidadesConhecidas = [
-            "São Paulo",
-            "Rio de Janeiro",
-            "Belo Horizonte",
-            // Adicione mais cidades conforme necessário
-        ];
-
         $(document).ready(function () {
+            var cidadesConhecidas = [];
+
+            $.ajax({
+                url: 'https://servicodados.ibge.gov.br/api/v1/localidades/municipios',
+                method: 'GET',
+                success: function (data) {
+                    cidadesConhecidas = data.map(function (cidade) {
+                        return cidade.nome;
+                    });
+                },
+                error: function () {
+                    console.error("Erro ao buscar as cidades do IBGE.");
+                }
+            });
+
             $('#cidade').on('input', function () {
                 var cidadeDigitada = $(this).val().trim();
                 var sugestoes = [];
 
                 if (cidadeDigitada === '') {
-                    $('#sugestoes-cidades').empty(); // Limpar sugestões se o campo estiver vazio
+                    $('#sugestoes-cidades').empty();
+                    $('#aviso-cidade').hide();
                     return;
                 }
 
-                // Verificar a semelhança entre a cidade digitada e as cidades conhecidas
                 cidadesConhecidas.forEach(function (cidadeConhecida) {
                     var distancia = calcularDistanciaLevenshtein(cidadeDigitada.toLowerCase(), cidadeConhecida.toLowerCase());
-                    if (distancia < 5) { // Se a distância for menor que 5, considere como sugestão
+                    if (distancia < 5) {
                         sugestoes.push(cidadeConhecida);
                     }
                 });
 
-                // Exibir sugestões na página
+                sugestoes = sugestoes.slice(0, 15);
+
                 exibirSugestoes(sugestoes);
             });
 
-            // Verificar se a cidade digitada é válida quando o campo perde o foco
             $('#cidade').on('blur', function () {
-                var cidadeDigitada = $(this).val().trim();
-                var cidadeValida = verificarCidadeValida(cidadeDigitada);
-                if (!cidadeValida) {
-                    $('#aviso-cidade').text('Cidade inválida. Por favor, verifique novamente.');
-                } else {
-                    $('#aviso-cidade').text('');
-                }
+                setTimeout(function () {
+                    $('#sugestoes-cidades').empty();
+                }, 5000);
             });
 
-            // Completar a cidade quando o usuário pressiona Enter ou Tab
             $('#cidade').on('keydown', function (event) {
-                var sugestaoSelecionada = $('.sugestao').first().text();
-                if (event.key === 'Enter' || event.key === 'Tab') {
-                    if (sugestaoSelecionada) {
-                        $(this).val(sugestaoSelecionada);
-                        $('#sugestoes-cidades').empty(); // Limpar sugestões
-                        event.preventDefault(); // Evitar a submissão do formulário
+                var sugestoes = $('.sugestao');
+                var index = sugestoes.index($('.selecionada'));
+
+                if (event.key === 'ArrowUp') {
+                    if (index > 0) {
+                        sugestoes.removeClass('selecionada');
+                        sugestoes.eq(index - 1).addClass('selecionada');
+                    }
+                } else if (event.key === 'ArrowDown') {
+                    if (index < sugestoes.length - 1) {
+                        sugestoes.removeClass('selecionada');
+                        sugestoes.eq(index + 1).addClass('selecionada');
+                    }
+                } else if (event.key === 'Enter' || event.key === 'Tab') {
+                    if (index >= 0) {
+                        $(this).val(sugestoes.eq(index).text());
+                        $('#sugestoes-cidades').empty();
+                        event.preventDefault();
                     }
                 }
             });
 
-            // Função para exibir sugestões de cidades
             function exibirSugestoes(sugestoes) {
                 var sugestoesHtml = '';
                 sugestoes.forEach(function (sugestao) {
                     sugestoesHtml += '<div class="sugestao">' + sugestao + '</div>';
                 });
                 $('#sugestoes-cidades').html(sugestoesHtml);
+
+                $('.sugestao').on('click', function () {
+                    $('#cidade').val($(this).text());
+                    $('#sugestoes-cidades').empty();
+                });
+
+                if (sugestoes.length > 0) {
+                    $('.sugestao').first().addClass('selecionada');
+                }
             }
 
-            // Função para verificar se a cidade digitada é válida
-            function verificarCidadeValida(cidadeDigitada) {
-                return cidadesConhecidas.includes(cidadeDigitada);
-            }
-
-            // Função para calcular a distância de Levenshtein entre duas strings
             function calcularDistanciaLevenshtein(s1, s2) {
+                function removerAcentos(str) {
+                    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                }
+
+                s1 = removerAcentos(s1.toLowerCase());
+                s2 = removerAcentos(s2.toLowerCase());
+
                 var m = s1.length;
                 var n = s2.length;
                 var d = [];
@@ -822,14 +896,33 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             d[i][j] = d[i - 1][j - 1];
                         } else {
                             d[i][j] = Math.min(d[i - 1][j] + 1,
-                                d[i][j - 1] + 1, 
-                                d[i - 1][j - 1] + 1 
+                                d[i][j - 1] + 1,
+                                d[i - 1][j - 1] + 1
                             );
                         }
                     }
                 }
 
                 return d[m][n];
+            }
+        });
+    </script>
+    <script>
+        document.getElementById('email').addEventListener('input', function () {
+            var emailInput = document.getElementById('email');
+            var aviso = document.getElementById('aviso');
+            var emailError = document.getElementById('emailError');
+            var email = emailInput.value;
+
+            // Regex para validação de email
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailPattern.test(email)) {
+                emailError.style.display = 'none';
+                aviso.style.display = 'block';
+            } else {
+                emailError.style.display = 'block';
+                aviso.style.display = 'none';
             }
         });
     </script>
