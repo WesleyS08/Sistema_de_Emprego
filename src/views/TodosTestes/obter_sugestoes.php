@@ -14,7 +14,7 @@ if ($area !== 'Todas') {
     $sql .= " AND Area = ?";
 }
 
-$sql .= " LIMIT 5";
+$sql .= " LIMIT 3";
 
 $stmt = $_con->prepare($sql);
 $likeTerm = "%" . $termo . "%";

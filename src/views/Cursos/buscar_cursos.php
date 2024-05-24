@@ -60,12 +60,16 @@ if ($resultado->num_rows > 0) {
         $estilo_texto = ($tema === 'noturno') ? 'style="' . $cor_texto . '"' : '';
 
         // Abre a div principal do curso
-        $html_output .= '<div class="cursoLink"';
+        $html_output .= '<div class="cursoLink" style="cursor: pointer;"';
         // Abre o link do curso
-        $html_output .= '<a class="cursoLink" href="' . $row['link'] . '">';
+        $html_output .= '<a class="cursoLink" href="' . $row['link'] . '" title="' . $row['nome'] . '">';
         // Abre o artigo do curso
-        $html_output .= '<article class="curso">';
-        
+        if ($tema === 'noturno') {
+            $html_output .= '<article class="curso" style="box-shadow: none;">';
+        } else {
+            $html_output .= '<article class="curso">';
+        }
+
         // Abre a div do logo do curso
         $html_output .= '<div class="divLogoCurso">';
         // Adiciona a imagem do curso
@@ -96,8 +100,15 @@ if ($resultado->num_rows > 0) {
         $html_output .= '</div>';
     }
 } else {
-    // Se nenhum curso for encontrado, exibe uma mensagem
-    $html_output = '<p>Nenhum curso encontrado</p>';
+    if ($tema === 'noturno') {
+        $html_output = '<p class="infos" style="text-align: center;
+    margin-top: 5%;
+    position: absolute; color: silver">Nenhum Curso encontrado com os filtros selecionados.</p>';
+    } else {
+        $html_output = '<p class="infos" style="text-align: center;
+    margin-top: 5%;
+    position: absolute; color: black">Nenhum Curso encontrado com os filtros selecionados.</p>';
+    }
 }
 
 // Fechando a declaração e a conexão

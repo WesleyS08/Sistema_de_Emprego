@@ -87,9 +87,8 @@ if ($result_verificar_candidato === false) {
     echo "Erro na consulta: " . $_con->error;
     exit;
 }
-
 // Consulta para puxar os questionários
-$sql_puxarQuestionarios = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
+$sql_puxarQuestionarios = "SELECT DISTINCT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa, q.ImagemQuestionario
 FROM Tb_Questionarios q
 INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
 INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
@@ -148,7 +147,7 @@ if ($result->num_rows > 0) {
     // Obtenha o total de inscrições
     $row = $result->fetch_assoc();
     $total_inscricoes = $row['total_inscricoes'];
-   
+
 }
 
 // Obter dados do candidato
@@ -468,11 +467,7 @@ function determinarImagemCategoria($categoria)
                     } else {
                         echo "<p style='text-align:center; margin:0 auto;'>Não há inscrições realizadas.</p>";
                     }
-
-                    $stmt->close();
                 }
-
-                $_con->close();
                 ?>
             </div>
         </div>
@@ -500,33 +495,51 @@ function determinarImagemCategoria($categoria)
                             $nome = $row['Nome'];
                             $area = $row['Area'];
                             $nomeEmpresa = $row['Nome_da_Empresa'];
-                            // Saída HTML para cada questionário no carrossel
-                            echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
-                            echo '<article class="testeCarrossel">';
-                            echo '<div class="divAcessos">';
-                            echo '<img src="../../../imagens/people.svg"></img>';
-                            echo '<small class="qntdAcessos">800</small>';
-                            echo '</div>';
-                            echo '<img src="../../../imagens/excel.svg"></img>';
-                            echo '<div class="divDetalhesTeste">';
-                            echo '<div>';
-                            $limite = 21;
+                            $imagem_questionario = $row['ImagemQuestionario'];
+                            $sql_contagem_respostas = "SELECT COUNT(*) AS total_respostas FROM Tb_Resultados WHERE Tb_Questionarios_ID = ?";
+                            $stmt_contagem_respostas = $_con->prepare($sql_contagem_respostas);
 
-                            // Obtenha o nome e limite-o se necessário
-                            if (strlen($nome) > $limite) {
-                                $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
-                            } else {
-                                $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                            if ($stmt_contagem_respostas) {
+                                $stmt_contagem_respostas->bind_param("i", $idQuestionario);
+                                $stmt_contagem_respostas->execute();
+                                $result_contagem_respostas = $stmt_contagem_respostas->get_result();
+
+                                // Verifica se a consulta retornou algum resultado
+                                if ($result_contagem_respostas->num_rows > 0) {
+                                    $row_contagem_respostas = $result_contagem_respostas->fetch_assoc();
+                                    $total_respostas = $row_contagem_respostas['total_respostas'];
+                                } else {
+                                    $total_respostas = 0;
+                                }
+
+                                // Saída HTML para cada questionário no carrossel
+                                echo '<a class="testeCarrosselLink" href="../PreparaTeste/preparaTeste.php?id=' . $idQuestionario . '">';
+                                echo '<article class="testeCarrossel">';
+                                echo '<div class="divAcessos">';
+                                echo '<img src="../../../imagens/people.svg"></img>';
+                                echo '<small class="qntdAcessos">' . $total_respostas . '</small>';
+                                echo '</div>';
+                                echo '<img class="imgTeste"  src="' . $imagem_questionario . '"></img>';
+                                echo '<div class="divDetalhesTeste">';
+                                echo '<div>';
+                                $limite = 21;
+
+                                // Obtenha o nome e limite-o se necessário
+                                if (strlen($nome) > $limite) {
+                                    $nome_limitado = mb_substr($nome, 0, $limite) . '...'; // Cortar o texto e adicionar reticências
+                                } else {
+                                    $nome_limitado = $nome; // Se não ultrapassar o limite, use o nome inteiro
+                                }
+
+                                // Exibir o nome limitado
+                                echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
+                                echo '<small class="autorTeste">' . $nomeEmpresa . '</small><br>';
+                                echo '<small class="competenciasTeste">' . $area . '</small>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</article>';
+                                echo '</a>';
                             }
-
-                            // Exibir o nome limitado
-                            echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
-                            echo '<small class="autorTeste">' . $nomeEmpresa . '</small><br>';
-                            echo '<small class="competenciasTeste">' . $area . '</small>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</article>';
-                            echo '</a>';
                         }
                         echo '<div class="divBtnVerMais">';
                         echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';

@@ -86,7 +86,7 @@ function preencherHTMLComCursos($categoria)
 
     // Iterando sobre os cursos e preenchendo o HTML
     foreach ($cursos as $curso) {
-        echo '<a class="cursoLink" href="' . $curso['Link'] . '" target="_blank" onclick="registrarClique(' . $curso['Id_Cursos'] . ')">';
+        echo '<a class="cursoLink" href="' . $curso['Link'] . '" target="_blank" onclick="registrarClique(' . $curso['Id_Cursos'] . ')" title="' . $curso['Nome_do_Curso'] . '">';
         echo '<article class="curso">';
         echo '<div class="divLogoCurso">';
         echo '<img src="' . $curso['URL_da_Imagem'] . '">';
@@ -239,10 +239,11 @@ if ($stmt) {
                     <input id="inputPesquisa" class="inputPesquisa" placeholder="Pesquisar" type="text">
                 </div>
             </div>
+
+
             <div id="divGridCursos" class="divGridCursos">
                 <!--Aqui vai os cursos da pesquisa-->
             </div>
-
         </div>
     </div>
 
@@ -341,29 +342,6 @@ if ($stmt) {
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
     <script src="../../../modoNoturno.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('#inputPesquisa').on('input', function () {
-                var query = $(this).val().trim();
-                if (query.length > 0) {
-                    $.ajax({
-                        url: 'sugerir_cursos.php',
-                        method: 'GET',
-                        data: { query: query },
-                        success: function (response) {
-                            $('#sugestoesCursos').html(response);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Erro ao obter sugestões de cursos:', error);
-                        }
-                    });
-                } else {
-                    $('#sugestoesCursos').empty();
-                }
-            });
-        });
-    </script>
 
     <script>
         // Função para atualizar o estilo da página e notificar o servidor
