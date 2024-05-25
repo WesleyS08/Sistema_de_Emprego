@@ -123,7 +123,7 @@ if ($stmt) {
             $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
 
             // Gerar HTML para cada vaga
-            echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
+            echo '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . $row["Id_Anuncios"] . '">';
             echo '<article class="post">';
             echo '<div class="divAcessos">';
             if ($tema == 'noturno') {
