@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Candidato` (
 )
 ENGINE = InnoDB;
 
+
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Empresa`
 -- -----------------------------------------------------
@@ -96,6 +97,7 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Empresa` (
     ON UPDATE NO ACTION
 )
 ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Avaliacoes`
@@ -176,12 +178,15 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Anuncios` (
   `Horario` varchar(45) NOT NULL,
   `Estado` varchar(45) NOT NULL,
   `Jornada` varchar(45) NOT NULL,
-  `CEP`VARCHAR(9) NOT NULL,
+  `CEP` VARCHAR(9) NOT NULL,
   `Rua` varchar(45) NOT NULL,
   `Numero` TEXT NOT NULL,
   `Bairro` varchar(45) NOT NULL,
-  PRIMARY KEY (`Id_Anuncios`))
+  PRIMARY KEY (`Id_Anuncios`)
+)
 ENGINE = InnoDB;
+
+
 
 
 -- -----------------------------------------------------
@@ -193,20 +198,20 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Vagas` (
   `Status` VARCHAR(45) NULL,
   `Data_de_Termino` DATETIME NULL,
   PRIMARY KEY (`Tb_Anuncios_Id`, `Tb_Empresa_CNPJ`),
-  INDEX `fk_Tb_Anuncios_has_Tb_Empresa_Tb_Empresa1_idx` (`Tb_Empresa_CNPJ` ASC) ,
-  INDEX `fk_Tb_Anuncios_has_Tb_Empresa_Tb_Anuncios1_idx` (`Tb_Anuncios_Id` ASC) ,
+  INDEX `fk_Tb_Anuncios_has_Tb_Empresa_Tb_Empresa1_idx` (`Tb_Empresa_CNPJ` ASC),
+  INDEX `fk_Tb_Anuncios_has_Tb_Empresa_Tb_Anuncios1_idx` (`Tb_Anuncios_Id` ASC),
   CONSTRAINT `fk_Tb_Anuncios_has_Tb_Empresa_Tb_Anuncios1`
     FOREIGN KEY (`Tb_Anuncios_Id`)
     REFERENCES `SIAS`.`Tb_Anuncios` (`Id_Anuncios`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Tb_Anuncios_has_Tb_Empresa_Tb_Empresa1`
     FOREIGN KEY (`Tb_Empresa_CNPJ`)
     REFERENCES `SIAS`.`Tb_Empresa` (`CNPJ`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `SIAS`.`Tb_Inscricoes`
@@ -217,19 +222,36 @@ CREATE TABLE IF NOT EXISTS `SIAS`.`Tb_Inscricoes` (
   `Tb_Candidato_CPF` VARCHAR(11) NOT NULL,
   `Data_de_Inscricao` DATETIME NULL,
   PRIMARY KEY (`Tb_Vagas_Tb_Anuncios_Id`, `Tb_Vagas_Tb_Empresa_CNPJ`, `Tb_Candidato_CPF`),
-  INDEX `fk_Tb_Vagas_has_Tb_Candidato_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC) ,
-  INDEX `fk_Tb_Vagas_has_Tb_Candidato_Tb_Vagas1_idx` (`Tb_Vagas_Tb_Anuncios_Id` ASC, `Tb_Vagas_Tb_Empresa_CNPJ` ASC) ,
+  INDEX `fk_Tb_Vagas_has_Tb_Candidato_Tb_Candidato1_idx` (`Tb_Candidato_CPF` ASC),
+  INDEX `fk_Tb_Vagas_has_Tb_Candidato_Tb_Vagas1_idx` (`Tb_Vagas_Tb_Anuncios_Id` ASC, `Tb_Vagas_Tb_Empresa_CNPJ` ASC),
   CONSTRAINT `fk_Tb_Vagas_has_Tb_Candidato_Tb_Vagas1`
-    FOREIGN KEY (`Tb_Vagas_Tb_Anuncios_Id` , `Tb_Vagas_Tb_Empresa_CNPJ`)
-    REFERENCES `SIAS`.`Tb_Vagas` (`Tb_Anuncios_Id` , `Tb_Empresa_CNPJ`)
-    ON DELETE NO ACTION
+    FOREIGN KEY (`Tb_Vagas_Tb_Anuncios_Id`, `Tb_Vagas_Tb_Empresa_CNPJ`)
+    REFERENCES `SIAS`.`Tb_Vagas` (`Tb_Anuncios_Id`, `Tb_Empresa_CNPJ`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Tb_Vagas_has_Tb_Candidato_Tb_Candidato1`
     FOREIGN KEY (`Tb_Candidato_CPF`)
     REFERENCES `SIAS`.`Tb_Candidato` (`CPF`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Trigger para apagar registros de Tb_Anuncios ao deletar de Tb_Vagas
+-- -----------------------------------------------------
+DELIMITER //
+
+CREATE TRIGGER trg_after_delete_vaga
+AFTER DELETE ON `SIAS`.`Tb_Vagas`
+FOR EACH ROW
+BEGIN
+    DELETE FROM `SIAS`.`Tb_Anuncios`
+    WHERE `Id_Anuncios` = OLD.`Tb_Anuncios_Id`;
+END//
+
+DELIMITER ;
+
 
 
 -- -----------------------------------------------------
