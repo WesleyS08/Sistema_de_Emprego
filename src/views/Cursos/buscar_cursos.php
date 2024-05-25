@@ -35,7 +35,7 @@ if ($stmt) {
 $cor_texto = ($tema === 'noturno') ? 'color: whitesmoke;' : 'color: black;';
 
 // Preparando a query SQL
-$sql = "SELECT Nome_do_Curso as nome, Duração as duracao, Nivel as nivel, Link as link, Descricao as descricao, URL_da_Imagem as url_imagem, Categoria as categoria 
+$sql = "SELECT Nome_do_Curso as nome, Duração as duracao, Nivel as nivel, Link as link, URL_da_Imagem as url_imagem, Categoria as categoria 
         FROM Tb_Cursos 
         WHERE Nome_do_Curso LIKE ?";
 
@@ -78,7 +78,7 @@ if ($resultado->num_rows > 0) {
         // Adiciona o parágrafo da empresa do curso
         $html_output .= '<p id="empresaCurso" ' . $estilo_texto . '>' . $row['categoria'] . '</p>';
         // Adiciona o título do curso com o estilo definido
-        $html_output .= '<h3 ' . $estilo_texto . '>' . substr($row['nome'], 0, 18) . '...</h3>';
+        $html_output .= '<h3 ' . $estilo_texto . '>' . substr($row['nome'], 0, 15) . '...</h3>';
         // Abre a div para os elementos flexíveis
         $html_output .= '<div class="divFlexSpace">';
         // Adiciona o nível do curso

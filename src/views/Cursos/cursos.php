@@ -93,9 +93,9 @@ function preencherHTMLComCursos($categoria)
         echo '</div>';
         echo '<section>';
         echo '<p id="empresaCurso">' . $curso['Categoria'] . '</p>';
-        echo '<h3>' . substr($curso['Nome_do_Curso'], 0, 18) . '...</h3>';
+        echo '<h3>' . substr($curso['Nome_do_Curso'], 0, 15) . '...</h3>';
         echo '<div class="divFlexSpace">';
-        echo '<p>' . $curso['Nivel'] . '</p>';
+        echo '<p>' . substr($curso['Nivel'], 0, 28) . '</p>';
         echo '<p>' . $curso['Duração'] . '</p>';
         echo '</div>';
         echo '</section>';
@@ -342,7 +342,73 @@ if ($stmt) {
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
     <script src="../../../modoNoturno.js"></script>
+    <script>
+        // Função para atualizar o estilo da página e notificar o servidor
+        function atualizarEstiloENotificarServidor(novoTema) {
+            $.ajax({
+                url: "../../services/Temas/atualizar_tema.php",
+                method: "POST",
+                data: { tema: novoTema },
+                success: function () {
+                    console.log("Tema atualizado com sucesso");
+                    atualizarEstiloPagina(novoTema); // Atualiza o estilo da página
+                },
+                error: function (error) {
+                    console.error("Erro ao salvar o tema:", error);
+                }
+            });
+        }
 
+        // Função para atualizar o estilo da página
+        function atualizarEstiloPagina(novoTema) {
+            if (novoTema === "noturno") {
+                $("body").addClass("noturno");
+                Noturno(); // Ativa funcionalidades noturnas
+            } else {
+                $("body").removeClass("noturno");
+                Claro(); // Ativa funcionalidades claras
+            }
+            executarBusca(); // Executa a busca após atualizar o estilo da página
+        }
+
+        // Evento de clique no botão de alternância de tema
+        $(".btnModo").click(function () {
+            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
+            atualizarEstiloENotificarServidor(novoTema);
+        });
+
+        document.getElementById('inputPesquisa').addEventListener('input', function () {
+            executarBusca();
+        });
+
+        // Função para executar a busca em tempo real
+        function executarBusca() {
+            const query = document.getElementById('inputPesquisa').value;
+            const novoTema = $("body").hasClass("noturno") ? "claro" : "noturno"; // Obter o valor do tema
+            if (query.length > 0) {
+                fetch(`buscar_cursos.php?titulo=${encodeURIComponent(query)}&tema=${novoTema}`) // Inclua o tema na URL da busca
+                    .then(response => response.text())
+                    .then(data => {
+                        console.table({
+                            Query: query,
+                            tema: novoTema
+                        });
+                        document.getElementById('divGridCursos').innerHTML = data;
+                    })
+                    .catch(error => console.error('Erro:', error));
+            } else {
+                // Limpa os resultados se a consulta estiver vazia
+                document.getElementById('divGridCursos').innerHTML = '';
+            }
+        }
+        // Evento de clique no botão de pesquisa
+        document.getElementById('searchButton').addEventListener('click', function () {
+            executarBusca();
+        });
+
+        // Executar a busca quando a página carregar pela primeira vez
+        executarBusca();
+    </script>
     <script>
         // Função para atualizar o estilo da página e notificar o servidor
         function atualizarEstiloENotificarServidor(novoTema) {
