@@ -169,7 +169,7 @@ if ($result === false) {
         }
 
         .selecionada {
-            background-color: #f0f0f0;
+            background-color: #ffffff;
             /* Cor de fundo da sugestão selecionada */
             color: #333;
             /* Cor do texto da sugestão selecionada */
@@ -219,9 +219,10 @@ if ($result === false) {
         <div class="container">
             <div class="divPesquisa">
                 <div class="divFlexInput">
-                    <input class="inputPesquisa" type="text" placeholder="Pesquisa por Título">
+                    <input id="inputPesquisa" class="inputPesquisa" type="text" placeholder="Pesquisa por Título">
                 </div>
                 <div id="sugestoes" class="sugestoes" style="display: none;">
+                    <ul id="sugestoesLista"></ul>
                 </div>
                 <div id="mostraFiltros">
                     <h3>Filtros</h3>
@@ -345,38 +346,34 @@ if ($result === false) {
 
     <script>
         $(document).ready(function () {
-            // Evento change para as checkboxes de tipos de vagas
-            $(".checkBoxTipo").change(function () {
-                // Captura os tipos de vagas selecionados
-                var tiposVagaSelecionados = [];
-                $(".checkBoxTipo:checked").each(function () {
-                    tiposVagaSelecionados.push($(this).val());
-                });
-
-                // Captura o ID da pessoa do PHP
+            $('#inputPesquisa').blur(function () {
+                var pesquisa = $(this).val();
                 var idPessoa = <?php echo json_encode($idPessoa); ?>;
 
-                // Envia os tipos de vagas selecionados e o ID da pessoa para o servidor via AJAX
+                // Verifica se o idPessoa está definido
+                if (!idPessoa) {
+                    console.warn("ID da pessoa não definido. A função não será executada.");
+                    return;  // Sai da função se o idPessoa não estiver definido
+                }
+
                 $.ajax({
-                    type: "POST",
-                    url: "salvar_tipos_vaga.php",
+                    type: 'POST',
+                    url: 'salvar_pesquisa.php',
                     data: {
-                        id_pessoa: idPessoa,
-                        tipos_vaga: tiposVagaSelecionados
+                        pesquisa: pesquisa,
+                        idPessoa: idPessoa
                     },
                     success: function (response) {
-                        // Manipula a resposta do servidor
-                        if (response.success) {
-                            alert("Dados salvos com sucesso!");
-                        } else {
-                            alert("Falha ao salvar os dados. Tente novamente.");
+                        try {
+                            var cursos = JSON.parse(response);
+                            console.log(cursos);
+                            // Aqui você pode adicionar código para exibir os cursos recomendados na interface do usuário
+                        } catch (e) {
+                            console.error("Erro ao processar a resposta: " + e);
                         }
                     },
-
                     error: function (xhr, status, error) {
-                        // Manipula erros de requisição, se houver
-                        console.error(error); // Exibe o erro no console
-                        //alert("Erro ao enviar os dados. Por favor, tente novamente."); // Exibe uma mensagem de erro
+                        console.error("Erro ao enviar a solicitação AJAX: " + error);
                     }
                 });
             });
@@ -454,26 +451,16 @@ if ($result === false) {
                             idPessoa: idPessoa // Inclui o ID da pessoa
                         },
                         success: function (response) {
-                            $('#sugestoes').html(response).show();
-                            // Adiciona evento de teclado para seleção das sugestões
-                            $('.sugestao-item').first().addClass('selecionada');
-                            $(document).on('keydown', function (e) {
-                                var sugestoes = $('.sugestao-item');
-                                var index = sugestoes.index($('.selecionada'));
-                                if (e.which === 38) { // Seta para cima
-                                    sugestoes.removeClass('selecionada');
-                                    sugestoes.eq(index === 0 ? sugestoes.length - 1 : index - 1).addClass('selecionada');
-                                } else if (e.which === 40) { // Seta para baixo
-                                    sugestoes.removeClass('selecionada');
-                                    sugestoes.eq((index + 1) % sugestoes.length).addClass('selecionada');
-                                } else if (e.which === 13 || e.which === 9 ) { // Enter, Tab 
-                                    var textoSelecionado = $('.selecionada').text();
-                                    $('.inputPesquisa').val(textoSelecionado);
-                                    $('#sugestoes').hide();
-                                    localStorage.setItem('termoPesquisa', textoSelecionado);
-                                    buscarVagasPorTitulo(textoSelecionado, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
-                                }
+                            var sugestoes = JSON.parse(response);
+                            var sugestoesLista = $('#sugestoesLista');
+                            sugestoesLista.empty();
+
+                            sugestoes.forEach(function (sugestao) {
+                                sugestoesLista.append('<li class="sugestao-item">' + sugestao + '</li>');
                             });
+
+                            // Exibir o contêiner de sugestões após adicionar as sugestões
+                            $('#sugestoes').css('display', 'block');
                         },
                         error: function () {
                             console.error("Erro ao buscar sugestões.");
@@ -494,6 +481,34 @@ if ($result === false) {
                 $('#sugestoes').hide();
                 localStorage.setItem('termoPesquisa', textoSelecionado);
                 buscarVagasPorTitulo(textoSelecionado, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
+            });
+
+            $(document).on('keydown', function (e) {
+                var sugestoes = $('.sugestao-item');
+                var index = sugestoes.index($('.selecionada'));
+
+                if (e.which === 38) { // Seta para cima
+                    e.preventDefault(); // Evita que a página faça scroll
+                    index = (index === -1) ? sugestoes.length - 1 : (index === 0) ? sugestoes.length - 1 : index - 1;
+                    sugestoes.removeClass('selecionada');
+                    sugestoes.eq(index).addClass('selecionada');
+                } else if (e.which === 40) { // Seta para baixo
+                    e.preventDefault(); // Evita que a página faça scroll
+                    index = (index === sugestoes.length - 1) ? -1 : index + 1;
+                    sugestoes.removeClass('selecionada');
+                    sugestoes.eq(index).addClass('selecionada');
+                } else if (e.which === 13 || e.which === 9) { // Enter, Tab 
+                    if (index === -1) { // Se nenhuma sugestão estiver selecionada
+                        var primeiraSugestao = sugestoes.first().text();
+                        $('.inputPesquisa').val(primeiraSugestao);
+                    } else {
+                        var textoSelecionado = $('.selecionada').text();
+                        $('.inputPesquisa').val(textoSelecionado);
+                    }
+                    $('#sugestoes').hide();
+                    localStorage.setItem('termoPesquisa', $('.inputPesquisa').val());
+                    buscarVagasPorTitulo($('.inputPesquisa').val(), areaAtual, idPessoa);
+                }
             });
 
             function buscarVagasPorTitulo(termoPesquisa, area, idPessoa) {
@@ -606,7 +621,6 @@ if ($result === false) {
                     }
                 });
             }
-
             aplicarFiltros();
         });
     </script>
