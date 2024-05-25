@@ -171,7 +171,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                 <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
             </ul>
         <?php } else { ?>
-            <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
+            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
                     src="../../assets/images/logos_empresa/logo_sias.png"></a>
             <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
             <ul>

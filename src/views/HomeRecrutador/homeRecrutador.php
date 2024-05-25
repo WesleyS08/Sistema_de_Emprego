@@ -555,7 +555,7 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
             </a>
             <div class="carrosselBox" id="carrosselPerfis">
                 <?php
-                $sqlCandidatos = "SELECT p.Id_Pessoas AS Pessoa_Id, p.Nome AS Nome, c.Autodefinicao AS Autodefinicao, c.Img_Perfil AS Img_Perfil
+                $sqlCandidatos = "SELECT DISTINCT p.Id_Pessoas AS Pessoa_Id, p.Nome AS Nome, c.Autodefinicao AS Autodefinicao, c.Img_Perfil AS Img_Perfil
                 FROM Tb_Inscricoes i
                 INNER JOIN Tb_Candidato c ON i.Tb_Candidato_CPF = c.CPF
                 INNER JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
