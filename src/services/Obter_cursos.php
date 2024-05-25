@@ -54,6 +54,8 @@ function extrairInformacoesCursosEtec($url)
                     break;
                 }
             }
+            // Obtendo o nível do curso
+            $nivel = 'Técnico';
 
             // Definindo o preço como "Gratuito"
             $preco = "Gratuito";
@@ -150,7 +152,6 @@ function extrairInformacoesCursosFatec($url)
 }
 
 
-// Função para extrair informações de cursos do novo site
 // Função para extrair informações de cursos do site EV
 function extrairInformacoesCursosEV($url)
 {
@@ -184,7 +185,6 @@ function extrairInformacoesCursosEV($url)
 
             // Obtendo a descrição do curso
             $descricao = $curso->getElementsByTagName('p')[0]->nodeValue;
-
             // Obtendo a duração do curso
             $duracao = '';
             foreach ($curso->getElementsByTagName('p') as $p) {
@@ -211,7 +211,7 @@ function extrairInformacoesCursosEV($url)
 
             // Obtendo a URL da imagem (se disponível)
             $imgUrl = 'https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/032013/bradesco_v_rgb.png?itok=58ZX99XK';
-        
+
 
             // Armazenando as informações do curso em um array
             $informacoesCursos[] = [
@@ -249,8 +249,8 @@ function conectarBancoDados()
     return $conexao;
 }
 
-// Função para inserir informações dos cursos no banco de dados
-function inserirInformacoesCursos($informacoesCursos, $conexao, $categoria)
+// Função para inserir informações dos cursos no banco de dados em lotes
+function inserirInformacoesCursosLote($informacoesCursos, $conexao, $categoria)
 {
     // Preparando a query SQL
     $sql = "INSERT INTO Tb_Cursos (Nome_do_Curso, Duração, Nivel, Link, URL_da_Imagem, Tipo, Categoria, Ultima_Atualizacao) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
@@ -262,17 +262,32 @@ function inserirInformacoesCursos($informacoesCursos, $conexao, $categoria)
         die("Erro na preparação da declaração: " . $conexao->error);
     }
 
-    // Iterando sobre as informações dos cursos
-    foreach ($informacoesCursos as $curso) {
-        // Ligando parâmetros
-        $stmt->bind_param("sssssss", $curso['Nome'], $curso['Duração'], $curso['Nível'], $curso['Link'], $curso['URL da Imagem'], $curso['Tipo de Curso'], $categoria);
+    // Iterando sobre as informações dos cursos em lotes de 15
+    $batchSize = 15;
+    $batchCount = ceil(count($informacoesCursos) / $batchSize);
+    for ($i = 0; $i < $batchCount; $i++) {
+        $batch = array_slice($informacoesCursos, $i * $batchSize, $batchSize);
 
-        // Executando a declaração
-        $resultado = $stmt->execute();
+        // Iniciando uma transação
+        $conexao->begin_transaction();
 
-        if ($resultado === false) {
-            die("Erro na execução da declaração: " . $stmt->error);
+        // Iterando sobre o lote de cursos
+        foreach ($batch as $curso) {
+            // Ligando parâmetros
+            $stmt->bind_param("sssssss", $curso['Nome'], $curso['Duração'], $curso['Nível'], $curso['Link'], $curso['URL da Imagem'], $curso['Tipo de Curso'], $categoria);
+
+            // Executando a declaração
+            $resultado = $stmt->execute();
+
+            if ($resultado === false) {
+                // Se houver um erro, reverta a transação
+                $conexao->rollback();
+                die("Erro na execução da declaração: " . $stmt->error);
+            }
         }
+
+        // Commit das inserções do lote
+        $conexao->commit();
     }
 
     // Fechando a declaração
@@ -292,11 +307,10 @@ $informacoesEV = extrairInformacoesCursosEV($urlEV);
 // Conectando ao banco de dados
 $conexao = conectarBancoDados();
 
-// Inserindo informações dos cursos no banco de dados
-inserirInformacoesCursos($informacoesFatec, $conexao, "Fatecs");
-inserirInformacoesCursos($informacoesEtec, $conexao, "Etecs");
-inserirInformacoesCursos($informacoesEV, $conexao, "Bradesco");
+// Inserindo informações dos cursos no banco de dados em lotes
+inserirInformacoesCursosLote($informacoesFatec, $conexao, "Fatecs");
+inserirInformacoesCursosLote($informacoesEtec, $conexao, "Etecs");
+inserirInformacoesCursosLote($informacoesEV, $conexao, "Bradesco");
 
 // Fechando a conexão com o banco de dados
 $conexao->close();
-?>
