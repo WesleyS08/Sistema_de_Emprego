@@ -63,6 +63,25 @@ if ($stmt) {
 if (isset($_GET['id'])) {
     $id_questionario = $_GET['id'];
 
+    // Verificar se o usuário já respondeu ao questionário
+    $sql = "SELECT * FROM Tb_Resultados WHERE Tb_Questionarios_ID = ? AND Tb_Candidato_CPF = (SELECT CPF FROM Tb_Candidato WHERE Tb_Pessoas_Id = ?)";
+    $stmt = $_con->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param("ii", $id_questionario, $idPessoa);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            // Usuário já respondeu ao questionário
+            $jaRespondeu = true;
+        } else {
+            // Usuário não respondeu o questionário ainda
+            $jaRespondeu = false;
+        }
+        $stmt->close();
+    } else {
+        die("Erro ao preparar a consulta.");
+    }
+
     // Contar quantas questões estão associadas a um questionário
     $sql = "SELECT COUNT(*) AS total_questoes FROM Tb_Questoes WHERE Id_Questionario = $id_questionario";
     $result = $_con->query($sql);
@@ -166,9 +185,14 @@ if (isset($_GET['id'])) {
                         </div>
                     </section>
                     <section class="sectionButton">
-                        <a href="../Teste/teste.php?id=<?php echo $id_questionario; ?>">
-                            <button>Iniciar</button>
-                        </a>
+                        <?php if ($jaRespondeu): ?>
+                            <p>Você já respondeu a este questionário.</p>
+                            <button class="disabled" disabled>Iniciar</button>
+                        <?php else: ?>
+                            <a href="../Teste/teste.php?id=<?php echo $id_questionario; ?>">
+                                <button>Iniciar</button>
+                            </a>
+                        <?php endif; ?>
                     </section>
                 </article>
             </div>

@@ -49,7 +49,7 @@ if ($result->num_rows > 0) {
 
     if ($_con->query($sql) === TRUE) {
         // Redirecionar o usuário para alguma página de sucesso ou resultados
-        header('Location: pagina_de_resultados.php');
+        header("Location: ../../views/ResultadosQuestionario/paginaResultado.php?pontuacaoTotal=$pontuacaoTotal");
         exit();
     } else {
         echo "Erro ao atualizar os resultados: " . $_con->error;

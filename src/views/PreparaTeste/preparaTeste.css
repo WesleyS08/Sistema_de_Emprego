@@ -64,3 +64,11 @@ header div{
     font-weight: bold;
     display: none;
 }
+
+/* Botão desabilitado */
+button.disabled {
+    background-color: #cccccc; /* Cor de fundo acinzentada */
+    color: #666666; /* Cor do texto acinzentada */
+    cursor: not-allowed; /* Cursor indicando que o botão está desabilitado */
+    pointer-events: none; /* Desabilita eventos de clique */
+}

@@ -4,12 +4,15 @@ include "../../services/conexão_com_banco.php";
 // Iniciar a sessão
 session_start();
 
-// Verificar se o usuário está autenticado e definir o e-mail do usuário
-if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario'])) {
+/// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'candidato') {
     $emailUsuario = $_SESSION['email_session'];
-} elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario'])) {
+} elseif (isset($_SESSION['google_session']) && isset($_SESSION['google_usuario']) && $_SESSION['google_usuario'] == 'candidato') {
     $emailUsuario = $_SESSION['google_session'];
 } else {
+
+    header("Location: ../Login/login.html");
+    exit;
 }
 
 // Primeira consulta para obter o ID da pessoa logada
