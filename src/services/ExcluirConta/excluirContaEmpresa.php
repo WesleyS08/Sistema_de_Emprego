@@ -5,177 +5,218 @@ include "../../../src/services/conexão_com_banco.php";
 // Inicia a sessão
 session_start();
 
-// Verifica se o ID da pessoa foi fornecido na URL
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $idUsuario = intval($_GET['id']);  // Converte para número inteiro
+try {
+    // Verifica se o ID da pessoa foi fornecido na URL
+    if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+        $idUsuario = intval($_GET['id']);  // Converte para número inteiro
 
-    // 1. Excluir todas as inscrições associadas às vagas de emprego da empresa
-    $sql_delete_inscricoes = "DELETE FROM Tb_Inscricoes WHERE (Tb_Vagas_Tb_Anuncios_Id, Tb_Vagas_Tb_Empresa_CNPJ) IN (
-            SELECT Tb_Vagas_Tb_Anuncios_Id, Tb_Empresa_CNPJ
-            FROM Tb_Vagas
-            WHERE Tb_Empresa_CNPJ IN (
-                SELECT CNPJ
-                FROM Tb_Empresa
-                WHERE Tb_Pessoas_Id = ?
-            )
-        )";
-    $stmt_delete_inscricoes = mysqli_prepare($_con, $sql_delete_inscricoes);
-    mysqli_stmt_bind_param($stmt_delete_inscricoes, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_inscricoes);
-    mysqli_stmt_close($stmt_delete_inscricoes);
+        echo "ID do Usuário: $idUsuario<br>";
 
-    // 2. Excluir as vagas de emprego associadas à empresa
-    $sql_delete_vagas = "DELETE FROM Tb_Vagas WHERE Tb_Empresa_CNPJ IN (
-            SELECT CNPJ
-            FROM Tb_Empresa
-            WHERE Tb_Pessoas_Id = ?
-        )";
-    $stmt_delete_vagas = mysqli_prepare($_con, $sql_delete_vagas);
-    mysqli_stmt_bind_param($stmt_delete_vagas, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_vagas);
-    mysqli_stmt_close($stmt_delete_vagas);
+        // Inicia a transação
+        $_con->begin_transaction();
 
-    // 3. Excluir os anúncios associados às vagas de emprego
-    $sql_delete_anuncios = "DELETE FROM Tb_Anuncios WHERE Id_Anuncios IN (
-            SELECT Tb_Anuncios_Id
-            FROM Tb_Vagas
-            WHERE Tb_Empresa_CNPJ IN (
-                SELECT CNPJ
-                FROM Tb_Empresa
-                WHERE Tb_Pessoas_Id = ?
-            )
-        )";
-    $stmt_delete_anuncios = mysqli_prepare($_con, $sql_delete_anuncios);
-    mysqli_stmt_bind_param($stmt_delete_anuncios, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_anuncios);
-    mysqli_stmt_close($stmt_delete_anuncios);
+        // Obter o CNPJ da empresa usando o Tb_Pessoas_Id
+        $sql = "SELECT CNPJ FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('i', $idUsuario);
+        $stmt->execute();
+        $stmt->bind_result($cnpj);
+        $stmt->fetch();
+        $stmt->close();
 
-    // 4. Excluir os questionários associados ao usuário
-    $sql_delete_questionarios = "DELETE FROM Tb_Questionarios WHERE Id_Questionario IN (
-            SELECT Id_Questionario
-            FROM Tb_Empresa_Questionario
-            WHERE Id_Empresa IN (
-                SELECT CNPJ
-                FROM Tb_Empresa
-                WHERE Tb_Pessoas_Id = ?
-            )
-        )";
-    $stmt_delete_questionarios = mysqli_prepare($_con, $sql_delete_questionarios);
-    mysqli_stmt_bind_param($stmt_delete_questionarios, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_questionarios);
-    mysqli_stmt_close($stmt_delete_questionarios);
+        echo "CNPJ: $cnpj<br>";
 
-    // 5. Excluir as questões associadas aos questionários
-    $sql_delete_questoes = "DELETE FROM Tb_Questoes WHERE Id_Questionario IN (
-            SELECT Id_Questionario
-            FROM Tb_Empresa_Questionario
-            WHERE Id_Empresa IN (
-                SELECT CNPJ
-                FROM Tb_Empresa
-                WHERE Tb_Pessoas_Id = ?
-            )
-        )";
-    $stmt_delete_questoes = mysqli_prepare($_con, $sql_delete_questoes);
-    mysqli_stmt_bind_param($stmt_delete_questoes, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_questoes);
-    mysqli_stmt_close($stmt_delete_questoes);
-
-    // 6. Excluir as alternativas associadas às questões
-    $sql_delete_alternativas = "DELETE FROM Tb_Alternativas WHERE Tb_Questoes_Id_Questao IN (
-            SELECT Id_Questao
-            FROM Tb_Questoes
-            WHERE Id_Questionario IN (
-                SELECT Id_Questionario
-                FROM Tb_Empresa_Questionario
-                WHERE Id_Empresa IN (
-                    SELECT CNPJ
-                    FROM Tb_Empresa
-                    WHERE Tb_Pessoas_Id = ?
-                )
-            )
-        )";
-    $stmt_delete_alternativas = mysqli_prepare($_con, $sql_delete_alternativas);
-    mysqli_stmt_bind_param($stmt_delete_alternativas, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_alternativas);
-    mysqli_stmt_close($stmt_delete_alternativas);
-
-    // 7. Excluir as relações entre questionários e questões
-    $sql_delete_relacao_questionario_questoes = "DELETE FROM Tb_Questionario_Questoes WHERE Id_Questionario IN (
-            SELECT Id_Questionario
-            FROM Tb_Empresa_Questionario
-            WHERE Id_Empresa IN (
-                SELECT CNPJ
-                FROM Tb_Empresa
-                WHERE Tb_Pessoas_Id = ?
-            )
-        )";
-    $stmt_delete_relacao_questionario_questoes = mysqli_prepare($_con, $sql_delete_relacao_questionario_questoes);
-    mysqli_stmt_bind_param($stmt_delete_relacao_questionario_questoes, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_relacao_questionario_questoes);
-    mysqli_stmt_close($stmt_delete_relacao_questionario_questoes);
-
-    // 8. Excluir a relação entre empresa e questionário
-    $sql_delete_relacao_empresa_questionario = "DELETE FROM Tb_Empresa_Questionario WHERE Id_Empresa IN (
-            SELECT CNPJ
-            FROM Tb_Empresa
-            WHERE Tb_Pessoas_Id = ?
-        )";
-    $stmt_delete_relacao_empresa_questionario = mysqli_prepare($_con, $sql_delete_relacao_empresa_questionario);
-    mysqli_stmt_bind_param($stmt_delete_relacao_empresa_questionario, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_delete_relacao_empresa_questionario);
-    mysqli_stmt_close($stmt_delete_relacao_empresa_questionario);
-
-  
-
-    // Consulta para obter os dados da empresa com base no ID do usuário
-    $sql_select_dados_empresa = "SELECT * FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?";
-    $stmt_select_dados_empresa = mysqli_prepare($_con, $sql_select_dados_empresa);
-    mysqli_stmt_bind_param($stmt_select_dados_empresa, "i", $idUsuario);
-    mysqli_stmt_execute($stmt_select_dados_empresa);
-    $result = mysqli_stmt_get_result($stmt_select_dados_empresa);
-
-    // Verifica se os dados da empresa foram encontrados
-    if ($result && mysqli_num_rows($result) > 0) {
-        $dadosEmpresa = mysqli_fetch_assoc($result);
-       
-        $caminhoImagemPerfil = $dadosEmpresa['Img_Perfil'];
-        $caminhoImagemBanner = $dadosEmpresa['Img_Banner'];
-
-        // Excluir todas as informações da empresa e conta associadas ao ID do usuário
-        // ...
-
-        // 8. Excluir a imagem de perfil da empresa, se existir
-        if (!empty($caminhoImagemPerfil)) {
-            unlink($caminhoImagemPerfil); // Exclui o arquivo do servidor
+        // Verificar se o CNPJ foi encontrado
+        if (!$cnpj) {
+            throw new Exception("Nenhuma empresa encontrada para o ID do usuário fornecido.");
         }
 
-        // 9. Excluir a imagem do banner da empresa, se existir
-        if (!empty($caminhoImagemBanner)) {
-            unlink($caminhoImagemBanner); // Exclui o arquivo do servidor
+        // 1. Excluir todas as inscrições associadas às vagas de emprego da empresa
+        $sql_delete_inscricoes = "DELETE FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Empresa_CNPJ = ?";
+        $stmt_delete_inscricoes = $_con->prepare($sql_delete_inscricoes);
+        $stmt_delete_inscricoes->bind_param('s', $cnpj);
+        $stmt_delete_inscricoes->execute();
+        $stmt_delete_inscricoes->close();
+        echo "Inscrições excluídas com sucesso<br>";
+
+        // 2. Excluir as vagas de emprego há vai excluir os anuncios com fé em Deus 
+        $sql_delete_vagas = "DELETE FROM Tb_Vagas WHERE Tb_Empresa_CNPJ = ?";
+        $stmt_delete_vagas = $_con->prepare($sql_delete_vagas);
+        $stmt_delete_vagas->bind_param('s', $cnpj);
+        $stmt_delete_vagas->execute();
+        $stmt_delete_vagas->close();
+        echo "Vagas de emprego excluídas com sucesso<br>";
+
+
+        // 3. Excluir alternativas associadas às questões
+        $sql = "DELETE FROM Tb_Alternativas WHERE Tb_Questoes_Id_Questao IN (
+                    SELECT Id_Questao
+                    FROM Tb_Questoes
+                    WHERE Id_Questionario IN (
+                        SELECT Id_Questionario
+                        FROM Tb_Questionario_Questoes
+                        WHERE Id_Questionario IN (
+                            SELECT Id_Questionario
+                            FROM Tb_Empresa_Questionario
+                            WHERE Id_Empresa = ?
+                        )
+                    )
+                )";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('s', $cnpj);
+        $stmt->execute();
+        $stmt->close();
+
+        // 4. Excluir questões associadas aos questionários
+        $sql = "DELETE FROM Tb_Questoes WHERE Id_Questionario IN (
+                    SELECT Id_Questionario
+                    FROM Tb_Empresa_Questionario
+                    WHERE Id_Empresa = ?
+                )";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('s', $cnpj);
+        $stmt->execute();
+        $stmt->close();
+
+        // 5. Excluir questionários associados à empresa
+        $sql_select_images = "SELECT Q.ImagemQuestionario
+                    FROM Tb_Questionarios Q
+                    JOIN Tb_Empresa_Questionario EQ ON Q.Id_Questionario = EQ.Id_Questionario
+                    WHERE EQ.Id_Empresa = ?";
+        $stmt_select_images = $_con->prepare($sql_select_images);
+        $stmt_select_images->bind_param('s', $cnpj);
+        $stmt_select_images->execute();
+        $stmt_select_images->bind_result($caminhoImagem);
+        while ($stmt_select_images->fetch()) {
+            if (file_exists($caminhoImagem)) {
+                unlink($caminhoImagem);
+                echo "Imagem $caminhoImagem excluída com sucesso<br>";
+            } else {
+                echo "Imagem $caminhoImagem não encontrada<br>";
+            }
+        }
+        $stmt_select_images->close();
+
+        $sql_delete_questionarios = "DELETE FROM Tb_Questionarios WHERE Id_Questionario IN (
+                                SELECT Id_Questionario
+                                FROM Tb_Empresa_Questionario
+                                WHERE Id_Empresa = ?
+                            )";
+        $stmt_delete_questionarios = $_con->prepare($sql_delete_questionarios);
+        $stmt_delete_questionarios->bind_param('s', $cnpj);
+        $stmt_delete_questionarios->execute();
+        $stmt_delete_questionarios->close();
+        echo "Questionários excluídos com sucesso<br>";
+
+        // 6. Excluir a relação entre empresa e questionário
+        $sql = "DELETE FROM Tb_Empresa_Questionario WHERE Id_Empresa = ?";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('s', $cnpj);
+        $stmt->execute();
+        $stmt->close();
+
+        // 7. Excluir avaliações
+        $sql = "DELETE FROM Tb_Avaliacoes WHERE Tb_Pessoas_Id IN (
+                    SELECT Id_Pessoas
+                    FROM Tb_Pessoas
+                    WHERE Id_Pessoas IN (
+                        SELECT Tb_Pessoas_Id
+                        FROM Tb_Empresa
+                        WHERE CNPJ = ?
+                    )
+                )";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('s', $cnpj);
+        $stmt->execute();
+        $stmt->close();
+
+        // 8. Excluir recomendações
+        $sql = "DELETE FROM Tb_Recomendacoes WHERE Tb_Candidato_CPF IN (
+                    SELECT DISTINCT Tb_Candidato_CPF
+                    FROM Tb_Inscricoes
+                    WHERE Tb_Vagas_Tb_Empresa_CNPJ = ?
+                )";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('s', $cnpj);
+        $stmt->execute();
+        $stmt->close();
+
+        // 9. Excluir candidatos
+        $sql_delete_candidatos = "DELETE FROM Tb_Candidato WHERE Tb_Pessoas_Id IN(
+            SELECT Id_Pessoas
+            FROM Tb_Pessoas
+            WHERE Tb_Pessoas.Id_Pessoas IN (
+                SELECT Tb_Pessoas_Id
+                FROM Tb_Empresa
+                WHERE CNPJ = ?
+            )
+        )";
+        $stmt_delete_candidatos = $_con->prepare($sql_delete_candidatos);
+        $stmt_delete_candidatos->bind_param('s', $cnpj);
+        $stmt_delete_candidatos->execute();
+        $stmt_delete_candidatos->close();
+
+        // 10. Excluir todos os resultados da tabela Tb_Resultados
+        $sql_delete_resultados = "DELETE FROM Tb_Resultados WHERE Tb_Candidato_CPF IN (
+                    SELECT DISTINCT Tb_Candidato_CPF
+                    FROM Tb_Inscricoes
+                    WHERE Tb_Vagas_Tb_Empresa_CNPJ = ?
+                )";
+        $stmt_delete_resultados = $_con->prepare($sql_delete_resultados);
+        $stmt_delete_resultados->bind_param('s', $cnpj);
+        $stmt_delete_resultados->execute();
+        $stmt_delete_resultados->close();
+
+        // 11. Excluir empresa
+
+        $sql_select_empresa_images = "SELECT Img_Perfil, Img_Banner FROM Tb_Empresa WHERE CNPJ = ?";
+        $stmt_select_empresa_images = $_con->prepare($sql_select_empresa_images);
+        $stmt_select_empresa_images->bind_param('s', $cnpj);
+        $stmt_select_empresa_images->execute();
+        $stmt_select_empresa_images->bind_result($imgPerfil, $imgBanner);
+        $stmt_select_empresa_images->fetch();
+        $stmt_select_empresa_images->close();
+
+        if (file_exists($imgPerfil)) {
+            unlink($imgPerfil);
+            echo "Imagem de perfil $imgPerfil excluída com sucesso<br>";
+        } else {
+            echo "Imagem de perfil $imgPerfil não encontrada<br>";
         }
 
-        // 10. Excluir a empresa associada ao ID da pessoa
-        $sql_delete_empresa = "DELETE FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?";
-        $stmt_delete_empresa = mysqli_prepare($_con, $sql_delete_empresa);
-        mysqli_stmt_bind_param($stmt_delete_empresa, "i", $idUsuario);
-        mysqli_stmt_execute($stmt_delete_empresa);
-        mysqli_stmt_close($stmt_delete_empresa);
+        if (file_exists($imgBanner)) {
+            unlink($imgBanner);
+            echo "Imagem de banner $imgBanner excluída com sucesso<br>";
+        } else {
+            echo "Imagem de banner $imgBanner não encontrada<br>";
+        }
+        $sql = "DELETE FROM Tb_Empresa WHERE CNPJ = ?";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('s', $cnpj);
+        $stmt->execute();
+        $stmt->close();
 
-        // 10. Excluir a pessoa associada ao ID
-        $sql_delete_pessoa = "DELETE FROM Tb_Pessoas WHERE Id_Pessoas = ?";
-        $stmt_delete_pessoa = mysqli_prepare($_con, $sql_delete_pessoa);
-        mysqli_stmt_bind_param($stmt_delete_pessoa, "i", $idUsuario);
-        mysqli_stmt_execute($stmt_delete_pessoa);
-        mysqli_stmt_close($stmt_delete_pessoa);
+        // 12. Excluir pessoa
+        $sql = "DELETE FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+        $stmt = $_con->prepare($sql);
+        $stmt->bind_param('i', $idUsuario);
+        $stmt->execute();
+        $stmt->close();
 
-        // Destruir a sessão
+        // Commit a transação
+        $_con->commit();
         session_destroy();
         header("Location: ../../../index.php");
         exit();
-} else {
-    // Se o ID não foi encontrado, redireciona para uma página de erro
-    header("Location: ../../views/PaginaErro/Erro.html");
-    exit();
+    } else {
+        throw new Exception("ID de usuário inválido.");
+    }
+} catch (Exception $e) {
+    // Rollback a transação em caso de erro
+    $_con->rollback();
+    echo "Falha ao apagar dados: " . $e->getMessage();
 }
-}
+
+// Fechar a conexão
+$_con->close();
 ?>
