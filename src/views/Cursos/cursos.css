@@ -1,3 +1,11 @@
+.divCarrossel{
+    margin: 60px 0px;
+}
+
+.divCommon{
+    margin-bottom: 10px;
+}
+
 #cursosGratuitos, #cursosPagos, #certificacoes{
     height: 150px;
 }

@@ -186,7 +186,7 @@ if (isset($_GET['id'])) {
                     </section>
                     <section class="sectionButton">
                         <?php if ($jaRespondeu): ?>
-                            <p>Você já respondeu a este questionário.</p>
+                            <p class="jaRespondeu">Você já respondeu a este questionário.</p>
                             <button class="disabled" disabled>Iniciar</button>
                         <?php else: ?>
                             <a href="../Teste/teste.php?id=<?php echo $id_questionario; ?>">

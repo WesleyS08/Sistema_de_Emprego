@@ -49,7 +49,7 @@ header div{
 
 .sectionButton{
     display: grid;
-    justify-content: center;
+    justify-items: center;
 }
 
 .sectionButton button{
@@ -67,8 +67,13 @@ header div{
 
 /* Botão desabilitado */
 button.disabled {
+    border-color: #cccccc;
     background-color: #cccccc; /* Cor de fundo acinzentada */
     color: #666666; /* Cor do texto acinzentada */
     cursor: not-allowed; /* Cursor indicando que o botão está desabilitado */
     pointer-events: none; /* Desabilita eventos de clique */
+}
+
+.jaRespondeu{
+    margin-bottom: 20px;
 }
