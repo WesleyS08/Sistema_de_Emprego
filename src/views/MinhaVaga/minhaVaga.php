@@ -502,7 +502,7 @@ if ($stmt) {
             </a>
             <div class="carrosselBox" id="carrosselPerfis">
                 <?php
-                $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Foto_Perfil, p.Nome
+                $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Img_Perfil, p.Nome
                                 FROM Tb_Candidato c
                                 JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
                                 JOIN Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
@@ -514,14 +514,15 @@ if ($stmt) {
                 if ($resultCandidatos && mysqli_num_rows($resultCandidatos) > 0) {
                     // Loop sobre as informações das candidaturas
                     while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
+                        $caminhoImgPerfil = $candidatura['Img_Perfil'];
                         ?>
                         <a class="perfilLink"
                             href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>">
                             <article class="perfil">
                                 <div class="divImg">
                                     <?php
-                                    if (!empty($Img_Perfil)) {
-                                        echo '<img src="' . $candidatura[$Img_Perfil] . '" alt="" style="width: 100%; height: 99%; display: block; border-radius: 50%; object-fit: cover;">';
+                                    if (!empty($caminhoImgPerfil)) {
+                                        echo '<img src="' . $caminhoImgPerfil . '" alt="" style="width: 100%; height: 99%; display: block; border-radius: 50%; object-fit: cover;">';
                                     }
                                     ?>
                                 </div>

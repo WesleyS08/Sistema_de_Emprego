@@ -58,11 +58,8 @@ if ($resultado->num_rows > 0) {
     while ($row = $resultado->fetch_assoc()) {
         // Verifica se o tema é noturno e define a cor do texto
         $estilo_texto = ($tema === 'noturno') ? 'style="' . $cor_texto . '"' : '';
-
-        // Abre a div principal do curso
-        $html_output .= '<div class="cursoLink" style="cursor: pointer;"';
         // Abre o link do curso
-        $html_output .= '<a class="cursoLink" href="' . $row['link'] . '" title="' . $row['nome'] . '">';
+        $html_output .= '<a class="cursoLink" style="cursor: pointer;" href="' . $row['link'] . '" title="' . $row['nome'] . '" target="_blank">';
         // Abre o artigo do curso
         if ($tema === 'noturno') {
             $html_output .= '<article class="curso" style="box-shadow: none;">';

@@ -30,6 +30,11 @@ $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
 // Verificar se todas as informações necessárias foram fornecidas
 if (empty($nomeEmpresa) || empty($areaEmpresa) || empty($telefoneEmpresa) || empty($sobreEmpresa) || empty($emailUsuario)) {
     echo "Erro: Preencha todos os campos obrigatórios.";
+    echo"nome da empresa".  $nomeEmpresa;
+    echo"area da empresa".  $areaEmpresa;
+    echo"telefone da empresa".  $telefoneEmpresa;
+    echo"sobre da empresa".  $sobreEmpresa;
+    echo"email_usuario da empresa".  $emailUsuario;
     exit;
 }
 // Obter o CNPJ da empresa
