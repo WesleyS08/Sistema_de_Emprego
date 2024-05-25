@@ -116,9 +116,14 @@ if ($stmt) {
         </ul>
     </nav>
     <div class="divBackgroundImg" id="divBackgroundImgDefinida">
-        <!-- Exibir o banner da empresa -->
-        <img src="<?php echo $caminhoImagemBanner; ?>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
-
+    <?php
+        if (!empty($caminhoImagemBanner)) { ?>
+            <img src="<?php echo $caminhoImagemBanner; ?>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+        <?php } else { ?>
+            <img src="https://static.vecteezy.com/system/resources/previews/010/705/558/non_2x/orange-modern-abstract-background-for-banner-landing-page-poster-presentation-or-flyer-free-vector.jpg"
+                alt="" style="width: 100%; height: 100%; object-fit: cover;">
+        <?php } ?>
+        
         <!-- Exibir a imagem de perfil da empresa -->
         <div class="divFotoDePerfil" id="divFotoDePerfilDefinida">
             <img src="<?php echo $caminhoImagemPerfil; ?>" alt=""

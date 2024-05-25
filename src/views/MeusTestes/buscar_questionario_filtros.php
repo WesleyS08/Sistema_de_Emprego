@@ -7,10 +7,30 @@ $termoPesquisa = isset($_POST['termo']) ? $_POST['termo'] . '%' : '%'; // Valor 
 $area = isset($_POST['area']) ? $_POST['area'] : 'Todas'; // Valor padrão: Todas
 $criador = isset($_POST['criador']) ? $_POST['criador'] : '';
 $niveis = isset($_POST['niveis']) ? $_POST['niveis'] : [];
-
-
-// ID da pessoa
 $idPessoa = isset($_POST['idPessoa']) ? $_POST['idPessoa'] : '';
+
+
+
+// Segunda Consulta para selecionar o tema que salvo no banco de dados
+$query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+$stmt = $_con->prepare($query);
+
+// Verifique se a preparação foi bem-sucedida
+if ($stmt) {
+    $stmt->bind_param('i', $idPessoa);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result) {
+        $row = $result->fetch_assoc();
+        $tema = $row['Tema'] ?? null;
+    } else {
+        $tema = null;
+    }
+    $stmt->close();
+} else {
+    die("Erro ao preparar a query: " . $_con->error);
+}
+
 
 // Consulta SQL base
 $sql = "SELECT DISTINCT q.*, e.Nome_da_Empresa
@@ -42,7 +62,6 @@ if (!empty($niveis)) {
     $bindParams = array_merge($bindParams, $niveis); // Adicionar parâmetros de níveis
 }
 
-// Adicione a condição do ID da pessoa
 // Adicione a condição para encontrar os questionários criados pela pessoa especificada
 if (!empty($idPessoa)) {
     $sql .= " AND eq.Id_Empresa IN (SELECT CNPJ FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?)";
@@ -77,12 +96,21 @@ if ($stmt) {
             $row_respostas = $stmt_contar_respostas->fetch(PDO::FETCH_ASSOC);
             $total_pessoas = $row_respostas['total_pessoas'];
 
+
+            // Determinar a cor do nome da empresa com base no tema
+            $cor_nome_empresa = ($tema == 'noturno') ? "#FFFFFF" : "#000000"; // Branco para tema noturno, preto para tema padrão
+
+
             // Saída HTML para cada questionário
             echo "<a class='testeCarrosselLink' href='../PreparaTeste/preparaTeste.php?id=$idQuestionario'>";
             echo '<article class="testeCarrossel">';
             echo '<div class="divAcessos">';
-            echo '<img src="../../../imagens/people.svg"></img>';
-            echo '<small class="qntdAcessos">' .$total_pessoas .'</small>';
+            if ($tema == 'noturno') {
+                echo '<img src="../../assets/images/icones_diversos/peopleWhite.svg"></img>';
+            } else {
+                echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+            }
+            echo '<small class="qntdAcessos">' . $total_pessoas . '</small>';
             echo '</div>';
             echo '<img class="imgTeste" src="' . $ImagemQuestionario . '"></img>';
             echo '<div class="divDetalhesTeste divDetalhesTesteCustom">';

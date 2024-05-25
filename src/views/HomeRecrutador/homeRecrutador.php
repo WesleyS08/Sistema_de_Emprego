@@ -284,24 +284,24 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
     <title>Home</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
     <script>
-    function limparLocalStorageComExcecao() {
-        const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa', 'btnJovemAprendizState', 'btnEstagioState', 'btnCltState', 'btnPjState', 'termo', 'criador', 'niveis'];
+        function limparLocalStorageComExcecao() {
+            const chavesParaLimpar = ['tipos', 'area', 'apenasVagasAbertas', 'termoPesquisa', 'btnJovemAprendizState', 'btnEstagioState', 'btnCltState', 'btnPjState', 'termo', 'criador', 'niveis'];
 
-        chavesParaLimpar.forEach(function (chave) {
-            localStorage.removeItem(chave);
-        });
+            chavesParaLimpar.forEach(function (chave) {
+                localStorage.removeItem(chave);
+            });
 
-        const areaPadrao = 'Todas'; // Valor padrão para "area"
-        if (!localStorage.getItem('area')) {
-            localStorage.setItem('area', areaPadrao);
+            const areaPadrao = 'Todas'; // Valor padrão para "area"
+            if (!localStorage.getItem('area')) {
+                localStorage.setItem('area', areaPadrao);
+            }
         }
-    }
 
-    window.addEventListener('load', function () {
-        limparLocalStorageComExcecao();
-        console.table(localStorage);
-    });
-</script>
+        window.addEventListener('load', function () {
+            limparLocalStorageComExcecao();
+            console.table(localStorage);
+        });
+    </script>
 
     <style>
         .aviso-verificado {
@@ -525,13 +525,13 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                             echo '<p class="nomeTeste">' . $nome_limitado . '</p>';
                             echo '<small class="competenciasTeste">' . $area . '</small>';
                             echo '</div>';
-                         
+
                             echo '</article>';
                             echo '</a>';
                         }
                     }
                     echo '<div class="divBtnVerMais">';
-                    echo '<a href="../todosTestes/todosTestes.php" class="btnVerMais">';
+                    echo '<a href="../MeusTestes/meusTestes.php" class="btnVerMais">';
                     echo '<button class="verMais">Ver mais</button>';
                     echo '</a>';
                     echo '</div>';

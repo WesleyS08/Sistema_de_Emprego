@@ -1,62 +1,27 @@
 <?php
-
 include "../../services/conexão_com_banco.php";
 
-// Receba o termo de pesquisa do cliente (usando POST para evitar exposição do termo na URL)
+// Receber o termo de pesquisa e o ID da pessoa usando POST
 $termo = isset($_POST['termo']) ? $_POST['termo'] : '';
-$idPessoa = isset($_POST['idPessoa']) ? intval($_POST['idPessoa']) : null;
+$idPessoa = isset($_POST['idPessoa']) ? intval($_POST['idPessoa']) : 0;
+$tema = 0;
 
-$nomeEmpresa = ''; // Variável inicializada como string vazia
+if ($idPessoa > 0) {
+    // Consulta para selecionar o tema salvo no banco de dados
+    $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
+    $stmt = $_con->prepare($query);
 
-// Preparar a consulta SQL para buscar o nome da empresa com base no ID da pessoa
-$sql = "SELECT Tb_Empresa.Nome_da_Empresa 
-        FROM Tb_Empresa
-        WHERE Tb_Empresa.Tb_Pessoas_Id = ?";
-
-$stmt = $_con->prepare($sql);
-
-if ($stmt) {
-    // Vincular o parâmetro da consulta
-    $stmt->bind_param("i", $idPessoa);
-    // Tentar executar a consulta
-    try {
+    if ($stmt) {
+        $stmt->bind_param('i', $idPessoa);
         $stmt->execute();
-        // Obter os resultados
         $result = $stmt->get_result();
-        if ($result->num_rows > 0) {
-            // Obter o nome da empresa do primeiro resultado
-            $row = $result->fetch_assoc();
-            $nomeEmpresa = $row['Nome_da_Empresa']; // Salvar o nome na variável
-        } else {
-          // ! Arrumar questão de tratamento de Erros !! 
-        }
-    } catch (Exception $e) {
-        error_log('Erro ao buscar o nome da empresa: ' . $e->getMessage());
-         // ! Arrumar questão de tratamento de Erros !! 
-        
+        $tema = $result ? ($result->fetch_assoc()['Tema'] ?? null) : null;
+        $stmt->close();
+    } else {
+        die("Erro ao preparar a query: " . $_con->error);
     }
-    // Fechar a declaração
-    $stmt->close();
 }
 
-// Consulta SQL para buscar as vagas que correspondem ao termo de pesquisa
-$sql = "SELECT A.*, V.Status FROM Tb_Anuncios A 
-        INNER JOIN Tb_Vagas V ON A.Id_Anuncios = V.Tb_Anuncios_Id
-        WHERE A.Titulo LIKE ?";
-$stmt = $_con->prepare($sql); // Prepara a consulta
-$likeTerm = "%" . $termo . "%"; // Crie o padrão de pesquisa para SQL
-
-// Vincule o parâmetro para a consulta SQL
-$stmt->bind_param("s", $likeTerm);
-
-// Execute a consulta
-$stmt->execute();
-
-// Obtenha os resultados
-$result = $stmt->get_result();
-
-// Inicialize uma variável para armazenar o HTML das vagas
-$htmlVagas = '';
 
 function determinarImagemCategoria($categoria)
 {
@@ -74,33 +39,45 @@ function determinarImagemCategoria($categoria)
     }
 }
 
-// Verifique se há resultados
-if ($result->num_rows > 0) {
-    // Se houver resultados, crie o HTML para exibir as vagas
-    while ($row = $result->fetch_assoc()) {
+// Consulta SQL para buscar vagas que correspondem ao termo de pesquisa
+$sql = "SELECT A.*, V.Status, E.Nome_da_Empresa
+        FROM Tb_Anuncios A 
+        INNER JOIN Tb_Vagas V ON A.Id_Anuncios = V.Tb_Anuncios_Id
+        INNER JOIN Tb_Empresa E ON V.Tb_Empresa_CNPJ = E.CNPJ
+        WHERE A.Titulo LIKE ?
+        LIMIT 10";
 
+$stmt = $_con->prepare($sql);
+$likeTerm = "%" . $termo . "%";
+$stmt->bind_param("s", $likeTerm);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$htmlVagas = '';
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        // Consulta para contar o número de inscrições para cada vaga
         $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
         $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
-        $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
+        $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]);
         $stmt_inscricoes->execute();
         $result_inscricoes = $stmt_inscricoes->get_result();
-        // Verificar se a consulta teve sucesso
-        if ($result_inscricoes === false) {
-            // ! Arrumar questão de tratamento de Erros !! 
-            $htmlVagas .=  "Erro na consulta de contagem de inscrições: " . $_con->error;
-            exit;
-        }
-        // Obter o resultado da contagem de inscrições
-        $row_inscricoes = $result_inscricoes->fetch_assoc();
-        $total_inscricoes = $row_inscricoes['total_inscricoes'];
+        $total_inscricoes = $result_inscricoes ? $result_inscricoes->fetch_assoc()['total_inscricoes'] : 0;
+        $stmt_inscricoes->close();
+
         // Exibir a vaga e o número de inscritos
-        $htmlVagas .=  '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . $row["Id_Anuncios"] . '">';
-        $htmlVagas .=  '<article class="post">';
+        $htmlVagas .= '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . htmlspecialchars($row["Id_Anuncios"]) . '">';
+        $htmlVagas .= '<article class="post">';
         $htmlVagas .=  '<div class="divAcessos">';
-        $htmlVagas .=  '<img src="../../assets/images/icones_diversos/people.svg></img>';
+        if ($tema == 'noturno') {
+            $htmlVagas .= '<img src="../../assets/images/icones_diversos/peopleWhite.svg"></img>';
+        } else {
+        $htmlVagas .= '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+        }
         $htmlVagas .=  '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
         $htmlVagas .=  '</div>';
-        $htmlVagas .=  '<header>';
+        $htmlVagas .= '<header>';
         switch ($row["Categoria"]) {
             case "CLT":
                 $htmlVagas .= '<img src="../../../imagens/clt.svg">';
@@ -120,32 +97,28 @@ if ($result->num_rows > 0) {
                 break;
         }
         $htmlVagas .= '</header>';
-        $htmlVagas .=  '<section>';
-        $htmlVagas .=  '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? (strlen($row["Titulo"]) > 14 ? substr($row["Titulo"], 0, 20) . '...' : $row["Titulo"]) : "Título não definido") . '</h3>';
-        $htmlVagas .=  '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
-        // Exibir o status da vaga e a data de criação
+        $htmlVagas .= '<section>';
+        $tituloVaga = htmlspecialchars($row["Titulo"]);
+        $htmlVagas .= '<h3 class="nomeVaga">' . (strlen($tituloVaga) > 14 ? substr($tituloVaga, 0, 20) . '...' : $tituloVaga) . '</h3>';
+        $htmlVagas .= '<p class="empresaVaga"> Empresa: ' . htmlspecialchars($row['Nome_da_Empresa']) . '</p>';
         $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
         $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
         if ($row['Status'] == 'Aberto') {
-            $htmlVagas .=  '<h4 class="statusVaga" style="color:green">Aberto</h4>';
-            $htmlVagas .=  '<p class="dataVaga">' . $dataCriacao . '</p>';
+            $htmlVagas .= '<h4 class="statusVaga" style="color:green">Aberto</h4>';
+            $htmlVagas .= '<p class="dataVaga">' . htmlspecialchars($dataCriacao) . '</p>';
         } else {
-            $htmlVagas .=  '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
-            $htmlVagas .=  '<p class="dataVaga">' . $datadeTermino . '</p>';
+            $htmlVagas .= '<h4 class="statusVaga" style="color:red">' . htmlspecialchars($row['Status']) . '</h4>';
+            $htmlVagas .= '<p class="dataVaga">' . htmlspecialchars($datadeTermino) . '</p>';
         }
-        $htmlVagas .=  '</section>';
-        $htmlVagas .=  '</article>';
-        $htmlVagas .=  '</a>';
-    
+        $htmlVagas .= '</section>';
+        $htmlVagas .= '</article>';
+        $htmlVagas .= '</a>';
     }
 } else {
-    // Se não houver resultados, exiba uma mensagem indicando que não foram encontradas vagas
     $htmlVagas .= '<div class="sem-resultados">Nenhuma vaga encontrada</div>';
 }
 
-// Feche a declaração para liberar recursos
 $stmt->close();
-
-// Saída do HTML das vagas para o JavaScript
 echo $htmlVagas;
+$_con->close();
 ?>

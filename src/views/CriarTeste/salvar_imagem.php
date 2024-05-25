@@ -10,6 +10,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Diretório base onde as imagens serão armazenadas
         $diretorioBase = '../../assets/ImagesTestes/';
 
+
+        // Verifica se o diretório base existe; se não, cria-o
+        if (!file_exists($diretorioBase)) {
+            if (!mkdir($diretorioBase, 0755, true)) {
+                die("Erro ao criar o diretório base.");
+            }
+        }
+
         // Verifique se a pasta do usuário (com base no ID da pessoa) existe, se não, crie-a
         $idPessoa = $_POST['idPessoa']; // Obtém o ID da pessoa do formulário
         $diretorioUsuario = $diretorioBase . $idPessoa . '/';
@@ -56,11 +64,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_con->query($sql_update);
 
                     // Retorna o caminho da imagem e a mensagem de sucesso para o JavaScript
-                    echo json_encode(array(
-                        "success" => "Questionário criado com sucesso",
-                        "redirect" => "../AvisoQuestionarioCriado/avisoQuestionarioCriado.html",
-                        "caminho_imagem" => $caminho
-                    ));
+                    echo json_encode(
+                        array(
+                            "success" => "Questionário criado com sucesso",
+                            "redirect" => "../AvisoQuestionarioCriado/avisoQuestionarioCriado.html",
+                            "caminho_imagem" => $caminho
+                        )
+                    );
                 } else {
                     // Se não houver resultados na segunda consulta, retorna uma mensagem de erro
                     echo json_encode(array('error' => 'Nenhum registro encontrado na Tb_Empresa_Questionario para o CNPJ especificado.'));

@@ -123,6 +123,15 @@ if ($result_areas && $result_areas->num_rows > 0) {
         .sugestao-item:hover {
             background-color: #fff;
         }
+
+        .selecionada {
+            background-color: #f0f0f0;
+            /* Cor de fundo da sugestão selecionada */
+            color: #333;
+            /* Cor do texto da sugestão selecionada */
+        }
+    </style>
+
     </style>
 </head>
 
@@ -227,7 +236,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                                     echo '<img src="../../../imagens/people.svg"></img>';
                                     echo '<small class="qntdAcessos">' . $total_respostas . '</small>';
                                     echo '</div>';
-                                    echo '<img class="imgTeste" src="' . $row_questionarios['ImagemQuestionario'] . '"></img>'; 
+                                    echo '<img class="imgTeste" src="' . $row_questionarios['ImagemQuestionario'] . '"></img>';
                                     echo '<div class="divDetalhesTeste">';
                                     echo '<div>';
                                     echo '<p class="nomeTeste">' . $row_questionarios['Nome'] . '</p>'; // Exibindo o título do questionário
@@ -277,7 +286,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
     <script src="mostrarFiltros.js"></script>
     <script src="tituloDigitavel.js"></script>
     <script>
-        // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
     <script src="../../../modoNoturno.js"></script>
@@ -286,7 +294,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
 
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-
             // Salva o novo tema no banco de dados via AJAX
             $.ajax({
                 url: "../../services/Temas/atualizar_tema.php",
@@ -294,27 +301,46 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 data: { tema: novoTema, idPessoa: idPessoa },
                 success: function () {
                     console.log("Tema atualizado com sucesso");
+
+                    // Atualizar a imagem dentro da divAcessos
+                    var novoIcone = novoTema === "noturno" ? "peopleWhite.svg" : "people.svg";
+                    $(".divAcessos img").attr("src", "../../assets/images/icones_diversos/" + novoIcone);
                 },
                 error: function (error) {
                     console.error("Erro ao salvar o tema:", error);
                 }
             });
-
             // Atualiza a classe do body para mudar o tema
             if (novoTema === "noturno") {
                 $("body").addClass("noturno");
-                Noturno(); // Adicione esta linha para atualizar imediatamente o tema na interface
+                Noturno();
             } else {
                 $("body").removeClass("noturno");
-                Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
+                Claro();
             }
         });
+
     </script>
     <script>
         $(document).ready(function () {
-            var tema = <?php echo json_encode($tema); ?>;
-            var idPessoa = <?php echo $idPessoa; ?>;
-            // Função para carregar valores do localStorage
+            var idPessoa = <?php echo json_encode($idPessoa); ?>; // Armazena o ID da pessoa
+            var tema = <?php echo json_encode($tema); ?>; // Armazena o tema (noturno ou claro)
+
+            // Função para aplicar o modo noturno
+            function aplicarModoNoturno() {
+                if (tema === "noturno") {
+                    $("body").addClass("noturno");
+                    Noturno(); // Chama a função que configura o modo noturno
+                } else {
+                    $("body").removeClass("noturno");
+                    Claro(); // Chama a função que configura o modo claro
+                }
+            }
+
+            // Aplicar o modo noturno ao carregar a página
+            aplicarModoNoturno();
+
+            // Carrega os valores salvos no localStorage
             function carregarValores() {
                 var termo = localStorage.getItem('termo');
                 var area = localStorage.getItem('area');
@@ -332,14 +358,16 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 }
                 if (niveis) {
                     niveis = JSON.parse(niveis);
-                    $('.checkBoxTipo').prop('checked', false); // Desmarcar todos os checkboxes primeiro
+                    $('.checkBoxTipo').prop('checked', false);
                     niveis.forEach(function (nivel) {
                         $('#' + nivel.toLowerCase()).prop('checked', true);
                     });
                 }
+
+                restaurarEstadosDosBotoes();
             }
 
-            // Função para salvar valores no localStorage
+            // Salva os valores no localStorage
             function salvarValores() {
                 var termo = $('.inputPesquisa').val();
                 var area = $('.selectArea').val();
@@ -352,38 +380,23 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 localStorage.setItem('termo', termo);
                 localStorage.setItem('area', area);
                 localStorage.setItem('criador', criador);
-                localStorage.setItem('niveis', JSON.stringify(niveis));
+                localStorage.setItem('niveis', JSON.stringify(niveis)); // Salvar os níveis como JSON
             }
 
-            // Carregar valores ao inicializar
-            carregarValores();
-
-            // Função para executar a pesquisa
+            // Executa a pesquisa
             function executarPesquisa() {
+                salvarValores(); // Salvar valores antes de executar a pesquisa
                 var termo = $('.inputPesquisa').val();
                 var area = $('.selectArea').val();
                 var criador = $('#criadorFiltro').val();
-                var niveis = [];
-                $('.checkBoxTipo:checked').each(function () {
-                    niveis.push($(this).val());
-                });
+                var niveis = JSON.parse(localStorage.getItem('niveis'));
 
-                // Exibir as informações enviadas para a pesquisa no console
-                console.table({
-                    idPessoa: idPessoa,
-                    termo: termo,
-                    area: area,
-                    criador: criador,
-                    niveis: niveis,
-                    tema: tema
-
-                });
-
-                // Realizar a solicitação AJAX para processar a pesquisa
                 $.ajax({
                     url: 'buscar_questionario_filtros.php',
                     method: 'POST',
-                    data: { idPessoa: idPessoa, termo: termo, area: area, criador: criador, niveis: niveis, tema: tema },
+                    data: {
+                        termo: termo, area: area, criador: criador, niveis: niveis, idPessoa: idPessoa, tema: tema
+                    },
                     success: function (response) {
                         $('.divGridTestes').html(response).addClass('noturno');
                     },
@@ -393,51 +406,95 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 });
             }
 
-            // Adicionar eventos para salvar valores no localStorage
+            // Eventos para salvar valores e executar pesquisa quando inputs mudam
             $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
                 salvarValores();
                 executarPesquisa();
             });
 
-            // Executar a pesquisa inicialmente ao carregar a página
+            // Executa a pesquisa ao carregar a página
             executarPesquisa();
 
-            // Sugestões de pesquisa
-            $('.inputPesquisa').keyup(function () {
-                var query = $(this).val();
-                var area = $('.selectArea').val(); // Captura o valor selecionado na área
+            // Exibe sugestões ao focar na inputPesquisa
+            $('.inputPesquisa').focus(function () {
+                exibirSugestoes();
+            });
+
+            // Oculta sugestões após 5 segundos de perder o foco
+            $('.inputPesquisa').blur(function () {
+                setTimeout(function () {
+                    $('.sugestoes').hide();
+                }, 5000);
+            });
+
+            // Função para exibir sugestões
+           
+            function exibirSugestoes() {
+                var query = $('.inputPesquisa').val();
+                var area = $('.selectArea').val();
                 if (query != '') {
                     $.ajax({
                         url: 'obter_sugestoes.php',
                         method: 'POST',
-                        data: { idPessoa: idPessoa, query: query, area: area }, // Envia também a área selecionada
-                        success: function (data) {
-                            $('#sugestoes').html(data);
-                            $('.sugestoes').show();
-                            // Exibe os dados recebidos no console do navegador
-                            console.table(data);
+                        data: { idPessoa: idPessoa, query: query, area: area },
+                        success: function (response) {
+                            $('#sugestoes').html(response).show();
+                            // Adiciona evento de teclado para seleção das sugestões
+                            $(document).off('keydown').on('keydown', function (e) {
+                                var sugestoes = $('.sugestao-item');
+                                var index = sugestoes.index($('.selecionada'));
+                                if (e.which === 38) { // Seta para cima
+                                    e.preventDefault(); // Previne o comportamento padrão
+                                    sugestoes.removeClass('selecionada');
+                                    sugestoes.eq(index === 0 ? sugestoes.length - 1 : index - 1).addClass('selecionada');
+                                } else if (e.which === 40) { // Seta para baixo
+                                    e.preventDefault(); // Previne o comportamento padrão
+                                    sugestoes.removeClass('selecionada');
+                                    sugestoes.eq((index + 1) % sugestoes.length).addClass('selecionada');
+                                } else if (e.which === 13 || e.which === 9) { // Enter, Tab 
+                                    var textoSelecionado = $('.selecionada').text();
+                                    $('.inputPesquisa').val(textoSelecionado);
+                                    $('#sugestoes').hide();
+                                    localStorage.setItem('termoPesquisa', textoSelecionado);
+                                    // Chame sua função para buscar vagas aqui
+                                }
+                            });
+                        },
+                        error: function () {
+                            console.error("Erro ao buscar sugestões.");
                         }
                     });
                 } else {
-                    $('.sugestoes').hide();
+                    $('.inputPesquisa').on('blur', function () {
+                        setTimeout(function () {
+                            $('#sugestoes').hide();
+                        }, 5000); // Oculta as sugestões após 5 segundos de perder o foco
+                    });
                 }
-            });
+            }
 
-            $(document).on('click', '.sugestao-item', function () {
-                var sugestao = $(this).text();
-                $('.inputPesquisa').val(sugestao);
-                $('.sugestoes').hide();
-                salvarValores();
-                executarPesquisa();
-            });
 
-            // Função para alternar o estado do botão e salvar no localStorage
+            executarPesquisa();
+
+            // Evento para chamar a função ao digitar na inputPesquisa
+            $('.inputPesquisa').on('input', exibirSugestoes);
+
+            // Chamada inicial para esconder as sugestões
+            $('#sugestoes').hide();
+
+            // Função para destacar a sugestão
+            function highlightSuggestion(index) {
+                console.log('highlightSuggestion called with index:', index);
+                $('.sugestao-item').removeClass('selected');
+                $('.sugestao-item').eq(index).addClass('selected');
+            }
+
+            // Função para alternar o estado do botão
             function toggleButtonState(buttonId) {
                 const button = document.querySelector(`#${buttonId}`);
                 let isActive = localStorage.getItem(`${buttonId}State`) === 'true';
-                // Alternar o estado do botão
                 isActive = !isActive;
-                localStorage.setItem(`${buttonId}State`, isActive); // Salvar no localStorage
+                localStorage.setItem(`${buttonId}State`, isActive);
                 if (isActive) {
                     button.style.backgroundColor = "var(--laranja)";
                     button.style.border = "1px solid var(--laranja)";
@@ -446,28 +503,6 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     button.style = "initial";
                 }
             }
-            // Função para restaurar os estados dos botões ao carregar a página
-            function restaurarEstadosDosBotoes() {
-                const buttonIds = ["btnBasico", "btnIntermediario", "btnExperiente"];
-                buttonIds.forEach(buttonId => {
-                    const button = document.querySelector(`#${buttonId}`);
-                    if (button) {
-                        const isActive = localStorage.getItem(`${buttonId}State`) === 'true';
-                        if (isActive) {
-                            button.style.backgroundColor = "var(--laranja)";
-                            button.style.border = "1px solid var(--laranja)";
-                            button.style.color = "whitesmoke";
-                        } else {
-                            button.style = "initial";
-                        }
-                    }
-                });
-            }
-            restaurarEstadosDosBotoes();
-            // Configurar eventos de clique para alternar estados e salvar no localStorage
-            document.querySelector("#btnBasico").addEventListener("click", () => toggleButtonState("btnBasico"));
-            document.querySelector("#btnIntermediario").addEventListener("click", () => toggleButtonState("btnIntermediario"));
-            document.querySelector("#btnExperiente").addEventListener("click", () => toggleButtonState("btnExperiente"));
         });
     </script>
 </body>

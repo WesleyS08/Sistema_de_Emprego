@@ -2,12 +2,12 @@
 // Conexão com o banco de dados
 include "../../services/conexão_com_banco.php"; // Ajuste o caminho conforme necessário
 
-// Receber o termo de busca e a área enviados pela solicitação AJAX
-$termo = isset($_POST['termo']) ? trim($_POST['termo']) : ''; 
+// Receber o query  de busca e a área enviados pela solicitação AJAX
+$query  = isset($_POST['query']) ? trim($_POST['query']) : '';
 $area = isset($_POST['area']) ? trim($_POST['area']) : '';
 $idPessoa = isset($_POST['idPessoa']) ? $_POST['idPessoa'] : '';
 
-// Preparar a consulta SQL para buscar títulos com base no termo e, opcionalmente, na área, considerando o ID da pessoa
+// Preparar a consulta SQL para buscar títulos com base no query  e, opcionalmente, na área, considerando o ID da pessoa
 $sql = "SELECT q.Nome 
         FROM Tb_Questionarios q
         JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
@@ -22,10 +22,10 @@ if ($area !== 'Todas') {
 // Adicione a condição para encontrar os questionários associados à pessoa especificada
 $sql .= " AND e.Tb_Pessoas_Id = ?";
 
-$sql .= " LIMIT 5";
+$sql .= " LIMIT 3";
 
 $stmt = $_con->prepare($sql);
-$likeTerm = "%" . $termo . "%";
+$likeTerm = "%" . $query  . "%";
 
 // Vincular os parâmetros da consulta
 if ($area !== 'Todas') {

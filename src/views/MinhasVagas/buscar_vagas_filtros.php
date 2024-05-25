@@ -1,6 +1,5 @@
 <?php
 include "../../services/conexão_com_banco.php";
-
 // Informações Enviadas do AJAX 
 $idPessoa = isset($_POST['idPessoa']) ? intval($_POST['idPessoa']) : null;
 $area = isset($_POST['area']) ? $_POST['area'] : 'Todas';
@@ -108,33 +107,33 @@ if ($stmt) {
     if ($result->num_rows > 0) {
         // Gerar HTML para cada vaga encontrada
         while ($row = $result->fetch_assoc()) {
-
-            // Quarta Consulta para contar o número de inscritos para esta vaga
+            // Consulta para contar o número de inscritos para cada vaga
             $sql_contar_inscricoes = "SELECT COUNT(*) AS total_inscricoes FROM Tb_Inscricoes WHERE Tb_Vagas_Tb_Anuncios_Id = ?";
             $stmt_inscricoes = $_con->prepare($sql_contar_inscricoes);
-            $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]); // "i" indica que o parâmetro é um inteiro
+            $stmt_inscricoes->bind_param("i", $row["Id_Anuncios"]);
             $stmt_inscricoes->execute();
             $result_inscricoes = $stmt_inscricoes->get_result();
+            $total_inscricoes = $result_inscricoes->fetch_assoc()['total_inscricoes'] ?? 0;
+            $stmt_inscricoes->close();
 
-            // Verificar se a consulta teve sucesso
-            if ($result_inscricoes === false) {
-                // ! Arrumar questão de tratamento de Erros !! 
-                echo "Erro na consulta de contagem de inscrições: " . $_con->error;
-                exit;
-            }
+            // Obter o nome da empresa
+            $nome_empresa = $row['Nome_da_Empresa'] ?? 'Empresa não identificada';
 
-            // Obter o resultado da contagem de inscrições
-            $row_inscricoes = $result_inscricoes->fetch_assoc();
-            $total_inscricoes = $row_inscricoes['total_inscricoes'];
+            // Data de criação
             $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
 
-            // HTML para cada vaga
-            echo '<a class="postLink" href="../MinhaVaga/minhaVaga.php?id=' . $row["Id_Anuncios"] . '">';
+            // Gerar HTML para cada vaga
+            echo '<a class="postLink" href="../Vaga/vaga.php?id=' . $row["Id_Anuncios"] . '">';
             echo '<article class="post">';
             echo '<div class="divAcessos">';
-            echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+            if ($tema == 'noturno') {
+                echo '<img src="../../assets/images/icones_diversos/peopleWhite.svg"></img>';
+            } else {
+                echo '<img src="../../assets/images/icones_diversos/people.svg"></img>';
+            }
             echo '<small class="qntdAcessos">' . $total_inscricoes . '</small>';
             echo '</div>';
+
             echo '<header>';
             switch ($row["Categoria"]) {
                 case "CLT":
@@ -155,74 +154,33 @@ if ($stmt) {
                     break;
             }
             echo '</header>';
+
             echo '<section>';
-            echo '<h3 class="nomeVaga">' . (isset($row["Titulo"]) ? $row["Titulo"] : "Título não definido") . '</h3>';
-            $nomeEmpresa = isset($row['Nome_da_Empresa']) && $row['Nome_da_Empresa'] !== null
-                ? $row['Nome_da_Empresa']
-                : 'Confidencial';
-            // Exibir o nome da empresa ou "Confidencial"
-            echo '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
-            // Exibir o status da vaga e a data de criação
-            $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
-            $datadeTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y", strtotime($row["Data_de_Termino"])) : "Data não definida";
+            echo '<h3 class="nomeVaga">' . ($row["Titulo"] ?? "Título não definido") . '</h3>';
+            if (empty($nome_empresa)) {
+                $nome_empresa = 'Confidencial';
+            }
+            echo '<p class="empresaVaga">' . $nome_empresa . '</p>';
+
             if ($row['Status'] == 'Aberto') {
                 echo '<h4 class="statusVaga" style="color:green">Aberto</h4>';
                 echo '<p class="dataVaga">' . $dataCriacao . '</p>';
             } else {
                 echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
-                echo '<p class="dataVaga">' . $datadeTermino . '</p>';
+                echo '<p class="dataVaga">' . $dataCriacao . '</p>';
             }
             echo '</section>';
             echo '</article>';
             echo '</a>';
         }
-    
-        echo '
-        <script>
-            var temaDoBancoDeDados = "' . $tema . '";
-            // Função para aplicar o modo noturno ao carregar a página
-            function aplicarModoNoturno() {
-                if (temaDoBancoDeDados === "noturno") {
-                    $("body").addClass("noturno");
-                    Noturno(); // Se houver alguma lógica específica do modo noturno que precise ser executada, chame-a aqui
-                }
-            }
-            // Chame a função para aplicar o modo noturno ao carregar a página
-            aplicarModoNoturno();
-        </script>
-        <script src="../../../modoNoturno.js"></script>
-        <script>
-            var idPessoa = ' . $idPessoa . ';
-        
-            $(".btnModo").click(function () {
-                var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-                $.ajax({
-                    url: "../../services/Temas/atualizar_tema.php",
-                    method: "POST",
-                    data: { tema: novoTema, idPessoa: idPessoa },
-                    success: function () {
-                        console.log("Tema atualizado com sucesso");
-                    },
-                    error: function (error) {
-                        console.error("Erro ao salvar o tema:", error);
-                    }
-                });
-                if (novoTema === "noturno") {
-                    $("body").addClass("noturno");
-                    Noturno();
-                } else {
-                    $("body").removeClass("noturno");
-                    Claro();
-                }
-            });
-        </script>';
     } else {
         echo "<p class='infos' style='text-align:center; margin:0 auto; position: absolute'>Nenhuma vaga encontrada com os filtros selecionados.</p>";
     }
-
 
     $stmt->close();
 } else {
     echo "Erro na preparação da consulta: " . $_con->error;
 }
+
+$_con->close();
 ?>
