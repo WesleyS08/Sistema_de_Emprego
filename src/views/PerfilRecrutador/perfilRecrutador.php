@@ -1,25 +1,68 @@
 <?php
 include "../../services/conexão_com_banco.php";
 
+// Iniciar a sessão
 session_start();
 
-// Obter informações de sessão
 $nomeUsuario = isset($_SESSION['nome_usuario']) ? $_SESSION['nome_usuario'] : '';
-$emailUsuario = isset($_SESSION['email_session']) ? $_SESSION['email_session'] : (isset($_SESSION['google_session']) ? $_SESSION['google_session'] : '');
-
-// Verificar se o usuário está autenticado como publicador
-$autenticadoComoPublicador = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
-
-// Inicializar variáveis
+$emailUsuario = '';
+$empresa = false;
 $podeEditar = false;
 $idPessoa = isset($_GET['id']) ? $_GET['id'] : '';
+$autenticadoComoPublicador = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] == 'empresa';
+
+// Verificar se o usuário está autenticado e definir o e-mail do usuário
+if (isset($_SESSION['email_session'])) {
+    // Se estiver autenticado com e-mail/senha
+    $emailUsuario = $_SESSION['email_session'];
+} elseif (isset($_SESSION['google_session'])) {
+    // Se estiver autenticado com o Google
+    $emailUsuario = $_SESSION['google_session'];
+}
+$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+$stmt = $_con->prepare($sql);
+if ($stmt) {
+    $stmt->bind_param("s", $emailUsuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $idPessoaAtiva = $result->fetch_assoc()['Id_Pessoas'];
+    } else {
+        die("Erro: Usuário não encontrado.");
+    }
+    $stmt->close();
+} else {
+    die("Erro ao preparar a consulta para obter o ID da pessoa.");
+}
+
+// Consulta SQL para obter o ID do usuário como empresa
+$sql = "SELECT e.Tb_Pessoas_Id AS idUsuario FROM Tb_Pessoas AS p
+        INNER JOIN Tb_Candidato AS e ON p.Id_Pessoas = e.Tb_Pessoas_Id
+        WHERE p.Email = ?";
+$stmt = $_con->prepare($sql);
+if ($stmt) {
+    $stmt->bind_param("s", $emailUsuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Verificar se o usuário é uma empresa
+    if ($result->num_rows > 0) {
+        $idUsuarioEmpresa = $result->fetch_assoc()['idUsuario'];
+        $candidato = true;
+    } else {
+        $candidato = false;
+    }
+    $stmt->close();
+} else {
+    die("Erro ao preparar a consulta para obter o ID do usuário como empresa.");
+}
 
 // Consulta para obter o tema da pessoa
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
-
 if ($stmt) {
-    $stmt->bind_param('i', $idPessoa);
+    $stmt->bind_param('i', $idPessoaAtiva);
     $stmt->execute();
 
     // Verificar resultado
@@ -34,7 +77,6 @@ if ($stmt) {
 // Consulta para obter informações da empresa
 $query = "SELECT * FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?";
 $stmt = $_con->prepare($query);
-
 if ($stmt) {
     $stmt->bind_param('i', $idPessoa);
     $stmt->execute();
@@ -56,7 +98,6 @@ if ($stmt) {
         $caminhoImagemPerfil = isset($empresa['Img_Perfil']) ? $empresa['Img_Perfil'] : '';
         $caminhoImagemBanner = isset($empresa['Img_Banner']) ? $empresa['Img_Banner'] : '';
     }
-
     $stmt->close();
 } else {
     die("Erro ao preparar a consulta para obter informações da empresa.");
@@ -65,25 +106,20 @@ if ($stmt) {
 // Verificar se o usuário pode editar
 $query = "SELECT Email FROM Tb_Pessoas WHERE Id_Pessoas = (SELECT Tb_Pessoas_Id FROM Tb_Empresa WHERE Tb_Pessoas_Id = ?)";
 $stmt = $_con->prepare($query);
-
 if ($stmt) {
     $stmt->bind_param('i', $idPessoa);
     $stmt->execute();
-
     $result = $stmt->get_result();
-
     if ($result && $result->num_rows > 0) {
         $emailUsuarioBanco = $result->fetch_assoc()['Email'];
-
         $podeEditar = ($emailUsuario == $emailUsuarioBanco);
     }
-
     $stmt->close();
 } else {
     die("Erro ao preparar a consulta para verificar a permissão de edição.");
 }
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -104,26 +140,39 @@ if ($stmt) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
-                src="../../assets/images/logos_empresa/logo_sias.png"></a>
-        <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
-        <ul>
-            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
-            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
-            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
-            <li><a href="../../../index.php">Deslogar</a></li>
-            <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
-        </ul>
+        <?php if ($candidato == true) { ?>
+            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
+                    src="../../assets/images/logos_empresa/logo_sias.png"></a>
+            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+            <ul>
+                <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+                <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
+                <li><a href="../Cursos/cursos.php">Cursos</a></li>
+                <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoaAtiva; ?>">Perfil</a></li>
+            </ul>
+        <?php } else { ?>
+            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
+                    src="../../assets/images/logos_empresa/logo_sias.png"></a>
+            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
+            <ul>
+                <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+                <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+                <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!-- Arrumar esse link -->
+                <li><a href="../../../index.php">Deslogar</a></li>
+                <li><a href="#">Perfil</a></li>
+            </ul>
+        <?php } ?>
+
     </nav>
     <div class="divBackgroundImg" id="divBackgroundImgDefinida">
-    <?php
+        <?php
         if (!empty($caminhoImagemBanner)) { ?>
             <img src="<?php echo $caminhoImagemBanner; ?>" alt="" style="width: 100%; height: 100%; object-fit: cover;">
         <?php } else { ?>
             <img src="https://static.vecteezy.com/system/resources/previews/010/705/558/non_2x/orange-modern-abstract-background-for-banner-landing-page-poster-presentation-or-flyer-free-vector.jpg"
                 alt="" style="width: 100%; height: 100%; object-fit: cover;">
         <?php } ?>
-        
+
         <!-- Exibir a imagem de perfil da empresa -->
         <div class="divFotoDePerfil" id="divFotoDePerfilDefinida">
             <img src="<?php echo $caminhoImagemPerfil; ?>" alt=""
@@ -165,8 +214,8 @@ if ($stmt) {
             <div class="contentPerfil">
                 <h3>Contato</h3>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/nzixoeyk.json" class="iconeVaga" trigger="hover" colors="primary:#000000"
-                        style="width:30px;height:30px">
+                    <lord-icon src="https://cdn.lordicon.com/nzixoeyk.json" class="iconeVaga" trigger="hover"
+                        colors="primary:#000000" style="width:30px;height:30px">
                     </lord-icon>
                     <?php
                     if ($emailUsuario) {
@@ -177,8 +226,8 @@ if ($stmt) {
                     ?>
                 </div>
                 <div class="divFlexContato">
-                    <lord-icon src="https://cdn.lordicon.com/rsvfayfn.json" class="iconeVaga" trigger="hover" colors="primary:#000000"
-                        style="width:30px;height:30px">
+                    <lord-icon src="https://cdn.lordicon.com/rsvfayfn.json" class="iconeVaga" trigger="hover"
+                        colors="primary:#000000" style="width:30px;height:30px">
                     </lord-icon>
 
                     <?php

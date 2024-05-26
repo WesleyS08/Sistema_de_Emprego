@@ -160,7 +160,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <?php if ($empresa = false) { ?>
+        <?php if (!$empresa) { ?>
             <a href="../homeCandidato/homeCandidato.php"><img id="logo"
                     src="../../assets/images/logos_empresa/logo_sias.png"></a>
             <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
@@ -171,7 +171,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                 <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
             </ul>
         <?php } else { ?>
-            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
+            <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
                     src="../../assets/images/logos_empresa/logo_sias.png"></a>
             <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
             <ul>
@@ -369,8 +369,6 @@ if ($result && mysqli_num_rows($result) > 0) {
                 <div class="divPontuacao">
                     <?php
                     arsort($pontuacaoPorArea);
-
-
                     if (empty($pontuacaoPorArea)) {
                         if ($podeEditar == true) {
                             echo "<div class='infos' style='display: flex; justify-content: center; align-items: center; text-align: center'>Você ainda não possui pontuação. Realize os testes para começar!</div>";
