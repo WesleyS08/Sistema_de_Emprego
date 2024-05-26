@@ -128,12 +128,15 @@ if ($stmt) {
 }
 
 
-// Nova consulta para obter os Anuncios por Id_Pessoas
-$sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
+$sql_verificar_empresa = "
+    SELECT * 
+    FROM Tb_Anuncios 
     JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
     JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
     JOIN Tb_Pessoas ON Tb_Empresa.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-    WHERE Tb_Pessoas.Id_Pessoas = ?";
+    WHERE Tb_Pessoas.Id_Pessoas = ?
+    ORDER BY Tb_Anuncios.Data_de_Criacao DESC";
+
 
 $stmt = $_con->prepare($sql_verificar_empresa);
 $stmt->bind_param("i", $idPessoa); // 'i' indica que o parâmetro é um número inteiro
@@ -212,10 +215,10 @@ if ($stmt_empresa) {
 
         // Consulta SQL para selecionar as avaliações apenas da empresa específica
         $sql_avaliacoes = "SELECT q.Id_Questionario, q.Nome, q.Area, e.Nome_da_Empresa 
-                           FROM Tb_Questionarios q
-                           INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
-                           INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
-                           WHERE e.CNPJ = ?";
+                            FROM Tb_Questionarios q
+                            INNER JOIN Tb_Empresa_Questionario eq ON q.Id_Questionario = eq.Id_Questionario
+                            INNER JOIN Tb_Empresa e ON eq.Id_Empresa = e.CNPJ
+                            WHERE e.CNPJ = ?";
 
         $stmt_avaliacoes = $_con->prepare($sql_avaliacoes);
         if ($stmt_avaliacoes) {
@@ -270,10 +273,7 @@ $stmt_avaliacoes->execute();
 
 // Obtenha o resultado
 $result_avaliacoes = $stmt_avaliacoes->get_result();
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="pt-br">

@@ -131,10 +131,10 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
 
     // Segunda consulta no banco de dados para pegar o CPF do candidato e o CNPJ da empresa
     $sql = "SELECT Tb_Candidato.CPF, Tb_Empresa.CNPJ
-   FROM Tb_Candidato
-   INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
-   LEFT JOIN Tb_Empresa ON Tb_Candidato.Tb_Pessoas_Id = Tb_Empresa.Tb_Pessoas_Id
-   WHERE Tb_Pessoas.Email = '$emailUsuario'";
+        FROM Tb_Candidato
+        INNER JOIN Tb_Pessoas ON Tb_Candidato.Tb_Pessoas_Id = Tb_Pessoas.Id_Pessoas
+        LEFT JOIN Tb_Empresa ON Tb_Candidato.Tb_Pessoas_Id = Tb_Empresa.Tb_Pessoas_Id
+        WHERE Tb_Pessoas.Email = '$emailUsuario'";
 
     $result = mysqli_query($_con, $sql); // Executar a consulta
     if ($result && mysqli_num_rows($result) > 0) {
@@ -427,36 +427,6 @@ if ($stmt) {
                             </p>
                         </div>
                     </div>
-                    <?php if ($autenticadoComoPublicador == false) { ?>
-                    <?php }
-                    if ($autenticadoComoCandidato == false) { ?>
-                    <?php } elseif ($Status == 'Aberto' && !$candidatoInscrito) { ?>
-                        <form method="POST"
-                            action="../../services/cadastros/processar_candidatura.php?id_anuncio=<?php echo $idAnuncio; ?>">
-                            <div class="divSendButton">
-                                <button>
-                                    <h4>Candidatar-se</h4>
-                                    <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                        colors="primary:#f5f5f5" style="width:80px;height:80px">
-                                    </lord-icon>
-                                </button>
-                            </div>
-                        </form>
-                    <?php } elseif ($candidatoInscrito) { ?>
-                        <div class="divSendButton">
-                            <button disabled style="cursor: default; background-color:  #723911">
-                                <h4>Já inscrito</h4>
-                                <lord-icon src="https://cdn.lordicon.com/smwmetfi.json" trigger="hover"
-                                    colors="primary:#f5f5f5" style="width:80px;height:80px">
-                                </lord-icon>
-                            </button>
-                        </div>
-                    <?php } elseif ($Status != 'Aberto') { ?>
-                        <p>Status: Encerrado</p>
-                    <?php } ?>
-
-
-
                 </div>
                 <?php
                 // Divida os requisitos e benefícios por vírgula e remova espaços em branco desnecessários
@@ -468,7 +438,7 @@ if ($stmt) {
                     <div class="divBox">
                         <h3>Requisitos</h3>
                         <ul>
-                        <?php foreach ($arrayRequisitos as $requisito) { ?>
+                            <?php foreach ($arrayRequisitos as $requisito) { ?>
                                 <li class="infos">
                                     <?php echo $requisito; ?>
                                 </li>
@@ -478,9 +448,9 @@ if ($stmt) {
                     <div class="divBox">
                         <h3>Benefícios</h3>
                         <ul>
-                        <?php foreach ($arrayBeneficios as $beneficio) { ?>
+                            <?php foreach ($arrayBeneficios as $beneficio) { ?>
                                 <li class="infos">
-                                   <?php echo $beneficio; ?>
+                                    <?php echo $beneficio; ?>
                                 </li>
                             <?php } ?>
                         </ul>
@@ -502,11 +472,25 @@ if ($stmt) {
             </a>
             <div class="carrosselBox" id="carrosselPerfis">
                 <?php
-                $sqlCandidatos = "SELECT c.*, c.Img_Perfil AS Img_Perfil, p.Nome
-                                FROM Tb_Candidato c
-                                JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
-                                JOIN Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
-                                WHERE i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio";
+                $sqlCandidatos = "
+                    SELECT 
+                        c.*, 
+                        c.Img_Perfil AS Img_Perfil, 
+                        p.Nome,
+                        r.Nota
+                    FROM 
+                        Tb_Candidato c
+                    JOIN 
+                        Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+                    JOIN 
+                        Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
+                    LEFT JOIN 
+                        Tb_Resultados r ON c.CPF = r.Tb_Candidato_CPF
+                    WHERE 
+                        i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio
+                    ORDER BY 
+                        r.Nota DESC
+                    ";
 
                 $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
 
@@ -515,9 +499,11 @@ if ($stmt) {
                     // Loop sobre as informações das candidaturas
                     while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
                         $caminhoImgPerfil = $candidatura['Img_Perfil'];
+                        $nota = isset($candidatura['Nota']) ? $candidatura['Nota'] : 'Sem nota'; // Verifica se a nota está definida
                         ?>
                         <a class="perfilLink"
-                            href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>">
+                            href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>"
+                            title="Nota: <?php echo $nota; ?>">
                             <article class="perfil">
                                 <div class="divImg">
                                     <?php
@@ -544,19 +530,15 @@ if ($stmt) {
                             </article>
                         </a>
                         <?php
-                    }
-
+                    }   
                 } else {
                     // Caso não haja candidatos inscritos
                     echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para esta vaga.</p>";
-
                 }
                 ?>
             </div>
         </div>
     </div>
-
-
     <div id="map" style="height: 400px;margin-top: 1%;position: relative;outline: none;width: 95%;margin-left: 3%;">
     </div>
 
@@ -582,11 +564,8 @@ if ($stmt) {
     <script src="../../../modoNoturno.js"></script>
     <script>
         var idPessoa = <?php echo $idPessoa; ?>;
-
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-
-
             // Salva o novo tema no banco de dados via AJAX
             $.ajax({
                 url: "../../services/Temas/atualizar_tema.php",
@@ -607,7 +586,6 @@ if ($stmt) {
                 $("body").removeClass("noturno");
                 Claro(); // Adicione esta linha para atualizar imediatamente o tema na interface
             }
-
         });
     </script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"

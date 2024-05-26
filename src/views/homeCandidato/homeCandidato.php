@@ -43,9 +43,6 @@ if ($stmt) {
     }
     $stmt->close();
 }
-
-
-
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
 
@@ -170,7 +167,9 @@ $tokenSession = isset($_SESSION['token_session']) ? $_SESSION['token_session'] :
 // Consulta SQL para verificar empresas e puxar as vagas
 $sql_verificar_empresa = "SELECT * FROM Tb_Anuncios 
 JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ";
+JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+ORDER BY Tb_Anuncios.Data_de_Criacao DESC";
+
 
 $stmt = $_con->prepare($sql_verificar_empresa);
 $stmt->execute();
@@ -200,10 +199,7 @@ function determinarImagemCategoria($categoria)
             return 'default'; // Retorna uma imagem padrão caso não haja correspondência
     }
 }
-
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -219,15 +215,12 @@ function determinarImagemCategoria($categoria)
             chavesParaLimpar.forEach(function (chave) {
                 localStorage.removeItem(chave);
             });
-
             const areaPadrao = 'Todas'; // Valor padrão para "area"
             if (!localStorage.getItem('area')) {
                 localStorage.setItem('area', areaPadrao);
             }
-
             console.log("LocalStorage após limpeza:", localStorage);
         }
-
         window.addEventListener('load', limparLocalStorageComExcecao);
     </script>
     <style>
@@ -395,31 +388,29 @@ function determinarImagemCategoria($categoria)
                 if ($cpf) {
                     $horaAtual = date('d/m/Y H:i');
                     $query = "
-                    SELECT
-                        va.Tb_Anuncios_Id,
-                        an.Id_Anuncios,
-                        va.Tb_Empresa_CNPJ,
-                        an.Titulo,
-                        an.Categoria,
-                        em.Nome_da_Empresa,
-                        va.Status,
-                        DATE_FORMAT(va.Data_de_Termino, '%d/%m/%Y') AS Data_Termino,
-                        DATE_FORMAT(ins.Data_de_Inscricao, '%d/%m/%Y %H:%i') AS Data_Inscricao,
-                        NOW() AS Hora_Atual
-                    FROM
-                        Tb_Inscricoes ins
-                    JOIN
-                        Tb_Vagas va ON ins.Tb_Vagas_Tb_Anuncios_Id = va.Tb_Anuncios_Id
-                    JOIN
-                        Tb_Anuncios an ON va.Tb_Anuncios_Id = an.Id_Anuncios
-                    JOIN
-                        Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
-                    WHERE
-                        ins.Tb_Candidato_CPF = ?
-                    ORDER BY
-                        (va.Status = 'Encerrado'),
-                        va.Data_de_Termino ASC";
-
+                        SELECT
+                            va.Tb_Anuncios_Id,
+                            an.Id_Anuncios,
+                            va.Tb_Empresa_CNPJ,
+                            an.Titulo,
+                            an.Categoria,
+                            em.Nome_da_Empresa,
+                            va.Status,
+                            DATE_FORMAT(va.Data_de_Termino, '%d/%m/%Y') AS Data_Termino,
+                            DATE_FORMAT(ins.Data_de_Inscricao, '%d/%m/%Y %H:%i') AS Data_Inscricao,
+                            NOW() AS Hora_Atual
+                        FROM
+                            Tb_Inscricoes ins
+                        JOIN
+                            Tb_Vagas va ON ins.Tb_Vagas_Tb_Anuncios_Id = va.Tb_Anuncios_Id
+                        JOIN
+                            Tb_Anuncios an ON va.Tb_Anuncios_Id = an.Id_Anuncios
+                        JOIN
+                            Tb_Empresa em ON va.Tb_Empresa_CNPJ = em.CNPJ
+                        WHERE
+                            ins.Tb_Candidato_CPF = ?
+                        ORDER BY
+                            ins.Data_de_Inscricao DESC";
 
                     $stmt = $_con->prepare($query);
                     $stmt->bind_param('s', $cpf);
@@ -459,7 +450,7 @@ function determinarImagemCategoria($categoria)
                             // Exibir o nome da empresa ou "Confidencial"
                             echo '<p class="empresaVaga">' . $nomeEmpresa . '</p>';
                             echo ' </section>';
-                            echo ' <label class="statusVaga" style="color: green;">' . $row['Status'] . '</label>';
+                            echo '<label class="statusVaga" style="color: ' . ($row['Status'] == 'Aberto' ? 'green' : 'red') . ';">' . $row['Status'] . '</label>';
                             echo ' <label class="dataVaga">' . $row['Data_Inscricao'] . '</label>';
                             echo ' </article>';
                             echo '</a>';
