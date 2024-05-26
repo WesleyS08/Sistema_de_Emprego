@@ -14,7 +14,7 @@ let btnTecnico = document.querySelector("#btnTecnico");
 let btnSuperior = document.querySelector("#btnSuperior");
 
 let btnAberto = document.querySelector("#btnAberto");
-let btnEncerrado = document.querySelector("btnEncerrado");
+let btnEncerrado = document.querySelector("#btnEncerrado");
 
 // ======================================================
 
@@ -158,5 +158,4 @@ btnSuperior.addEventListener("click", Superior);
 
 btnAberto.addEventListener("click", Aberto);
 btnEncerrado.addEventListener("click", Encerrado);
-
 

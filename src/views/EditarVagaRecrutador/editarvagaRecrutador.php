@@ -21,11 +21,11 @@ if (isset($_GET['id'])) {
     $idAnuncio = intval($_GET['id']); // Converte para um número inteiro por segurança
 
     // Consulta para obter dados do anúncio
-    $sql = "SELECT Tb_Anuncios.*, Tb_Empresa.Nome_da_Empresa
-            FROM Tb_Anuncios
-            INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
-            INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
-            WHERE Tb_Anuncios.Id_Anuncios = ?";
+    $sql = "SELECT Tb_Anuncios.*, Tb_Vagas.Status, Tb_Empresa.Nome_da_Empresa
+FROM Tb_Anuncios
+INNER JOIN Tb_Vagas ON Tb_Anuncios.Id_Anuncios = Tb_Vagas.Tb_Anuncios_Id
+INNER JOIN Tb_Empresa ON Tb_Vagas.Tb_Empresa_CNPJ = Tb_Empresa.CNPJ
+WHERE Tb_Anuncios.Id_Anuncios = ?";
 
     $stmt = $_con->prepare($sql);
 
@@ -55,6 +55,23 @@ if (isset($_GET['id'])) {
             $Numero = $dadosAnuncio['Numero'];
             $Bairro = $dadosAnuncio['Bairro'];
             $NomeEmpresa = $dadosAnuncio['Nome_da_Empresa'];
+            $Status = $dadosAnuncio['Status'];
+            /*
+            echo '<table>';
+            echo '<thead><tr><th>Coluna 1</th><th>Coluna 2</th><th>...</th></tr></thead>';
+            echo '<tbody>';
+
+            foreach ($dadosAnuncio as $key => $value) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars($key) . '</td>'; // Nome da coluna
+                echo '<td>' . htmlspecialchars($value) . '</td>'; // Valor da coluna
+                // Se os valores forem arrays ou objetos, você pode formatá-los recursivamente aqui
+                echo '</tr>';
+            }
+
+            echo '</tbody>';
+            echo '</table>';
+*/
         } else {
             die("Erro: Anúncio não encontrado.");
         }
@@ -179,7 +196,6 @@ if (isset($_GET['id'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -189,7 +205,6 @@ if (isset($_GET['id'])) {
     <title>Anunciar</title>
     <link rel="stylesheet" type="text/css" href="../../assets/styles/criacao.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles/homeStyles.css">
-
 </head>
 
 <body>
@@ -202,7 +217,7 @@ if (isset($_GET['id'])) {
                 src="../../assets/images/logos_empresa/logo_sias.png"></a>
         <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
         <ul>
-        <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
             <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
             <li><a href="../../../index.php">Deslogar</a></li>
@@ -223,10 +238,9 @@ if (isset($_GET['id'])) {
             ?>
             <img src="../../assets/images/icones_diversos/back.svg">
             </a>
+
             <h2>Editar de Vaga</h2>
         </div>
-
-
         <form id="formvaga" method="POST" action="../../services/Edição/vagas.php" autocomplete="off">
             <div class="containerForm">
                 <div class="containerSuperior">
@@ -236,7 +250,6 @@ if (isset($_GET['id'])) {
                                 <div class="contentInput">
                                     <input class="inputAnimado" id="titulo" name="titulo" type="text" required
                                         value="<?php echo $dadosAnuncio['Titulo'] ?>">
-
                                     <div class="labelLine">Titulo</div>
                                 </div>
                                 <small name="aviso"></small>
@@ -330,9 +343,8 @@ if (isset($_GET['id'])) {
                                     required><?php echo $dadosAnuncio['Descricao']; ?></textarea>
                                 <div class="textArealabelLine">Descrição da Vaga</div>
                             </div>
-                            <small name="aviso"></small>
+                            <small name="aviso" id="aviso-descricao"></small>
                         </div>
-
                         <div class="divFlex" id="divFlexTextArea">
                             <div class="containerTextArea">
                                 <div class="contentInputTextArea">
@@ -340,19 +352,16 @@ if (isset($_GET['id'])) {
                                         required><?php echo $dadosAnuncio['Requisitos']; ?></textarea>
                                     <div class="textArealabelLine">Requisitos</div>
                                 </div>
-                                <small name="aviso">Separe os elementos por vírgula</small>
-
+                                <small name="aviso" id="aviso-requisitos"></small>
                             </div>
-
                             <div class="containerTextArea">
                                 <div class="contentInputTextArea">
                                     <textarea class="textAreaAnimada" name="beneficios" id="beneficios"
                                         required><?php echo $dadosAnuncio['Beneficios']; ?></textarea>
                                     <div class="textArealabelLine">Benefícios</div>
                                 </div>
-                                <small name="aviso">Separe os elementos por vírgula</small>
+                                <small name="aviso" id="aviso-beneficios"></small>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -361,12 +370,13 @@ if (isset($_GET['id'])) {
                         <div>
                             <div class="divRadioContent">
                                 <h3>Tipo de profissional:</h3>
-                                <input type="radio" name="categoria" id="jovemAprendiz" value="Jovem Aprendiz" class="radioBtn" required
-                                    <?php echo ($dadosAnuncio['Categoria'] == 'Jovem Aprendiz') ? 'checked' : ''; ?>>
-                                <input type="radio" name="categoria" id="estagio" value="Estágio" class="radioBtn" required <?php echo ($dadosAnuncio['Categoria'] == 'Estágio') ? 'checked' : ''; ?>>
-                                <input type="radio" name="categoria" id="clt" value="CLT" class="radioBtn" required <?php echo ($dadosAnuncio['Categoria'] == 'CLT') ? 'checked' : ''; ?>>
+                                <input type="radio" name="categoria" id="jovemAprendiz" value="Jovem Aprendiz"
+                                    class="radioBtn" required <?php echo ($dadosAnuncio['Categoria'] == 'Jovem Aprendiz') ? 'checked' : ''; ?>>
+                                <input type="radio" name="categoria" id="estagio" value="Estágio" class="radioBtn"
+                                    required <?php echo ($dadosAnuncio['Categoria'] == 'Estágio') ? 'checked' : ''; ?>>
+                                <input type="radio" name="categoria" id="clt" value="CLT" class="radioBtn" required
+                                    <?php echo ($dadosAnuncio['Categoria'] == 'CLT') ? 'checked' : ''; ?>>
                                 <input type="radio" name="categoria" id="pj" value="PJ" class="radioBtn" required <?php echo ($dadosAnuncio['Categoria'] == 'PJ') ? 'checked' : ''; ?>>
-
                                 <label for="jovemAprendiz" class="btnRadio" id="btnJovemAprendiz">Jovem Aprendiz</label>
                                 <label for="estagio" class="btnRadio" id="btnEstagio">Estágio</label>
                                 <label for="clt" class="btnRadio" id="btnClt">CLT</label>
@@ -375,9 +385,12 @@ if (isset($_GET['id'])) {
                             </div>
                             <div class="divRadioContent">
                                 <h3>Nível de aprendizado:</h3>
-                                <input type="radio" name="nivel" id="medio" value="Ensino Médio" class="radioBtn" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Médio') ? 'checked' : ''; ?>>
-                                <input type="radio" name="nivel" id="tecnico" value="Ensino Técnico" class="radioBtn" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Técnico') ? 'checked' : ''; ?>>
-                                <input type="radio" name="nivel" id="superior" value="Ensino Superior" class="radioBtn" required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Superior') ? 'checked' : ''; ?>>
+                                <input type="radio" name="nivel" id="medio" value="Ensino Médio" class="radioBtn"
+                                    required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Médio') ? 'checked' : ''; ?>>
+                                <input type="radio" name="nivel" id="tecnico" value="Ensino Técnico" class="radioBtn"
+                                    required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Técnico') ? 'checked' : ''; ?>>
+                                <input type="radio" name="nivel" id="superior" value="Ensino Superior" class="radioBtn"
+                                    required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Superior') ? 'checked' : ''; ?>>
 
                                 <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
                                 <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label>
@@ -386,41 +399,40 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
                         <div>
-                            <div class="divRadioContent">
+                            <div class="divRadioContent" id="modalidadeDiv">
                                 <h3>Modalidade:</h3>
-                                <input type="radio" name="modalidade" id="remoto" value="Remoto" class="radioBtn" required <?php echo ($dadosAnuncio['Modalidade'] == 'Remoto') ? 'checked' : ''; ?>>
-                                <input type="radio" name="modalidade" id="presencial" value="Presencial" class="radioBtn" required <?php echo ($dadosAnuncio['Modalidade'] == 'Presencial') ? 'checked' : ''; ?>>
+                                <input type="radio" name="modalidade" id="remoto" value="Remoto" class="radioBtn">
+                                <input type="radio" name="modalidade" id="presencial" value="Presencial"
+                                    class="radioBtn">
                                 <label for="remoto" class="btnRadio" id="btnRemoto">Remoto</label>
                                 <label for="presencial" class="btnRadio" id="btnPresencial">Presencial</label>
                                 <small name="aviso"></small>
                             </div>
+
                             <div class="divRadioContent">
                                 <h3>Jornada:</h3>
                                 <!-- Botão de rádio para meio período -->
-                                <input type="radio" name="jornada" id="meio_periodo" value="Meio período" class="radioBtn" required <?php echo ($dadosAnuncio['Jornada'] === 'Meio período') ? 'checked' : ''; ?>>
+                                <input type="radio" name="jornada" id="meio_periodo" value="Meio período"
+                                    class="radioBtn" required <?php echo ($dadosAnuncio['Jornada'] === 'Meio período') ? 'checked' : ''; ?>>
                                 <label for="meio_periodo" class="btnRadio" id="btnMeioPeriodo">Meio período</label>
-
                                 <!-- Botão de rádio para tempo integral -->
-                                <input type="radio" name="jornada" id="tempo_integral" value="Tempo integral" class="radioBtn" required
-                                    <?php echo ($dadosAnuncio['Jornada'] === 'Tempo integral') ? 'checked' : ''; ?>>
+                                <input type="radio" name="jornada" id="tempo_integral" value="Tempo integral"
+                                    class="radioBtn" required <?php echo ($dadosAnuncio['Jornada'] === 'Tempo integral') ? 'checked' : ''; ?>>
                                 <label for="tempo_integral" class="btnRadio" id="btnIntegral">Tempo integral</label>
-
                                 <small name="aviso"></small> <!-- Mensagens de validação -->
                             </div>
-
-
                         </div>
                         <div>
                             <div class="divRadioContent">
                                 <h3>Status:</h3>
                                 <div class="contentInput">
                                     <!-- Verifique se $Status tem o valor esperado -->
-                                    <input type="radio" name="status" id="aberto" value="Aberto" class="radioBtn" required <?php echo ($Status === 'Aberto') ? 'checked' : ''; ?>>
-                                    <input type="radio" name="status" id="encerrado" value="Encerrado" class="radioBtn" required <?php echo ($Status === 'Encerrado') ? 'checked' : ''; ?>>
-
+                                    <input type="radio" name="status" id="aberto" value="Aberto" class="radioBtn"
+                                        required <?php echo ($Status === 'Aberto') ? 'checked' : ''; ?>>
+                                    <input type="radio" name="status" id="encerrado" value="Encerrado" class="radioBtn"
+                                        required <?php echo ($Status === 'Encerrado') ? 'checked' : ''; ?>>
                                     <label for="aberto" class="btnRadio" id="btnAberto">Aberto</label>
                                     <label for="encerrado" class="btnRadio" id="btnEncerrado">Encerrado</label>
-
                                     <small name="aviso"></small> <!-- Mensagem de aviso ou validação -->
                                 </div>
                             </div>
@@ -429,8 +441,6 @@ if (isset($_GET['id'])) {
                     </div>
                     <input type="hidden" name="emailSession" value="<?php echo $emailUsuario; ?>">
                     <input type="hidden" name="idAnuncio" value="<?php echo $idAnuncio; ?>">
-
-
                     <div class="divSalvar">
                         <input type="submit" value="Salvar" class="btnSalvar">
                     </div>
@@ -444,11 +454,102 @@ if (isset($_GET['id'])) {
         <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
     </footer>
-    <script src="radioButtons.js"></script>
+    <script>
+        // Supondo que $dadosAnuncio seja um array associativo contendo os dados recebidos do PHP
+        var dadosAnuncio = {
+            'Categoria': '<?php echo $Categoria; ?>',
+            'Modalidade': '<?php echo $Modalidade; ?>',
+            'Jornada': '<?php echo $Jornada; ?>',
+            'Nivel_Operacional': '<?php echo $Nivel_Operacional; ?>',
+            'Status': '<?php echo $Status; ?>',
+            // Adicione outros campos aqui conforme necessário
+        };
+
+        // Função para selecionar os botões de opção com base nos dados recebidos
+        function selecionarBotoesDeOpcao(dadosAnuncio) {
+            // Selecionar botões de opção e atualizar os valores
+            document.getElementById('meio_periodo').checked = (dadosAnuncio['Jornada'] === 'Meio período');
+            document.getElementById('tempo_integral').checked = (dadosAnuncio['Jornada'] === 'Tempo integral');
+
+            document.getElementById('remoto').checked = (dadosAnuncio['Modalidade'] === 'Remoto');
+            document.getElementById('presencial').checked = (dadosAnuncio['Modalidade'] === 'Presencial');
+
+            document.getElementById('jovemAprendiz').checked = (dadosAnuncio['Categoria'] === 'Jovem Aprendiz');
+            document.getElementById('estagio').checked = (dadosAnuncio['Categoria'] === 'Estágio');
+            document.getElementById('clt').checked = (dadosAnuncio['Categoria'] === 'CLT');
+            document.getElementById('pj').checked = (dadosAnuncio['Categoria'] === 'PJ');
+
+            document.getElementById('medio').checked = (dadosAnuncio['Nivel_Operacional'] === 'Ensino Médio');
+            document.getElementById('tecnico').checked = (dadosAnuncio['Nivel_Operacional'] === 'Ensino Técnico');
+            document.getElementById('superior').checked = (dadosAnuncio['Nivel_Operacional'] === 'Ensino Superior');
+
+            document.getElementById('aberto').checked = (dadosAnuncio['Status'] === 'Aberto');
+            document.getElementById('encerrado').checked = (dadosAnuncio['Status'] === 'Encerrado');
+
+            // Adicione outras atualizações de campos aqui conforme necessário
+        }
+
+        // Função para definir os estilos iniciais com base nos dados recebidos
+        function definirEstilosIniciais(dadosAnuncio) {
+            // Chamar a função para selecionar os botões de opção
+            selecionarBotoesDeOpcao(dadosAnuncio);
+
+
+            if (dadosAnuncio['Jornada'] === 'Meio período') {
+                MeioPeriodo();
+            } else {
+                Integral();
+            }
+
+            if (dadosAnuncio['Modalidade'] === 'Remoto') {
+                Remoto();
+            } else {
+                Presencial();
+            }
+
+            if (dadosAnuncio['Status'] === 'Aberto') {
+                Aberto();
+            } else {
+                Encerrado();
+            }
+
+            if (dadosAnuncio['Nivel_Operacional'] === 'Ensino Médio') {
+                Medio();
+            } else if (dadosAnuncio['Nivel_Operacional'] === 'Ensino Técnico') {
+                Tecnico();
+            } else {
+                Superior();
+            }
+
+            if (dadosAnuncio['Categoria'] === 'Jovem Aprendiz'){
+                JovemAprendiz();
+            } else if (dadosAnuncio['Categoria'] === 'Estágio'){
+                Estagio();
+            } else if (dadosAnuncio['Categoria'] === 'CLT') {
+                Clt();
+            } else {
+                Pj();
+            }
+        }
+
+        // Chamar a função para definir os estilos iniciais ao carregar a página
+        window.onload = function () {
+            definirEstilosIniciais(dadosAnuncio);
+        };
+
+
+        // Carregar o arquivo radioButtons.js após o carregamento completo da página
+        var script = document.createElement('script');
+        script.src = 'radioButtons.js';
+        document.body.appendChild(script);
+        console.log("Script de seleção de botões está sendo executado.");
+
+    </script>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        // Defina uma variável JavaScript para armazenar o tema obtido do banco de dados
         var temaDoBancoDeDados = "<?php echo $tema; ?>";
     </script>
     <script src="../../../modoNoturno.js"></script>
@@ -457,7 +558,6 @@ if (isset($_GET['id'])) {
 
         $(".btnModo").click(function () {
             var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-
 
             // Salva o novo tema no banco de dados via AJAX
             $.ajax({
