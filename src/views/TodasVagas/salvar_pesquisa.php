@@ -74,17 +74,39 @@ function salvarRecomendacoes($cpfCandidato, $cursos)
     // Conecta ao banco de dados
     $conexao = conectarBancoDados();
 
-    // Prepara as consultas SQL para inserir ou atualizar as recomendações
+    // Verifica se o candidato já possui 10 recomendações
+    $sqlCount = "SELECT COUNT(*) AS total FROM Tb_Recomendacoes WHERE Tb_Candidato_CPF = ?";
+    $stmtCount = $conexao->prepare($sqlCount);
+    $stmtCount->bind_param("s", $cpfCandidato);
+    $stmtCount->execute();
+    $resultCount = $stmtCount->get_result();
+    $rowCount = $resultCount->fetch_assoc();
+    $totalRecomendacoes = $rowCount['total'];
+    $stmtCount->close();
+
+    if ($totalRecomendacoes >= 10) {
+        // Se o candidato já tiver 10 recomendações, exclua as antigas
+        $sqlDelete = "DELETE FROM Tb_Recomendacoes WHERE Tb_Candidato_CPF = ?";
+        $stmtDelete = $conexao->prepare($sqlDelete);
+        $stmtDelete->bind_param("s", $cpfCandidato);
+        $stmtDelete->execute();
+        $stmtDelete->close();
+    }
+
+    // Insere as novas recomendações
     foreach ($cursos as $curso) {
-        $sql = "INSERT INTO Tb_Recomendacoes (Tb_Candidato_CPF, Tb_Cursos_Id)
-                VALUES ('$cpfCandidato', {$curso['Id_Cursos']})
-                ON DUPLICATE KEY UPDATE Tb_Cursos_Id = VALUES(Tb_Cursos_Id)";
-        $conexao->query($sql);
+        $sqlInsert = "INSERT INTO Tb_Recomendacoes (Tb_Candidato_CPF, Tb_Cursos_Id)
+                      VALUES (?, ?)";
+        $stmtInsert = $conexao->prepare($sqlInsert);
+        $stmtInsert->bind_param("si", $cpfCandidato, $curso['Id_Cursos']);
+        $stmtInsert->execute();
+        $stmtInsert->close();
     }
 
     // Fecha a conexão
     $conexao->close();
 }
+
 
 // Verifica se os dados foram enviados corretamente
 if (isset($_POST['pesquisa']) && isset($_POST['idPessoa'])) {

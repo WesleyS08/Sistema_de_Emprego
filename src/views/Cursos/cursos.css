@@ -116,3 +116,28 @@
 .divGridCursos .cursoLink{
     margin: 20px 0px
 }
+
+.sugestoes {
+    position: absolute;
+    border: 1px solid #ccc;
+    background-color: #cecece;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sugestao-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.sugestao-item:hover {
+    background-color: #fff;
+}
+
+.selecionada {
+    background-color: #f0f0f0;
+    /* Cor de fundo da sugestão selecionada */
+    color: #333;
+    /* Cor do texto da sugestão selecionada */
+}

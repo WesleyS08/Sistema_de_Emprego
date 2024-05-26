@@ -174,6 +174,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     <input class="inputPesquisa" type="text" placeholder="Pesquisa por Título">
                 </div>
                 <div id="sugestoes" class="sugestoes" style="display: none;">
+                    <ul id="sugestoesLista"></ul>
                 </div>
                 <div id="mostraFiltros">
                     <h3>Filtros</h3>
@@ -311,7 +312,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
             // Aplicar o modo noturno ao carregar a página
             aplicarModoNoturno();
 
-            // Carrega os valores salvos no localStorage
+            // Carregar os valores salvos no localStorage
             function carregarValores() {
                 var termo = localStorage.getItem('termo');
                 var area = localStorage.getItem('area');
@@ -338,7 +339,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 restaurarEstadosDosBotoes();
             }
 
-            // Salva os valores no localStorage
+            // Salvar os valores no localStorage
             function salvarValores() {
                 var termo = $('.inputPesquisa').val();
                 var area = $('.selectArea').val();
@@ -354,7 +355,7 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 localStorage.setItem('niveis', JSON.stringify(niveis)); // Salvar os níveis como JSON
             }
 
-            // Executa a pesquisa
+            // Executar a pesquisa
             function executarPesquisa() {
                 salvarValores(); // Salvar valores antes de executar a pesquisa
                 var termo = $('.inputPesquisa').val();
@@ -383,28 +384,12 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 executarPesquisa();
             });
 
-            // Executa a pesquisa ao carregar a página
+            // Executar a pesquisa ao carregar a página
             executarPesquisa();
 
-            // Exibe sugestões ao focar na inputPesquisa
-            $('.inputPesquisa').focus(function () {
+            // Eventos para exibir sugestões quando o conteúdo do campo de pesquisa mudar
+            $('.inputPesquisa').on('input', function () {
                 exibirSugestoes();
-            });
-
-            // Oculta sugestões após 5 segundos de perder o foco
-            $('.inputPesquisa').blur(function () {
-                setTimeout(function () {
-                    $('.sugestoes').hide();
-                }, 5000);
-            });
-
-            // Seleciona sugestão ao clicar nela
-            $(document).on('click', '.sugestao-item', function () {
-                var sugestao = $(this).text();
-                $('.inputPesquisa').val(sugestao);
-                $('.sugestoes').hide();
-                salvarValores();
-                executarPesquisa();
             });
 
             // Função para exibir sugestões
@@ -417,67 +402,102 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         method: 'POST',
                         data: { termo: termo, area: area },
                         success: function (response) {
-                            $('#sugestoes').html(response).show();
-                            // Adiciona evento de teclado para seleção das sugestões
-                            $('.sugestao-item').first().addClass('selecionada');
-                            $(document).on('keydown', function (e) {
-                                var sugestoes = $('.sugestao-item');
-                                var index = sugestoes.index($('.selecionada'));
-                                if (e.which === 38) { // Seta para cima
-                                    sugestoes.removeClass('selecionada');
-                                    sugestoes.eq(index === 0 ? sugestoes.length - 1 : index - 1).addClass('selecionada');
-                                } else if (e.which === 40) { // Seta para baixo
-                                    sugestoes.removeClass('selecionada');
-                                    sugestoes.eq((index + 1) % sugestoes.length).addClass('selecionada');
-                                } else if (e.which === 13 || e.which === 9) { // Enter, Tab ou Espaço
-                                    var textoSelecionado = $('.selecionada').text();
-                                    $('.inputPesquisa').val(textoSelecionado);
-                                    $('#sugestoes').hide();
-                                    localStorage.setItem('termoPesquisa', textoSelecionado);
-                                    executarPesquisa(); // Chama a função para executar a pesquisa
-                                }
+                            var sugestoes = JSON.parse(response);
+                            var sugestoesLista = $('#sugestoesLista');
+                            sugestoesLista.empty();
+
+                            sugestoes.forEach(function (sugestao) {
+                                sugestoesLista.append('<li class="sugestao-item">' + sugestao + '</li>');
                             });
+
+                            // Exibir o contêiner de sugestões após adicionar as sugestões
+                            $('#sugestoes').show();
                         },
                         error: function () {
                             console.error("Erro ao buscar sugestões.");
                         }
                     });
                 } else {
-                    $('.inputPesquisa').on('blur', function () {
-                        setTimeout(function () {
-                            $('#sugestoes').hide();
-                        }, 5000); // Oculta as sugestões após 5 segundos de perder o foco
-                    });
+                    // Ocultar as sugestões se o campo de pesquisa estiver vazio
+                    $('#sugestoes').hide();
                 }
             }
 
-            // Evento para chamar a função ao digitar na inputPesquisa
-            $('.inputPesquisa').on('input', exibirSugestoes);
+            // Evento para esconder as sugestões quando o campo de pesquisa perder o foco
+            $('.inputPesquisa').on('blur', function () {
+                setTimeout(function () {
+                    $('#sugestoes').hide();
+                }, 10000); // Oculta as sugestões após 5 segundos de perder o foco
+            });
 
-            // Chamada inicial para esconder as sugestões
-            $('#sugestoes').hide();
-
-            // Função para destacar a sugestão
-            function highlightSuggestion(index) {
-                console.log('highlightSuggestion called with index:', index);
-                $('.sugestao-item').removeClass('selected');
-                $('.sugestao-item').eq(index).addClass('selected');
+            // Função para buscar vagas por título
+            function buscarVagasPorTitulo(termoPesquisa, area) {
+                $.ajax({
+                    url: 'buscar_vaga_por_titulo.php',
+                    method: 'POST',
+                    data: {
+                        termo: termoPesquisa,
+                        area: area,
+                        idPessoa: idPessoa // Inclui o ID da pessoa
+                    },
+                    success: function (response) {
+                        $('.divGridVagas').html(response).addClass('noturno');
+                    },
+                    error: function () {
+                        console.error("Erro ao buscar vagas por título.");
+                    }
+                });
             }
 
-            // Função para alternar o estado do botão
-            function toggleButtonState(buttonId) {
-                const button = document.querySelector(`#${buttonId}`);
-                let isActive = localStorage.getItem(`${buttonId}State`) === 'true';
-                isActive = !isActive;
-                localStorage.setItem(`${buttonId}State`, isActive);
-                if (isActive) {
-                    button.style.backgroundColor = "var(--laranja)";
-                    button.style.border = "1px solid var(--laranja)";
-                    button.style.color = "whitesmoke";
-                } else {
-                    button.style = "initial";
+            // Evento de clique em sugestões
+            $(document).on('click', '.sugestao-item', function () {
+                var textoSelecionado = $(this).text();
+                $('.inputPesquisa').val(textoSelecionado);
+                $('#sugestoes').hide();
+                localStorage.setItem('termoPesquisa', $('.inputPesquisa').val());
+                executarPesquisa($('.inputPesquisa').val(), $('.selectArea').val());
+            });
+
+            // Evento de teclado para seleção de sugestões
+            $(document).on('keydown', function (e) {
+                var sugestoes = $('.sugestao-item');
+                var index = sugestoes.index($('.selecionada'));
+                var sugestoesContainer = $('#sugestoesLista'); // Define o contêiner de sugestões
+                var containerHeight = sugestoesContainer.height(); // Altura do contêiner
+                var itemHeight = sugestoes.outerHeight(); // Altura de cada item de sugestão
+                var scrollTop = sugestoesContainer.scrollTop(); // Posição de rolagem atual do contêiner
+
+                if (e.which === 38) { // Seta para cima
+                    e.preventDefault(); // Evita que a página faça scroll
+                    index = (index === -1) ? sugestoes.length - 1 : (index === 0) ? sugestoes.length - 1 : index - 1;
+                    sugestoes.removeClass('selecionada');
+                    sugestoes.eq(index).addClass('selecionada');
+                } else if (e.which === 40) { // Seta para baixo
+                    e.preventDefault(); // Evita que a página faça scroll
+                    index = (index === sugestoes.length - 1) ? -1 : index + 1;
+                    sugestoes.removeClass('selecionada');
+                    sugestoes.eq(index).addClass('selecionada');
+                } else if (e.which === 13 || e.which === 9) { // Enter, Tab 
+                    if (index === -1) { // Se nenhuma sugestão estiver selecionada
+                        var primeiraSugestao = sugestoes.first().text();
+                        $('.inputPesquisa').val(primeiraSugestao);
+                    } else {
+                        var textoSelecionado = $('.selecionada').text();
+                        $('.inputPesquisa').val(textoSelecionado);
+                    }
+                    $('#sugestoes').hide();
+                    localStorage.setItem('termoPesquisa', $('.inputPesquisa').val());
+                    executarPesquisa($('.inputPesquisa').val(), $('.selectArea').val());
                 }
-            }
+
+                // Verificar se a sugestão selecionada está visível
+                var selectedOffset = sugestoes.eq(index).position().top + scrollTop;
+                if (selectedOffset < scrollTop) {
+                    sugestoesContainer.scrollTop(selectedOffset);
+                } else if (selectedOffset + itemHeight > scrollTop + containerHeight) {
+                    sugestoesContainer.scrollTop(selectedOffset + itemHeight - containerHeight);
+                }
+            });
         });
     </script>
 </body>

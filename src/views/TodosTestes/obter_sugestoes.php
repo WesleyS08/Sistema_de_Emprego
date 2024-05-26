@@ -14,7 +14,7 @@ if ($area !== 'Todas') {
     $sql .= " AND Area = ?";
 }
 
-$sql .= " LIMIT 3";
+$sql .= " LIMIT 4";
 
 $stmt = $_con->prepare($sql);
 $likeTerm = "%" . $termo . "%";
@@ -26,6 +26,9 @@ if ($area !== 'Todas') {
     $stmt->bind_param("s", $likeTerm);
 }
 
+// Inicializa um array para armazenar as sugestões
+$sugestoes = array();
+
 // Tentar executar a consulta
 try {
     $stmt->execute();
@@ -35,18 +38,19 @@ try {
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo "<div class='sugestao-item'>" . htmlspecialchars($row['Nome'], ENT_QUOTES, 'UTF-8') . "</div>";
+            // Adicionar o título do anúncio como sugestão
+            $sugestoes[] = htmlspecialchars($row['Nome'], ENT_QUOTES, 'UTF-8');
         }
     } else {
-        echo "<div class='sugestao-item'>Nenhuma sugestão encontrada</div>";
+        // Se não houver sugestões, adicionar uma mensagem de erro ao array
+        $sugestoes[] = 'Nenhuma sugestão encontrada';
     }
 } catch (Exception $e) {
-    // Registrar o erro e retornar uma mensagem apropriada para o cliente
+    // Se ocorrer um erro, registrar o erro e adicionar uma mensagem de erro ao array
     error_log('Erro na busca de sugestões: ' . $e->getMessage());
-    echo "<div class='sugestao-item'>Erro ao buscar sugestões</div>";
+    $sugestoes[] = 'Erro ao buscar sugestões';
 }
 
-// Fechar a declaração e a conexão
-$stmt->close();
-$_con->close();
+// Converte o array para JSON e o retorna
+echo json_encode($sugestoes);
 ?>

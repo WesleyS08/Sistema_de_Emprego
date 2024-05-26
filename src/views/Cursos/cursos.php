@@ -78,6 +78,130 @@ function buscarCursosDoBanco($categoria)
     return $cursos;
 }
 
+function BuscarCursosRecomendados($idPessoa)
+{
+    include "../../services/conexão_com_banco.php";
+
+    // Consulta SQL para obter o CPF do candidato com base no ID da pessoa
+    $sqlCPF = "SELECT c.CPF
+                FROM Tb_Pessoas p
+                JOIN Tb_Candidato c ON p.Id_Pessoas = c.Tb_Pessoas_Id
+                WHERE p.Id_Pessoas = ?";
+
+    // Preparar a declaração
+    $stmtCPF = $_con->prepare($sqlCPF);
+
+    // Verificar se a preparação da declaração foi bem-sucedida
+    if ($stmtCPF === false) {
+        die("Erro na preparação da declaração: " . $_con->error);
+    }
+
+    // Executar a declaração com o ID da pessoa como parâmetro
+    $stmtCPF->bind_param("i", $idPessoa);
+    $stmtCPF->execute();
+
+    // Obter o resultado da consulta
+    $resultadoCPF = $stmtCPF->get_result();
+
+    // Verificar se a consulta retornou alguma linha
+    if ($resultadoCPF->num_rows > 0) {
+        // Obter o CPF do candidato
+        $linhaCPF = $resultadoCPF->fetch_assoc();
+        $cpfCandidato = $linhaCPF['CPF'];
+
+        // Consulta SQL para obter os IDs dos cursos recomendados para o candidato
+        $sqlCursos = "SELECT Tb_Cursos_Id FROM Tb_Recomendacoes WHERE Tb_Candidato_CPF = ?";
+
+        // Preparar a declaração
+        $stmtCursos = $_con->prepare($sqlCursos);
+
+        // Verificar se a preparação da declaração foi bem-sucedida
+        if ($stmtCursos === false) {
+            die("Erro na preparação da declaração: " . $_con->error);
+        }
+
+        // Executar a declaração com o CPF do candidato como parâmetro
+        $stmtCursos->bind_param("s", $cpfCandidato);
+        $stmtCursos->execute();
+
+        // Obter o resultado da consulta
+        $resultadoCursos = $stmtCursos->get_result();
+
+        // Inicializar um array para armazenar os IDs dos cursos recomendados
+        $idsCursosRecomendados = array();
+
+        // Verificar se a consulta retornou alguma linha
+        if ($resultadoCursos->num_rows > 0) {
+            // Iterar sobre os resultados e armazenar os IDs dos cursos recomendados
+            while ($linhaCursos = $resultadoCursos->fetch_assoc()) {
+                $idsCursosRecomendados[] = $linhaCursos['Tb_Cursos_Id'];
+            }
+        } else {
+            // Se a tabela de recomendações estiver vazia, recomendar cursos aleatórios
+            $sqlAleatorio = "SELECT Id_Cursos FROM Tb_Cursos ORDER BY RAND() LIMIT 5"; // Seleciona 5 cursos aleatórios
+            $resultadoAleatorio = $_con->query($sqlAleatorio);
+
+            // Verificar se a consulta retornou alguma linha
+            if ($resultadoAleatorio->num_rows > 0) {
+                // Iterar sobre os resultados e armazenar os IDs dos cursos recomendados
+                while ($linhaAleatoria = $resultadoAleatorio->fetch_assoc()) {
+                    $idsCursosRecomendados[] = $linhaAleatoria['Id_Cursos'];
+                }
+            }
+        }
+
+        // Consulta SQL para obter os detalhes dos cursos recomendados
+        $sqlDetalhes = "SELECT * FROM Tb_Cursos WHERE Id_Cursos IN (" . implode(",", $idsCursosRecomendados) . ")";
+
+        // Executar a consulta
+        $resultadoDetalhes = $_con->query($sqlDetalhes);
+
+        // Verificar se a consulta retornou alguma linha
+        if ($resultadoDetalhes->num_rows > 0) {
+            // Inicializar um array para armazenar os cursos recomendados
+            $cursos = array();
+
+            // Iterar sobre os resultados e armazenar os cursos recomendados
+            while ($linhaDetalhes = $resultadoDetalhes->fetch_assoc()) {
+                $cursos[] = $linhaDetalhes;
+            }
+
+            // Retornar os cursos recomendados
+            return $cursos;
+        } else {
+            // Se nenhum curso recomendado for encontrado, retornar um array vazio
+            return array();
+        }
+    } else {
+        // Se não houver candidato encontrado, retornar um array vazio
+        return array();
+    }
+}
+
+function preencherHTMLComCursosRecomendados($idPessoa)
+{
+
+    $cursos = BuscarCursosRecomendados($idPessoa);
+    // Iterando sobre os cursos e preenchendo o HTML
+    foreach ($cursos as $curso) {
+        echo '<a class="cursoLink" href="' . $curso['Link'] . '" target="_blank" onclick="registrarClique(' . $curso['Id_Cursos'] . ')" title="' . $curso['Nome_do_Curso'] . '">';
+        echo '<article class="curso">';
+        echo '<div class="divLogoCurso">';
+        echo '<img src="' . $curso['URL_da_Imagem'] . '">';
+        echo '</div>';
+        echo '<section>';
+        echo '<p id="empresaCurso">' . $curso['Categoria'] . '</p>';
+        echo '<h3>' . substr($curso['Nome_do_Curso'], 0, 15) . '...</h3>';
+        echo '<div class="divFlexSpace">';
+        echo '<p>' . substr($curso['Nivel'], 0, 28) . '</p>';
+        echo '<p>' . $curso['Duração'] . '</p>';
+        echo '</div>';
+        echo '</section>';
+        echo '</article>';
+        echo '</a>';
+    }
+}
+
 // Função para preencher o HTML com os cursos
 function preencherHTMLComCursos($categoria)
 {
@@ -172,8 +296,6 @@ if ($stmt) {
     // ! Arrumar questão de tratamento de Erros !! 
     die("Erro ao preparar a query.");
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -238,9 +360,10 @@ if ($stmt) {
                 <div class="divFlexInput">
                     <input id="inputPesquisa" class="inputPesquisa" placeholder="Pesquisar" type="text">
                 </div>
+                <div id="sugestoes" class="sugestoes" style="display: none;">
+                    <ul id="sugestoesLista"></ul>
+                </div>
             </div>
-
-
             <div id="divGridCursos" class="divGridCursos">
                 <!--Aqui vai os cursos da pesquisa-->
             </div>
@@ -248,6 +371,29 @@ if ($stmt) {
     </div>
 
     <?php
+    // Verifica se o ID da pessoa está definido
+    if (isset($idPessoa)) {
+        // Preenchendo a seção de cursos Recomendados
+        echo '<div class="divCarrossel">';
+        echo '<div class="divTitulo">';
+        echo '<h2>Cursos Recomendados</h2>';
+        echo '</div>';
+        echo '<div class="container">';
+        echo '<a class="btnLeftSlider" id="leftCursosGratuitos">';
+        echo '<img src="../../assets/images/icones_diversos/leftSlider.svg">';
+        echo '</a>';
+        echo '<a class="btnRightSlider" id="rightCursosGratuitos">';
+        echo '<img src="../../assets/images/icones_diversos/rightSlider.svg">';
+        echo '</a>';
+        echo '<div class="carrosselBox" id="cursosGratuitos">';
+
+        // Preenchendo com os cursos das Fatec
+        preencherHTMLComCursosRecomendados($idPessoa);
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    }
+
     // Preenchendo a seção de cursos Fatec
     echo '<div class="divCarrossel">';
     echo '<div class="divTitulo">';
@@ -343,50 +489,77 @@ if ($stmt) {
     </script>
     <script src="../../../modoNoturno.js"></script>
     <script>
-        // Função para atualizar o estilo da página e notificar o servidor
-        function atualizarEstiloENotificarServidor(novoTema) {
-            $.ajax({
-                url: "../../services/Temas/atualizar_tema.php",
-                method: "POST",
-                data: { tema: novoTema },
-                success: function () {
-                    console.log("Tema atualizado com sucesso");
-                    atualizarEstiloPagina(novoTema); // Atualiza o estilo da página
-                },
-                error: function (error) {
-                    console.error("Erro ao salvar o tema:", error);
-                }
-            });
-        }
-
-        // Função para atualizar o estilo da página
-        function atualizarEstiloPagina(novoTema) {
-            if (novoTema === "noturno") {
-                $("body").addClass("noturno");
-                Noturno(); // Ativa funcionalidades noturnas
-            } else {
-                $("body").removeClass("noturno");
-                Claro(); // Ativa funcionalidades claras
-            }
-            executarBusca(); // Executa a busca após atualizar o estilo da página
-        }
-
-        // Evento de clique no botão de alternância de tema
-        $(".btnModo").click(function () {
-            var novoTema = $("body").hasClass("noturno") ? "claro" : "noturno";
-            atualizarEstiloENotificarServidor(novoTema);
-        });
-
+        // Evento de entrada no campo de pesquisa para exibir sugestões e executar busca
         document.getElementById('inputPesquisa').addEventListener('input', function () {
+            exibirSugestoes();
             executarBusca();
         });
+
+        // Função para exibir sugestões
+        function exibirSugestoes() {
+            const query = document.getElementById('inputPesquisa').value;
+            fetch(`obter_sugestoes.php?query=${encodeURIComponent(query)}`)
+
+
+
+                .then(response => response.json())
+                .then(data => {
+                    const sugestoesLista = document.getElementById('sugestoesLista');
+                    sugestoesLista.innerHTML = ''; // Limpar sugestões anteriores
+                    data.forEach(sugestao => {
+                        const sugestaoItem = document.createElement('li');
+                        sugestaoItem.textContent = sugestao;
+                        sugestaoItem.classList.add('sugestao-item');
+                        sugestoesLista.appendChild(sugestaoItem);
+                    });
+                    document.getElementById('sugestoes').style.display = 'block'; // Exibir sugestões
+                })
+                .catch(error => console.error('Erro ao obter sugestões:', error));
+        }
+
+        // Evento de clique nas sugestões para selecionar
+        document.getElementById('sugestoesLista').addEventListener('click', function (event) {
+            if (event.target.classList.contains('sugestao-item')) {
+                const sugestaoSelecionada = event.target.textContent;
+                document.getElementById('inputPesquisa').value = sugestaoSelecionada;
+                executarBusca(); // Executar busca ao selecionar sugestão
+                ocultarSugestoes(); // Ocultar sugestões após selecionar
+            }
+        });
+
+        // Evento de teclado para navegar e selecionar sugestões
+        document.getElementById('inputPesquisa').addEventListener('keydown', function (event) {
+            const sugestoes = document.querySelectorAll('.sugestao-item');
+            const index = Array.from(sugestoes).findIndex(sugestao => sugestao.classList.contains('selecionada'));
+            if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                event.preventDefault(); // Evitar comportamento padrão de scroll
+                let newIndex = index;
+                if (event.key === 'ArrowUp') {
+                    newIndex = index > 0 ? index - 1 : sugestoes.length - 1;
+                } else {
+                    newIndex = index < sugestoes.length - 1 ? index + 1 : 0;
+                }
+                sugestoes.forEach(sugestao => sugestao.classList.remove('selecionada'));
+                sugestoes[newIndex].classList.add('selecionada');
+            } else if (event.key === 'Enter') {
+                const sugestaoSelecionada = sugestoes[index].textContent;
+                document.getElementById('inputPesquisa').value = sugestaoSelecionada;
+                executarBusca(); // Executar busca ao selecionar sugestão
+                ocultarSugestoes(); // Ocultar sugestões após selecionar
+            }
+        });
+
+        // Função para ocultar as sugestões
+        function ocultarSugestoes() {
+            document.getElementById('sugestoes').style.display = 'none';
+        }
 
         // Função para executar a busca em tempo real
         function executarBusca() {
             const query = document.getElementById('inputPesquisa').value;
             const novoTema = $("body").hasClass("noturno") ? "claro" : "noturno"; // Obter o valor do tema
             if (query.length > 0) {
-                fetch(`buscar_cursos.php?titulo=${encodeURIComponent(query)}&tema=${novoTema}`) // Inclua o tema na URL da busca
+                fetch(`buscar_cursos.php?titulo=${encodeURIComponent(query)}&tema=${novoTema}`) // Incluir o tema na URL da busca
                     .then(response => response.text())
                     .then(data => {
                         console.table({
@@ -397,10 +570,11 @@ if ($stmt) {
                     })
                     .catch(error => console.error('Erro:', error));
             } else {
-                // Limpa os resultados se a consulta estiver vazia
+                // Limpar os resultados se a consulta estiver vazia
                 document.getElementById('divGridCursos').innerHTML = '';
             }
         }
+
         // Evento de clique no botão de pesquisa
         document.getElementById('searchButton').addEventListener('click', function () {
             executarBusca();
