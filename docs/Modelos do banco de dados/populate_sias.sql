@@ -1,3 +1,4 @@
+-- Inserir dados na tabela Tb_Pessoas
 INSERT INTO `SIAS`.`Tb_Pessoas` (`Email`, `Senha`, `Nome`, `Token`, `Verificado`)
 VALUES
 ('john.doe@example.com', SHA1('123'), 'John Doe', NULL, 1),
@@ -51,8 +52,6 @@ VALUES
 ('sharon.phillips@example.com', SHA1('123'), 'Sharon Phillips', NULL, 1),
 ('raymond.evans@example.com', SHA1('123'), 'Raymond Evans', NULL, 1);
 
-
-
 -- Criar uma tabela temporária para armazenar os primeiros 50 IDs sequenciais
 CREATE TEMPORARY TABLE `temp_ids` AS
 SELECT `Id_Pessoas`
@@ -83,15 +82,15 @@ SELECT
   NULL,
   NULL
 FROM `temp_ids`
+ORDER BY RAND()
 LIMIT 30;
-
 
 -- Inserir 20 IDs restantes em `Tb_Empresa`
 INSERT INTO `SIAS`.`Tb_Empresa`
 (`CNPJ`, `Tb_Pessoas_Id`, `Img_Banner`, `Facebook`, `Github`, `Linkedin`, `Instagram`, `Nome_da_Empresa`, `Sobre_a_Empresa`, `Area_da_Empresa`, `Avaliacao_de_Funcionarios`, `Avaliacao_Geral`, `Telefone`, `Img_Perfil`)
 SELECT
   RIGHT(MD5(CONCAT(`Id_Pessoas`, RAND())), 14),  -- CNPJ fictício
-  `Id_Pessoas`,  -- Referência a `Tb_Pessoas`
+  `Id_Pessoas`,
   NULL,  -- Imagem de banner
   'facebook.com/empresa',  -- Link para Facebook
   'github.com/empresa',  -- Link para GitHub
@@ -105,9 +104,8 @@ SELECT
   '5511987654321',  -- Telefone
   NULL  -- Imagem de perfil
 FROM `temp_ids`
-WHERE `Id_Pessoas` >= 21 AND `Id_Pessoas` <= 50
-LIMIT 20;-- Inserir 20 IDs para empresas
-
+WHERE `Id_Pessoas` NOT IN (SELECT `Tb_Pessoas_Id` FROM `SIAS`.`Tb_Candidato`)
+LIMIT 20;
 
 -- Inserir 50 anúncios na tabela `SIAS`.`Tb_Anuncios`
 INSERT INTO `SIAS`.`Tb_Anuncios`
@@ -144,21 +142,26 @@ VALUES
 ('Jovem Aprendiz', 'Contador', 'Gestão de contabilidade e impostos.', 'Finanças', 'Curitiba', 'Sênior', NOW(), 'Híbrido', 'Plano de saúde, Seguro de vida', 'Experiência em contabilidade', '09:00 - 18:00', 'PR', 'Integral', '21000-000', 'Av. Batel', '123', 'Batel'),
 ('Estágio', 'Especialista em Redes Sociais', 'Gestão de redes sociais.', 'Marketing', 'São Paulo', 'Pleno', NOW(), 'Remoto', 'Vale transporte, Seguro de vida', 'Experiência com redes sociais', '10:00 - 19:00', 'SP', 'Integral', '22000-000', 'Av. Paulista', '456', 'Bela Vista'),
 ('PJ', 'Administrador de Sistemas', 'Gerenciamento de sistemas e servidores.', 'TI', 'Recife', 'Sênior', NOW(), 'Remoto', 'Plano de saúde, Vale alimentação', 'Experiência com administração de sistemas', '09:00 - 18:00', 'PE', 'Integral', '23000-000', 'Rua da Aurora', '123', 'Boa Vista');
-
 -- Populando a tabela Tb_Avaliacoes com texto aleatório limitado
 INSERT INTO `SIAS`.`Tb_Avaliacoes` (`Tb_Pessoas_Id`, `Nota`, `Texto`)
 SELECT 
     FLOOR(1 + RAND() * 50) AS `Tb_Pessoas_Id`,  -- IDs aleatórios de 1 a 50
     FLOOR(1 + RAND() * 5) AS `Nota`,  -- Nota aleatória de 1 a 5
-    LEFT(CONCAT('Texto de avaliação com até 150 caracteres. ', RPAD('', FLOOR(1 + RAND() * 100), '.')), 100) AS `Texto`  -- Texto aleatório limitado a 150 caracteres
+    LEFT(CONCAT(
+        'Esta é uma avaliação de exemplo. ',
+        'O texto desta avaliação é gerado aleatoriamente para fins de teste. ',
+        'A quantidade de caracteres é limitada a 150. ',
+        'Espero que esta avaliação esteja útil para você. ',
+        'Tenha um ótimo dia! '
+    ), 150) AS `Texto`  -- Texto aleatório limitado a 150 caracteres
 FROM 
     -- Utiliza uma tabela auxiliar para gerar múltiplas linhas
     (SELECT 1 AS `dummy`) AS `d`
 CROSS JOIN
     -- Uma tabela com números de 1 a 100 (você pode ajustar o número de acordo com a quantidade de avaliações que deseja gerar)
     (SELECT a.N + b.N * 10 + 1 AS `N` 
-     FROM (SELECT 0 AS `N` UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) AS a
-     CROSS JOIN (SELECT 0 AS `N` UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) AS b
+    FROM (SELECT 0 AS `N` UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) AS a
+    CROSS JOIN (SELECT 0 AS `N` UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) AS b
     ) AS `numbers`
 LIMIT 50;
 
@@ -200,20 +203,20 @@ FROM
    LIMIT 13) AS `Candidato`
 ORDER BY RAND() -- Ordem aleatória para distribuir as inscrições
 LIMIT 25;       -- Inserir 25 inscrições
-
 -- Inserir os 10 questionários na tabela Tb_Questionarios
 INSERT INTO `SIAS`.`Tb_Questionarios` (`Nome`, `Area`, `DataQuestionario`, `Nivel`, `Tempo`, `Descricao`, `ImagemQuestionario`)
 VALUES
-('Questionário de TI', 'Tecnologia da Informação', CURDATE(), 'Básico', '30 minutos', 'Avaliação de conhecimentos em TI.', NULL),
-('Questionário de Marketing', 'Marketing', CURDATE(), 'Intermediário', '40 minutos', 'Avaliação de conhecimentos em Marketing.', NULL),
-('Questionário de Finanças', 'Finanças', CURDATE(), 'Intermediário', '40 minutos', 'Avaliação de conhecimentos em Finanças.', NULL),
-('Questionário de Recursos Humanos', 'Recursos Humanos', CURDATE(), 'Experiente', '50 minutos', 'Avaliação de conhecimentos em RH.', NULL),
-('Questionário de Gestão de Projetos', 'Gestão de Projetos', CURDATE(), 'Intermediário', '45 minutos', 'Avaliação de conhecimentos em Gestão de Projetos.', NULL),
-('Questionário de Liderança', 'Liderança', CURDATE(), 'Experiente', '50 minutos', 'Avaliação de conhecimentos em Liderança.', NULL),
-('Questionário de Ética Profissional', 'Ética Profissional', CURDATE(), 'Básico', '30 minutos', 'Avaliação de conhecimentos em Ética Profissional.', NULL),
-('Questionário de Comunicação', 'Comunicação', CURDATE(), 'Intermediário', '40 minutos', 'Avaliação de conhecimentos em Comunicação.', NULL),
-('Questionário de Logística', 'Logística', CURDATE(), 'Básico', '35 minutos', 'Avaliação de conhecimentos em Logística.', NULL),
-('Questionário de Vendas', 'Vendas', CURDATE(), 'Experiente', '50 minutos', 'Avaliação de conhecimentos em Vendas.', NULL);
+('Questionário de TI', 'Tecnologia da Informação', CURDATE(), 'Básico', '30', 'Avaliação de conhecimentos em TI.', NULL),
+('Questionário de Marketing', 'Marketing', CURDATE(), 'Intermediário', '40', 'Avaliação de conhecimentos em Marketing.', NULL),
+('Questionário de Finanças', 'Finanças', CURDATE(), 'Intermediário', '40', 'Avaliação de conhecimentos em Finanças.', NULL),
+('Questionário de Recursos Humanos', 'Recursos Humanos', CURDATE(), 'Experiente', '50', 'Avaliação de conhecimentos em RH.', NULL),
+('Questionário de Gestão de Projetos', 'Gestão de Projetos', CURDATE(), 'Intermediário', '45', 'Avaliação de conhecimentos em Gestão de Projetos.', NULL),
+('Questionário de Liderança', 'Liderança', CURDATE(), 'Experiente', '50', 'Avaliação de conhecimentos em Liderança.', NULL),
+('Questionário de Ética Profissional', 'Ética Profissional', CURDATE(), 'Básico', '30', 'Avaliação de conhecimentos em Ética Profissional.', NULL),
+('Questionário de Comunicação', 'Comunicação', CURDATE(), 'Intermediário', '40', 'Avaliação de conhecimentos em Comunicação.', NULL),
+('Questionário de Logística', 'Logística', CURDATE(), 'Básico', '35', 'Avaliação de conhecimentos em Logística.', NULL),
+('Questionário de Vendas', 'Vendas', CURDATE(), 'Experiente', '50', 'Avaliação de conhecimentos em Vendas.', NULL);
+
 
 -- Recuperar os Ids dos questionários recém-inseridos
 SET @id_questionario_ti = (SELECT `Id_Questionario` FROM `SIAS`.`Tb_Questionarios` WHERE `Nome` = 'Questionário de TI');
@@ -257,17 +260,13 @@ VALUES
 (@id_questionario_marketing, @id_questao_2),
 (@id_questionario_marketing, @id_questao_4);
 
--- Populando a tabela Tb_Empresa_Questionario com CNPJs de empresas fictícias já existentes
-INSERT INTO `SIAS`.`Tb_Empresa_Questionario` (`Id_Empresa`, `Id_Questionario`)
-SELECT `CNPJ`, @id_questionario_ti
-FROM `SIAS`.`Tb_Empresa`
-ORDER BY RAND()
-LIMIT 5;
-
 -- Declaração de variáveis
 SET @id_questionario = 1;
 
--- Loop para inserir registros na tabela Tb_Empresa_Questionario para cada questionário de 1 a 10
+-- Verifica e apaga o procedimento caso ele já exista
+DROP PROCEDURE IF EXISTS insert_empresas_questionarios;
+
+-- Criar procedimento armazenado para inserir registros na tabela Tb_Empresa_Questionario para cada questionário de 1 a 10
 DELIMITER //
 CREATE PROCEDURE insert_empresas_questionarios()
 BEGIN
