@@ -397,7 +397,6 @@ if ($stmt) {
                                     <?php echo $Categoria; ?>
                                 </label>
                             </div>
-
                             <div class="divIconeENome">
                                 <img id="imgModalidade" src="" class="icone">
                                 <label id="modalidade">
@@ -422,7 +421,6 @@ if ($stmt) {
                             <p>
                                 <?php
                                 $wrappedText = wordwrap($Descricao, 40, "<br>\n", true);
-
                                 echo $wrappedText; ?>
                             </p>
                         </div>
@@ -433,7 +431,6 @@ if ($stmt) {
                 $arrayRequisitos = array_filter(array_map('trim', explode(',', $dadosAnuncio['Requisitos'])));
                 $arrayBeneficios = array_filter(array_map('trim', explode(',', $dadosAnuncio['Beneficios'])));
                 ?>
-
                 <div class="divFlex" id="divBoxes">
                     <div class="divBox">
                         <h3>Requisitos</h3>
@@ -473,25 +470,29 @@ if ($stmt) {
             <div class="carrosselBox" id="carrosselPerfis">
                 <?php
                 $sqlCandidatos = "
-                    SELECT 
-                        c.*, 
-                        c.Img_Perfil AS Img_Perfil, 
-                        p.Nome,
-                        r.Nota
-                    FROM 
-                        Tb_Candidato c
-                    JOIN 
-                        Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
-                    JOIN 
-                        Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
-                    LEFT JOIN 
-                        Tb_Resultados r ON c.CPF = r.Tb_Candidato_CPF
-                    WHERE 
-                        i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio
-                    ORDER BY 
-                        r.Nota DESC
-                    ";
-
+                                    SELECT 
+                                        c.*, 
+                                        c.Img_Perfil AS Img_Perfil, 
+                                        p.Nome,
+                                        GROUP_CONCAT(CONCAT('Área: ', q.Area, ' / Nota: ', COALESCE(r.Nota, 'Sem nota')) ORDER BY r.Nota DESC SEPARATOR '\n') AS AreasNotas
+                                    FROM 
+                                        Tb_Candidato c
+                                    JOIN 
+                                        Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+                                    JOIN 
+                                        Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
+                                    LEFT JOIN 
+                                        Tb_Resultados r ON c.CPF = r.Tb_Candidato_CPF
+                                    LEFT JOIN 
+                                        Tb_Questionarios q ON r.Tb_Questionarios_ID = q.Id_Questionario
+                                    WHERE 
+                                        i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio
+                                    GROUP BY 
+                                        c.CPF
+                                    ORDER BY 
+                                        MAX(r.Nota) DESC
+                                    LIMIT 3
+                                ";
                 $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
 
                 // Verificar se a consulta retornou resultados
@@ -499,11 +500,13 @@ if ($stmt) {
                     // Loop sobre as informações das candidaturas
                     while ($candidatura = mysqli_fetch_assoc($resultCandidatos)) {
                         $caminhoImgPerfil = $candidatura['Img_Perfil'];
-                        $nota = isset($candidatura['Nota']) ? $candidatura['Nota'] : 'Sem nota'; // Verifica se a nota está definida
+                        $areasNotas = isset($candidatura['AreasNotas']) ? $candidatura['AreasNotas'] : 'Sem notas'; // Verifica se as áreas e notas estão definidas
+                        // Divide a string em um array com base no separador '\n'
+                        $areasNotasArray = explode("\n", $areasNotas);
                         ?>
                         <a class="perfilLink"
                             href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $candidatura['Tb_Pessoas_Id']; ?>"
-                            title="Nota: <?php echo $nota; ?>">
+                            title="<?php echo $areasNotas; ?>">
                             <article class="perfil">
                                 <div class="divImg">
                                     <?php
@@ -512,17 +515,15 @@ if ($stmt) {
                                     }
                                     ?>
                                 </div>
-
                                 <section>
                                     <p class="nomePessoa"><?php echo $candidatura['Nome']; ?></p>
                                 </section>
                                 <section>
                                     <?php
-                                    $limite_caracteres = 55; // Defina o limite de caracteres desejado
-                                    $autodefinicao = $candidatura['Autodefinicao']; // Atribua a string à uma variável para facilitar o acesso
-                            
+                                    $limite_caracteres = 55;
+                                    $autodefinicao = $candidatura['Autodefinicao'];
                                     if (strlen($autodefinicao) > $limite_caracteres) {
-                                        $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...'; // Adiciona os pontos suspensivos
+                                        $autodefinicao = substr($autodefinicao, 0, $limite_caracteres) . '...';
                                     }
                                     ?>
                                     <small class="descricaoPessoa"><?php echo $autodefinicao; ?></small>
@@ -530,7 +531,7 @@ if ($stmt) {
                             </article>
                         </a>
                         <?php
-                    }   
+                    }
                 } else {
                     // Caso não haja candidatos inscritos
                     echo "<p style='margin-left: 36%;'>Não há candidatos inscritos para esta vaga.</p>";
