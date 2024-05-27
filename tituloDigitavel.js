@@ -11,7 +11,7 @@ function showText(titulo, text, interval){
 
         // este if verifica se todos os caractéres já foram digitados (pois eles são removidos do array a medida que são exibidos)
         if(!char.length){
-            return clearInterval(typer); // encerrando a função
+            return clearInterval(typer); // Encerrando a função
         }
 
         let next = char.pop(); // variável recebendo e removendo a última letra do array
