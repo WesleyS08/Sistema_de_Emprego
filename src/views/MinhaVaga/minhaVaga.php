@@ -470,29 +470,28 @@ if ($stmt) {
             <div class="carrosselBox" id="carrosselPerfis">
                 <?php
                 $sqlCandidatos = "
-                                    SELECT 
-                                        c.*, 
-                                        c.Img_Perfil AS Img_Perfil, 
-                                        p.Nome,
-                                        GROUP_CONCAT(CONCAT('Área: ', q.Area, ' / Nota: ', COALESCE(r.Nota, 'Sem nota')) ORDER BY r.Nota DESC SEPARATOR '\n') AS AreasNotas
-                                    FROM 
-                                        Tb_Candidato c
-                                    JOIN 
-                                        Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
-                                    JOIN 
-                                        Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
-                                    LEFT JOIN 
-                                        Tb_Resultados r ON c.CPF = r.Tb_Candidato_CPF
-                                    LEFT JOIN 
-                                        Tb_Questionarios q ON r.Tb_Questionarios_ID = q.Id_Questionario
-                                    WHERE 
-                                        i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio
-                                    GROUP BY 
-                                        c.CPF
-                                    ORDER BY 
-                                        MAX(r.Nota) DESC
-                                    LIMIT 3
-                                ";
+                SELECT 
+                c.*, 
+                c.Img_Perfil AS Img_Perfil, 
+                p.Nome,
+                GROUP_CONCAT(CONCAT('Área: ', q.Area, ' / Nota: ', COALESCE(r.Nota, 'Sem nota')) ORDER BY r.Nota DESC SEPARATOR '\n') AS AreasNotas
+            FROM 
+                Tb_Candidato c
+            JOIN 
+                Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+            JOIN 
+                Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
+            LEFT JOIN 
+                Tb_Resultados r ON c.CPF = r.Tb_Candidato_CPF
+            LEFT JOIN 
+                Tb_Questionarios q ON r.Tb_Questionarios_ID = q.Id_Questionario
+            WHERE 
+                i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio
+            GROUP BY 
+                c.CPF
+            ORDER BY 
+                c.PCD DESC, MAX(r.Nota) DESC
+            LIMIT 3";
                 $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
 
                 // Verificar se a consulta retornou resultados

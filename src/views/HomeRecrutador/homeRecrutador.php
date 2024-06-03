@@ -555,11 +555,21 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
             </a>
             <div class="carrosselBox" id="carrosselPerfis">
                 <?php
-                $sqlCandidatos = "SELECT DISTINCT p.Id_Pessoas AS Pessoa_Id, p.Nome AS Nome, c.Autodefinicao AS Autodefinicao, c.Img_Perfil AS Img_Perfil
-                FROM Tb_Inscricoes i
-                INNER JOIN Tb_Candidato c ON i.Tb_Candidato_CPF = c.CPF
-                INNER JOIN Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
-                WHERE i.Tb_Vagas_Tb_Empresa_CNPJ = '$cnpj_empresa'";
+                $sqlCandidatos = "SELECT DISTINCT 
+                p.Id_Pessoas AS Pessoa_Id, 
+                p.Nome AS Nome, 
+                c.Autodefinicao AS Autodefinicao, 
+                c.Img_Perfil AS Img_Perfil
+            FROM 
+                Tb_Inscricoes i
+            INNER JOIN 
+                Tb_Candidato c ON i.Tb_Candidato_CPF = c.CPF
+            INNER JOIN 
+                Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
+            WHERE 
+                i.Tb_Vagas_Tb_Empresa_CNPJ = '$cnpj_empresa'
+            ORDER BY 
+                c.PCD DESC, p.Nome ASC";
 
                 $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
 
@@ -638,8 +648,6 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
                     <div class="slide">
                         <img class="slideCss" src="../../assets/images/logos_parceiros/css.svg">
                     </div>
-
-
                     <div class="slide">
                         <img class="slideMysql" src="../../assets/images/logos_parceiros/mysql.svg">
                     </div>
