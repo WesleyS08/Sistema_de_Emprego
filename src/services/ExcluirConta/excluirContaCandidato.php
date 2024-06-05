@@ -33,14 +33,28 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         mysqli_stmt_execute($stmt_delete_inscricoes);
         mysqli_stmt_close($stmt_delete_inscricoes);
 
-        // 3. Excluir o candidato
+        // 3. Excluir todas as avaliações do candidato
+        $sql_delete_avaliacoes = "DELETE FROM Tb_Avaliacoes WHERE Tb_Pessoas_Id = ?";
+        $stmt_delete_avaliacoes = mysqli_prepare($_con, $sql_delete_avaliacoes);
+        mysqli_stmt_bind_param($stmt_delete_avaliacoes, "i", $idUsuario);
+        mysqli_stmt_execute($stmt_delete_avaliacoes);
+        mysqli_stmt_close($stmt_delete_avaliacoes);
+
+        // 4. Excluir todos os resultados do candidato em questionários
+        $sql_delete_resultados = "DELETE FROM Tb_Resultados WHERE Tb_Candidato_CPF = ?";
+        $stmt_delete_resultados = mysqli_prepare($_con, $sql_delete_resultados);
+        mysqli_stmt_bind_param($stmt_delete_resultados, "s", $cpfCandidato);
+        mysqli_stmt_execute($stmt_delete_resultados);
+        mysqli_stmt_close($stmt_delete_resultados);
+
+        // 5. Excluir o candidato
         $sql_delete_candidato = "DELETE FROM Tb_Candidato WHERE Tb_Pessoas_Id = ?";
         $stmt_delete_candidato = mysqli_prepare($_con, $sql_delete_candidato);
         mysqli_stmt_bind_param($stmt_delete_candidato, "i", $idUsuario);
         mysqli_stmt_execute($stmt_delete_candidato);
         mysqli_stmt_close($stmt_delete_candidato);
 
-        // 4. Excluir a pessoa associada ao ID
+        // 6. Excluir a pessoa associada ao ID
         $sql_delete_pessoa = "DELETE FROM Tb_Pessoas WHERE Id_Pessoas = ?";
         $stmt_delete_pessoa = mysqli_prepare($_con, $sql_delete_pessoa);
         mysqli_stmt_bind_param($stmt_delete_pessoa, "i", $idUsuario);
