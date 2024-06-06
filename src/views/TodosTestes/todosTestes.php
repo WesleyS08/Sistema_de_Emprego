@@ -15,6 +15,8 @@ if (isset($_SESSION['email_session'])) {
     // Se estiver autenticado com o Google
     $emailUsuario = $_SESSION['google_session'];
 }
+ini_set("display_errors", "1");
+error_reporting(E_ALL);
 // Verifique se o email do usuário está definido
 if (!empty($emailUsuario)) {
     // Consulta SQL para obter o ID da pessoa pelo email
@@ -105,7 +107,7 @@ if ($stmt) {
 // Quarta Consulta ao banco de dados para obter as areas 
 $sql_areas = "
     SELECT DISTINCT Area 
-    FROM Tb_questionarios 
+    FROM Tb_Questionarios 
     ORDER BY Area ASC";
 
 $stmt_areas = $_con->prepare($sql_areas);

@@ -141,7 +141,7 @@ if ($stmt) {
             <img src="../../../imagens/menu.svg">
         </label>
         <?php if ($candidato == true) { ?>
-            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
+            <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
                     src="../../assets/images/logos_empresa/logo_sias.png"></a>
             <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
             <ul>
