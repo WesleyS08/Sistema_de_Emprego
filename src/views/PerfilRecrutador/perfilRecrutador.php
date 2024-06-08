@@ -283,7 +283,7 @@ if ($stmt) {
     <footer>
     <a href="../PoliticadePrivacidade/PoliticadePrivacidade.html">Política de Privacidade</a>
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
-        <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
+        <a href="../AvalieNos/avalieNos.php">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
     </footer>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
