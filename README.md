@@ -82,214 +82,63 @@ docs/
 |    |---- SIAS diagrama de caso de uso.asta
 
 |---- word/
-|    |---- DWS-FZS-012024-EMPRESA-SIAS-V7.docx
-|    |---- Sistema de emprego.docx
+|    |---- DWS-FZS-012024-EMPRESA-SIAS-V9.docx
+
 
 imagens/
-|---- avatar.svg
-|---- clt.svg
-|---- css.svg
-|---- estagio.svg
-|---- excel.svg
-|---- fatec.png
-|---- figma.svg
-|---- firebase.svg
-|---- garotoFlutuando.jpeg
-|---- google.svg
-|---- html.svg
-|---- icones.jpeg
-|---- javascript.svg
-|---- like.svg
-|---- menu.svg
-|---- moon.svg
-|---- mysql.svg
-|---- people.svg
-|---- pessoa.png
-|---- php.svg
-|---- pj.svg
-|---- python.svg
-|---- runningBlack.svg
-|---- runningWhite.svg
-|---- sombraDoGaroto.jpeg
-|---- star-fill.svg
-|---- star.svg
-|---- word.svg
+|---- ...
 
 src/
 |---- assets/
 |    |---- banners/
-|    |    |---- banner_29735171090.jpg
-|    |    |---- banner_39881876000120.jpg
-|    |    |---- banner_76559982000118.jpg
+|    |      |---- ...
 
 |    |---- imagensPerfil/
-|    |    |---- perfil_29735171090.jpg
-|    |    |---- perfil_39881876000120.jpg
-|    |    |---- perfil_76559982000118.jpg
+|    |      |---- ...
+
 
 |    |---- images/
-|    |    |---- Perfil da empresa.png
-
 |    |    |---- figuras/
-|    |    |    |---- avatar.svg
-|    |    |    |---- garotoFlutuando.jpeg
-|    |    |    |---- icones.jpeg
-|    |    |    |---- imgFundo.jpg
-|    |    |    |---- pessoa.png
-|    |    |    |---- runningBlack.svg
-|    |    |    |---- runningWhite.svg
-|    |    |    |---- sombraDoGaroto.jpeg
+|    |    |    |---- ...
 
 |    |    |---- icones_diversos/
-|    |    |    |---- back.svg
-|    |    |    |---- backWhite.svg
-|    |    |    |---- closeEye.svg
-|    |    |    |---- google.svg
-|    |    |    |---- leftSlider.svg
-|    |    |    |---- menu.svg
-|    |    |    |---- moon.svg
-|    |    |    |---- openEye.svg
-|    |    |    |---- rightSlider.svg
-|    |    |    |---- showHidden.svg
-|    |    |    |---- showVisible.svg
-|    |    |    |---- star-fill.svg
-|    |    |    |---- star.svg
+|    |    |    |---- ...
 
 |    |    |---- icones_regimes/
-|    |    |    |---- clt.svg
-|    |    |    |---- estudante.svg
-|    |    |    |---- pj.svg
+|    |    |    |---- ...
 
 |    |    |---- icones_vaga/
-|    |    |    |---- cltSemFundo.svg
-|    |    |    |---- estudanteSemFundo.svg
-|    |    |    |---- iconeMeioPeriodo.svg
-|    |    |    |---- iconeNivelMedio.svg
-|    |    |    |---- iconeNivelSuperior.svg
-|    |    |    |---- iconeNivelTecnico.svg
-|    |    |    |---- iconePresencial.svg
-|    |    |    |---- iconeRemoto.svg
-|    |    |    |---- iconeTempoIntegral.svg
-|    |    |    |---- pjSemFundo.svg
+|    |    |    |---- ...
 
 |    |    |---- logos_cursos/
-|    |    |    |---- excel.svg
-|    |    |    |---- figma.svg
-|    |    |    |---- python.svg
-|    |    |    |---- word.svg
+|    |    |    |---- ...
 
 |    |    |---- logos_empresa/
-|    |    |    |---- logo_sias.png
+|    |    |    |---- ...
 
 |    |    |---- logos_parceiros/
-|    |    |    |---- css.svg
-|    |    |    |---- cssWhite.svg
-|    |    |    |---- fatec.png
-|    |    |    |---- fatecWhite.png
-|    |    |    |---- firebase.svg
-|    |    |    |---- firebaseWhite.svg
-|    |    |    |---- html.svg
-|    |    |    |---- htmlWhite.svg
-|    |    |    |---- javascript.svg
-|    |    |    |---- javascriptWhite.svg
-|    |    |    |---- mysql.svg
-|    |    |    |---- mysqlWhite.svg
-|    |    |    |---- php.svg
-|    |    |    |---- phpWhite.svg
+|    |    |    |---- ...
 
 |---- styles/
-|    |---- editarStyles.css
-|    |---- homeStyles.css
-|    |---- login.css
-|    |---- perfilStyle.css
-|    |---- todosStyle.css
-|    |---- verificacoes.css
+|   |    |---- ...
 
 |---- components/
-|    |---- text
+|   |    |---- ...
 
 |---- PHPMailer-master/
-|    |---- .editorconfig
-|    |---- COMMITMENT
-|    |---- composer.json
-|    |---- get_oauth_token.php
-|    |---- LICENSE
-|    |---- README.md
-|    |---- SECURITY.md
-|    |---- VERSION
+|   |---- ...
 
 |---- language/
-|    |---- phpmailer.lang-af.php
-|    |---- phpmailer.lang-ar.php
-|    |---- phpmailer.lang-as.php
-|    |---- phpmailer.lang-az.php
-|    |---- phpmailer.lang-ba.php
-|    |---- phpmailer.lang-be.php
-|    |---- phpmailer.lang-bg.php
-|    |---- phpmailer.lang-bn.php
-|    |---- phpmailer.lang-ca.php
-|    |---- phpmailer.lang-cs.php
-|    |---- phpmailer.lang-da.php
-|    |---- phpmailer.lang-de.php
-|    |---- phpmailer.lang-el.php
-|    |---- phpmailer.lang-eo.php
-|    |---- phpmailer.lang-es.php
-|    |---- phpmailer.lang-et.php
-|    |---- phpmailer.lang-fa.php
-|    |---- php
+|   |---- ...
 
 mailer.lang-fi.php
-|    |---- phpmailer.lang-fo.php
-|    |---- phpmailer.lang-fr.php
-|    |---- phpmailer.lang-gl.php
-|    |---- phpmailer.lang-he.php
-|    |---- phpmailer.lang-hi.php
-|    |---- phpmailer.lang-hr.php
-|    |---- phpmailer.lang-hu.php
-|    |---- phpmailer.lang-hy.php
-|    |---- phpmailer.lang-id.php
-|    |---- phpmailer.lang-it.php
-|    |---- phpmailer.lang-ja.php
-|    |---- phpmailer.lang-ka.php
-|    |---- phpmailer.lang-ko.php
-|    |---- phpmailer.lang-lt.php
-|    |---- phpmailer.lang-lv.php
-|    |---- phpmailer.lang-mg.php
-|    |---- phpmailer.lang-mn.php
-|    |---- phpmailer.lang-ms.php
-|    |---- phpmailer.lang-nb.php
-|    |---- phpmailer.lang-nl.php
-|    |---- phpmailer.lang-pl.php
-|    |---- phpmailer.lang-pt.php
-|    |---- phpmailer.lang-pt_br.php
-|    |---- phpmailer.lang-ro.php
-|    |---- phpmailer.lang-ru.php
-|    |---- phpmailer.lang-si.php
-|    |---- phpmailer.lang-sk.php
-|    |---- phpmailer.lang-sl.php
-|    |---- phpmailer.lang-sr.php
-|    |---- phpmailer.lang-sr_latn.php
-|    |---- phpmailer.lang-sv.php
-|    |---- phpmailer.lang-tl.php
-|    |---- phpmailer.lang-tr.php
-|    |---- phpmailer.lang-uk.php
-|    |---- phpmailer.lang-vi.php
-|    |---- phpmailer.lang-zh.php
-|    |---- phpmailer.lang-zh_cn.php
-
-|---- src/
-|    |---- DSNConfigurator.php
-|    |---- Exception.php
-|    |---- OAuth.php
-|    |---- OAuthTokenProvider.php
-|    |---- PHPMailer.php
-|    |---- POP3.php
-|    |---- SMTP.php
+|   |---- ...
 
 |---- services/
 |    |---- conexão_com_banco.php
 |    |---- criar_banco.php
 |    |---- google_credentials.php
+|    |---- Obter_cursos.php
 
 |    |---- auth/
 |    |    |---- exempro_de_senssion.php
@@ -298,10 +147,16 @@ mailer.lang-fi.php
 |    |    |---- verificarRecrutador.php
 |    |    |---- verificarUsuario.php
 
+|    |---- Avaliaçao/
+|    |    |---- Avaliaçao.php
+
 |    |---- cadastros/
-|    |    |---- cadastro.php
 |    |    |---- cadastroRecrutador.php
+|    |    |---- cadastroUsuario.php
+|    |    |---- encvio_Recrutador.php
+|    |    |---- encvio_Usuario.php
 |    |    |---- processar_candidatura.php
+|    |    |---- processar_retirada_candidatura.php
 |    |    |---- vaga.php
 
 |    |---- CandidatarVaga/
@@ -329,8 +184,18 @@ mailer.lang-fi.php
 
 |    |---- Testes/
 |    |    |---- processarTeste.php
+|    |    |---- processarQuestoes.php
 
 |---- views/
+|    |---- AvalieNos/
+|    |    |---- adicionarEstrelas.js
+|    |    |---- avalieNos.php
+|    |    |---- hoverEstrelas.js
+|    |    |---- verificar-palavras.php
+
+|    |---- AvisoQuestionarioCriado/
+|    |    |---- AvisoQuestionarioCriado.html
+
 |    |---- AvisoVerificaEmail/
 |    |    |---- avisoVerificaEmail.html
 
@@ -339,29 +204,43 @@ mailer.lang-fi.php
 |    |    |---- cadastro.html
 |    |    |---- mostrarSenha.js
 |    |    |---- trocaDeForms.js
-|    |    |---- validacoes.js
+|    |    |---- verificar_cnpj.php
+|    |    |---- Verificar_cpf.php
+|    |    |---- verificar_email_recrutador.php
+|    |    |---- verificar_email.php
 |    |    |---- Web.gitattributes
 
+|    |---- CriarTaga/
+|    |    |---- adicionarQuestao.js
+|    |    |---- criarTeste.php
+|    |    |---- imagemTeste.js
+|    |    |---- mostraIcone.js
+|    |    |---- processarQuestoes.js
+|    |    |---- salvar_imagem.php
+|    |    |---- verificar-palavra.php
+|    |    |---- verificar-palavras.php
+
 |    |---- criarVaga/
-|    |    |---- criarVaga.html
 |    |    |---- criarVaga.php
 |    |    |---- criaVaga.css
 |    |    |---- radioButtons.js
 |    |    |---- verificar-palavra.php
 
 |    |---- Cursos/
+|    |    |---- buscar_cursos.php
 |    |    |---- carrosselCertificacoes.js
 |    |    |---- carrosselCursosGratuitos.js
 |    |    |---- carrosselCursosPagos.js
 |    |    |---- cursos.css
-|    |    |---- cursos.html
+|    |    |---- cursos.php
+|    |    |---- obter_sugestoes.php
+|    |    |---- registrar_clique.php
 |    |    |---- tituloDigitavel.js
 |    |
 
 ---- EditarPerfilCandidato/
 |    |    |---- adicionaElementos.js
 |    |    |---- avisoInicial.js
-|    |    |---- editarPerfilCandidato.html
 |    |    |---- editarPerfilCandidato.php
 |    |    |---- mascaras.js
 |    |    |---- mostraIcone.js
@@ -369,7 +248,6 @@ mailer.lang-fi.php
 |    |---- EditarPerfilRecrutador/
 |    |    |---- adicionaElementos.js
 |    |    |---- avisoInicial.js
-|    |    |---- editarPerfilRecrutador.html
 |    |    |---- editarPerfilRecrutador.php
 |    |    |---- mascaras.js
 |    |    |---- mostraIcone.js
@@ -379,14 +257,12 @@ mailer.lang-fi.php
 |    |    |---- radioButtons.js
 
 |    |---- EmailVerificado/
-|    |    |---- emailVerificado.html
 |    |    |---- emailVerificado.php
 
 |    |---- homeCandidato/
 |    |    |---- carrosselMinhasVagas.js
 |    |    |---- carrosselTestes.js
 |    |    |---- carrosselUltimosAnuncios.js
-|    |    |---- homeCandidato.html
 |    |    |---- homeCandidato.php
 |    |    |---- tituloDigitavel.js
 
@@ -394,7 +270,6 @@ mailer.lang-fi.php
 |    |    |---- carrosselAnuncios.js
 |    |    |---- carrosselPerfis.js
 |    |    |---- carrosselTestes.js
-|    |    |---- homeRecrutador.html
 |    |    |---- homeRecrutador.php
 |    |    |---- tituloDigitavel.js
 
@@ -404,16 +279,17 @@ mailer.lang-fi.php
 |    |    |---- mostrarSenha.js
 
 |    |---- MeusTestes/
+|    |    |---- buscar_questionario_filtros.php
 |    |    |---- checkButtons.js
-|    |    |---- meusTestes.html
+|    |    |---- meusTestes.php
 |    |    |---- mostrarFiltros.js
+|    |    |---- obter_sugestoes.php
 |    |    |---- tituloDigitavel.js
 
 |    |---- MinhasVagas/
 |    |    |---- buscar_vagas_filtros.php
 |    |    |---- buscar_vaga_por_titulo.php
 |    |    |---- checkButtons.js
-|    |    |---- minhasVagas.html
 |    |    |---- minhasVagas.php
 |    |    |---- mostrarFiltros.js
 |    |    |---- obter_sugestoes.php
@@ -422,25 +298,28 @@ mailer.lang-fi.php
 |    |---- MinhaVaga/
 |    |    |---- carrosselPerfis.js
 |    |    |---- minhaVaga.css
-|    |    |---- minhaVaga.html
 |    |    |---- minhaVaga.php
 |    |    |---- trocaIcones.js
+
+|    |---- NossoContado/
+|    |    |---- nossoContado.html
 
 |    |---- PaginaErro/
 |    |    |---- paginaErro.html
 
 |    |---- PerfilCandidato/
 |    |    |---- acumuloDePontos.js
-|    |    |---- perfilCandidato.html
 |    |    |---- perfilCandidato.php
 
 |    |---- PerfilRecrutador/
-|    |    |---- perfilRecrutador.html
 |    |    |---- perfilRecrutador.php
+
+|    |---- PoliticadePrivcidade/
+|    |    |---- PoliticadePrivacidade.css
+|    |    |---- PoliticadePrivacidade.php
 
 |    |---- PreparaTeste/
 |    |    |---- preparaTeste.css
-|    |    |---- preparaTeste.html
 |    |    |---- preparaTeste.php
 
 |    |---- RecuperarSenha/
@@ -449,15 +328,16 @@ mailer.lang-fi.php
 
 |    |---- RedefinirSenha/
 |    |    |---- mostrarSenha.js
-|    |    |---- redefinirSenha.html
 |    |    |---- redefinirSenha.php
+
+|    |---- ResultadosQuestionario/
+|    |    |---- paginaResultado.php
 
 |    |---- Teste/
 |    |    |---- contagemQuestoes.js
 |    |    |---- cronometro.js
 |    |    |---- finalizarTeste.js
 |    |    |---- teste.css
-|    |    |---- teste.html
 |    |    |---- teste.php
 
 |    |---- TodasVagas/
@@ -467,25 +347,21 @@ mailer.lang-fi.php
 |    |    |---- mostrarFiltros.js
 |    |    |---- obter_sugestoes.php
 |    |    |---- tituloDigitavel.js
-|    |    |---- todasVagas.html
 |    |    |---- todasVagas.php
 
 |    |---- TodosTestes/
 |    |    |---- checkButtons.js
 |    |    |---- mostrarFiltros.js
 |    |    |---- tituloDigitavel.js
-|    |    |---- todosTestes.html
 |    |    |---- todosTestes.php
 
 |    |---- Vaga/
 |    |    |---- trocaIcones.js
 |    |    |---- vaga.css
-|    |    |---- vaga.html
 |    |    |---- vaga.php
 
 | -- .gitignore/
 |-- carrossel.js
-|-- index.html
 |-- index.php
 |-- README.md
 |-- tituloDigitavel.js
