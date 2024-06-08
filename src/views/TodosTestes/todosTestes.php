@@ -199,10 +199,11 @@ if ($result_areas && $result_areas->num_rows > 0) {
                             value="Intermediário" required>
                         <input class="checkBoxTipo" type="checkbox" name="nivel" id="experiente" value="Experiente"
                             required>
-                        <label for="basico" class="btnCheckBox" id="btnBasico">Básico</label>
-                        <label for="intermediario" class="btnCheckBox" id="btnIntermediario">Intermediário</label>
-                        <label for="experiente" class="btnCheckBox" id="btnExperiente">Experiente</label>
+                        <label for="basico" class="btnCheckBox nivel" id="btnBasico">Básico</label>
+                        <label for="intermediario" class="btnCheckBox nivel" id="btnIntermediario">Intermediário</label>
+                        <label for="experiente" class="btnCheckBox nivel" id="btnExperiente">Experiente</label>
                     </div>
+
                 </div>
             </div>
             <div class="divGridTestes">
@@ -293,12 +294,12 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 Claro();
             }
         });
-
     </script>
     <script>
         $(document).ready(function () {
             var idPessoa = <?php echo json_encode($idPessoa); ?>; // Armazena o ID da pessoa
             var tema = <?php echo json_encode($tema); ?>; // Armazena o tema (noturno ou claro)
+            var pageIdentifier = window.location.pathname; // Identificador único da página
 
             // Função para aplicar o modo noturno
             function aplicarModoNoturno() {
@@ -311,66 +312,36 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 }
             }
 
-            // Aplicar o modo noturno ao carregar a página
-            aplicarModoNoturno();
+            aplicarModoNoturno(); // Aplicar o modo noturno ao carregar a página
 
-            // Carregar os valores salvos no localStorage
-            function carregarValores() {
-                var termo = localStorage.getItem('termo');
-                var area = localStorage.getItem('area');
-                var criador = localStorage.getItem('criador');
-                var niveis = localStorage.getItem('niveis');
-
-                if (termo) {
-                    $('.inputPesquisa').val(termo);
-                }
-                if (area) {
-                    $('.selectArea').val(area);
-                }
-                if (criador) {
-                    $('#criadorFiltro').val(criador);
-                }
-                if (niveis) {
-                    niveis = JSON.parse(niveis);
-                    $('.checkBoxTipo').prop('checked', false);
-                    niveis.forEach(function (nivel) {
-                        $('#' + nivel.toLowerCase()).prop('checked', true);
-                    });
-                }
-
-                restaurarEstadosDosBotoes();
-            }
-
-            // Salvar os valores no localStorage
-            function salvarValores() {
-                var termo = $('.inputPesquisa').val();
-                var area = $('.selectArea').val();
+            // Função para aplicar filtros ao carregar a página
+            function aplicarFiltros() {
+                var area = localStorage.getItem(pageIdentifier + '_area') || 'Todas';
+                var niveis = JSON.parse(localStorage.getItem(pageIdentifier + '_niveis')) || [];
+                var termo = localStorage.getItem(pageIdentifier + '_termo') || "";
                 var criador = $('#criadorFiltro').val();
-                var niveis = [];
-                $('.checkBoxTipo:checked').each(function () {
-                    niveis.push($(this).val());
+
+                $('.selectArea').val(area);
+                $('.checkBoxTipo').each(function () {
+                    $(this).prop('checked', niveis.includes($(this).val()));
                 });
+                $('.inputPesquisa').val(termo);
 
-                localStorage.setItem('termo', termo);
-                localStorage.setItem('area', area);
-                localStorage.setItem('criador', criador);
-                localStorage.setItem('niveis', JSON.stringify(niveis)); // Salvar os níveis como JSON
-            }
+                var filtros = {
+                    area: area,
+                    niveis: niveis,
+                    criador: criador,
+                    idPessoa: idPessoa,
+                    tema: tema,
+                    termo: termo
+                };
 
-            // Executar a pesquisa
-            function executarPesquisa() {
-                salvarValores(); // Salvar valores antes de executar a pesquisa
-                var termo = $('.inputPesquisa').val();
-                var area = $('.selectArea').val();
-                var criador = $('#criadorFiltro').val();
-                var niveis = JSON.parse(localStorage.getItem('niveis'));
+                console.table(filtros);
 
                 $.ajax({
                     url: 'processar_pesquisa.php',
                     method: 'POST',
-                    data: {
-                        termo: termo, area: area, criador: criador, niveis: niveis, idPessoa: idPessoa, tema: tema
-                    },
+                    data: filtros,
                     success: function (response) {
                         $('.divGridTestes').html(response).addClass('noturno');
                     },
@@ -380,14 +351,123 @@ if ($result_areas && $result_areas->num_rows > 0) {
                 });
             }
 
+            // Salvar os valores no localStorage
+            function salvarFiltros() {
+                var termo = $('.inputPesquisa').val();
+                var area = $('.selectArea').val();
+                var criador = $('#criadorFiltro').val();
+                var niveis = [];
+                $('.checkBoxTipo:checked').each(function () {
+                    niveis.push($(this).val());
+                });
+
+                localStorage.setItem(pageIdentifier + '_termo', termo);
+                localStorage.setItem(pageIdentifier + '_area', area);
+                localStorage.setItem('criador', criador);
+                localStorage.setItem(pageIdentifier + '_niveis', JSON.stringify(niveis));
+            }
+
+            aplicarFiltros(); // Aplicar filtros ao carregar a página
+
             // Eventos para salvar valores e executar pesquisa quando inputs mudam
             $('.inputPesquisa, .selectArea, #criadorFiltro, .checkBoxTipo').on('input change', function () {
-                salvarValores();
-                executarPesquisa();
+                salvarFiltros();
+                aplicarFiltros();
             });
 
-            // Executar a pesquisa ao carregar a página
-            executarPesquisa();
+            function toggleButtonState(buttonId) {
+                console.log("Botão clicado:", buttonId);
+
+                const button = document.querySelector(`#${buttonId}`);
+                console.log("Elemento do botão:", button);
+
+                const checkbox = document.querySelector(`input[id=${buttonId.replace('btn', '').toLowerCase()}]`);
+                console.log("Checkbox correspondente:", checkbox);
+
+                let isActive = checkbox.checked;
+                console.log("Estado atual do checkbox:", isActive);
+
+                // Alternar o estado
+                isActive = !isActive;
+                checkbox.checked = isActive;
+
+                // Salvar o estado no localStorage
+                localStorage.setItem(pageIdentifier + '_' + buttonId + 'State', isActive);
+
+                // Atualizar a aparência do botão
+                if (isActive) {
+                    button.style.backgroundColor = "var(--laranja)";
+                    button.style.border = "1px solid var(--laranja)";
+                    button.style.color = "whitesmoke";
+                } else {
+                    button.style = "initial";
+                }
+
+                // Atualizar a lista de níveis no localStorage
+                var niveis = [];
+                $('.checkBoxTipo:checked').each(function () {
+                    niveis.push($(this).val());
+                });
+                localStorage.setItem(pageIdentifier + '_niveis', JSON.stringify(niveis));
+
+                // Aplicar os filtros imediatamente
+                aplicarFiltros();
+            }
+
+
+            function restaurarEstadosDosBotoes() {
+                const buttonIds = ["btnBasico", "btnIntermediario", "btnExperiente"];
+                buttonIds.forEach(buttonId => {
+                    const button = document.querySelector(`#${buttonId}`);
+                    const checkbox = document.querySelector(`input[id=${buttonId.replace('btn', '').toLowerCase()}]`);
+                    const isChecked = localStorage.getItem(pageIdentifier + '_' + buttonId + 'State') === 'true';
+
+                    checkbox.checked = isChecked; // Define o estado do checkbox conforme armazenado no localStorage
+
+                    if (isChecked) {
+                        button.style.backgroundColor = "var(--laranja)";
+                        button.style.border = "1px solid var(--laranja)";
+                        button.style.color = "whitesmoke";
+                    } else {
+                        button.style = "initial";
+                    }
+                });
+            }
+
+
+            restaurarEstadosDosBotoes();
+
+            // Configurar eventos de clique para alternar estados e salvar no localStorage
+            document.querySelector("#btnBasico").addEventListener("click", () => toggleButtonState("btnBasico"));
+            document.querySelector("#btnIntermediario").addEventListener("click", () => toggleButtonState("btnIntermediario"));
+            document.querySelector("#btnExperiente").addEventListener("click", () => toggleButtonState("btnExperiente"));
+
+            // Função para buscar vagas por título
+            function buscarVagasPorTitulo(termoPesquisa, area) {
+                $.ajax({
+                    url: 'buscar_vaga_por_titulo.php',
+                    method: 'POST',
+                    data: {
+                        termo: termoPesquisa,
+                        area: area,
+                        idPessoa: idPessoa // Inclui o ID da pessoa
+                    },
+                    success: function (response) {
+                        $('.divGridVagas').html(response).addClass('noturno');
+                    },
+                    error: function () {
+                        console.error("Erro ao buscar vagas por título.");
+                    }
+                });
+            }
+
+            // Gestão da pesquisa e sugestões
+            var areaAtual = $('.selectArea').val();
+            var termoAnterior = localStorage.getItem(pageIdentifier + '_termoPesquisa');
+            if (termoAnterior) {
+                $('.inputPesquisa').val(termoAnterior);
+                buscarVagasPorTitulo(termoAnterior, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
+            }
 
             // Eventos para exibir sugestões quando o conteúdo do campo de pesquisa mudar
             $('.inputPesquisa').on('input', function () {
@@ -420,35 +500,13 @@ if ($result_areas && $result_areas->num_rows > 0) {
                         }
                     });
                 } else {
-                    // Ocultar as sugestões se o campo de pesquisa estiver vazio
-                    $('#sugestoes').hide();
+                    // Evento para esconder as sugestões quando o campo de pesquisa perder o foco
+                    $('.inputPesquisa').on('blur', function () {
+                        setTimeout(function () {
+                            $('#sugestoes').hide();
+                        }, 5000); // Oculta as sugestões após 5 segundos de perder o foco
+                    });
                 }
-            }
-
-            // Evento para esconder as sugestões quando o campo de pesquisa perder o foco
-            $('.inputPesquisa').on('blur', function () {
-                setTimeout(function () {
-                    $('#sugestoes').hide();
-                }, 10000); // Oculta as sugestões após 5 segundos de perder o foco
-            });
-
-            // Função para buscar vagas por título
-            function buscarVagasPorTitulo(termoPesquisa, area) {
-                $.ajax({
-                    url: 'buscar_vaga_por_titulo.php',
-                    method: 'POST',
-                    data: {
-                        termo: termoPesquisa,
-                        area: area,
-                        idPessoa: idPessoa // Inclui o ID da pessoa
-                    },
-                    success: function (response) {
-                        $('.divGridVagas').html(response).addClass('noturno');
-                    },
-                    error: function () {
-                        console.error("Erro ao buscar vagas por título.");
-                    }
-                });
             }
 
             // Evento de clique em sugestões
@@ -489,17 +547,38 @@ if ($result_areas && $result_areas->num_rows > 0) {
                     }
                     $('#sugestoes').hide();
                     localStorage.setItem('termoPesquisa', $('.inputPesquisa').val());
-                    executarPesquisa($('.inputPesquisa').val(), $('.selectArea').val());
-                }
-
-                // Verificar se a sugestão selecionada está visível
-                var selectedOffset = sugestoes.eq(index).position().top + scrollTop;
-                if (selectedOffset < scrollTop) {
-                    sugestoesContainer.scrollTop(selectedOffset);
-                } else if (selectedOffset + itemHeight > scrollTop + containerHeight) {
-                    sugestoesContainer.scrollTop(selectedOffset + itemHeight - containerHeight);
+                    buscarVagasPorTitulo($('.inputPesquisa').val(), $('.selectArea').val());
                 }
             });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            var pageIdentifier = window.location.pathname;
+            var storageKey = pageIdentifier + '_lastVisit';
+            var now = new Date().getTime();
+            var expirationTime = 1 * 60 * 60 * 1000;
+
+            // Verificar se a última visita foi há mais de 24 horas
+            var lastVisit = localStorage.getItem(storageKey);
+            if (lastVisit && now - lastVisit > expirationTime) {
+                // Limpar o localStorage se passou o tempo de expiração
+                localStorage.removeItem(pageIdentifier + '_termo', termo);
+                localStorage.removeItem(pageIdentifier + '_area', area);
+                localStorage.removeItem('criador', criador);
+                localStorage.removeItem(pageIdentifier + '_niveis', JSON.stringify(niveis));
+
+                // Remover estados de botões de filtro
+                const buttonIds = ["btnBasico", "btnIntermediario", "btnExperiente"];
+                buttonIds.forEach(buttonId => {
+                    localStorage.removeItem(pageIdentifier + '_' + buttonId + 'State');
+                });
+            }
+
+            // Atualizar a última visita
+            localStorage.setItem(storageKey, now);
         });
     </script>
 </body>
