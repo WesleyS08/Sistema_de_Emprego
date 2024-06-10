@@ -9,6 +9,9 @@ if (isset($_SESSION['email_session']) && isset($_SESSION['tipo_usuario'])) {
     $emailUsuario = $_SESSION['google_session'];
 } else {
 }
+//Exibição de Erros Web
+ini_set("display_errors", "1");
+error_reporting(E_ALL);
 
 // Primeira consulta para obter o ID da pessoa logada
 $sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
@@ -64,7 +67,7 @@ if (isset($_GET['id'])) {
     $id_questionario = $_GET['id'];
 
     // Verificar se o usuário já respondeu ao questionário
-    $sql = "SELECT * FROM Tb_Resultados WHERE Tb_Questionarios_ID = ? AND Tb_Candidato_CPF = (SELECT CPF FROM Tb_Candidato WHERE Tb_Pessoas_Id = ?)";
+    $sql = "SELECT * FROM Tb_Resultados WHERE Tb_Questionarios_ID = ? AND Tb_Candidato_CPF IN (SELECT CPF FROM Tb_Candidato WHERE Tb_Pessoas_Id = ?)";
     $stmt = $_con->prepare($sql);
     if ($stmt) {
         $stmt->bind_param("ii", $id_questionario, $idPessoa);
@@ -204,9 +207,9 @@ if (isset($_GET['id'])) {
             </article>
             </div>
             <footer>
-                <a>Política de Privacidade</a>
+            <a href="../PoliticadePrivacidade/PoliticadePrivacidade.php">Política de Privacidade</a>
                 <a href="../NossoContato/nossoContato.html">Nosso contato</a>
-                <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
+                <a href="../AvalieNos/avalieNos.php">Avalie-nos</a>
                 <p class="sinopse">SIAS 2024</p>
             </footer>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

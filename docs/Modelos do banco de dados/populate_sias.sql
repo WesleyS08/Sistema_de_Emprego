@@ -153,7 +153,7 @@ SELECT
         'A quantidade de caracteres é limitada a 150. ',
         'Espero que esta avaliação esteja útil para você. ',
         'Tenha um ótimo dia! '
-    ), 150) AS `Texto`  -- Texto aleatório limitado a 150 caracteres
+    ), 100) AS `Texto`  -- Texto aleatório limitado a 150 caracteres
 FROM 
     -- Utiliza uma tabela auxiliar para gerar múltiplas linhas
     (SELECT 1 AS `dummy`) AS `d`

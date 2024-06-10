@@ -330,7 +330,7 @@ if ($result === false) {
         </div>
     </div>
     <footer>
-        <a>Política de Privacidade</a>
+        <a href="../PoliticadePrivacidade/PoliticadePrivacidade.php">Política de Privacidade</a>
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
         <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
@@ -420,116 +420,6 @@ if ($result === false) {
 
     </script>
 
-    <!--================================ Obter sugestão dos títulos ======================================= -->
-    <script>
-        $(document).ready(function () {
-            var areaAtual = $('.selectArea').val();
-            var idPessoa = <?php echo json_encode($idPessoa); ?>; // Armazena o ID da pessoa
-
-            // Atualiza a área sempre que o usuário muda a seleção
-            $('.selectArea').on('change', function () {
-                areaAtual = $(this).val();
-            });
-
-            var termoAnterior = localStorage.getItem('termoPesquisa');
-            if (termoAnterior) {
-                $('.inputPesquisa').val(termoAnterior);
-                buscarVagasPorTitulo(termoAnterior, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
-            }
-
-            $('.inputPesquisa').on('input', function () {
-                var searchTerm = $(this).val();
-                localStorage.setItem('termoPesquisa', searchTerm);
-
-                if (searchTerm.length >= 2) {
-                    $.ajax({
-                        url: 'obter_sugestoes.php',
-                        method: 'POST',
-                        data: {
-                            termo: searchTerm,
-                            area: areaAtual,
-                            idPessoa: idPessoa // Inclui o ID da pessoa
-                        },
-                        success: function (response) {
-                            var sugestoes = JSON.parse(response);
-                            var sugestoesLista = $('#sugestoesLista');
-                            sugestoesLista.empty();
-
-                            sugestoes.forEach(function (sugestao) {
-                                sugestoesLista.append('<li class="sugestao-item">' + sugestao + '</li>');
-                            });
-
-                            // Exibir o contêiner de sugestões após adicionar as sugestões
-                            $('#sugestoes').css('display', 'block');
-                        },
-                        error: function () {
-                            console.error("Erro ao buscar sugestões.");
-                        }
-                    });
-                } else {
-                    $('.inputPesquisa').on('blur', function () {
-                        setTimeout(function () {
-                            $('#sugestoes').hide();
-                        }, 5000); // Oculta as sugestões após 5 segundos de perder o foco
-                    });
-                }
-            });
-
-            $(document).on('click', '.sugestao-item', function () {
-                var textoSelecionado = $(this).text();
-                $('.inputPesquisa').val(textoSelecionado);
-                $('#sugestoes').hide();
-                localStorage.setItem('termoPesquisa', textoSelecionado);
-                buscarVagasPorTitulo(textoSelecionado, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
-            });
-
-            $(document).on('keydown', function (e) {
-                var sugestoes = $('.sugestao-item');
-                var index = sugestoes.index($('.selecionada'));
-
-                if (e.which === 38) { // Seta para cima
-                    e.preventDefault(); // Evita que a página faça scroll
-                    index = (index === -1) ? sugestoes.length - 1 : (index === 0) ? sugestoes.length - 1 : index - 1;
-                    sugestoes.removeClass('selecionada');
-                    sugestoes.eq(index).addClass('selecionada');
-                } else if (e.which === 40) { // Seta para baixo
-                    e.preventDefault(); // Evita que a página faça scroll
-                    index = (index === sugestoes.length - 1) ? -1 : index + 1;
-                    sugestoes.removeClass('selecionada');
-                    sugestoes.eq(index).addClass('selecionada');
-                } else if (e.which === 13 || e.which === 9) { // Enter, Tab 
-                    if (index === -1) { // Se nenhuma sugestão estiver selecionada
-                        var primeiraSugestao = sugestoes.first().text();
-                        $('.inputPesquisa').val(primeiraSugestao);
-                    } else {
-                        var textoSelecionado = $('.selecionada').text();
-                        $('.inputPesquisa').val(textoSelecionado);
-                    }
-                    $('#sugestoes').hide();
-                    localStorage.setItem('termoPesquisa', $('.inputPesquisa').val());
-                    buscarVagasPorTitulo($('.inputPesquisa').val(), areaAtual, idPessoa);
-                }
-            });
-
-            function buscarVagasPorTitulo(termoPesquisa, area, idPessoa) {
-                $.ajax({
-                    url: 'buscar_vaga_por_titulo.php',
-                    method: 'POST',
-                    data: {
-                        termo: termoPesquisa,
-                        area: area,
-                        idPessoa: idPessoa // Inclui o ID da pessoa
-                    },
-                    success: function (response) {
-                        $('.divGridVagas').html(response).addClass('noturno');
-                    },
-                    error: function () {
-                        console.error("Erro ao buscar vagas por título.");
-                    }
-                });
-            }
-        });
-    </script>
 
 
     <!--================================ Buscar Vagas por filtros ======================================= -->
@@ -537,6 +427,7 @@ if ($result === false) {
         $(document).ready(function () {
             var idPessoa = <?php echo json_encode($idPessoa); ?>; // Armazena o ID da pessoa
             var tema = <?php echo json_encode($tema); ?>; // Armazena o tema
+            var pageIdentifier = window.location.pathname; // Identificador único da página
 
             // Função para aplicar o modo noturno
             function aplicarModoNoturno() {
@@ -552,34 +443,13 @@ if ($result === false) {
             // Aplicar o modo noturno ao carregar a página
             aplicarModoNoturno();
 
-            // Quando houver uma mudança em qualquer filtro, salvar no localStorage
-            $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
-                salvarFiltros();
-                aplicarFiltros();
-            });
-
-            function salvarFiltros() {
-                // Obter valores dos filtros
-                var area = $('.selectArea').val();
-                var tipos = [];
-                $('.checkBoxTipo:checked').each(function () {
-                    tipos.push($(this).val());
-                });
-                var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked');
-                var termoPesquisa = $('.inputPesquisa').val();
-                // Salvar no localStorage
-                localStorage.setItem('area', area);
-                localStorage.setItem('tipos', JSON.stringify(tipos));
-                localStorage.setItem('apenasVagasAbertas', apenasVagasAbertas);
-                localStorage.setItem('termoPesquisa', termoPesquisa);
-            }
-
+            // Função para aplicar e salvar filtros
             function aplicarFiltros() {
-                // Obter valores dos filtros
-                var area = localStorage.getItem('area');
-                var tipos = JSON.parse(localStorage.getItem('tipos')) || [];
-                var apenasVagasAbertas = JSON.parse(localStorage.getItem('apenasVagasAbertas'));
-                var termoPesquisa = localStorage.getItem('termoPesquisa') || "";
+                // Obter valores dos filtros do localStorage usando a chave única
+                var area = localStorage.getItem(pageIdentifier + '_area') || 'Todas'; // Definir "Todas" como valor padrão
+                var tipos = JSON.parse(localStorage.getItem(pageIdentifier + '_tipos')) || [];
+                var apenasVagasAbertas = JSON.parse(localStorage.getItem(pageIdentifier + '_apenasVagasAbertas'));
+                var termoPesquisa = localStorage.getItem(pageIdentifier + '_termoPesquisa') || "";
 
                 // Aplicar os valores do localStorage aos elementos da página
                 $('.selectArea').val(area);
@@ -621,20 +491,142 @@ if ($result === false) {
                     }
                 });
             }
+
+            // Salvar filtros ao mudar qualquer filtro
+            function salvarFiltros() {
+                // Obter valores dos filtros
+                var area = $('.selectArea').val();
+                var tipos = [];
+                $('.checkBoxTipo:checked').each(function () {
+                    tipos.push($(this).val());
+                });
+                var apenasVagasAbertas = $('#apenasVagasAbertas').is(':checked');
+                var termoPesquisa = $('.inputPesquisa').val();
+
+                // Salvar no localStorage com a chave única
+                localStorage.setItem(pageIdentifier + '_area', area);
+                localStorage.setItem(pageIdentifier + '_tipos', JSON.stringify(tipos));
+                localStorage.setItem(pageIdentifier + '_apenasVagasAbertas', apenasVagasAbertas);
+                localStorage.setItem(pageIdentifier + '_termoPesquisa', termoPesquisa);
+            }
+
+            // Aplicar filtros ao carregar a página
             aplicarFiltros();
-        });
-    </script>
 
+            // Eventos para salvar filtros quando eles são alterados
+            $('.selectArea, .checkBoxTipo, #apenasVagasAbertas, .inputPesquisa').on('change input', function () {
+                salvarFiltros();
+                aplicarFiltros();
+            });
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+            // Função para buscar vagas por título com área e idPessoa
+            function buscarVagasPorTitulo(termoPesquisa, area, idPessoa) {
+                $.ajax({
+                    url: 'buscar_vaga_por_titulo.php',
+                    method: 'POST',
+                    data: {
+                        termo: termoPesquisa,
+                        area: area,
+                        idPessoa: idPessoa // Inclui o ID da pessoa
+                    },
+                    success: function (response) {
+                        $('.divGridVagas').html(response).addClass('noturno');
+                    },
+                    error: function () {
+                        console.error("Erro ao buscar vagas por título.");
+                    }
+                });
+            }
+
+            // Gestão da pesquisa e sugestões
+            var areaAtual = $('.selectArea').val();
+            var termoAnterior = localStorage.getItem(pageIdentifier + '_termoPesquisa');
+            if (termoAnterior) {
+                $('.inputPesquisa').val(termoAnterior);
+                buscarVagasPorTitulo(termoAnterior, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
+            }
+
+            $('.inputPesquisa').on('input', function () {
+                var searchTerm = $(this).val();
+                localStorage.setItem(pageIdentifier + '_termoPesquisa', searchTerm);
+
+                if (searchTerm.length >= 2) {
+                    $.ajax({
+                        url: 'obter_sugestoes.php',
+                        method: 'POST',
+                        data: {
+                            termo: searchTerm,
+                            area: areaAtual,
+                            idPessoa: idPessoa // Inclui o ID da pessoa
+                        },
+                        success: function (response) {
+                            var sugestoes = JSON.parse(response);
+                            var sugestoesLista = $('#sugestoesLista');
+                            sugestoesLista.empty();
+
+                            sugestoes.forEach(function (sugestao) {
+                                sugestoesLista.append('<li class="sugestao-item">' + sugestao + '</li>');
+                            });
+
+                            // Exibir o contêiner de sugestões após adicionar as sugestões
+                            $('#sugestoes').css('display', 'block');
+                        },
+                        error: function () {
+                            console.error("Erro ao buscar sugestões.");
+                        }
+                    });
+                } else {
+                    $('.inputPesquisa').on('blur', function () {
+                        setTimeout(function () {
+                            $('#sugestoes').hide();
+                        }, 5000); // Oculta as sugestões após 5 segundos de perder o foco
+                    });
+                }
+            });
+
+            $(document).on('click', '.sugestao-item', function () {
+                var textoSelecionado = $(this).text();
+                $('.inputPesquisa').val(textoSelecionado);
+                $('#sugestoes').hide();
+                localStorage.setItem(pageIdentifier + '_termoPesquisa', textoSelecionado);
+                buscarVagasPorTitulo(textoSelecionado, areaAtual, idPessoa); // Passa a área e o ID da pessoa corretos
+            });
+
+            $(document).on('keydown', function (e) {
+                var sugestoes = $('.sugestao-item');
+                var index = sugestoes.index($('.selecionada'));
+
+                if (e.which === 38) { // Seta para cima
+                    e.preventDefault(); // Evita que a página faça scroll
+                    index = (index === -1) ? sugestoes.length - 1 : (index === 0) ? sugestoes.length - 1 : index - 1;
+                    sugestoes.removeClass('selecionada');
+                    sugestoes.eq(index).addClass('selecionada');
+                } else if (e.which === 40) { // Seta para baixo
+                    e.preventDefault(); // Evita que a página faça scroll
+                    index = (index === sugestoes.length - 1) ? -1 : index + 1;
+                    sugestoes.removeClass('selecionada');
+                    sugestoes.eq(index).addClass('selecionada');
+                } else if (e.which === 13 || e.which === 9) { // Enter, Tab 
+                    if (index === -1) { // Se nenhuma sugestão estiver selecionada
+                        var primeiraSugestao = sugestoes.first().text();
+                        $('.inputPesquisa').val(primeiraSugestao);
+                    } else {
+                        var textoSelecionado = $('.selecionada').text();
+                        $('.inputPesquisa').val(textoSelecionado);
+                    }
+                    $('#sugestoes').hide();
+                    localStorage.setItem(pageIdentifier + '_termoPesquisa', $('.inputPesquisa').val());
+                    buscarVagasPorTitulo($('.inputPesquisa').val(), areaAtual, idPessoa);
+                }
+            });
+
             // Função para alternar o estado do botão e salvar no localStorage
             function toggleButtonState(buttonId) {
                 const button = document.querySelector(`#${buttonId}`);
-                let isActive = localStorage.getItem(`${buttonId}State`) === 'true';
+                let isActive = localStorage.getItem(pageIdentifier + '_' + buttonId + 'State') === 'true';
                 // Alternar o estado do botão
                 isActive = !isActive;
-                localStorage.setItem(`${buttonId}State`, isActive); // Salvar no localStorage
+                localStorage.setItem(pageIdentifier + '_' + buttonId + 'State', isActive); // Salvar no localStorage
                 if (isActive) {
                     button.style.backgroundColor = "var(--laranja)";
                     button.style.border = "1px solid var(--laranja)";
@@ -643,13 +635,14 @@ if ($result === false) {
                     button.style = "initial";
                 }
             }
+
             // Função para restaurar os estados dos botões ao carregar a página
             function restaurarEstadosDosBotoes() {
                 const buttonIds = ["btnJovemAprendiz", "btnEstagio", "btnClt", "btnPj"];
                 buttonIds.forEach(buttonId => {
                     const button = document.querySelector(`#${buttonId}`);
                     if (button) {
-                        const isActive = localStorage.getItem(`${buttonId}State`) === 'true';
+                        const isActive = localStorage.getItem(pageIdentifier + '_' + buttonId + 'State') === 'true';
                         if (isActive) {
                             button.style.backgroundColor = "var(--laranja)";
                             button.style.border = "1px solid var(--laranja)";
@@ -668,6 +661,34 @@ if ($result === false) {
             document.querySelector("#btnPj").addEventListener("click", () => toggleButtonState("btnPj"));
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            var pageIdentifier = window.location.pathname;
+            var storageKey = pageIdentifier + '_lastVisit';
+            var now = new Date().getTime();
+            var expirationTime = 1 * 60 * 60 * 1000;
+
+            // Verificar se a última visita foi há mais de 24 horas
+            var lastVisit = localStorage.getItem(storageKey);
+            if (lastVisit && now - lastVisit > expirationTime) {
+                // Limpar o localStorage se passou o tempo de expiração
+                localStorage.removeItem(pageIdentifier + '_area');
+                localStorage.removeItem(pageIdentifier + '_tipos');
+                localStorage.removeItem(pageIdentifier + '_apenasVagasAbertas');
+                localStorage.removeItem(pageIdentifier + '_termoPesquisa');
+
+                // Remover estados de botões de filtro
+                const buttonIds = ["btnJovemAprendiz", "btnEstagio", "btnClt", "btnPj"];
+                buttonIds.forEach(buttonId => {
+                    localStorage.removeItem(pageIdentifier + '_' + buttonId + 'State');
+                });
+            }
+
+            // Atualizar a última visita
+            localStorage.setItem(storageKey, now);
+        });
+    </script>
+
 </body>
 
 </html>
