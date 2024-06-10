@@ -454,7 +454,7 @@ function determinarImagemCategoria($categoria)
         </div>
     </div>
     <footer>
-    <a href="src/views/PoliticadePrivacidade/PoliticadePrivacidade.html">Política de Privacidade</a>
+    <a href="src/views/PoliticadePrivacidade/PoliticadePrivacidade.php">Política de Privacidade</a>
         <a href="src/views/NossoContato/nossoContato.html">Nosso contato</a>
         <a href="src/views/Cadastro/cadastro.html">Avalie-nos</a>
         <p>SIAS 2024</p>
