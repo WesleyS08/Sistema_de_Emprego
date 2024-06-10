@@ -43,6 +43,14 @@ h3{
     transform: scale(1.08);
 }
 
+#deslogar{
+    bottom: -120px;
+}
+
+#deslogar div{
+    background-color: brown;
+}
+
 /* ------------------------- CONTAINER -------------------------*/
 
 .containerPerfil{

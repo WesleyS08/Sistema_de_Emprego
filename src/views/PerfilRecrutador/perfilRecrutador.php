@@ -188,6 +188,19 @@ if ($stmt) {
                     <label>Editar</label>
                 </div>
             </a>
+            <a id="deslogar" class="acessarEditarPerfil" href="../EditarPerfilCandidato/editarPerfilCandidato.html">
+                <div>
+                    <lord-icon
+                        src="https://cdn.lordicon.com/gwvmctbb.json"
+                        trigger="hover"
+                        stroke="bold"
+                        state="hover-line"
+                        colors="primary:#ffffff,secondary:#ffffff"
+                        style="width:30px;height:30px">
+                    </lord-icon>
+                    <label>Deslogar</label>
+                </div>
+            </a>
         <?php } ?>
 
 
