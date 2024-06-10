@@ -674,7 +674,7 @@ $result_avaliacoes = $stmt_avaliacoes->get_result();
         </div>
     </div>
     <footer>
-    <a href="../PoliticadePrivacidade/PoliticadePrivacidade.html">Política de Privacidade</a>
+    <a href="../PoliticadePrivacidade/PoliticadePrivacidade.php">Política de Privacidade</a>
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
         <a href="../AvalieNos/avalieNos.php">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>

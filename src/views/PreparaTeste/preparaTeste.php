@@ -207,7 +207,7 @@ if (isset($_GET['id'])) {
             </article>
             </div>
             <footer>
-                <a>Política de Privacidade</a>
+            <a href="../PoliticadePrivacidade/PoliticadePrivacidade.php">Política de Privacidade</a>
                 <a href="../NossoContato/nossoContato.html">Nosso contato</a>
                 <a href="../AvalieNos/avalieNos.php">Avalie-nos</a>
                 <p class="sinopse">SIAS 2024</p>
