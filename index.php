@@ -78,7 +78,6 @@ function determinarImagemCategoria($categoria)
         <a href="index.php"><img id="logo" src="src/assets/images/logos_empresa/logo_sias.png"></a>
         <ul>
             <li><a href="src/views/TodasVagas/todasVagas.php">Vagas</a></li>
-            <!--Colocar  link depois   -->
             <li><a href="src/views/Login/login.html">Testes</a></li>
             <li><a href="src/views/Cursos/cursos.php">Cursos</a></li>
             <li><a href="src/views/Login/login.html">Login</a></li>
@@ -138,6 +137,7 @@ function determinarImagemCategoria($categoria)
                     $total_inscricoes = $row_inscricoes['total_inscricoes'];
                     $dataCriacao = isset($row["Data_de_Criacao"]) ? date("d/m/Y", strtotime($row["Data_de_Criacao"])) : "Data não definida";
 
+                    $dataTermino = isset($row["Data_de_Termino"]) ? date("d/m/Y H:i", strtotime($row["Data_de_Termino"])) : "Data não definida";
                     // Obter o CNPJ da empresa associada
                     $sql_obter_cnpj = "SELECT Tb_Empresa_CNPJ FROM Tb_Vagas WHERE Tb_Anuncios_Id = ?";
                     $stmt_cnpj = $_con->prepare($sql_obter_cnpj);
@@ -191,7 +191,7 @@ function determinarImagemCategoria($categoria)
                         echo '<p class="dataVaga">' . $dataCriacao . '</p>';
                     } else {
                         echo '<h4 class="statusVaga" style="color:red">' . $row['Status'] . '</h4>';
-                        echo '<p class="dataVaga">' . $row['Data_de_Termino'] . '</p>'; // Certifique-se de que esta variável está definida
+                        echo '<p class="dataVaga">' . $dataTermino . '</p>'; // Certifique-se de que esta variável está definida
                     }
 
                     echo '</article>';
@@ -454,7 +454,7 @@ function determinarImagemCategoria($categoria)
         </div>
     </div>
     <footer>
-    <a href="src/views/PoliticadePrivacidade/PoliticadePrivacidade.php">Política de Privacidade</a>
+        <a href="src/views/PoliticadePrivacidade/PoliticadePrivacidade.php">Política de Privacidade</a>
         <a href="src/views/NossoContato/nossoContato.html">Nosso contato</a>
         <a href="src/views/Cadastro/cadastro.html">Avalie-nos</a>
         <p>SIAS 2024</p>
