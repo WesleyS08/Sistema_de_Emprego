@@ -19,22 +19,29 @@ if (isset($_SESSION['email_session'])) {
     // Se estiver autenticado com o Google
     $emailUsuario = $_SESSION['google_session'];
 }
-$sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
-$stmt = $_con->prepare($sql);
-if ($stmt) {
-    $stmt->bind_param("s", $emailUsuario);
-    $stmt->execute();
-    $result = $stmt->get_result();
+// Verificar se o email do usuário não está vazio antes de executar a consulta SQL
+if (!empty($emailUsuario)) {
+    // Preparar a consulta para obter o ID da pessoa associado ao email
+    $sql = "SELECT Id_Pessoas FROM Tb_Pessoas WHERE Email = ?";
+    $stmt = $_con->prepare($sql);
 
-    if ($result->num_rows > 0) {
-        $idPessoaAtiva = $result->fetch_assoc()['Id_Pessoas'];
+    if ($stmt) {
+        $stmt->bind_param("s", $emailUsuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Verificar se encontrou um usuário com o email fornecido
+        if ($result->num_rows > 0) {
+            $idPessoaAtiva = $result->fetch_assoc()['Id_Pessoas'];
+        } else {
+            die("Erro: Usuário não encontrado.");
+        }
+
+        $stmt->close();
     } else {
-        die("Erro: Usuário não encontrado.");
+        die("Erro ao preparar a consulta para obter o ID da pessoa.");
     }
-    $stmt->close();
-} else {
-    die("Erro ao preparar a consulta para obter o ID da pessoa.");
-}
+} 
 
 // Consulta SQL para obter o ID do usuário como empresa
 $sql = "SELECT e.Tb_Pessoas_Id AS idUsuario FROM Tb_Pessoas AS p
@@ -140,28 +147,26 @@ if ($stmt) {
         <label for="check" class="menuBtn">
             <img src="../../../imagens/menu.svg">
         </label>
-        <?php if ($candidato == true) { ?>
+        <?php if ($podeEditar) { ?>
             <a href="../HomeRecrutador/homeRecrutador.php"><img id="logo"
                     src="../../assets/images/logos_empresa/logo_sias.png"></a>
             <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
             <ul>
-                <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
-                <li><a href="../TodosTestes/todosTestes.php">Testes</a></li>
-                <li><a href="../Cursos/cursos.php">Cursos</a></li>
-                <li><a href="../PerfilCandidato/perfilCandidato.php?id=<?php echo $idPessoaAtiva; ?>">Perfil</a></li>
+            <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
+            <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
+            <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
+            <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
             </ul>
         <?php } else { ?>
-            <a href="../homeCandidato/homeCandidato.php"><img id="logo"
-                    src="../../assets/images/logos_empresa/logo_sias.png"></a>
-            <button class="btnModo"><img src="../../../imagens/moon.svg"></button>
-            <ul>
-                <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
-                <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
-                <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!-- Arrumar esse link -->
-                <li><a href="../../../index.php">Deslogar</a></li>
-                <li><a href="#">Perfil</a></li>
-            </ul>
+            <a href="../../../index.php"><img id="logo"  src="../../assets/images/logos_empresa/logo_sias.png"></a>
+        <ul>
+            <li><a href="../TodasVagas/todasVagas.php">Vagas</a></li>
+            <li><a href="../Login/login.html">Testes</a></li>
+            <li><a href="../Cursos/cursos.php">Cursos</a></li>
+            <li><a href="../Login/login.html">Login</a></li>
+        </ul>
         <?php } ?>
+
 
     </nav>
     <div class="divBackgroundImg" id="divBackgroundImgDefinida">
@@ -188,15 +193,10 @@ if ($stmt) {
                     <label>Editar</label>
                 </div>
             </a>
-            <a id="deslogar" class="acessarEditarPerfil" href="../EditarPerfilCandidato/editarPerfilCandidato.html">
+            <a id="deslogar" class="acessarEditarPerfil" href="../../../index.php">
                 <div>
-                    <lord-icon
-                        src="https://cdn.lordicon.com/gwvmctbb.json"
-                        trigger="hover"
-                        stroke="bold"
-                        state="hover-line"
-                        colors="primary:#ffffff,secondary:#ffffff"
-                        style="width:30px;height:30px">
+                    <lord-icon src="https://cdn.lordicon.com/gwvmctbb.json" trigger="hover" stroke="bold" state="hover-line"
+                        colors="primary:#ffffff,secondary:#ffffff" style="width:30px;height:30px">
                     </lord-icon>
                     <label>Deslogar</label>
                 </div>
@@ -294,7 +294,7 @@ if ($stmt) {
         </div>
     </div>
     <footer>
-    <a href="../PoliticadePrivacidade/PoliticadePrivacidade.html">Política de Privacidade</a>
+        <a href="../PoliticadePrivacidade/PoliticadePrivacidade.html">Política de Privacidade</a>
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
         <a href="../AvalieNos/avalieNos.php">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>

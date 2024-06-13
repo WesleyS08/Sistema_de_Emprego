@@ -206,7 +206,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                     <label>Editar</label>
                 </div>
             </a>
-            <a id="deslogar" class="acessarEditarPerfil" href="../EditarPerfilCandidato/editarPerfilCandidato.html">
+            <a id="deslogar" class="acessarEditarPerfil" href="../../../index.php">
                 <div>
                     <lord-icon
                         src="https://cdn.lordicon.com/gwvmctbb.json"
