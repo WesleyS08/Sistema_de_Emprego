@@ -249,47 +249,52 @@ if ($stmt) {
         </ul>
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
-        <?php
-        echo '<a class="acessarEditarPerfil" href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=' . $idAnuncio . '">';
-        ?>
-        <div style="padding: 6px 12px;
-                box-shadow: 0px 0px 6px silver;
-                display: flex;
-                align-items: center;
-                background-color: #000;
-                color: whitesmoke;
-                border-radius: 10px;
-                width: 7%;
-                margin-top: 1%;
-                margin-left: 2%;">
-            <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
-                colors="primary:#ffffff,secondary:#ffffff" style="width:30px;height:30px">
-            </lord-icon>
-            <label>Editar</label>
-        </div>
-        </a>
-    <?php } ?>
-    <?php if ($autenticadoComoPublicador == true): ?>
-        <a class="acessarEditarPerfil" href="#"
-            onclick="openModal('../../services/deletar/DeletarVaga.php?id=<?php echo $idAnuncio; ?>&idPessoa=<?php echo $idPessoaEmpresa; ?>&action=delete')">
-
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 10px; box-sizing: border-box;"> <!-- Contêiner flexível com espaçamento -->
+        
+        <!-- Botão Editar no canto esquerdo -->
+        <a class="acessarEditarPerfil editar"
+            href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=<?php echo $idAnuncio; ?>">
             <div style="padding: 6px 12px;
                     box-shadow: 0px 0px 6px silver;
                     display: flex;
                     align-items: center;
-                    background-color: #830404; /* Corrigido o duplo # */
+                    background-color: #000;
                     color: whitesmoke;
                     border-radius: 10px;
-                    width: 9%;
-                    margin-top: -3%;
-                    margin-left: 89%;">
-                <lord-icon src="https://cdn.lordicon.com/wpyrrmcq.json" trigger="hover" colors="primary:#ffffff"
-                    style="width:30px;height:30px">
+                    width: 100px;
+                    margin: 0;">
+                <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
+                    colors="primary:#ffffff,secondary:#ffffff" style="width:40px;height:40px"> <!-- Aumentar tamanho -->
                 </lord-icon>
-                <label>Deletar</label>
+                <label style="margin-left: 8px;">Editar</label> 
             </div>
         </a>
-    <?php endif; ?>
+        
+        <!-- Espaço flexível para empurrar o botão Deletar para o canto direito -->
+        <div style="flex-grow: 1;"></div> 
+        
+        <!-- Botão Deletar no canto direito -->
+        <a class="acessarEditarPerfil deletar" href="#"
+            onclick="openModal('../../services/deletar/DeletarVaga.php?id=<?php echo $idAnuncio; ?>&idPessoa=<?php echo $idPessoaEmpresa; ?>&action=delete')">
+            <div style="padding: 6px 12px;
+                    box-shadow: 0px 0px 6px silver;
+                    display: flex;
+                    align-items: center;
+                    background-color: #830404;
+                    color: whitesmoke;
+                    border-radius: 10px;
+                    width: 120px; 
+                    margin: 0;"> 
+                <lord-icon src="https://cdn.lordicon.com/wpyrrmcq.json" trigger="hover" colors="primary:#ffffff"
+                    style="width:40px;height:40px"> 
+                </lord-icon>
+                <label style="margin-left: 8px;">Deletar</label>
+            </div>
+        </a>
+        
+    </div>
+<?php } ?>
+
     <!-- Modal de Confirmação -->
     <div id="confirmDeleteModal" class="modal">
         <div class="modal-content">
@@ -548,7 +553,7 @@ if ($stmt) {
     </div>
 
     <footer>
-    <a href="../PoliticadePrivacidade/PoliticadePrivacidade.html">Política de Privacidade</a>
+        <a href="../PoliticadePrivacidade/PoliticadePrivacidade.html">Política de Privacidade</a>
         <a href="../NossoContato/nossoContato.html">Nosso contato</a>
         <a href="../AvalieNos/avalieNos.html">Avalie-nos</a>
         <p class="sinopse">SIAS 2024</p>
