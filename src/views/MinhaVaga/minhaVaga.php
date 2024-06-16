@@ -57,7 +57,7 @@ if ($stmt) {
     $stmt->close();
 }
 
-// verifica se o id da vaga doi mandando pela url 
+// verifica se o id da vaga doi mandando pela url
 if (isset($_GET['id'])) {
     if ($_con->connect_error) {
         die("Falha na conexão: " . $_con->connect_error);
@@ -188,7 +188,7 @@ WHERE Tb_Anuncios.Id_Anuncios = $idAnuncio";
         }
     }
 }
-// Quartar consulta para selecionar o tema que  a pessoa selecionou 
+// Quartar consulta para selecionar o tema que  a pessoa selecionou
 $query = "SELECT Tema FROM Tb_Pessoas WHERE Id_Pessoas = ?";
 $stmt = $_con->prepare($query);
 
@@ -244,13 +244,13 @@ if ($stmt) {
             <li><a href="../CriarVaga/criarVaga.php">Anunciar</a></li>
             <li><a href="../MinhasVagas/minhasVagas.php">Minhas vagas</a></li>
             <li><a href="../MeusTestes/meusTestes.php">Meus testes</a></li><!--Arrumar esse link  -->
-            <li><a href="../../../index.php">Deslogar</a></li>
+            <!-- <li><a href="../../../index.php">Deslogar</a></li> -->
             <li><a href="../PerfilRecrutador/perfilRecrutador.php?id=<?php echo $idPessoa; ?>">Perfil</a></li>
         </ul>
     </nav>
     <?php if ($autenticadoComoPublicador == true) { ?>
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 10px; box-sizing: border-box;"> <!-- Contêiner flexível com espaçamento -->
-        
+
         <!-- Botão Editar no canto esquerdo -->
         <a class="acessarEditarPerfil editar"
             href="../EditarVagaRecrutador/editarvagaRecrutador.php?id=<?php echo $idAnuncio; ?>">
@@ -266,13 +266,13 @@ if ($stmt) {
                 <lord-icon src="https://cdn.lordicon.com/wuvorxbv.json" trigger="hover" stroke="bold" state="hover-line"
                     colors="primary:#ffffff,secondary:#ffffff" style="width:40px;height:40px"> <!-- Aumentar tamanho -->
                 </lord-icon>
-                <label style="margin-left: 8px;">Editar</label> 
+                <label style="margin-left: 8px;">Editar</label>
             </div>
         </a>
-        
+
         <!-- Espaço flexível para empurrar o botão Deletar para o canto direito -->
-        <div style="flex-grow: 1;"></div> 
-        
+        <div style="flex-grow: 1;"></div>
+
         <!-- Botão Deletar no canto direito -->
         <a class="acessarEditarPerfil deletar" href="#"
             onclick="openModal('../../services/deletar/DeletarVaga.php?id=<?php echo $idAnuncio; ?>&idPessoa=<?php echo $idPessoaEmpresa; ?>&action=delete')">
@@ -283,15 +283,15 @@ if ($stmt) {
                     background-color: #830404;
                     color: whitesmoke;
                     border-radius: 10px;
-                    width: 120px; 
-                    margin: 0;"> 
+                    width: 120px;
+                    margin: 0;">
                 <lord-icon src="https://cdn.lordicon.com/wpyrrmcq.json" trigger="hover" colors="primary:#ffffff"
-                    style="width:40px;height:40px"> 
+                    style="width:40px;height:40px">
                 </lord-icon>
                 <label style="margin-left: 8px;">Deletar</label>
             </div>
         </a>
-        
+
     </div>
 <?php } ?>
 
@@ -475,26 +475,26 @@ if ($stmt) {
             <div class="carrosselBox" id="carrosselPerfis">
                 <?php
                 $sqlCandidatos = "
-                SELECT 
-                c.*, 
-                c.Img_Perfil AS Img_Perfil, 
+                SELECT
+                c.*,
+                c.Img_Perfil AS Img_Perfil,
                 p.Nome,
                 GROUP_CONCAT(CONCAT('Área: ', q.Area, ' / Nota: ', COALESCE(r.Nota, 'Sem nota')) ORDER BY r.Nota DESC SEPARATOR '\n') AS AreasNotas
-            FROM 
+            FROM
                 Tb_Candidato c
-            JOIN 
+            JOIN
                 Tb_Pessoas p ON c.Tb_Pessoas_Id = p.Id_Pessoas
-            JOIN 
+            JOIN
                 Tb_Inscricoes i ON c.CPF = i.Tb_Candidato_CPF
-            LEFT JOIN 
+            LEFT JOIN
                 Tb_Resultados r ON c.CPF = r.Tb_Candidato_CPF
-            LEFT JOIN 
+            LEFT JOIN
                 Tb_Questionarios q ON r.Tb_Questionarios_ID = q.Id_Questionario
-            WHERE 
+            WHERE
                 i.Tb_Vagas_Tb_Anuncios_Id = $idAnuncio
-            GROUP BY 
+            GROUP BY
                 c.CPF
-            ORDER BY 
+            ORDER BY
                 c.PCD DESC, MAX(r.Nota) DESC
             LIMIT 3";
                 $resultCandidatos = mysqli_query($_con, $sqlCandidatos);
