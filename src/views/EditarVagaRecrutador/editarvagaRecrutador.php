@@ -392,7 +392,7 @@ WHERE Tb_Anuncios.Id_Anuncios = ?";
                                     required <?php echo ($dadosAnuncio['Nivel_Operacional'] == 'Ensino Superior') ? 'checked' : ''; ?>>
 
                                 <label for="medio" class="btnRadio" id="btnMedio">Ensino Médio</label>
-                                <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label>
+                                <label for="tecnico" class="btnRadio" id="btnTecnico">Ensino Técnico</label><br><br><br>
                                 <label for="superior" class="btnRadio" id="btnSuperior">Ensino Superior</label>
                                 <small name="aviso"></small>
                             </div>
